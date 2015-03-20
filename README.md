@@ -1,3 +1,11 @@
+# Ninteen Thirty Four
+
+This is the base theme for UCLA UniCamp's websites.
+
+## License
+
+This theme is licensed under the MIT license, as specified in `LICENSE.txt`. Keep in mind that, though you can use any of the code as permitted by the license, it is not allowed to impersonate UCLA UniCamp or use any of the official branding without written permission.
+
 # FoundationPress
 
 This is a WordPress starter theme based on Foundation 5 by Zurb. The purpose of FoundationPress, is to act as a small and handy toolbox that contains the essentials needed to build any design. FoundationPress is meant to be a starting point, not the final product. If you're looking for an all-in-one theme with built-in shortcodes, plugins, fancypancy portfolio templates or whatnot, I'm afraid you have to look elsewhere.
@@ -71,74 +79,3 @@ Check for Foundation Updates? Run:
   * `js/vendor`: Vendor scripts are copied from `bower_components/` to this directory. We use this path for enqueing the vendor scripts in WordPress.
 
   * Please note that you must run `grunt build` in your terminal for the script to be copied and concatinated. See [Gruntfile.js](https://github.com/olefredrik/FoundationPress/blob/master/Gruntfile.js) for details
-
-## Demo
-
-* [Clean FoundationPress install](http://foundationpress.olefredrik.com/)
-* [FoundationPress Kitchen Sink - see every single element in action](http://foundationpress.olefredrik.com/kitchen-sink/)
-
-## UI toolkits for rapid prototyping
-
-* [Foundation UI Kit for Axure RP](https://gumroad.com/l/foundation-ui-kit-axure-rp)
-* [FoundationPSD - Foundation UI Kit for Photoshop](http://foundationpress.olefredrik.com/downloads/foundation-psd-template/)
-
-## Tutorials
-
-* [Installing FoundationPress - video tutorial](https://www.youtube.com/watch?v=s4m5wwM4BWM#t=11)
-* [Responsive images in WordPress with Interchange](http://rachievee.com/responsive-images-in-wordpress/)
-* [Learn to use the _settings file to change almost every aspect of a Foundation site](http://zurb.com/university/lessons/66)
-* [Other lessons from Zurb University](http://zurb.com/university/past-lessons)
-
-## A selection of sites built with FoundationPress
-
-* [Harvard Center for Green Buildings and Cities](http://www.harvardcgbc.org/)
-* [Parent-Child Home Program](http://www.parent-child.org/)
-* [Hip and Healthy](http://hipandhealthy.com/)
-* [Thinx Underwear](http://www.shethinx.com/)
-* [Threadbird blog](http://blog.threadbird.com/)
-* [Public House Wines](http://publichousewines.hstestsite.info/)
-* [Franchise Career Advisors](http://franchisecareeradvisors.com/)
-* [Le saint](http://www.lesaint.ca/)
-* [Help blog](http://help.com/blog/)
-* [Maren Schmidt](http://marenschmidt.com/)
-* [Ciancimino Gallery](http://ciancimino.com/)
-* [Sokolove Law](http://www.sokolovelaw.com/)
-* [Pandora Children's Parties](http://www.pandorachildrensparties.co.uk/)
-* [The Rainbow Venues](http://www.therainbowvenues.co.uk/)
-* [Ameronix](http://www.ameronix.com/)
-* [Finnerodja](http://www.finnerodja.se/)
-* [Nufloors](http://www.nufloors.ca/)
-* [Glossop Cartons](http://www.glossopcartons.co.uk/)
-* [Ready4Work](http://www.ready4work.my/)
-* [Just Legal](http://www.justlegal.co.jp/en/)
-* [Vintage and Stuff](http://vintageandstuff.com/)
-* [Software for FM](http://softwareforfm.co.uk/)
-* [WP Diamonds](http://www.wpdiamonds.com/)
-
-## Contributing
-#### Here are ways to get involved:
-
-1. [Star](https://github.com/olefredrik/FoundationPress/stargazers) the project!
-2. Answer questions that come through [GitHub issues](https://github.com/olefredrik/FoundationPress/issues)
-3. Report a bug that you find
-4. Share a theme you've built on top of FoundationPress
-5. [Tweet](https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Ffoundationpress.olefredrik.com%2F&text=Check%20out%20FoundationPress%2C%20the%20ultimate%20%23WordPress%20starter-theme%20built%20on%20%23Foundation%205&tw_p=tweetbutton&url=http%3A%2F%2Ffoundationpress.olefredrik.com&via=olefredrik) and [blog](http://www.justinfriebel.com/my-first-experience-with-foundationpress-a-wordpress-starter-theme-106/) your experience of FoundationPress.
-
-#### Pull Requests
-
-Pull requests are highly appreciated. About a dozen people have written parts of FoundationPress (so far). Here are some guidelines to help:
-
-1. Solve a problem. Features are great, but even better is cleaning-up and fixing issues in the code that you discover
-2. Make sure that your code is bug-free and does not introduce new bugs
-3. Create a [pull request](https://help.github.com/articles/creating-a-pull-request)
-
-## Documentation
-
-* [Zurb Foundation Docs](http://foundation.zurb.com/docs/)
-* [WordPress Codex](http://codex.wordpress.org/)
-
-## Reviews
-
-* [Build a responsive WordPress theme](http://www.webdesignermag.co.uk/tutorials/build-a-responsive-wordpress-theme/)
-* [Setting Up a Blog with Foundation and WordPress](http://www.thecodecub.com/htmlcss/setting-up-a-blog-with-foundation-and-wordpress/)
-* [FoundationPress un starter theme pour WordPress (fr)](http://www.leblogduresponsivedesign.fr/developpement/foundationpress-un-starter-theme-pour-wordpress/)
