@@ -1,7 +1,7 @@
 {
   "name": "foundationpress",
   "main": [
-    "css/foundation.css",
+    "css/main.css",
     "js/foundation.js"
   ],
   "ignore": [],

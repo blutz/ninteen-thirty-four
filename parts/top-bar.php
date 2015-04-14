@@ -1,4 +1,4 @@
-<div class="top-bar-container contain-to-grid show-for-medium-up">
+<div class="top-bar-container contain-to-grid show-for-medium-up sticky">
     <nav class="top-bar" data-topbar role="navigation">
         <ul class="title-area">
             <li class="name">

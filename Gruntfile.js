@@ -8,9 +8,12 @@ module.exports = function(grunt) {
     sass: {
       options: {
         // If you can't get source maps to work, run the following command in your terminal:
-        // $ sass scss/foundation.scss:css/foundation.css --sourcemap
+        // $ sass scss/main.scss:css/main.css --sourcemap
         // (see this link for details: http://thesassway.com/intermediate/using-source-maps-with-sass )
-        sourceMap: true
+        sourceMap: true,
+        includePaths: [
+          'bower_components/foundation/scss'
+        ],
       },
 
       dist: {
@@ -18,7 +21,7 @@ module.exports = function(grunt) {
           outputStyle: 'compressed'
         },
         files: {
-          'css/foundation.css': 'scss/foundation.scss'
+          'css/main.css': 'scss/main.scss'
         }
       }
     },
@@ -109,7 +112,7 @@ module.exports = function(grunt) {
       grunt: { files: ['Gruntfile.js'] },
 
       sass: {
-        files: 'scss/**/*.scss',
+        files: 'scss/main.scss',
         tasks: ['sass'],
         options: {
               livereload:true,

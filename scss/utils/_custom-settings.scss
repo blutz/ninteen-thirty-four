@@ -50,3 +50,10 @@ $body-font-style: normal;
 $header-font-weight: 300;
 $header-text-rendering: optimizeLegibility;
 $topbar-link-weight: bold;
+
+// Topbar settings
+$topbar-bg-color: $white;
+$topbar-bg-color: rgba(255, 255, 255, 0.8);
+$topbar-bg: $topbar-bg-color;
+$topbar-dropdown-link-color: $oil;
+$topbar-link-color: $oil;

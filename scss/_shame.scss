@@ -1,0 +1,4 @@
+// Fix issue where the WP admin bar overlaps the mobile menu
+#wpadminbar {
+  position: fixed !important;
+}

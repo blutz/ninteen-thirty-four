@@ -81,7 +81,10 @@ function FoundationPress_cleanup_head() {
     add_filter( 'script_loader_src', 'FoundationPress_remove_wp_ver_css_js', 9999 );
 
     // Prevent unneccecary info from being displayed
-    add_filter('login_errors',create_function('$a', "return null;"));
+    // add_filter('login_errors',create_function('$a', "return null;"));
+    // The lost password function provides a mechanism to check if an email
+    // address is registered in the system so preventing error messages from
+    // being displayed just makes the UI harder to use. -Byron
 
 } 
 endif;
