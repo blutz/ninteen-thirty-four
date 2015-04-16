@@ -1,0 +1,15 @@
+/*!
+ * Theme Name: Test theme
+ */
+
+div {
+ background-color: red;
+ display: flex;
+ float: left;
+}
+
+div.asdf {
+ float: right;
+}
+
+@import 'testt/test.scss';
