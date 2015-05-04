@@ -2,14 +2,23 @@
  * Theme Name: Test theme
  */
 
-div {
- background-color: red;
- display: flex;
- float: left;
-}
+// Vendors (managed by Bower)
+@import '../vendors/foundation/scss/normalize';
+@import '../vendors/foundation/scss/foundation';
 
-div.asdf {
- float: right;
-}
+// Utils
 
-@import 'testt/test.scss';
+// Base
+@import 'base/fonts';
+
+// Layout
+
+// Components
+
+// Pages
+
+// Themes
+
+
+// Shame file
+@import 'shame';

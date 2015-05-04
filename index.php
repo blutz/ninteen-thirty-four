@@ -1,4 +1,7 @@
-<link href="//localhost:8080/wp-content/themes/ninteen-thirty-four/style.css" rel="stylesheet" type="text/css" />
+<?php get_header(); ?>
+
 <div>
 Hello there
 </div>
+
+<?php get_footer(); ?>
