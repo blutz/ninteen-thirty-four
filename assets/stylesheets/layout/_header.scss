@@ -1,0 +1,23 @@
+$header-height: 80px;
+
+.header {
+  background-color: white;
+  height: $header-height;
+  padding: 10px 20px;
+  box-sizing: content-box;
+}
+
+.header__logo {
+  height: 100%;
+  display: block;
+  float: left;
+  &:before {
+    content: '';
+    background-image: url($directory-template + '/assets/images/logos/unicamp.gif');
+    display: block;
+    height: 100%;
+    width: $header-height;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
