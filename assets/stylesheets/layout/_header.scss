@@ -1,10 +1,14 @@
 $header-height: 100px;
 
 header {
-  background-color: white;
+  background-color: transparent;
   height: $header-height;
   padding: 0 20px;
   box-sizing: content-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
 .header__logo {
@@ -25,9 +29,6 @@ header {
   }
 }
 
-header nav {
-}
-
 .header__menu {
   list-style: none;
   margin: 0;
@@ -39,6 +40,12 @@ header nav {
   display: inline-block;
 }
 .header__menu > li > a {
+  color: white;
+  text-shadow: 0 0 7px black;
+  font-weight: bold;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
   height: $header-height;
   line-height: $header-height;
   white-space: nowrap;
@@ -46,9 +53,9 @@ header nav {
   position: relative;
   display: inline-block;
   padding: 0 10px;
-  letter-spacing: 0.03em;
   &:hover, &:focus, &:active {
     color: white;
+    text-shadow: none;
     background-color: $color-primary;
     outline: none;
   }

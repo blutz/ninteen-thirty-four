@@ -5,7 +5,6 @@
     <meta http-equiv='x-ua-compatible' content='ie=edge' />
     <title><?php wp_title('|', true, 'right'); bloginfo('name'); ?></title>
 
-    <link rel='stylesheet' href='<?php echo get_template_directory_uri(); ?>/style.css' />
     <?php wp_head(); ?>
   </head>
 
@@ -19,3 +18,6 @@
         'depth' => 1,
       )); ?>
     </header>
+    <div class='hero'>
+      <img src='<?php header_image(); ?>' />
+    </div>
