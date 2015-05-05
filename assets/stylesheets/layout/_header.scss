@@ -1,13 +1,16 @@
-$header-height: 80px;
+$header-height: 100px;
 
-.header {
+header {
   background-color: white;
   height: $header-height;
-  padding: 10px 20px;
+  padding: 0 20px;
   box-sizing: content-box;
 }
 
 .header__logo {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  box-sizing: border-box;
   height: 100%;
   display: block;
   float: left;
@@ -19,5 +22,37 @@ $header-height: 80px;
     width: $header-height;
     background-size: contain;
     background-repeat: no-repeat;
+  }
+}
+
+header nav {
+}
+
+.header__menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}
+
+.header__menu > li {
+  display: inline-block;
+}
+.header__menu > li > a {
+  height: $header-height;
+  line-height: $header-height;
+  white-space: nowrap;
+  box-sizing: border-box;
+  position: relative;
+  display: inline-block;
+  padding: 0 10px;
+  letter-spacing: 0.03em;
+  &:hover, &:focus, &:active {
+    color: white;
+    background-color: $color-primary;
+    outline: none;
+  }
+  &:active {
+    background-color: mix(black, $primary-color, 10);
   }
 }

@@ -1,0 +1,16 @@
+$color-primary: #2E86BE;
+$color-secondary: #FCB61C;
+$color-text: #333;
+$color-bg-accent: #F2F2F2;
+
+// Colors for each program
+$color-sail: #0C56A4;
+$color-wall: #F48A34;
+$color-climb: #3C2214;
+$color-corps: #156A3C;
+
+
+// OVERWRITE FOUNDATION COLORS
+$primary-color: $color-primary;
+$secondary-color: $color-secondary;
+$body-font-color: $color-text;

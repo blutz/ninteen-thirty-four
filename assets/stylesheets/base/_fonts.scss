@@ -2,6 +2,14 @@
 // Montserrat copyright Julieta Ulanovsky. SIL Open Font License v1.10.
 // Roboto Slab copyright Christian Robertson. Apache License v2.00.
 
+$header-font-family: 'Montserrat', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+$header-font-weight: 300;
+
+$body-font-family: 'Roboto Slab', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+$body-font-weight: 300;
+$paragraph-font-family: $body-font-family;
+$paragraph-font-weight: $body-font-weight;
+
 
 //============================================================================//
 //=== MONTSERRAT =============================================================//

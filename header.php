@@ -10,15 +10,12 @@
   </head>
 
   <body>
-    <header class='header'>
+    <header>
       <a class='header__logo' href='<?php echo get_site_url(); ?>' title='UCLA UniCamp'></a>
-      <nav>
-        <?php wp_nav_menu(array(
-          'theme_location' => 'top_menu',
-          'container' => false,
-          'menu_class' => '',
-          'items_wrap' => '%3$s',
-          'depth' => 1,
-        )); ?>
-      </nav>
+      <?php wp_nav_menu(array(
+        'theme_location' => 'top_nav',
+        'container' => 'nav',
+        'menu_class' => 'header__menu',
+        'depth' => 1,
+      )); ?>
     </header>
