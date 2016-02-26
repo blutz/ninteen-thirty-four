@@ -15,3 +15,21 @@ Then go to your http://dockerhost:8080, create an admin user, then enable the th
 ### Already have wordpress
 
 Put this directory in your `wp-content/themes/` and enable the theme "Ninteen Thirty-Four".
+
+## Development
+### Installation
+
+1. Install Node/NPM
+1. Run npm install
+
+### Precompiling CSS
+In this project, only CSS is precompiled. This is for a few reasons:
+
+* To use SASS (with SCSS) syntax
+* To use autoprefixer (so we don't have to worry about any browser prefixe)
+* To minify (for performance)
+
+You will only need to precopile if you make CSS changes:
+
+* To **build once** run `npm run-script build`
+* To **watch files** run `npm run-script watch`
