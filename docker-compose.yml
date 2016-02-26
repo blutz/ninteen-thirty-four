@@ -7,7 +7,7 @@ wordpress:
   environment:
     WORDPRESS_DB_PASSWORD: wordpress
   volumes:
-    - ./theme:/var/www/html/wp-content/themes/ninteen-thirty-four
+    - .:/var/www/html/wp-content/themes/ninteen-thirty-four
 db:
   image: mysql
   environment:
