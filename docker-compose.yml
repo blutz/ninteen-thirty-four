@@ -1,0 +1,14 @@
+wordpress:
+  image: wordpress
+  links:
+    - db:mysql
+  ports:
+    - 8080:80
+  environment:
+    WORDPRESS_DB_PASSWORD: wordpress
+  volumes:
+    - ./theme:/var/www/html/wp-content/themes/ninteen-thirty-four
+db:
+  image: mysql
+  environment:
+    MYSQL_ROOT_PASSWORD: wordpress
