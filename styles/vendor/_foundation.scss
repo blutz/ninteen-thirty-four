@@ -1,0 +1,10 @@
+// Foundation settings
+
+* {
+  background-color: green;
+}
+
+$global-flexbox: true;
+
+@import 'foundation/foundation';
+@include foundation-everything();
