@@ -5,6 +5,7 @@ header {
   height: 100px;
   margin-top: 15px;
   margin-left: 15px;
+  font-family: 'Code Pro';
 }
 .header__logo {
   height: 100%;
@@ -33,4 +34,14 @@ header {
   top: 50%;
   transform: translateY(-50%);
   margin-right: 15px;
+}
+.header__item--active {
+  font-weight: bold;
+  & a::before {
+    content: '>';
+    margin-right: 3px;
+  }
+}
+.header__item a:hover {
+  text-decoration: none;
 }
