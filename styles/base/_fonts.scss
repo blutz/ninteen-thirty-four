@@ -1,0 +1,44 @@
+// Museo Slab 500
+@font-face {
+  font-family: 'Museo Slab';
+  src: url('fonts/museo-slab-500.woff2') format('woff2'),
+       url('fonts/museo-slab-500.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+// Museo Slab 500 Italic
+@font-face {
+  font-family: 'Museo Slab';
+  src: url('fonts/museo-slab-500-italic.woff2') format('woff2'),
+       url('fonts/museo-slab-500.woff') format('woff');
+  font-weight: 500;
+  font-style: italic;
+}
+
+// Chunkfive
+@font-face {
+  font-family: 'ChunkFive';
+  src: url('fonts/chunkfive.woff2') format('woff2'),
+       url('fonts/chunkfive.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+// Code Pro
+@font-face {
+  font-family: 'Code Pro';
+  src: url('fonts/code-pro.woff2') format('woff2'),
+       url('fonts/code-pro.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+// Code Pro Light
+@font-face {
+  font-family: 'Code Pro';
+  src: url('fonts/code-pro-light.woff2') format('woff2'),
+       url('fonts/code-pro-light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
