@@ -15,7 +15,9 @@ gulp.task('css', function() {
       .pipe(sass().on('error', sass.logError))
       .pipe(autoprefixer(AUTOPREFIXER_OPTIONS))
       .pipe(cleanCSS())
-    .pipe(sourcemaps.write('.'))
+    .pipe(sourcemaps.write('.', {
+      sourceMappingURLPrefix: '/wp-content/themes/ninteen-thirty-four'
+    }))
     .pipe(gulp.dest('.'))
 })
 
