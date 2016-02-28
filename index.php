@@ -1,5 +1,7 @@
 <?php get_header(); ?>
 
-This is index.php
+<div class='large-block' id='test-block'>
+
+</div>
 
 <?php get_footer(); ?>

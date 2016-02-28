@@ -1,0 +1,8 @@
+$z-indexes: (
+  'header-items',
+  'header-logo',
+);
+
+@function z($name) {
+  @return index($z-indexes, $name);
+}
