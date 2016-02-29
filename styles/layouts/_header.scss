@@ -1,11 +1,12 @@
 $height_logo: 100px;
 
 header {
-  position: absolute;
+  position: fixed;
   height: 100px;
   margin-top: 15px;
   margin-left: 15px;
   font-family: 'Code Pro';
+  z-index: z('header');
 }
 .header__logo {
   height: 100%;

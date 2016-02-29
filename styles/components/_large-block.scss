@@ -2,6 +2,8 @@
   height: 700px;
   position: relative;
   background-size: cover;
+  transition: 0s linear background-position;
+  transform: transalte3d(0,0,0);
 }
 .large-block__content {
   color: white;

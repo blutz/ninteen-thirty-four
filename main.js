@@ -1,2 +1,2 @@
-!function(){"use strict";$=jQuery}();
+!function(){"use strict";var o=jQuery,n=[];o(document).ready(function(){o("[data-steady-background]").each(function(c,s){n.push({el:o(s),offset:o(s).scrollTop()}),o(s).css("background-position-y",0)})}),o(window).scroll(function(){var o=window.scrollY;n.forEach(function(n){var c=n.offset;n.el.css("background-position-y",o-c)})})}();
 //# sourceMappingURL=/wp-content/themes/ninteen-thirty-four/main.js.map
