@@ -1,0 +1,1 @@
+{"version":3,"sources":["test.js"],"names":["$","jQuery"],"mappings":"CAAA,WACA,YAEAA,GAAAC","file":"main.js","sourcesContent":["$ = jQuery\n"],"sourceRoot":"/source/"}
