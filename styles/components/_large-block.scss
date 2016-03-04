@@ -13,7 +13,22 @@
   position: absolute;
   bottom: 0;
   padding: 15px;
+  @media #{$medium-up} {
+    padding-left: 10%;
+    padding-right: 10%;
+  }
 }
+
+.large-block__blockquote {
+  border: none;
+  color: inherit;
+  text-align: right;
+  font-size: 1.1em;
+}
+.large-block__blockquote__cite {
+  font-size: 1em;
+}
+
 #test-block {
   background-image: url($path_images+'/samples/sweet-pea-1.jpg');
 }

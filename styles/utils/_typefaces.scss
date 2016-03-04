@@ -1,0 +1,8 @@
+$font-primary: 'Museo Slab', 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+$font-secondary: 'Code Pro', 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+$font-headings: 'ChunkFive', 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+
+// Override Foundation's styles
+$body-font-family: $font-primary;
+$header-font-family: $font-headings;
+
