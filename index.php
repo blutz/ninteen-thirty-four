@@ -1,14 +1,14 @@
 <?php get_header(); ?>
 
-<div class='large-block' id='test-block'>
+<section class='large-block' id='test-block'>
   <div class='large-block__content'>
     <h2>Apply for UCLA UniCamp</h2>
     <h4>Apps due: Friday 7th week<br />www.unicamp.org/apply</h4>
     <a class='button button--homepage'>Learn More</a>
   </div>
-</div>
+</section>
 
-<div class='large-block' id='test-block-2'>
+<section class='large-block' id='test-block-2'>
   <div class='large-block__content'>
     <h2>UCLA Student's Official Philanthropy</h2>
     <h4>UniCamp is an indepently funded 501(c)3 that annually links 500 UCLA student volunteers with over 1,200 urban LA youth.</h4>
@@ -18,6 +18,6 @@
       <cite class='large-block__blockquote__cite'>Alan Dyer "A Sense of Adventure"</cite>
     </blockquote>
   </div>
-</div>
+</section>
 
 <?php get_footer(); ?>
