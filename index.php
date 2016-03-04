@@ -4,6 +4,7 @@
   <div class='large-block__content'>
     <h2>Apply for UCLA UniCamp</h2>
     <h4>Apps due: Friday 7th week<br />www.unicamp.org/apply</h4>
+    <a class='button button--homepage'>Learn More</a>
   </div>
 </div>
 

@@ -33,3 +33,11 @@ You will only need to precopile if you make CSS changes:
 
 * To **build once** run `npm run-script build`
 * To **watch files** run `npm run-script watch`
+
+## FAQ
+### The docker image seems to be caching my templates randomly. How do I disable that?
+The docker image uses PHP's OPCache by default. Turn it off by adding the line:
+
+    php_flag opcache.enable Off
+
+to you Apache config (in `/etc/apache2/apache2.conf` in this image).
