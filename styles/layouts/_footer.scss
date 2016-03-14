@@ -1,0 +1,35 @@
+footer {
+  background-color: $color-background;
+  color: white;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+footer a {
+  color: white;
+  &:hover {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+.footer__menu {
+  margin-bottom: 50px;
+}
+.footer__menu h3 {
+  font-family: $font-secondary;
+  text-decoration: underline;
+  font-size: 1rem;
+}
+.footer__submenu {
+  list-style: none;
+  margin: 0;
+  font-family: $font-secondary;
+}
+.footer__submenu li {
+  padding: 0;
+  margin: 0;
+  line-height: 1em;
+  padding: 8px 0;
+}
+.footer__legal {
+  text-align: center;
+}
