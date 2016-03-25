@@ -1,5 +1,5 @@
 wordpress:
-  image: wordpress
+  build: .
   links:
     - db:mysql
   ports:
@@ -12,3 +12,8 @@ db:
   image: mysql
   environment:
     MYSQL_ROOT_PASSWORD: wordpress
+  volumes_from:
+    - data
+data:
+  image: mysql
+  entrypoint: /bin/bash
