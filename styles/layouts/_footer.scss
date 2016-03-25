@@ -33,3 +33,38 @@ footer a {
 .footer__legal {
   text-align: center;
 }
+.footer__contact__phone {
+  margin-top: 1em;
+}
+
+.footer__social {
+  text-align: center;
+}
+.footer__social__title {
+  font-weight: bold;
+}
+.footer__social__icons {
+  list-style: none;
+  font-size: 2rem;
+  margin: 0;
+}
+.footer__social__icons li {
+  display: inline-block;
+  text-align: center;
+}
+.footer__social__icons img {
+  height: 1em;
+  background-color: white;
+}
+
+.footer__legal__details {
+  color: rgba(255, 255, 255, 0.5);
+}
+.footer__legal__org {
+  font-family: $font-secondary;
+  font-size: 1.2rem;
+}
+.footer__legal__org__logo {
+  height: 5em;
+  vertical-align: bottom;
+}

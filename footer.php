@@ -38,7 +38,7 @@
     </div>
   </div>
   <div class='row'>
-    <div class='footer__contact'>
+    <div class='footer__contact medium-6 columns'>
       <div class='footer__contact__address'>
         <strong>UCLA UniCamp Office</strong><br />
         900 Hilgard Ave. Suite 301<br />
@@ -49,27 +49,42 @@
         310.824.1948 (fax)
       </div>
     </div>
-    <div class='footer__social'>
+    <div class='footer__social medium-3 columns'>
       <span class='footer__social__title'>find us on social media:</span>
-      <ul>
-        <li><a href='#'>Facebook</a></li>
-        <li><a href='#'>Twitter</a></li>
-        <li><a href='#'>Instagram</a></li>
-        <li><a href='#'>YouTube</a></li>
+      <ul class='footer__social__icons'>
+        <li>
+          <a href='https://www.facebook.com/uclaunicamp' target='_blank'>
+            <img alt='Facebook' src='<?php echo get_template_directory_uri(); ?>/images/social/facebook_square.svg' />
+          </a>
+        </li>
+        <li>
+          <a href='https://twitter.com/uclaunicamp' target='_blank'>
+            <img alt='Twitter' src='<?php echo get_template_directory_uri(); ?>/images/social/twitter_square.svg' />
+          </a>
+        </li>
+        <li>
+          <a href='https://www.instagram.com/uclaunicamp/' target='_blank'>
+            <img alt='Instagram' src='<?php echo get_template_directory_uri(); ?>/images/social/instagram_square.svg' />
+          </a>
+        </li>
+        <li>
+          <a href='https://www.youtube.com/user/uclaunicamp' target='_blank'>
+            <img alt='YouTube' src='<?php echo get_template_directory_uri(); ?>/images/social/youtube_square.svg' />
+          </a>
+        </li>
       </ul>
     </div>
   </div>
   <div class='row footer__legal'>
-    <p>
-      <img src='#'> UCLA UniCamp is a University Camps Inc. Program
+    <p class='footer__legal__org'>
+      <img class='footer__legal__org__logo' alt='University Camps Inc.' src='<?php echo get_template_directory_uri(); ?>/images/university-camps-logo-small.png' />
+      UCLA UniCamp is a University Camps Inc. Program
     </p>
-    <p>
+    <p class='footer__legal__details'>
       <a href='#'>Privacy Policy</a> | <a href='#'>Terms of Use</a>
-    </p>
-    <p>
+      <br />
       University Camps Inc. is a registered 501(c)3 nonprofit organization. All donations are tax deductible in full or in part.
-    </p>
-    <p>
+      <br />
       &copy; 2016 University Camps Inc. All rights resersved.
     </p>
   </div>
