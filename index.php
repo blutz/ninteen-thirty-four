@@ -35,6 +35,15 @@
   </div>
 </section>
 
+<section class='large-block' id='continuum-of-care-block'>
+  <div class='continuum-of-care__fixed' data-fixed-block>
+    <h2>UCLA UniCamp's "Continuum of Care"</h2>
+    <img
+    class='continuum-of-care-block__logo'
+    src="<?php echo get_template_directory_uri(); ?>/images/samples/continuum-of-care.svg" />
+  </div>
+</section>
+
 <section class='row content-row'>
   <div class='medium-12 columns'>
     <h2>Programs</h2>

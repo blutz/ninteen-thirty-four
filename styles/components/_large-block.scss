@@ -1,5 +1,7 @@
+$height-large-block: 700px;
+
 .large-block {
-  height: 700px;
+  height: $height-large-block;
   position: relative;
   background-size: cover;
   transition: 0s linear background-position;
@@ -18,8 +20,8 @@
     padding-right: 10%;
   }
 }
-.large-block__content h2,
-.large-block__content h4 {
+.large-block h2,
+.large-block h4 {
   color: white;
 }
 
@@ -41,4 +43,10 @@
 }
 #test-block-3 {
   background-image: url($path_images+'/samples/sweet-pea-2.jpg');
+}
+#continuum-of-care-block {
+  background-image: url($path_images+'/samples/water-coyote-1.jpg');
+  background-attachment: fixed;
+  height: $height-large-block*2;
+  overflow: hidden;
 }
