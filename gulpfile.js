@@ -31,10 +31,10 @@ gulp.task('js', function() {
     .pipe(plumber())
     .pipe(sourcemaps.init())
       .pipe(iife())
-      .pipe(concat('main.js'))
       .pipe(uglify({
         compress: { drop_debugger: false }
       }))
+      .pipe(concat('main.js'))
     .pipe(sourcemaps.write('.', SOURCEMAPS_OPTIONS))
     .pipe(gulp.dest('.'))
 })
