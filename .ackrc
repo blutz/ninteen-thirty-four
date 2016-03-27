@@ -1,0 +1,3 @@
+--ignore-file=is:main.js
+--ignore-file=is:main.js.min
+--ignore-file=is:style.css

@@ -1,13 +1,13 @@
-$height-large-block: 700px;
+$height-photo-block: 700px;
 
-.large-block {
-  height: $height-large-block;
+.photo-block {
+  height: $height-photo-block;
   position: relative;
   background-size: cover;
   transition: 0s linear background-position;
   transform: transalte3d(0,0,0);
 }
-.large-block__content {
+.photo-block__content {
   color: white;
   background-color: rgba(0, 0, 0, 0.5);
   width: 100%;
@@ -20,18 +20,18 @@ $height-large-block: 700px;
     padding-right: 10%;
   }
 }
-.large-block h2,
-.large-block h4 {
+.photo-block__content h2,
+.photo-block__content h4 {
   color: white;
 }
 
-.large-block__blockquote {
+.photo-block__blockquote {
   border: none;
   color: inherit;
   text-align: right;
   font-size: 1.1em;
 }
-.large-block__blockquote__cite {
+.photo-block__blockquote__cite {
   font-size: 1em;
 }
 
@@ -47,7 +47,7 @@ $height-large-block: 700px;
 #continuum-of-care-block {
   background-image: url($path_images+'/samples/water-coyote-1.jpg');
   background-attachment: fixed;
-  height: $height-large-block*2;
+  height: $height-photo-block*2;
   overflow: hidden;
   text-align: center;
 }
