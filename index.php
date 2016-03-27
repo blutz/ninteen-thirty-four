@@ -35,4 +35,17 @@
   </div>
 </section>
 
+<section class='row content-row'>
+  <div class='medium-12 columns'>
+    <h2>Programs</h2>
+    <h4>UCLA UniCamp can be described as having many "Camps within a camp."</h4>
+  </div>
+  <div class='medium-6 columns'>
+    Classic UniCamp. Ages 10-14
+  </div>
+  <div class='medium-6 columns'>
+    Older Camper Programs. Ages 15-17
+  </div>
+</section>
+
 <?php get_footer(); ?>
