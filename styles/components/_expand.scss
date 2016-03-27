@@ -1,0 +1,8 @@
+.expand__button__icon {
+  @extend .fa;
+  @extend .fa-caret-up;
+  transition: 0.5s transform;
+  .expand--collapsed & {
+    transform: rotateX(180deg);
+  }
+}
