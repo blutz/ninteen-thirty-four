@@ -27,11 +27,12 @@ Text domain: ninteenthirtyfour
 
 // components
 @import 'components/content-row';
-@import 'components/large-block';
+@import 'components/photo-block';
 @import 'components/button';
 @import 'components/expand';
 
 // pages
+@import 'pages/continuum-of-care';
 
 // etc.
 @import 'shame';

@@ -1,0 +1,54 @@
+.continuum-of-care {
+  background-image: url($path_images+'/samples/water-coyote-1.jpg');
+  background-attachment: fixed;
+  height: $height-photo-block*2;
+  overflow: hidden;
+  text-align: center;
+}
+.continuum-of-care__fixed {
+  position: relative;
+  height: 100vh;
+  padding: 50px;
+}
+.continuum-of-care__header {
+  position: relative;
+  z-index: 1;
+}
+$continuum-of-care-transform: translateY(-50%) translateX(-50%);
+.continuum-of-care-block__logo {
+  height: 100vh;
+  display: block;
+  margin: auto;
+  transition: 0.5s transform;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: $continuum-of-care-transform;
+}
+.continuum-of-care-block__text {
+  @extend h4;
+  opacity: 0;
+  transition: 0.5s opacity;
+  position: absolute;
+  width: 40vw;
+  display: block;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+.continuum-of-care.animation-block-1 {
+  & .continuum-of-care-block__logo { transform: $continuum-of-care-transform rotate(0deg); }
+  & .continuum-of-care-block__text--animation1 { opacity: 1; }
+}
+.continuum-of-care.animation-block-2 {
+  & .continuum-of-care-block__logo { transform: $continuum-of-care-transform rotate(90deg); }
+  & .continuum-of-care-block__text--animation2 { opacity: 1; }
+}
+.continuum-of-care.animation-block-3 {
+  & .continuum-of-care-block__logo { transform: $continuum-of-care-transform rotate(180deg); }
+  & .continuum-of-care-block__text--animation3 { opacity: 1; }
+}
+.continuum-of-care.animation-block-4 {
+  & .continuum-of-care-block__logo { transform: $continuum-of-care-transform rotate(270deg); }
+  & .continuum-of-care-block__text--animation4 { opacity: 1; }
+}

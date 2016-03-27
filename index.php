@@ -35,13 +35,26 @@
   </div>
 </section>
 
-<section class='photo-block' id='continuum-of-care-block'>
+<section class='photo-block continuum-of-care'
+data-blocked-animation
+data-blocked-animation-dead-zone='700'
+data-blocked-animation-blocks='4'>
   <div class='continuum-of-care__fixed' data-fixed-block>
-    <h2>UCLA UniCamp's "Continuum of Care"</h2>
-    <img data-rotate-with-scroll
-    class='continuum-of-care-block__logo'
+    <h2 class='continuum-of-care__header'>UCLA UniCamp's "Continuum of Care"</h2>
+    <img class='continuum-of-care-block__logo'
     src="<?php echo get_template_directory_uri(); ?>/images/samples/continuum-of-care.svg" />
-    <span class='continuum-of-care-block__text'>"Creating the opportunity for today's kids from underserved communities to become UCLA UniCamp campers&hellip;"</span>
+    <span class='continuum-of-care-block__text continuum-of-care-block__text--animation1'>
+      "Creating the opportunity for today's kids from underserved communities to become UCLA UniCamp campers&hellip;"
+    </span>
+    <span class='continuum-of-care-block__text continuum-of-care-block__text--animation2'>
+      "Enabling today's campers to become tomorrow's Student Volunteers&hellip;"
+    </span>
+    <span class='continuum-of-care-block__text continuum-of-care-block__text--animation3'>
+      "Empowering today's UCLA Student Volunteers to become tomorrow's community leaders&hellip;"
+    </span>
+    <span class='continuum-of-care-block__text continuum-of-care-block__text--animation4'>
+      "Creating opportunities for Community Leaders to contribute to the successful development of today's underserved kids."
+    </span>
   </div>
 </section>
 
