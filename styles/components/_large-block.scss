@@ -49,4 +49,22 @@ $height-large-block: 700px;
   background-attachment: fixed;
   height: $height-large-block*2;
   overflow: hidden;
+  text-align: center;
+}
+.continuum-of-care__fixed {
+  position: relative;
+}
+.continuum-of-care-block__logo {
+  height: 100vh;
+  display: block;
+  margin: auto;
+}
+.continuum-of-care-block__text {
+  @extend h4;
+  position: absolute;
+  width: 40vw;
+  display: block;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }

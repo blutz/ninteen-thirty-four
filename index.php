@@ -38,9 +38,10 @@
 <section class='large-block' id='continuum-of-care-block'>
   <div class='continuum-of-care__fixed' data-fixed-block>
     <h2>UCLA UniCamp's "Continuum of Care"</h2>
-    <img
+    <img data-rotate-with-scroll
     class='continuum-of-care-block__logo'
     src="<?php echo get_template_directory_uri(); ?>/images/samples/continuum-of-care.svg" />
+    <span class='continuum-of-care-block__text'>"Creating the opportunity for today's kids from underserved communities to become UCLA UniCamp campers&hellip;"</span>
   </div>
 </section>
 
