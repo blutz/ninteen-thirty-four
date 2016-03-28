@@ -6,6 +6,7 @@ $height-photo-block: 700px;
   background-size: cover;
   transition: 0s linear background-position;
   transform: transalte3d(0,0,0);
+  background-attachment: fixed;
 }
 .photo-block__content {
   color: white;
