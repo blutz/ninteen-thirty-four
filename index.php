@@ -64,10 +64,36 @@ data-blocked-animation-blocks='4'>
     <h4>UCLA UniCamp can be described as having many "Camps within a camp."</h4>
   </div>
   <div class='medium-6 columns'>
-    Classic UniCamp. Ages 10-14
+    <div class='hover-image'>
+      <img
+      class='hover-image__image'
+      src='<?php echo get_template_directory_uri(); ?>/images/samples/water-coyote-1.jpg' />
+      <div class='hover-image__text'>
+        <div class='hover-image__text__title'>
+          Classic UniCamp. Ages 10-14
+        </div>
+        <div class='hover-image__text__blurb' style='display: none'>
+          And here's some more info about Classic Camp
+        </div>
+      </div>
+    </div>
   </div>
   <div class='medium-6 columns'>
-    Older Camper Programs. Ages 15-17
+    <div class='hover-image'>
+      <img
+      class='hover-image__image'
+      src='<?php echo get_template_directory_uri(); ?>/images/samples/water-coyote-1.jpg' />
+      <div class='hover-image__text'>
+        <div class='hover-image__text__title'>
+          Older Camper Programs. Ages 15-17
+        </div>
+        <div class='hover-image__text__blurb' style='display: none'>
+          And here's some more info about Older Camper Programs.
+          <br />
+          <a class='button button--homepage'>Maybe a button &rarr;</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
