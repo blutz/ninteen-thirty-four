@@ -161,7 +161,7 @@ style='background-image: url(<? echo get_template_directory_uri(); ?>/images/sam
         Learn More <i class='expand__button__icon'></i>
       </a>
       <div class='expand__content'>
-        Content to show on expand
+        WALL campers embark along with their volunteer advisors on a journey to summit Mount San Gorgonio, the tallest peak in Southern California. Through WALL, we embrace the beauty of nature, the skills needed for survival in the wilderness, and the challenges that come with the journey. At the end of their long journey, the WALL participants leave with a newfound appreciateion for the environment, stronger leadership skills, and mindfulness for how they live.
       </div>
     </div>
   </div>
@@ -178,7 +178,7 @@ style='background-image: url(<? echo get_template_directory_uri(); ?>/images/sam
         Learn More <i class='expand__button__icon'></i>
       </a>
       <div class='expand__content'>
-        Content to show on expand
+        UniCorps focuses on leadership, service learning, and educational awareness. Campers will engage in community service projects that will improve upon the natural beauty and aesthetic of the UniCamp campsite. Campers also lead younger campers in outcome-based programs. Campers who complete this program earn 40 hours of community service towards their high school graduation requirement. Led by UCLA students and alumni, UniCorps provides the perfect opportunity for your child to learn how to get to college from those who have already made it.
       </div>
     </div>
   </div>
