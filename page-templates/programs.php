@@ -139,4 +139,66 @@ style='background-image: url(<? echo get_template_directory_uri(); ?>/images/sam
   </div>
 </section>
 
+<section
+class='photo-block'
+style='background-image: url(<? echo get_template_directory_uri(); ?>/images/samples/sweet-pea-1.jpg'>
+  <div class='photo-block__content'>
+    <h2>Older Camper Programs</h2>
+    <p class='explainer'>
+      Specialty camps are available for campers ages 15-17 and are designed to push campers out of their comfort zone and challenge them to become leaders within UniCamp. Participats are taught program specific skills and asked to take more leadership responsibilities around the campsite.
+    </p>
+  </div>
+</section>
+
+<section
+class='photo-block'
+style='background-image: url(<? echo get_template_directory_uri(); ?>/images/samples/sweet-pea-4.jpg'>
+  <div class='photo-block__content'>
+    <h2>W.A.L.L.</h2>
+    <h4>Wilderness Adventures in Leadership and Learning</h4>
+    <div class='expand expand--collapsed'>
+      <a href='#' class='button expand__button'>
+        Learn More <i class='expand__button__icon'></i>
+      </a>
+      <div class='expand__content'>
+        Content to show on expand
+      </div>
+    </div>
+  </div>
+</section>
+
+<section
+class='photo-block'
+style='background-image: url(<? echo get_template_directory_uri(); ?>/images/samples/water-coyote-4.jpg'>
+  <div class='photo-block__content'>
+    <h2>UniCorps</h2>
+    <h4>Service Learning &amp; Leadership Development</h4>
+    <div class='expand expand--collapsed'>
+      <a href='#' class='button expand__button'>
+        Learn More <i class='expand__button__icon'></i>
+      </a>
+      <div class='expand__content'>
+        Content to show on expand
+      </div>
+    </div>
+  </div>
+</section>
+
+<section
+class='photo-block'
+style='background-image: url(<? echo get_template_directory_uri(); ?>/images/samples/water-coyote-3.jpg'>
+  <div class='photo-block__content'>
+    <h2>C.L.I.M.B.</h2>
+    <h4>Core Lessons in Mind &amp; Body</h4>
+    <div class='expand expand--collapsed'>
+      <a href='#' class='button expand__button'>
+        Learn More <i class='expand__button__icon'></i>
+      </a>
+      <div class='expand__content'>
+        Our campers learn about the fundamentals and safety of rock climbing as a platform to experience self-growth. It focuses around the 5 pillars of rock climbing to teach campers responsibility, trust, and mindfulness. Along with learning how to climb, campers will exercise new skills in leadership and communication as they teach the basics of climbing to younger campers at the Alpine Tower. The C.L.I.M.B. program culminates with an off-site, outdoor climb which allows them to fully appreciate and utilize everything they have learned through the program.
+      </div>
+    </div>
+  </div>
+</section>
+
 <?php get_footer(); ?>
