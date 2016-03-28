@@ -144,4 +144,17 @@ data-blocked-animation-blocks='4'>
   </div>
 </section>
 
+<section class='photo-block' id='contact-block'>
+  <div class='row content-row'>
+    <div class='medium-12 columns'>
+      <h2>Contact us</h2>
+    </div>
+    <div class='medium-5 columns end'>
+      <?php echo do_shortcode("
+        [contact-form to='byronlutz@gmail.com' subject='[UniCamp.org Contact Form Submission'][contact-field label='Name' type='name' required='1'/][contact-field label='Email' type='email' required='1'/][contact-field label='How can we help you?' type='textarea' rows='10' required='1'/][/contact-form]");
+      ?>
+    </div>
+  </div>
+</section>
+
 <?php get_footer(); ?>
