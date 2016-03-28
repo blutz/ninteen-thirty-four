@@ -79,7 +79,7 @@ data-blocked-animation-blocks='4'>
     </div>
   </div>
   <div class='medium-6 columns'>
-    <div class='hover-image'>
+    <div class='hover-image hover-image--large'>
       <img
       class='hover-image__image'
       src='<?php echo get_template_directory_uri(); ?>/images/samples/water-coyote-1.jpg' />

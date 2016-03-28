@@ -1,0 +1,38 @@
+#contact-block {
+  background-image: url($path_images+'/samples/sweet-pea-2.jpg');
+}
+#contact-block textarea {
+  height: 200px;
+}
+#contact-block h3 {
+  &, & a {
+    color: white;
+  }
+  & a {
+    text-decoration: underline;
+  }
+}
+#contact-block blockquote {
+  background-color: $color-overlay-dark;
+  &, & p {
+    color: white;
+  }
+}
+#contact-block label {
+  background-color: $color-overlay-dark;
+  color: white;
+  padding: 4px;
+  display: inline-block;
+  position: relative;
+  bottom: -1px;
+  left: 1px;
+}
+#contact-block label > span {
+  opacity: 0.5;
+  display: inline-block;
+  margin-left: 5px;
+}
+#contact-block input[type='submit'] {
+  @extend .button;
+  width: 100%;
+}

@@ -1,6 +1,20 @@
 .hover-image {
   position: relative;
   overflow: hidden;
+  margin-bottom: 30px;
+}
+.hover-image--square {
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+}
+.hover-image--square .hover-image__image {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-size: cover;
 }
 
 .hover-image__text {
@@ -23,10 +37,13 @@
 }
 .hover-image__text__title {
   @extend h2;
-  font-size: 2em;
+  font-size: 1.5em;
   color: white;
   display: block;
   margin-bottom: 0;
+  .hover-image--large & {
+    font-size: 2em;
+  }
 }
 .hover-image__text__blurb {
   display: block;
