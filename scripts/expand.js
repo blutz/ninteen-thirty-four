@@ -16,7 +16,8 @@ var ExpandWidget = function(el) {
 ExpandWidget.prototype.setHandlers = function() {
   this.toggleButton.click(this.toggle.bind(this))
 }
-ExpandWidget.prototype.toggle = function() {
+ExpandWidget.prototype.toggle = function(e) {
+  e.preventDefault()
   this.isVisible() ? this.hide() : this.show()
 }
 ExpandWidget.prototype.isVisible = function() {

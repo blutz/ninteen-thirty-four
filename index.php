@@ -13,7 +13,7 @@
     <h2>UCLA Student's Official Philanthropy</h2>
     <h4>UniCamp is an indepently funded 501(c)3 that annually links 500 UCLA student volunteers with over 1,200 urban LA youth.</h4>
     <div class='expand expand--collapsed'>
-      <a class='button button--homepage expand__button'>
+      <a href='#' class='button button--homepage expand__button'>
         More <i class='expand__button__icon'></i>
       </a>
       <div class='expand__content'>
@@ -93,6 +93,53 @@ data-blocked-animation-blocks='4'>
           <a class='button button--homepage'>Maybe a button &rarr;</a>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class='row content-row'>
+  <div class='medium-12 columns'>
+    <h5>Sponsors of UCLA UniCamp</h4>
+    <div class='logo-table logo-table--3col'>
+      <div class='logo-table__logo'>
+        <img
+        alt='Los Angeles Times'
+        src='<?php echo get_template_directory_uri(); ?>/images/logos/latimes-logo.png' />
+      </div>
+      <div class='logo-table__logo'>
+        <img
+        alt='Robert R. McCormick Foundation'
+        src='<?php echo get_template_directory_uri(); ?>/images/logos/mccormick-logo.png' />
+      </div>
+      <div class='logo-table__logo'>
+        <img
+        alt="Children's Hospital, Los Angeles"
+        src='<?php echo get_template_directory_uri(); ?>/images/logos/chla-logo.jpg' />
+      </div>
+    </div>
+    <div class='expand expand--collapsed'>
+      <div class='expand__content'>
+        <div class='logo-table logo-table--3col'>
+          <div class='logo-table__logo'>
+            <img
+            alt='Los Angeles Times'
+            src='<?php echo get_template_directory_uri(); ?>/images/logos/latimes-logo.png' />
+          </div>
+          <div class='logo-table__logo'>
+            <img
+            alt='Robert R. McCormick Foundation'
+            src='<?php echo get_template_directory_uri(); ?>/images/logos/mccormick-logo.png' />
+          </div>
+          <div class='logo-table__logo'>
+            <img
+            alt="Children's Hospital, Los Angeles"
+            src='<?php echo get_template_directory_uri(); ?>/images/logos/chla-logo.jpg' />
+          </div>
+        </div>
+      </div>
+      <a href='#' class='expand__button expand__button--full'>
+        See all <i class='expand__button__icon'></i>
+      </a>
     </div>
   </div>
 </section>

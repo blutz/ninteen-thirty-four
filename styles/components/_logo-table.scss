@@ -1,0 +1,13 @@
+.logo-table {
+  display: flex;
+  justify-contetn: space-between;
+  width: 100%;
+  align-items: center;
+}
+.logo-table__logo {
+  flex: 1;
+  padding: 15px;
+}
+.logo-table--3col .logo-table__logo {
+  min-width: 33.3%;
+}
