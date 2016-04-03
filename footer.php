@@ -41,8 +41,8 @@
     <div class='footer__contact medium-6 columns'>
       <div class='footer__contact__address'>
         <strong>UCLA UniCamp Office</strong><br />
-        900 Hilgard Ave. Suite 301<br />
-        Los Angeles, CA 90066<br />
+        2131 John Wooden Center<br />
+        Los Angeles, CA 90095
       </div>
       <div class='footer__contact__phone'>
         310.208.8252 (UCLA)<br />
