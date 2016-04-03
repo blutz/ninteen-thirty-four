@@ -70,16 +70,22 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
     <h4>UCLA UniCamp can be described as having many "Camps within a camp."</h4>
   </div>
   <div class='medium-6 columns'>
-    <div class='hover-image'>
+    <div class='hover-image hover-image--large'>
       <img
       class='hover-image__image'
       src='<?php echo get_template_directory_uri(); ?>/images/samples/water-coyote-1.jpg' />
       <div class='hover-image__text'>
         <div class='hover-image__text__title'>
-          Classic UniCamp. Ages 10-14
+          Classic UniCamp. Ages&nbsp;10&#8209;14
         </div>
         <div class='hover-image__text__blurb' style='display: none'>
-          And here's some more info about Classic Camp
+          <p>
+            Classic UniCamp serves campers ages 10 - 14 and is our most traditional residential camp program. Campers have the opportunity to explore the outdoors and participate in traditional camp programs such as: archery, arts &amp; crafts, or rec. and also have the chance to push themselves with programs such as: the alpine climbing tower, sailing, or mountain biking.
+          </p>
+          <p>
+            In addition to the traditional camp experience, each Classic UniCamp session partners with a Los Angeles area nonprofit or after-school program to address a specific social initiative. Throughout each camp session there will be special programs to address that week’s initiative.
+          </p>
+          <a class='button' href='/programs'>Learn more &rarr;</a>
         </div>
       </div>
     </div>
@@ -91,12 +97,13 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
       src='<?php echo get_template_directory_uri(); ?>/images/samples/water-coyote-1.jpg' />
       <div class='hover-image__text'>
         <div class='hover-image__text__title'>
-          Older Camper Programs. Ages 15-17
+          Older Camper Programs. Ages&nbsp;15&#8209;17
         </div>
         <div class='hover-image__text__blurb' style='display: none'>
-          And here's some more info about Older Camper Programs.
-          <br />
-          <a class='button button--homepage'>Maybe a button &rarr;</a>
+          <p>
+            Speciality camps are available for campers ages 15 - 17 and are designed to push campers out of their comfort zone and challenge them to become leaders within UniCamp.  Participants are taught program specific skills and asked to take more leadership responsibilities around the campsite.
+          </p>
+          <a class='button button--homepage' href='/programs#ocp'>Learn more &rarr;</a>
         </div>
       </div>
     </div>
@@ -108,38 +115,43 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
     <h5>Sponsors of UCLA UniCamp</h4>
     <div class='logo-table logo-table--3col'>
       <div class='logo-table__logo'>
-        <img
-        alt='Los Angeles Times'
-        src='<?php echo get_template_directory_uri(); ?>/images/logos/latimes-logo.png' />
+        <a href='http://www.mccormickfoundation.org/page.aspx?pid=674'>
+          <img
+          alt='Los Angeles Times'
+          src='<?php echo get_template_directory_uri(); ?>/images/logos/latimes-logo.png' />
+        </a>
       </div>
       <div class='logo-table__logo'>
-        <img
-        alt='Robert R. McCormick Foundation'
-        src='<?php echo get_template_directory_uri(); ?>/images/logos/mccormick-logo.png' />
+        <a href='http://donate.mccormickfoundation.org/'>
+          <img
+          alt='Robert R. McCormick Foundation'
+          src='<?php echo get_template_directory_uri(); ?>/images/logos/mccormick-logo.png' />
+        </a>
       </div>
       <div class='logo-table__logo'>
-        <img
-        alt="Children's Hospital, Los Angeles"
-        src='<?php echo get_template_directory_uri(); ?>/images/logos/chla-logo.jpg' />
+        <a href='http://www.chla.org/diabetes-and-obesity-program'>
+          <img
+          alt="Children's Hospital, Los Angeles"
+          src='<?php echo get_template_directory_uri(); ?>/images/logos/chla-logo.jpg' />
+        </a>
       </div>
     </div>
     <div class='expand expand--collapsed'>
       <div class='expand__content'>
         <div class='logo-table logo-table--3col'>
           <div class='logo-table__logo'>
-            <img
-            alt='Los Angeles Times'
-            src='<?php echo get_template_directory_uri(); ?>/images/logos/latimes-logo.png' />
+            <a href='http://www.projectgradla.org/'>
+              <img
+              alt='Project Grad'
+              src='<?php echo get_template_directory_uri(); ?>/images/logos/project-grad.jpg' />
+            </a>
           </div>
           <div class='logo-table__logo'>
-            <img
-            alt='Robert R. McCormick Foundation'
-            src='<?php echo get_template_directory_uri(); ?>/images/logos/mccormick-logo.png' />
-          </div>
-          <div class='logo-table__logo'>
-            <img
-            alt="Children's Hospital, Los Angeles"
-            src='<?php echo get_template_directory_uri(); ?>/images/logos/chla-logo.jpg' />
+            <a href='http://thevillagenation.com/'>
+              <img
+              alt='Village Nation'
+              src='<?php echo get_template_directory_uri(); ?>/images/logos/village-nation.jpg' />
+            </a>
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@ $continuum-of-care-transform: translateY(-50%) translateX(-50%);
   top: 50%;
   transform: $continuum-of-care-transform;
   margin-top: 8%;
-  @media $medium-up {
+  @media #{$medium-up} {
     height: 100vh;
   }
 }
