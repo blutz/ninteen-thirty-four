@@ -1,10 +1,10 @@
-#contact-block {
+.contact-block {
   background-image: url($path_images+'/samples/sweet-pea-2.jpg');
 }
-#contact-block textarea {
+.contact-block textarea {
   height: 200px;
 }
-#contact-block h3 {
+.contact-block h3 {
   &, & a {
     color: white;
   }
@@ -12,13 +12,13 @@
     text-decoration: underline;
   }
 }
-#contact-block blockquote {
+.contact-block blockquote {
   background-color: $color-overlay-dark;
   &, & p {
     color: white;
   }
 }
-#contact-block label {
+.contact-block label {
   background-color: $color-overlay-dark;
   color: white;
   padding: 4px;
@@ -27,17 +27,17 @@
   bottom: -1px;
   left: 1px;
 }
-#contact-block label > span {
+.contact-block label > span {
   opacity: 0.5;
   display: inline-block;
   margin-left: 5px;
 }
-#contact-block .contact-form textarea,
-#contact-block .contact-form input[type=email],
-#contact-block .contact-form input[type=text] {
+.contact-block .contact-form textarea,
+.contact-block .contact-form input[type=email],
+.contact-block .contact-form input[type=text] {
   width: 100%;
 }
-#contact-block input[type='submit'] {
+.contact-block input[type='submit'] {
   @extend .button;
   width: 100%;
 }

@@ -162,7 +162,8 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
   </div>
 </section>
 
-<section class='photo-block' id='contact-block'>
+<section class='photo-block contact-block'
+style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/home/contact-us-filtered.jpg")'>
   <div class='row content-row'>
     <div class='medium-12 columns'>
       <h2>Contact us</h2>
