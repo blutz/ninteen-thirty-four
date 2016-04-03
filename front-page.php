@@ -1,10 +1,11 @@
 <?php get_header(); ?>
 
-<section class='photo-block' id='test-block'>
+<section class='photo-block' id='test-block'
+style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg")'>
   <div class='photo-block__content'>
     <h2>Apply for UCLA UniCamp</h2>
-    <h4>Apps due: Friday 7th week<br />www.unicamp.org/apply</h4>
-    <a class='button button--homepage'>Learn More &rarr;</a>
+    <h4>Applications open April 11</h4>
+    <a class='button button--homepage' href='/apply'>Learn More &rarr;</a>
   </div>
 </section>
 
