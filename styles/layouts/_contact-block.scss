@@ -32,6 +32,10 @@
   display: inline-block;
   margin-left: 5px;
 }
+#contact-block .contact-form input[type=email],
+#contact-block .contact-form input[type=text] {
+  width: 100%;
+}
 #contact-block input[type='submit'] {
   @extend .button;
   width: 100%;
