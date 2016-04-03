@@ -169,7 +169,7 @@ style='background-image: url(<? echo get_template_directory_uri(); ?>/images/sam
 
 <section
 class='photo-block'
-style='background-image: url(<? echo get_template_directory_uri(); ?>/images/samples/water-coyote-4.jpg'>
+style='background-image: url(<? echo get_template_directory_uri(); ?>/images/photos/programs/unicorps.jpg'>
   <div class='photo-block__content'>
     <h2>UniCorps</h2>
     <h4>Service Learning &amp; Leadership Development</h4>
@@ -186,7 +186,7 @@ style='background-image: url(<? echo get_template_directory_uri(); ?>/images/sam
 
 <section
 class='photo-block'
-style='background-image: url(<? echo get_template_directory_uri(); ?>/images/samples/water-coyote-3.jpg'>
+style='background-image: url(<? echo get_template_directory_uri(); ?>/images/photos/programs/climb.jpg'>
   <div class='photo-block__content'>
     <h2>C.L.I.M.B.</h2>
     <h4>Core Lessons in Mind &amp; Body</h4>

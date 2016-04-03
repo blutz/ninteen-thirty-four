@@ -42,11 +42,11 @@
       <div class='footer__contact__address'>
         <strong>UCLA UniCamp Office</strong><br />
         2131 John Wooden Center<br />
-        Los Angeles, CA 90095
+        Los Angeles, CA 90095-1612
       </div>
       <div class='footer__contact__phone'>
-        310.208.8252 (UCLA)<br />
-        310.824.1948 (fax)
+        310.208.UCLA<br />
+        844.UNICAMP
       </div>
     </div>
     <div class='footer__social medium-3 columns'>

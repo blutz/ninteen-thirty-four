@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 
-<section class='photo-block' id='test-block'
+<section class='photo-block'
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg")'>
   <div class='photo-block__content'>
     <h2>Apply for UCLA UniCamp</h2>
@@ -9,7 +9,8 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
   </div>
 </section>
 
-<section class='photo-block' id='test-block-2'>
+<section class='photo-block'
+style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/official-charity.jpg")'>
   <div class='photo-block__content'>
     <h2>UCLA Student's Official Philanthropy</h2>
     <h4>UniCamp is an indepently funded 501(c)3 that annually links 500 UCLA student volunteers with over 1,200 urban LA youth.</h4>
@@ -18,7 +19,9 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
         More <i class='expand__button__icon'></i>
       </a>
       <div class='expand__content'>
-        Content to show on expand
+        <p>
+          UCLA UniCamp is the official philanthropy of the Students of UCLA. UniCamp is an independently funded non-profit that connects UCLA with the community. Each year, UCLA UniCamp inspires over 1,200 children from urban communities to envision brighter futures by sending them, along with 450 student volunteers, to its residential outdoor summer camp. Because of  UniCamp, both volunteers and campers have a chance to: Lead, Play, Learn.
+        </p>
       </div>
     </div>
     <blockquote class='photo-block__blockquote'>
@@ -28,34 +31,36 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
   </div>
 </section>
 
-<section class='photo-block' id='test-block-3'>
-  <div class='photo-block__content'>
-    <h2>Serving LA youth since 1928</h2>
-    <h4>UniCamp has served over 60,000 youth and over 10,000 volunteers over the past 80 years.</h4>
-    <a class='button button--homepage'>Learn More</a>
-  </div>
-</section>
-
 <section class='photo-block continuum-of-care'
+style='background-image: url("<?php echo get_template_directory_uri(); ?>/images/photos/home/coc-background-filtered.jpg")'
 data-blocked-animation
 data-blocked-animation-dead-zone='700'
 data-blocked-animation-blocks='4'>
   <div class='continuum-of-care__fixed' data-fixed-block>
     <h2 class='continuum-of-care__header'>UCLA UniCamp's "Continuum of Care"</h2>
     <img class='continuum-of-care-block__logo'
-    src="<?php echo get_template_directory_uri(); ?>/images/samples/continuum-of-care.svg" />
+    src="<?php echo get_template_directory_uri(); ?>/images/photos/home/coc-circle.png" />
     <span class='continuum-of-care-block__text continuum-of-care-block__text--animation1'>
       "Creating the opportunity for today's kids from underserved communities to become UCLA UniCamp campers&hellip;"
     </span>
     <span class='continuum-of-care-block__text continuum-of-care-block__text--animation2'>
-      "Enabling today's campers to become tomorrow's Student Volunteers&hellip;"
+      "&hellip;Enabling today's campers to become tomorrow's Student Volunteers&hellip;"
     </span>
     <span class='continuum-of-care-block__text continuum-of-care-block__text--animation3'>
-      "Empowering today's UCLA Student Volunteers to become tomorrow's community leaders&hellip;"
+      "&hellip;Empowering today's UCLA Student Volunteers to become tomorrow's community leaders&hellip;"
     </span>
     <span class='continuum-of-care-block__text continuum-of-care-block__text--animation4'>
-      "Creating opportunities for Community Leaders to contribute to the successful development of today's underserved kids."
+      "&hellip;Creating opportunities for Community Leaders to contribute to the successful development of today's underserved kids."
     </span>
+  </div>
+</section>
+
+<section class='photo-block'
+style='background-image: url("<?php echo get_template_directory_uri(); ?>/images/photos/home/history.jpg")'>
+  <div class='photo-block__content'>
+    <h2>Serving LA youth since 1928</h2>
+    <h4>UniCamp has served over 60,000 youth and over 10,000 volunteers over the past 80 years.</h4>
+    <a class='button button--homepage'>Learn More &rarr;</a>
   </div>
 </section>
 

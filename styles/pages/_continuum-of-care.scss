@@ -1,5 +1,4 @@
 .continuum-of-care {
-  background-image: url($path_images+'/samples/water-coyote-1.jpg');
   background-attachment: fixed;
   height: $height-photo-block*2;
   overflow: hidden;
@@ -7,7 +6,7 @@
 }
 .continuum-of-care__fixed {
   position: relative;
-  height: 100vh;
+  height: 80vh;
   padding: 50px;
 }
 .continuum-of-care__header {
@@ -16,7 +15,6 @@
 }
 $continuum-of-care-transform: translateY(-50%) translateX(-50%);
 .continuum-of-care-block__logo {
-  height: 100vh;
   display: block;
   margin: auto;
   transition: 0.5s transform;
@@ -24,13 +22,18 @@ $continuum-of-care-transform: translateY(-50%) translateX(-50%);
   left: 50%;
   top: 50%;
   transform: $continuum-of-care-transform;
+  margin-top: 8%;
+  @media $medium-up {
+    height: 100vh;
+  }
 }
 .continuum-of-care-block__text {
   @extend h4;
+  margin-top: 8%;
   opacity: 0;
   transition: 0.5s opacity;
   position: absolute;
-  width: 40vw;
+  width: 30vw;
   display: block;
   left: 50%;
   top: 50%;
