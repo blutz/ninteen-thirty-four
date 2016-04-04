@@ -115,21 +115,21 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
     <h5>Sponsors of UCLA UniCamp</h4>
     <div class='logo-table logo-table--3col'>
       <div class='logo-table__logo'>
-        <a href='http://www.mccormickfoundation.org/page.aspx?pid=674'>
+        <a href='http://www.mccormickfoundation.org/page.aspx?pid=674' target='_blank'>
           <img
           alt='Los Angeles Times'
           src='<?php echo get_template_directory_uri(); ?>/images/logos/latimes-logo.png' />
         </a>
       </div>
       <div class='logo-table__logo'>
-        <a href='http://donate.mccormickfoundation.org/'>
+        <a href='http://donate.mccormickfoundation.org/' target='_blank'>
           <img
           alt='Robert R. McCormick Foundation'
           src='<?php echo get_template_directory_uri(); ?>/images/logos/mccormick-logo.png' />
         </a>
       </div>
       <div class='logo-table__logo'>
-        <a href='http://www.chla.org/diabetes-and-obesity-program'>
+        <a href='http://www.chla.org/diabetes-and-obesity-program' target='_blank'>
           <img
           alt="Children's Hospital, Los Angeles"
           src='<?php echo get_template_directory_uri(); ?>/images/logos/chla-logo.jpg' />
@@ -140,14 +140,14 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
       <div class='expand__content'>
         <div class='logo-table logo-table--3col'>
           <div class='logo-table__logo'>
-            <a href='http://www.projectgradla.org/'>
+            <a href='http://www.projectgradla.org/' target='_blank'>
               <img
               alt='Project Grad'
               src='<?php echo get_template_directory_uri(); ?>/images/logos/project-grad.jpg' />
             </a>
           </div>
           <div class='logo-table__logo'>
-            <a href='http://thevillagenation.com/'>
+            <a href='http://thevillagenation.com/' target='_blank'>
               <img
               alt='Village Nation'
               src='<?php echo get_template_directory_uri(); ?>/images/logos/village-nation.jpg' />

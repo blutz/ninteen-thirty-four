@@ -3,5 +3,6 @@
 !function(){"use strict";var o=jQuery;o("[data-fixed-block]").each(function(n,t){var c=o(t),r=c.parent();o(window).scroll(function(){var o=window.scrollY-r.offset().top;0>o&&(o=0),c.css({"margin-top":o})})})}();
 !function(){"use strict";var e=jQuery;e(".hover-image").each(function(o,t){var i=e(t).find(".hover-image__text__blurb");e(t).hover(function(){i.stop().show(250)},function(){i.stop().hide(250)})})}();
 !function(){"use strict";var t=jQuery;t("[data-rotate-with-scroll]").each(function(o,r){t(window).scroll(function(){var o=window.scrollY/2;t(r).css({transform:"rotate("+o+"deg)"})})})}();
+!function(){"use strict";jQuery(document).foundation()}();
 !function(){"use strict";var o=jQuery,n=[];o(document).ready(function(){o("[data-steady-background]").each(function(c,s){n.push({el:o(s),offset:o(s).scrollTop()}),o(s).css("background-position-y",0)})}),o(window).scroll(function(){var o=window.scrollY;n.forEach(function(n){var c=n.offset;n.el.css("background-position-y",o-c)})})}();
 //# sourceMappingURL=/wp-content/themes/ninteen-thirty-four/main.js.map
