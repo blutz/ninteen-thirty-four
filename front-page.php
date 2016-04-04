@@ -73,7 +73,7 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
     <div class='hover-image hover-image--large'>
       <img
       class='hover-image__image'
-      src='<?php echo get_template_directory_uri(); ?>/images/samples/water-coyote-1.jpg' />
+      src='<?php echo get_template_directory_uri(); ?>/images/photos/home/classic-camp.jpg' />
       <div class='hover-image__text'>
         <div class='hover-image__text__title'>
           Classic UniCamp. Ages&nbsp;10&#8209;14
@@ -94,7 +94,7 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
     <div class='hover-image hover-image--large'>
       <img
       class='hover-image__image'
-      src='<?php echo get_template_directory_uri(); ?>/images/samples/water-coyote-1.jpg' />
+      src='<?php echo get_template_directory_uri(); ?>/images/photos/home/ocp.jpg' />
       <div class='hover-image__text'>
         <div class='hover-image__text__title'>
           Older Camper Programs. Ages&nbsp;15&#8209;17

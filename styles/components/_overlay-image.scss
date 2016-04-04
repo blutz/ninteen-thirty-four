@@ -1,0 +1,24 @@
+.overlay-image {
+  position: relative;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+.overlay-image__photo {
+  width: 100%;
+}
+.overlay-image__text {
+  color: white;
+}
+.overlay-image__text {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  background-color: $color-overlay-dark;
+  top: 0;
+  left: 15px;
+  right: 15px;
+  bottom: 0;
+  font-size: 1.4rem;
+}
