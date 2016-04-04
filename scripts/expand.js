@@ -8,12 +8,16 @@ var ANIMATION_SPEED = 250
 var ExpandWidget = function(el) {
   this.el = $(el)
   this.toggleButton = this.el.find('.'+BUTTON_CLASS)
-  this.contentContainer = this.el.find('.'+CONTENT_CLASS)
+  var contentContainerId = this.el.data('expand')
+  this.contentContainer = $('#'+contentContainerId)
+  if (!this.contentContainer.length)
+    this.contentContainer = this.el.find('.'+CONTENT_CLASS)
   // Make sure the DOM is set up correctly to start
   this.isVisible() ? this.show() : this.hide()
   this.setHandlers()
 }
 ExpandWidget.prototype.setHandlers = function() {
+  console.log(this.toggleButton)
   this.toggleButton.click(this.toggle.bind(this))
 }
 ExpandWidget.prototype.toggle = function(e) {

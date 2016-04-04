@@ -7,6 +7,7 @@ var uglify = require('gulp-uglify')
 var concat = require('gulp-concat')
 var plumber = require('gulp-plumber')
 var iife = require('gulp-iife')
+var concat = require('gulp-concat-sourcemap')
 
 AUTOPREFIXER_OPTIONS = {
   browsers: ['last 2 versions', '> 5%'],
