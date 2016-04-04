@@ -217,20 +217,20 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   </div>
 </section>
 
-<section
+<section id='ocp'
 class='photo-block'
-style='background-image: url(<? echo get_template_directory_uri(); ?>/images/samples/sweet-pea-1.jpg'>
+style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/programs/ocp.jpg")'>
   <div class='photo-block__content'>
     <h2>Older Camper Programs</h2>
     <p class='explainer'>
-      Specialty camps are available for campers ages 15-17 and are designed to push campers out of their comfort zone and challenge them to become leaders within UniCamp. Participats are taught program specific skills and asked to take more leadership responsibilities around the campsite.
+      Speciality camps are available for campers ages 15 - 17 and are designed to push campers out of their comfort zone and challenge them to become leaders within UniCamp.  Participants are taught program specific skills and asked to take more leadership responsibilities around the campsite.
     </p>
   </div>
 </section>
 
 <section
 class='photo-block'
-style='background-image: url(<? echo get_template_directory_uri(); ?>/images/samples/sweet-pea-4.jpg'>
+style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/programs/wall.jpg")'>
   <div class='photo-block__content'>
     <h2>W.A.L.L.</h2>
     <h4>Wilderness Adventures in Leadership and Learning</h4>
@@ -239,7 +239,7 @@ style='background-image: url(<? echo get_template_directory_uri(); ?>/images/sam
         Learn More <i class='expand__button__icon'></i>
       </a>
       <div class='expand__content'>
-        WALL campers embark along with their volunteer advisors on a journey to summit Mount San Gorgonio, the tallest peak in Southern California. Through WALL, we embrace the beauty of nature, the skills needed for survival in the wilderness, and the challenges that come with the journey. At the end of their long journey, the WALL participants leave with a newfound appreciateion for the environment, stronger leadership skills, and mindfulness for how they live.
+        WALL is an Older Camper Program that stands for Wilderness Adventures in Leadership and Learning. Our campers embark along with their volunteer advisors on a journey to summit Mount San Gorgonio, the tallest peak in Southern California. Through WALL, we embrace the beauty of nature, the skills needed for survival in the wilderness, and the challenges that come with the journey. At the end of their long journey, the WALL participants leave with a newfound appreciation for the environment, stronger leadership skills, and mindfulness for how they live.
       </div>
     </div>
   </div>
@@ -247,7 +247,7 @@ style='background-image: url(<? echo get_template_directory_uri(); ?>/images/sam
 
 <section
 class='photo-block'
-style='background-image: url(<? echo get_template_directory_uri(); ?>/images/photos/programs/unicorps.jpg'>
+style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/programs/unicorps.jpg")'>
   <div class='photo-block__content'>
     <h2>UniCorps</h2>
     <h4>Service Learning &amp; Leadership Development</h4>
@@ -256,7 +256,7 @@ style='background-image: url(<? echo get_template_directory_uri(); ?>/images/pho
         Learn More <i class='expand__button__icon'></i>
       </a>
       <div class='expand__content'>
-        UniCorps focuses on leadership, service learning, and educational awareness. Campers will engage in community service projects that will improve upon the natural beauty and aesthetic of the UniCamp campsite. Campers also lead younger campers in outcome-based programs. Campers who complete this program earn 40 hours of community service towards their high school graduation requirement. Led by UCLA students and alumni, UniCorps provides the perfect opportunity for your child to learn how to get to college from those who have already made it.
+        UniCorps is an Older Camper Program that focuses on leadership, service learning, and educational awareness. Campers will engage in community service projects that will improve upon the natural beauty and aesthetic of the UniCamp campsite. Campers also lead younger campers in outcome based programs. Campers who complete this program earn 40 hours of community service towards their high school graduation requirement. Led by UCLA students and alumni, UniCorps provides the perfect opportunity for your child to learn how to get to college from those who have already made it.
       </div>
     </div>
   </div>
@@ -264,7 +264,7 @@ style='background-image: url(<? echo get_template_directory_uri(); ?>/images/pho
 
 <section
 class='photo-block'
-style='background-image: url(<? echo get_template_directory_uri(); ?>/images/photos/programs/climb.jpg'>
+style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/programs/climb.jpg")'>
   <div class='photo-block__content'>
     <h2>C.L.I.M.B.</h2>
     <h4>Core Lessons in Mind &amp; Body</h4>
@@ -273,7 +273,7 @@ style='background-image: url(<? echo get_template_directory_uri(); ?>/images/pho
         Learn More <i class='expand__button__icon'></i>
       </a>
       <div class='expand__content'>
-        Our campers learn about the fundamentals and safety of rock climbing as a platform to experience self-growth. It focuses around the 5 pillars of rock climbing to teach campers responsibility, trust, and mindfulness. Along with learning how to climb, campers will exercise new skills in leadership and communication as they teach the basics of climbing to younger campers at the Alpine Tower. The C.L.I.M.B. program culminates with an off-site, outdoor climb which allows them to fully appreciate and utilize everything they have learned through the program.
+        Core Lessons in Mind &amp; Body is an Older Camper Program that offers an opportunity for Older Campers to learn about the fundamentals and safety of rock climbing as a platform to experience self-growth.It focuses around the 5 pillars of rock climbing to teach campers responsibility, trust, and mindfulness. Along with learning how to climb, campers will exercise new skills in leadership and communication as they teach the basics of climbing to younger campers at the Alpine Tower. The C.L.I.M.B. program culminates with an off-site, outdoor climb which allows them to fully appreciate and utilize everything they have learned through the program.
       </div>
     </div>
   </div>
