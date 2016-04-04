@@ -25,18 +25,20 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
 </section>
 <section class='expand-block' id='agencyExpectationsExpand'>
   <div class='row'>
-    <h5>Cost Sharing</h5>
-    <p class='explainer'>
-      Depending on the program, sending a camper to UCLA UniCamp costs $600 - $1,000. As we are investing in your programs’ participants we expect agencies are open to contributing up to half of the cost of sending a camper to UCLA UniCamp. ~$300 - $500. This can be either via direct contributions or pass through funds from grants.
-    </p>
-    <h5>Recruitment</h5>
-    <p class='explainer'>
-      Rather than having a first come, first serve based program, we expect agencies to select campers who have a strong desire to attend UCLA UniCamp and who may receive the most from the experience.
-    </p>
-    <h5>Statistics</h5>
-    <p class='explainer'>
-      We will work with agencies to agree on the best forms of evaluation for each agency. It is vital for UCLA UniCamp to see what kind of an impact our program is having outside of the week at camp. We rely on agencies that have year round interactions with campers to provide additional data.
-    </p>
+    <div class='medium-12 columns'>
+      <h5>Cost Sharing</h5>
+      <p class='explainer'>
+        Depending on the program, sending a camper to UCLA UniCamp costs $600 - $1,000. As we are investing in your programs’ participants we expect agencies are open to contributing up to half of the cost of sending a camper to UCLA UniCamp. ~$300 - $500. This can be either via direct contributions or pass through funds from grants.
+      </p>
+      <h5>Recruitment</h5>
+      <p class='explainer'>
+        Rather than having a first come, first serve based program, we expect agencies to select campers who have a strong desire to attend UCLA UniCamp and who may receive the most from the experience.
+      </p>
+      <h5>Statistics</h5>
+      <p class='explainer'>
+        We will work with agencies to agree on the best forms of evaluation for each agency. It is vital for UCLA UniCamp to see what kind of an impact our program is having outside of the week at camp. We rely on agencies that have year round interactions with campers to provide additional data.
+      </p>
+    </div>
   </div>
 </section>
 
