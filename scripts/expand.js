@@ -17,7 +17,6 @@ var ExpandWidget = function(el) {
   this.setHandlers()
 }
 ExpandWidget.prototype.setHandlers = function() {
-  console.log(this.toggleButton)
   this.toggleButton.click(this.toggle.bind(this))
 }
 ExpandWidget.prototype.toggle = function(e) {

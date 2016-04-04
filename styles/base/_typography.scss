@@ -7,8 +7,18 @@ h4 {
   color: $primary-color-alt;
 }
 h5 {
+  font-weight: 500;
+  color: $primary-color-heading;
+  font-size: 1.4rem;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.small-title {
+  display: block;
+  text-align: center;
   font-family: $font-primary;
   font-weight: normal;
+  font-size: 1.25rem;
 }
 .explainer {
   font-size: 1.4rem;

@@ -112,7 +112,7 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
 
 <section class='row content-row'>
   <div class='medium-12 columns'>
-    <h5>Sponsors of UCLA UniCamp</h4>
+    <span class='small-title'>Sponsors of UCLA UniCamp</span>
     <div class='logo-table logo-table--3col'>
       <div class='logo-table__logo'>
         <a href='http://www.mccormickfoundation.org/page.aspx?pid=674' target='_blank'>
