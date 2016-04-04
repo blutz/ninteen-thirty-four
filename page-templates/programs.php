@@ -228,7 +228,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   </div>
 </section>
 
-<section
+<section id='wall'
 class='photo-block'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/programs/wall.jpg")'>
   <div class='photo-block__content'>
@@ -245,7 +245,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   </div>
 </section>
 
-<section
+<section id='unicorps'
 class='photo-block'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/programs/unicorps.jpg")'>
   <div class='photo-block__content'>
@@ -262,7 +262,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   </div>
 </section>
 
-<section
+<section id='climb'
 class='photo-block'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/programs/climb.jpg")'>
   <div class='photo-block__content'>
