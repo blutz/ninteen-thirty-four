@@ -76,7 +76,7 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
       src='<?php echo get_template_directory_uri(); ?>/images/photos/home/classic-camp.jpg' />
       <div class='hover-image__text'>
         <div class='hover-image__text__title'>
-          Classic UniCamp. Ages&nbsp;10&#8209;14
+          Classic UniCamp.<br />Ages&nbsp;10&#8209;14
         </div>
         <div class='hover-image__text__blurb' style='display: none'>
           <p>
@@ -97,7 +97,7 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
       src='<?php echo get_template_directory_uri(); ?>/images/photos/home/ocp.jpg' />
       <div class='hover-image__text'>
         <div class='hover-image__text__title'>
-          Older Camper Programs. Ages&nbsp;15&#8209;17
+          Older Camper Programs.<br />Ages&nbsp;15&#8209;17
         </div>
         <div class='hover-image__text__blurb' style='display: none'>
           <p>
