@@ -63,7 +63,7 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
 
 <section class='row content-row'>
   <div class='medium-12 columns'>
-    <span class='small-title'>Sponsors of UCLA UniCamp</span>
+    <span class='small-title'>Partner Agencies</span>
     <div class='logo-table logo-table--3col'>
       <div class='logo-table__logo'>
         <a href='http://www.chla.org/diabetes-and-obesity-program' target='_blank'>
