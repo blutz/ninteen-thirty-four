@@ -30,13 +30,13 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   </div>
   <div class='medium-4 columns overlay-image'>
     <img class='overlay-image__photo' src='<?php echo get_template_directory_uri(); ?>/images/photos/volunteers-alumni/CampfireGalaUCLAColors.jpg' />
-    <div class='overlay-image__text'>
+    <a href='/gala' class='overlay-image__text'>
       <span>
         <strong>The Campfire Gala</strong>
         <br />
         May 7, 2016
       </span>
-    </div>
+    </a>
   </div>
   <div class='medium-4 columns overlay-image'>
     <img class='overlay-image__photo' src='<?php echo get_template_directory_uri(); ?>/images/photos/volunteers-alumni/FamilyCampWeekend.JPG' />
