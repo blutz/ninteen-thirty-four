@@ -44,7 +44,7 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
 
 <section
 class='photo-block'
-style='background-iage: url("<?php echo get_template_directory_uri(); ?>/images/photos/agencies/Agencies.Benefits.jpg")'>
+style='background-image: url("<?php echo get_template_directory_uri(); ?>/images/photos/agencies/Agencies.Benefits.jpg")'>
   <div class='photo-block__content'>
     <h2>Agency Benefits</h2>
     <p class='explainer'>Agencies will see great value in joining the UCLA UniCamp family. Becoming a partner agency means you will have a custom UniCamp experience built for you. Your week of camp will be tailored to your agency specific age range and programs. We tell our partner agencies to think of this week of camp as a continuation of their program.</p>
