@@ -8,6 +8,10 @@ $height-photo-block: 700px;
   transform: transalte3d(0,0,0);
   background-attachment: fixed;
 }
+.photo-block {
+  font-size: 1.4rem;
+  line-height: 1.3em;
+}
 .photo-block__content {
   color: white;
   background-color: $color-overlay-dark;
