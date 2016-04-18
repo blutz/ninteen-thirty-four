@@ -1,80 +1,106 @@
 $height_logo: 100px;
 
-header {
-  position: fixed;
-  height: 100px;
-  margin-top: 15px;
-  margin-left: 15px;
-  font-family: 'Code Pro';
-  z-index: z('header');
-}
-.header__logo {
-  height: 100%;
-  float: left;
-  z-index: z('header-logo');
-  position: relative;
-}
-.header__menu-container {
-  z-index: z('header-items');
-  position: absolute;
-  top: calc(50% - 2px);
-  height: 50%;
-  margin-left: $height_logo/2;
-  padding-left: $height_logo/2;
-  padding-right: 5px;
-  white-space: nowrap;
-  transform: translateY(-50%);
-  overflow: hidden;
-}
-.header__items {
-  background-color: rgba(255,255,255,0.7);
-  list-style: none;
-  margin: 0;
-  padding-top: 25px;
-  padding-left: 20px;
-  position: relative;
-  left: -20px;
-  transform: translateX(0);
-  transition: transform 0.25s ease-in-out;
-}
-.header__menu-container--closed .header__items {
-  transform: translateX(-100%);
-}
-.header__menu-container__expand {
-  cursor: pointer;
-  color: $primary-color;
-  z-index: z('header-menu-prompt');
-  position: absolute;
-  top: calc(50% - 2px);
-  height: 50%;
-  margin-left: $height_logo/2 * -1;
-  padding: 5px;
-  padding-right: 10px;
-  padding-left: $height_logo/2;
-  white-space: nowrap;
-  transform: translateY(-50%);
-  background-color: rgba(255,255,255,0.7);
-  height: auto;
-  opacity: 0;
-  transition: 0.25s opacity ease-in-out;
-}
-.header__menu-container--closed .header__menu-container__expand {
-  opacity: 1;
-}
-.header__items .menu-item {
-  display: inline-block;
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-right: 15px;
-}
-.header__items .current-menu-item {
-  font-weight: bold;
-  & a::before {
-    content: '>';
-    margin-right: 3px;
+@include breakpoint(large up) {
+  header {
+    position: fixed;
+    height: 100px;
+    margin-top: 15px;
+    margin-left: 15px;
+    font-family: 'Code Pro';
+    z-index: z('header');
+  }
+  .header__logo {
+    height: 100%;
+    float: left;
+    z-index: z('header-logo');
+    position: relative;
+  }
+  .header__menu-container {
+    z-index: z('header-items');
+    position: absolute;
+    top: calc(50% - 2px);
+    height: 50%;
+    margin-left: $height_logo/2;
+    padding-left: $height_logo/2;
+    padding-right: 5px;
+    white-space: nowrap;
+    transform: translateY(-50%);
+    overflow: hidden;
+  }
+  .header__items {
+    background-color: rgba(255,255,255,0.7);
+    list-style: none;
+    margin: 0;
+    padding-top: 25px;
+    padding-left: 20px;
+    position: relative;
+    left: -20px;
+    transform: translateX(0);
+    transition: transform 0.25s ease-in-out;
+  }
+  .header__menu-container--closed .header__items {
+    transform: translateX(-100%);
+  }
+  .header__menu-container__expand {
+    cursor: pointer;
+    color: $primary-color;
+    z-index: z('header-menu-prompt');
+    position: absolute;
+    top: calc(50% - 2px);
+    height: 50%;
+    margin-left: $height_logo/2 * -1;
+    padding: 5px;
+    padding-right: 10px;
+    padding-left: $height_logo/2;
+    white-space: nowrap;
+    transform: translateY(-50%);
+    background-color: rgba(255,255,255,0.7);
+    height: auto;
+    opacity: 0;
+    transition: 0.25s opacity ease-in-out;
+  }
+  .header__menu-container--closed .header__menu-container__expand {
+    opacity: 1;
+  }
+  .header__items .menu-item {
+    display: inline-block;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: 15px;
+  }
+  .header__items .current-menu-item {
+    font-weight: bold;
+    & a::before {
+      content: '>';
+      margin-right: 3px;
+    }
+  }
+  .header__items .menu-item a:hover {
+    text-decoration: none;
   }
 }
-.header__items .menu-item a:hover {
-  text-decoration: none;
+@include breakpoint(medium down) {
+  header {
+    padding: 20px;
+  }
+  .header__logo {
+    display: block;
+    margin: auto;
+    max-width: 150px;
+  }
+  .header__items {
+    margin-top: 10px;
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+    text-align: center;
+  }
+  .header__items .menu-item {
+    display: inline-block;
+    margin: 10px;
+  }
+  .header__menu-container__expand {
+    display: none;
+  }
 }
