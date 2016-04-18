@@ -39,6 +39,7 @@ function setStateFromFormSubmit(opts) {
   opts = opts || {}
   var context = {}
   var code = opts.code || els.code.val()
+  code = code.toLowerCase()
   context.code = code
   if (APPLICATION_CODES[code]) {
     context.activePage = 'details'
