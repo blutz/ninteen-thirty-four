@@ -24,7 +24,7 @@ $continuum-of-care-margin: 150px;
   top: 50%;
   transform: $continuum-of-care-transform;
   margin-top: $continuum-of-care-margin;
-  @media #{$medium-up} {
+  @include breakpoint(medium up) {
     height: 90vh;
   }
 }

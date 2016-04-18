@@ -21,7 +21,7 @@ $height-photo-block: 850px;
   position: absolute;
   bottom: 0;
   padding: 15px;
-  @media #{$medium-up} {
+  @include breakpoint(medium up) {
     padding-left: 10%;
     padding-right: 10%;
   }
