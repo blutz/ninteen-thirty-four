@@ -116,12 +116,12 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           <span aria-hidden="true">&times;</span>
         </button>
         <h3>Session 4</h3>
-        <h4>Literacy Intervention/Addressing the Summer Learning Loss</h4>
+        <h4>Academic Enrichment/Addressing the Summer Learning Loss/Social Justice Education</h4>
         <p>
           <strong>Organizational Partner:</strong> UCLA Community School/LA Times and McCormick Fund
         </p>
         <p>
-          Entering it’s fourth year, AcademiCamp is a four week program focusing on addressing the summer learning loss. Before attending camp, campers participate in a three week literacy intervention day camp to enhance reading skills. The resident camp program focuses on creating an educational setting in the outdoors and reinforces the skills they learned during the day camp program.
+          Entering it’s fourth year, AcademiCamp is part of a seven week program focusing on addressing the summer learning loss at Horace Mann Middle School as part of the Mann Summer Institute. Before attending camp, campers participate in a rigorous four week academic intervention day camp to enhance reading, writing and math skills. The resident camp program focuses on creating an educational setting in the outdoors, reinforcing the skills they learned during the day camp program, and creating a community among the students and teachers of Mann. After camp, the students will return to Horace Mann Middle for a host of community enrichment programs.
         </p>
       </div>
 
