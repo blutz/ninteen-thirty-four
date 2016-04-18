@@ -69,7 +69,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
       </span>
     </div>
   </div>
-  <div class='medium-4 columns overlay-image'>
+  <div class='medium-4 columns overlay-image hide-for-small-only'>
     <img class='overlay-image__photo' src='<?php echo get_template_directory_uri(); ?>/images/photos/volunteers-alumni/WOODSEY-NETWORK.jpg' />
   </div>
 </section>

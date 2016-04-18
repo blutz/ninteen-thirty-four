@@ -58,9 +58,9 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
   <div class='medium-12 columns'>
     <h2>Agency RFP</h2>
     <p class='explainer'>
-      If you are interested in becoming a partner agency with UCLA UniCamp please fill out the following form:
+      If you are interested in becoming a partner agency with UCLA UniCamp please contact us.
     </p>
-    <em>Form coming soon &mdash; contact us directly.</em>
+    <!--<em>Form coming soon &mdash; contact us directly.</em>-->
   </div>
 </section>
 
