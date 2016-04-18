@@ -17,7 +17,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   <div class='medium-10 medium-offset-1 columns'>
     <h2>Type your application code</h2>
     <div class='row'>
-      <div class='medium-8 medium-offset-2 columns'>
+      <div class='large-8 large-offset-2 columns'>
         <form id='applicationCodeForm'>
           <div class='input-group apply__code-inputs'>
             <input type='text' class='input-group-field' id='applicationCode' placeholder='Your application code...' required />
