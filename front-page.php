@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 
 <section class='photo-block'
-style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg")'>
+style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg"); background-position-y: top;'>
   <div class='photo-block__content'>
     <h2>Apply for UCLA UniCamp</h2>
     <h4>Applications open April 11</h4>

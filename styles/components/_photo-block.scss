@@ -4,6 +4,7 @@ $height-photo-block: 850px;
   height: $height-photo-block;
   position: relative;
   background-size: cover;
+  background-position: center center;
   transition: 0s linear background-position;
   transform: transalte3d(0,0,0);
   background-attachment: fixed;
