@@ -40,6 +40,9 @@ data-blocked-animation-blocks='4'>
     <h2 class='continuum-of-care__header'>UCLA UniCamp's "Continuum of Care"</h2>
     <img class='continuum-of-care-block__logo'
     src="<?php echo get_template_directory_uri(); ?>/images/photos/home/coc-circle.png" />
+    <span class='continuum-of-care-block__text continuum-of-care-block__text--no-animation'>
+      "Creating the opportunity for today's kids from underserved communities to become UCLA UniCamp campers. Enabling today's campers to become tomorrow's Student Volunteers. Empowering today's UCLA Stuent Volunteers to become tomorrow's community leaders. Creating opportunities for Community Leaders to contribute to the successful development of today's underserved kids."
+    </span>
     <span class='continuum-of-care-block__text continuum-of-care-block__text--animation1'>
       "Creating the opportunity for today's kids from underserved communities to become UCLA UniCamp campers&hellip;"
     </span>

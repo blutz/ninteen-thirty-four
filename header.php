@@ -2,7 +2,7 @@
 <html <?php language_attributes(); ?>>
 <head>
   <meta charset='<?php bloginfo('charset'); ?>' />
-  <!--<meta name='viewport' content='width=device-width' />-->
+  <meta name='viewport' content='width=device-width' />
   <title><? bloginfo('name'); ?><? wp_title('|'); ?></title>
   <link rel="icon" type="image/png" sizes="192x192"  href="<? echo get_template_directory_uri(); ?>/images/favicon-192x192.png">
   <link rel="icon" type="image/png" sizes="32x32" href="<? echo get_template_directory_uri(); ?>/images/favicon-32x32.png">
