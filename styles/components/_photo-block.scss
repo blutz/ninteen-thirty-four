@@ -1,29 +1,39 @@
 $height-photo-block: 850px;
 
 .photo-block {
-  height: $height-photo-block;
-  position: relative;
-  background-size: cover;
-  background-position: center center;
-  transition: 0s linear background-position;
-  transform: transalte3d(0,0,0);
-  background-attachment: fixed;
-}
-.photo-block {
   font-size: 1.4rem;
   line-height: 1.3em;
+  @include breakpoint(large up) {
+    height: $height-photo-block;
+    position: relative;
+    background-size: cover;
+    background-position: center center;
+    transition: 0s linear background-position;
+    background-attachment: fixed;
+  }
+  @include breakpoint(medium down) {
+    background-image: none !important;
+    background-color: $color-overlay-solid;
+  }
 }
+.photo-block__small-image {
+  @include breakpoint(large up) { display: none; }
+}
+
 .photo-block__content {
   color: white;
   background-color: $color-overlay-dark;
   width: 100%;
   text-align: center;
-  position: absolute;
-  bottom: 0;
-  padding: 15px;
-  @include breakpoint(medium up) {
+  @include breakpoint(large up) {
+    position: absolute;
+    bottom: 0;
+    padding: 15px;
     padding-left: 10%;
     padding-right: 10%;
+  }
+  @include breakpoint(medium down) {
+    padding-top: 26px;
   }
 }
 .photo-block__content h2,
@@ -35,7 +45,12 @@ $height-photo-block: 850px;
   border: none;
   color: inherit;
   text-align: right;
-  font-size: 1.1em;
+  @include breakpoint(large up) {
+    font-size: 1.5rem;
+  }
+  @include breakpoint(small down) {
+    font-size: 1.1rem;
+  }
 }
 .photo-block__blockquote__cite {
   font-size: 1em;

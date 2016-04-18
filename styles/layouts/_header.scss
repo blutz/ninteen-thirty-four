@@ -88,6 +88,9 @@ $height_logo: 100px;
     display: block;
     margin: auto;
     max-width: 150px;
+    @include breakpoint(small down) {
+      max-width: 100px;
+    }
   }
   .header__items {
     margin-top: 10px;

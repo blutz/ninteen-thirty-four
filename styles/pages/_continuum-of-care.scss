@@ -13,6 +13,9 @@
   position: relative;
   height: 80vh;
   padding: 50px;
+  @include breakpoint(medium down) {
+    margin-top: 0 !important;
+  }
 }
 .continuum-of-care__header {
   position: relative;

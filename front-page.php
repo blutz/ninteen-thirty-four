@@ -2,6 +2,7 @@
 
 <section class='photo-block'
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg"); background-position-y: top;'>
+  <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg' />
   <div class='photo-block__content'>
     <h2>Apply for UCLA UniCamp</h2>
     <h4>Applications are now open!</h4>
@@ -11,6 +12,7 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
 
 <section id='official-philanthropy' class='photo-block'
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/official-charity.jpg")'>
+  <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/official-charity.jpg' />
   <div class='photo-block__content'>
     <h2>UCLA Student's Official Philanthropy</h2>
     <h4>UniCamp is an indepently funded 501(c)3 that annually links 500 UCLA student volunteers with over 1,200 urban LA youth.</h4>
