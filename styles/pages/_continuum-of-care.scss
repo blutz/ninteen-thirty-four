@@ -14,6 +14,7 @@
   z-index: 1;
 }
 $continuum-of-care-transform: translateY(-50%) translateX(-50%);
+$continuum-of-care-margin: 150px;
 .continuum-of-care-block__logo {
   display: block;
   margin: auto;
@@ -22,14 +23,14 @@ $continuum-of-care-transform: translateY(-50%) translateX(-50%);
   left: 50%;
   top: 50%;
   transform: $continuum-of-care-transform;
-  margin-top: 8%;
+  margin-top: $continuum-of-care-margin;
   @media #{$medium-up} {
-    height: 100vh;
+    height: 90vh;
   }
 }
 .continuum-of-care-block__text {
   @extend h4;
-  margin-top: 8%;
+  margin-top: $continuum-of-care-margin;
   opacity: 0;
   transition: 0.5s opacity;
   position: absolute;
