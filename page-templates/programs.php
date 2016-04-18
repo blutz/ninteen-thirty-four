@@ -101,7 +101,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-4.jpg")'></div>
           <div class='hover-image__text'>
             <div class='hover-image__text__title'>
-              Session 4: Literacy Intervention
+              Session 4: Academic Enrichment
               <br />
               LA Times &amp; McCormick Fund
             </div>
