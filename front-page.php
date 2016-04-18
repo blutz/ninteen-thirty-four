@@ -87,10 +87,7 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
         </div>
         <div class='hover-image__text__blurb' style='display: none'>
           <p>
-            Classic UniCamp serves campers ages 10 - 14 and is our most traditional residential camp program. Campers have the opportunity to explore the outdoors and participate in traditional camp programs such as: archery, arts &amp; crafts, or rec. and also have the chance to push themselves with programs such as: the alpine climbing tower, sailing, or mountain biking.
-          </p>
-          <p>
-            In addition to the traditional camp experience, each Classic UniCamp session partners with a Los Angeles area nonprofit or after-school program to address a specific social initiative. Throughout each camp session there will be special programs to address that week’s initiative.
+            Classic UniCamp serves campers ages 10 - 14 and is our most traditional residential camp program. Campers have the opportunity to explore the outdoors and participate in traditional camp programs such as: archery, arts &amp; crafts, or rec. and also have the chance to push themselves with programs such as: the alpine climbing tower, sailing, or mountain biking. In addition to the traditional camp experience, each Classic UniCamp session partners with a Los Angeles area nonprofit or after-school program to address a specific social initiative. Throughout each camp session there will be special programs to address that week’s initiative.
           </p>
           <a class='button' href='/programs'>Learn more &rarr;</a>
         </div>
@@ -171,11 +168,12 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
 
 <section class='photo-block contact-block'
 style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/home/contact-us-filtered.jpg")'>
+  <img class='photo-block__small-image' src='<?php echo get_template_directory_uri(); ?>/images/photos/home/contact-us-filtered.jpg' />
   <div class='row content-row'>
     <div class='medium-12 columns'>
       <h2>Contact us</h2>
     </div>
-    <div class='medium-5 columns end'>
+    <div class='large-5 columns end'>
       <?php echo do_shortcode("
         [contact-form to='byronlutz@gmail.com' subject='[UniCamp.org Contact Form Submission'][contact-field label='Name' type='name' required='1'/][contact-field label='Email' type='email' required='1'/][contact-field label='How can we help you?' type='textarea' rows='10' required='1'/][/contact-form]");
       ?>

@@ -59,12 +59,23 @@ footer a {
 
 .footer__legal__details {
   color: rgba(255, 255, 255, 0.5);
+  @include breakpoint(small down) {
+    font-size: 0.8rem;
+    padding: 0 10px;
+  }
 }
 .footer__legal__org {
   font-family: $font-secondary;
-  font-size: 1.2rem;
+  @include breakpoint(small down) {
+    font-size: 1.2rem;
+  }
 }
 .footer__legal__org__logo {
   height: 5em;
   vertical-align: bottom;
+  @include breakpoint(small down) {
+    display: block;
+    margin: auto;
+    margin-top: 20px;
+  }
 }
