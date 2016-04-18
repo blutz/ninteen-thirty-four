@@ -48,7 +48,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <h5>Session 4: Literacy Intervention</h5>
         <strong>Organizational partner:</strong> LA Times &amp; McCormick Fund
         <br />
-        <strong>Dates:</strong> July 17 - 24
+        <strong>Dates:</strong> July 16 - 22
         <br />
         <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
       </div>
