@@ -15,7 +15,7 @@ var SESSION_INFO = {
   'session6': {
     'title': 'Session 6: Healthy Lifestyles',
     'subtitle': "Children's Hospital Los Angeles",
-    'formUrl': 'https://docs.google.com/forms/d/17VrW_si8Z4tLyyg03iMPfZE_uNqisEg93UswjPb12iM/viewform?embedded=true'
+    'formId': '1uMB3YMnie2Pt3QibExqsN-SY1xqc3saJrR5cafvLBhQ'
   },
   'session7': {}
 }
@@ -89,7 +89,8 @@ function draw(context) {
   else if (context.activePage == 'details') {
     els.details.find('h2').html(context.sessionDetails.title)
     els.details.find('h4').html(context.sessionDetails.subtitle)
-    els.form[0].src = context.sessionDetails.formUrl
+    var formUrl = 'https://docs.google.com/forms/d/' + context.sessionDetails.formId + '/viewform?embedded=true'
+    els.form[0].src = formUrl
     els.details.show()
   }
 }
