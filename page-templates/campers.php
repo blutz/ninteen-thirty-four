@@ -51,14 +51,18 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
       <h5>Key Dates for UCLA UniCamp’s 2016 Camper Application Process</h5>
       <p class='explainer'>
           Monday April 18, 2016 - Applications Released<br />
-          Monday May 9, 2016 - Applications Date Date<br />
+          Monday May 9, 2016 - Applications Due Date<br />
           Monday May 23, 2016 - All Responses out to Families<br />
           Monday June 6, 2016 - All Registration Packets &amp; Payments Due<br />
       </p>
 
       <h5>Sessions/Programs with Public Camper Spots</h5>
       <p class='explainer'>
-        Coming soon: more information about sessions with public camper spots.
+        Session 3: Community Building/Activism (July 5 - July 10)<br />
+        Session 5: Leadership Development for Urban Youth (July 24 - July 31)<br />
+        Session 6: Healthy Lifestyles (July 31 - August 7)<br />
+        Session 7: Empowerment Through Art (August 7 - August 14)<br />
+        Older Camper Programs (CLIMB, UniCorps, WALL)<br />
       </p>
 
       <a class='button large' href='/apply'>
