@@ -4,6 +4,7 @@
 <section
 class='photo-block'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/volunteers-alumni/VolunteersAlumni.Woodsey2.jpg")'>
+  <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/volunteers-alumni/VolunteersAlumni.Woodsey2.jpg' />
   <div class='photo-block__content'>
     <h2>UCLA UniCamp Woodsey Network</h2>
     <p class='explainer'>

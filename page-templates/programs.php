@@ -4,6 +4,7 @@
 <section
 class='photo-block'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/programs/classic-camp.jpg")'>
+  <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/programs/classic-camp.jpg' />
   <div class='photo-block__content'>
     <h2>Classic UniCamp</h2>
     <p class='explainer'>Classic UniCamp serves campers ages 10 - 14 and is our most traditional residential camp program. Campers have the opportunity to explore the outdoors and participate in traditional camp programs such as: archery, arts &amp; crafts, or rec. and also have the chance to push themselves with programs such as: the alpine climbing tower, sailing, or mountain biking.</p>
@@ -220,6 +221,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 <section id='ocp'
 class='photo-block'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/programs/ocp.jpg")'>
+  <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/programs/ocp.jpg' />
   <div class='photo-block__content'>
     <h2>Older Camper Programs</h2>
     <p class='explainer'>
@@ -231,6 +233,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 <section id='wall'
 class='photo-block'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/programs/wall.jpg")'>
+  <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/programs/wall.jpg' />
   <div class='photo-block__content'>
     <h2>W.A.L.L.</h2>
     <h4>Wilderness Adventures in Leadership and Learning</h4>
@@ -248,6 +251,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 <section id='unicorps'
 class='photo-block'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/programs/unicorps.jpg")'>
+  <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/programs/unicorps.jpg' />
   <div class='photo-block__content'>
     <h2>UniCorps</h2>
     <h4>Service Learning &amp; Leadership Development</h4>
@@ -265,6 +269,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 <section id='climb'
 class='photo-block'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/programs/climb.jpg")'>
+  <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/programs/climb.jpg' />
   <div class='photo-block__content'>
     <h2>C.L.I.M.B.</h2>
     <h4>Core Lessons in Mind &amp; Body</h4>

@@ -6,6 +6,7 @@
 <section
 class='photo-block'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.WhyCamp.jpg")'>
+  <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.WhyCamp.jpg' />
   <div class='photo-block__content'>
     <h2>Apply to UniCamp</h2>
     <p class='explainer'>Thanks for your interest in UCLA UniCamp! Enter your application code below to get started. If chosen to attend, you will receive registration information separately.</p>
