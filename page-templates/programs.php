@@ -16,9 +16,9 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   <div class='medium-12 columns'>
     <h2>Initiave Sessions</h2>
     <p class='explainer'>In 2011 UCLA UniCamp began partnering with local nonprofits and after school programs to expand UniCamp’s impact beyond a week over the summer. By working with other agencies UCLA UniCamp has been able to see how we impact our campers beyond the week of camp as agencies relay the impact they see in the campers throughout the year.</p>
-    <div class='row'>
+    <div class='row initiatives'>
 
-      <div class='medium-4 columns'>
+      <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
           style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-1.jpg")'></div>
@@ -48,7 +48,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         </p>
       </div>
 
-      <div class='medium-4 columns'>
+      <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
           style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-2.jpg")'></div>
@@ -65,7 +65,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         </div>
       </div>
 
-      <div class='medium-4 columns'>
+      <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
           style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-3.jpg")'></div>
@@ -95,7 +95,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         </p>
       </div>
 
-      <div class='medium-4 columns'>
+      <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
           style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-4.jpg")'></div>
@@ -125,7 +125,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         </p>
       </div>
 
-      <div class='medium-4 columns'>
+      <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
           style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-5.jpg")'></div>
@@ -155,7 +155,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         </p>
       </div>
 
-      <div class='medium-4 columns'>
+      <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
           style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-6.jpg")'></div>
@@ -185,7 +185,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         </p>
       </div>
 
-      <div class='medium-4 medium-offset-4 columns end'>
+      <div class='large-4 large-offset-4 columns end'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
           style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-7.jpg")'></div>

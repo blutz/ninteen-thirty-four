@@ -21,8 +21,10 @@ h5 {
   font-size: 1.25rem;
 }
 .explainer {
-  font-size: 1.4rem;
-  line-height: 1.3em;
+  @include breakpoint(medium up) {
+    font-size: 1.4rem;
+    line-height: 1.3em;
+  }
 }
 .explainer a {
   text-decoration: underline;
