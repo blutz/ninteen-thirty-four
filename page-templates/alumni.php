@@ -12,7 +12,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   </div>
 </section>
 
-<section class='row content-row'>
+<section class='row content-row' id='events'>
   <div class='medium-12 columns'>
     <h2>Woodsey Network Programs</h2>
     <p class='explainer'>Upcoming events will include bonfires, happy hour, food crawls, tailgate parties, and much more. In addition, alumni will have the opportunity to visit camp over a work or family weekend, mentor current UCLA UniCamp sessions, reconnect with other "Woodseys" from their past sessions, and contribute to upcoming issues of the Biff "E" Breeze.</p>

@@ -3,37 +3,37 @@
     <div class='medium-2 columns'>
       <h3>About Us</h3>
       <ul class='footer__submenu'>
-        <li><a href='#'>Mission &amp; Vision</a></li>
-        <li><a href='#'>FAQs</a></li>
-        <li><a href='#'>Job Opportunities</a></li>
-        <li><a href='#'>Our Relationship with UCLA</a></li>
+        <li><a href='/#official-philanthropy'>Mission &amp; Vision</a></li>
+        <!--<li><a href='#'>FAQs</a></li>-->
+        <!--<li><a href='#'>Job Opportunities</a></li>-->
+        <!--<li><a href='#'>Our Relationship with UCLA</a></li>-->
       </ul>
     </div>
     <div class='medium-2 columns'>
       <h3>How you can help</h3>
       <ul class='footer__submenu'>
-        <li><a href='#'>Donate</a></li>
-        <li><a href='#'>Volunteer</a></li>
-        <li><a href='#'>Become a Sponsor</a></li>
-        <li><a href='#'>Become a Partner Agency</a></li>
+        <li><a href='https://www.giveffect.com/charities/731-ucla-unicamp'>Donate</a></li>
+        <li><a href='/volunteers'>Volunteer</a></li>
+        <!--<li><a href='#'>Become a Sponsor</a></li>-->
+        <li><a href='/partnerships'>Become a Partner Agency</a></li>
       </ul>
     </div>
     <div class='medium-2 columns'>
       <h3>Programs</h3>
       <ul class='footer__submenu'>
-        <li><a href='#'>Classic UniCamp</a></li>
-        <li><a href='#'>W.A.L.L.</a></li>
-        <li><a href='#'>UniCorps</a></li>
-        <li><a href='#'>C.L.I.M.B.</a></li>
-        <li><a href='#'>AcademiCamp</a></li>
+        <li><a href='/programs'>Classic UniCamp</a></li>
+        <li><a href='/programs#wall'>W.A.L.L.</a></li>
+        <li><a href='/programs#unicorps'>UniCorps</a></li>
+        <li><a href='/programs#climb'>C.L.I.M.B.</a></li>
+        <!--<li><a href='#'>AcademiCamp</a></li>-->
       </ul>
     </div>
     <div class='medium-2 columns end'>
       <h3>Alumni</h3>
       <ul class='footer__submenu'>
-        <li><a href='#'>Get Involved</a></li>
-        <li><a href='#'>Special Events</a></li>
-        <li><a href='#'>Biff "E" Breeze Blog</a></li>
+        <li><a href='/alumni'>Get Involved</a></li>
+        <li><a href='/alumni#events'>Special Events</a></li>
+        <li><a href='https://biffebreeze.com'>Biff "E" Breeze Blog</a></li>
       </ul>
     </div>
   </div>

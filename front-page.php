@@ -9,7 +9,7 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
   </div>
 </section>
 
-<section class='photo-block'
+<section id='official-philanthropy' class='photo-block'
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/official-charity.jpg")'>
   <div class='photo-block__content'>
     <h2>UCLA Student's Official Philanthropy</h2>
