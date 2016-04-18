@@ -1,96 +1,88 @@
 <?php /* Template Name: Camper application */ ?>
-<!doctype html>
-<html>
-<head>
-  <title>UCLA UniCamp | Application</title>
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,700' rel='stylesheet' type='text/css'>
-  <link rel="icon" type="image/png"  href="<?php echo get_template_directory_uri(); ?>/sites/apply-assets/favicon.png">
-  <meta name="viewport" content="width=device-width">
-  <style>
-    html {
-      height: 100%;
-      font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    }
-    body {
-      background-image: url('<?php echo get_template_directory_uri(); ?>/sites/apply-assets/background.jpg');
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-    h2 {
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 1.2em;
-      margin-top: -15px;
-    }
-    p {
-      margin-top: 30px;
-    }
-    .main-content {
-      color: white;
-      padding: 20px;
-      background-color: rgba(0, 0, 0, 0.5);
-      min-width: 250px;
-      text-align: center;
-      max-height: 85%;
-      overflow: scroll;
-    }
-    @media (min-height: 650px) {
-      .main-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        max-height: auto;
-      }
-    }
-    .main-content__logo {
-      width: 150px;
-      display: block;
-      margin: auto;
-    }
-    .button {
-      color: black;
-      text-decoration: none;
-      display: inline-block;
-      padding: 10px 15px;
-      transition: 250ms background;
-      cursor: pointer;
-      background-color: white;
-    }
-    .button:hover {
-      background-color: #ddd;
-    }
-    .button--secondary {
-      color: white;
-      background-color: transparent;
-      font-weight: bold;
-    }
-    .button--secondary:hover {
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-  </style>
-</head>
-<body>
-  <div class='main-content'>
-    <a href='/'>
-      <img class='main-content__logo' src='<?php echo get_template_directory_uri(); ?>/sites/apply-assets/logo-white.gif' alt='UCLA UniCamp' />
-    </a>
-    <h1>You&lsquo;re early!</h1>
-    <h2>Applications open Monday, April 18</h2>
-    <p>We&lsquo;re not quite ready &mdash; check back here on the 11th to start the application process.</p>
-    <p>
-      <a class='button button--secondary' href='/'>Learn more about UniCamp&nbsp;&rarr;</a>
-    </p>
-    <p>
-      <a class='button' href='http://goo.gl/forms/slnz8WbsPT' target='_blank'>Sign up for an email reminder&nbsp;&rarr;</a>
-    </p>
-  </div>
-</body>
-</html>
+<?php get_header(); ?>
 
+<section
+class='photo-block'
+style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.WhyCamp.jpg")'>
+  <div class='photo-block__content'>
+    <h2>Apply to UniCamp</h2>
+    <p class='explainer'>Thanks for your interest in UCLA UniCamp! Enter your application code below to get started. If chosen to attend, you will receive registration information separately.</p>
+  </div>
+</section>
+
+<section class='row content-row apply__intro'>
+  <div class='medium-10 medium-offset-1 columns'>
+    <h2>Type your application code</h2>
+    <input type='text' id='applicationCode' />
+    <hr />
+    <h2>Don't have an application code?</h2>
+    <p class='explainer'>Contact us if you think one of our programs is right for you. <a href='/programs'>Learn more about our programs &rarr;</a></p>
+    <div class='row'>
+      <div class='medium-6 columns'>
+        <h5>Session 1: College readiness and retention</h5>
+        <strong>Organizational partner:</strong> Project GRAD
+        <br />
+        <strong>Dates:</strong> June 19 - 25
+        <br />
+        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
+      </div>
+      <div class='medium-6 columns'>
+        <h5>Session 2: Social &amp; Emotional Learning</h5>
+        <strong>Organizational partner:</strong> Project GRAD
+        <br />
+        <strong>Dates:</strong> June 25 - July 1
+        <br />
+        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='medium-6 columns'>
+        <h5>Session 3: Community Building/Activism</h5>
+        <strong>Organizational partner:</strong> The Village Nation
+        <br />
+        <strong>Dates:</strong> July 5 - July 10
+        <br />
+        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
+      </div>
+      <div class='medium-6 columns'>
+        <h5>Session 4: Literacy Intervention</h5>
+        <strong>Organizational partner:</strong> LA Times &amp; McCormick Fund
+        <br />
+        <strong>Dates:</strong> July 17 - 24
+        <br />
+        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='medium-6 columns'>
+        <h5>Session 5: Nonviolent Communication</h5>
+        <strong>Organizational partner:</strong> Dana Middle School
+        <br />
+        <strong>Dates:</strong> July 24 - July 31
+        <br />
+        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
+      </div>
+      <div class='medium-6 columns'>
+        <h5>Session 6: Healthy Lifestyles</h5>
+        <strong>Organizational partner:</strong> Children's Hospital Los Angeles
+        <br />
+        <strong>Dates:</strong> July 31 - August 7
+        <br />
+        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='medium-6 columns'>
+        <h5>Session 7: Empowerment Through Art</h5>
+        <strong>Organizational partner:</strong> TBD
+        <br />
+        <strong>Dates:</strong> August 7 - August 14
+        <br />
+        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<?php get_footer(); ?>
