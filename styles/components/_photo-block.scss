@@ -1,8 +1,6 @@
 $height-photo-block: 850px;
 
 .photo-block {
-  font-size: 1.4rem;
-  line-height: 1.3em;
   @include breakpoint(large up) {
     height: $height-photo-block;
     position: relative;
@@ -10,6 +8,8 @@ $height-photo-block: 850px;
     background-position: center center;
     transition: 0s linear background-position;
     background-attachment: fixed;
+    font-size: 1.4rem;
+    line-height: 1.3em;
   }
   @include breakpoint(medium down) {
     background-image: none !important;
@@ -33,7 +33,7 @@ $height-photo-block: 850px;
     padding-right: 10%;
   }
   @include breakpoint(medium down) {
-    padding-top: 26px;
+    padding: 26px 20px;
   }
 }
 .photo-block__content h2,

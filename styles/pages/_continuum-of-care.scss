@@ -2,19 +2,20 @@
   background-attachment: fixed;
   @include breakpoint(large up) {
     height: $height-photo-block*2;
+    overflow: hidden;
   }
-  @include breakpoint(medium down) {
-    height: $height-photo-block;
-  }
-  overflow: hidden;
   text-align: center;
 }
 .continuum-of-care__fixed {
-  position: relative;
-  height: 80vh;
-  padding: 50px;
+  @include breakpoint(large up) {
+    position: relative;
+    height: 80vh;
+    padding: 50px;
+  }
   @include breakpoint(medium down) {
     margin-top: 0 !important;
+    padding: 26px 20px;
+    background-color: white;
   }
 }
 .continuum-of-care__header {

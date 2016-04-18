@@ -38,6 +38,7 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
 data-blocked-animation
 data-blocked-animation-dead-zone='700'
 data-blocked-animation-blocks='4'>
+  <img class='photo-block__small-image' src='<?php echo get_template_directory_uri(); ?>/images/photos/home/coc-background-filtered.jpg' />
   <div class='continuum-of-care__fixed' data-fixed-block>
     <h2 class='continuum-of-care__header'>UCLA UniCamp's "Continuum of Care"</h2>
     <img class='continuum-of-care-block__logo'
@@ -62,6 +63,7 @@ data-blocked-animation-blocks='4'>
 
 <section class='photo-block'
 style='background-image: url("<?php echo get_template_directory_uri(); ?>/images/photos/home/history.jpg")'>
+  <img class='photo-block__small-image' src='<?php echo get_template_directory_uri(); ?>/images/photos/home/history.jpg' />
   <div class='photo-block__content'>
     <h2>Serving LA youth since 1928</h2>
     <h4>UniCamp has served over 60,000 youth and over 10,000 volunteers over the past 80 years.</h4>
