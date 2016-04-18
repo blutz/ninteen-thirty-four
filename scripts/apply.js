@@ -38,7 +38,7 @@ var APPLICATION_CODES = {
   'chla16': 'session6',
   'session5': 'session5',
   'session7': 'session7',
-  'session3': 'session3',
+  'tvn2016': 'session3',
   'ocp': 'ocp'
 }
 
