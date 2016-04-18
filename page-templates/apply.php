@@ -31,7 +31,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     </div>
     <hr />
     <h2>Don't have a code?</h2>
-    <p class='explainer'>Contact us if you think one of our programs is right for you. <a href='/programs'>Learn more about our programs &rarr;</a></p>
+    <p class='explainer'>Contact us if you think one of our programs is right for you. <a href='/programs'>Learn more about our programs&nbsp;&rarr;</a></p>
     <div class='row'>
       <div class='medium-6 columns'>
         <h5>Session 1: College readiness and retention</h5>
