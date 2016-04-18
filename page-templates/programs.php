@@ -24,27 +24,27 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-1.jpg")'></div>
           <div class='hover-image__text'>
             <div class='hover-image__text__title'>
-              Session 1: Social &amp; Emotional Learning
+              Session 1: Mental Health Awareness
               <br />
               Project GRAD
             </div>
             <div class='hover-image__text__blurb' style='display: none'>
-              <a data-open='session1and2Modal' class='button'>Learn more</a>
+              <a data-open='session1Modal' class='button'>Learn more</a>
             </div>
           </div>
         </div>
       </div>
-      <div id='session1and2Modal' class='reveal' data-reveal aria-hidden=true role='dialog'>
+      <div id='session1Modal' class='reveal' data-reveal aria-hidden=true role='dialog'>
         <button class="close-button" data-close aria-label="Close modal" type="button">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3>Sessions 1 and 2</h3>
-        <h4>College Readiness/Retention and Social and Emotional Learning</h4>
+        <h3>Sessions 1</h3>
+        <h4>Mental Health Awareness</h4>
         <p>
           <strong>Organizational Partner:</strong> Project GRAD, Los Angeles
         </p>
         <p>
-          PGLA works with urban youth from the San Fernando Valley to prepare them for college applications and life. These sessions will equip campers with skills necessary to properly navigate the college application process. A Social and Emotional Learning (SEL) component will teach campers to maintain positive mental health through the stressful process.
+          Session one is partnered with Project Grad Los Angeles, an organization that works with urban youth from the San Fernando valley to prepare them for college applications as well as their lives as future university students. This week will be mainly focused on mental health with two primary goals: raise awareness and reduce stigmas. This session plans to combine and develop the students’ socio-emotional learning skills with new strategies to promote healthy minds. Through education of mental health, session one aims to provide resources to these students that will allow them to successfully transition from high school to college. Session one is working with a variety of on-campus organizations at UCLA that focus on mental health, enabling them to better train their volunteers and create better outcome based programming for their kids.
         </p>
       </div>
 
@@ -59,10 +59,23 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
               Project GRAD
             </div>
             <div class='hover-image__text__blurb' style='display: none'>
-              <a data-open='session1and2Modal' class='button'>Learn more</a>
+              <a data-open='session2Modal' class='button'>Learn more</a>
             </div>
           </div>
         </div>
+      </div>
+      <div id='session2Modal' class='reveal' data-reveal aria-hidden=true role='dialog'>
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3>Sessions 2</h3>
+        <h4>College Readiness/Retention</h4>
+        <p>
+          <strong>Organizational Partner:</strong> Project GRAD, Los Angeles
+        </p>
+        <p>
+          PGLA works with urban youth from the San Fernando Valley to prepare them for college applications and life. These sessions will equip campers with skills necessary to properly navigate the college application process. A Social and Emotional Learning (SEL) component will teach campers to maintain positive mental health through the stressful process.
+        </p>
       </div>
 
       <div class='large-4 columns'>
