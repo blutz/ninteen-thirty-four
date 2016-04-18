@@ -1,6 +1,8 @@
 <?php /* Template Name: Camper application */ ?>
 <?php get_header(); ?>
 
+<meta name='unicamp-page' value='camper-application' />
+
 <section
 class='photo-block'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.WhyCamp.jpg")'>
@@ -10,12 +12,24 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   </div>
 </section>
 
-<section class='row content-row apply__intro'>
+<section id='applicationIntro' class='row content-row apply__intro'>
   <div class='medium-10 medium-offset-1 columns'>
     <h2>Type your application code</h2>
-    <input type='text' id='applicationCode' />
+    <div class='row'>
+      <div class='medium-8 medium-offset-2 columns'>
+        <form id='applicationCodeForm'>
+          <div class='input-group apply__code-inputs'>
+            <input type='text' class='input-group-field' id='applicationCode' placeholder='Your application code...' required />
+            <div class='input-group-button'>
+              <input type='submit' class='button' value='Submit' />
+            </div>
+          </div>
+          <span class='form-error' id='applicationCodeFormError'>That's not a valid code; please try again. Contact us if it doesn't work after a few tries.</span>
+        </form>
+      </div>
+    </div>
     <hr />
-    <h2>Don't have an application code?</h2>
+    <h2>Don't have a code?</h2>
     <p class='explainer'>Contact us if you think one of our programs is right for you. <a href='/programs'>Learn more about our programs &rarr;</a></p>
     <div class='row'>
       <div class='medium-6 columns'>
@@ -81,6 +95,15 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<section id='applicationDetails' class='row content-row apply__details'>
+  <div class='medium-10 medium-offset-1 columns'>
+    <a href='#' class='apply__back'>&larr; Apply to a different session</a>
+    <h2></h2>
+    <h4></h4>
+    <iframe class='apply__form' id='applicationForm' frameborder='0' marginheight='0' marginwidth='0'>Loading&hellip;</iframe>
   </div>
 </section>
 
