@@ -82,7 +82,7 @@
       <img class='main-content__logo' src='<?php echo get_template_directory_uri(); ?>/sites/apply-assets/logo-white.gif' alt='UCLA UniCamp' />
     </a>
     <h1>You&lsquo;re early!</h1>
-    <h2>Applications open Monday, April 11</h2>
+    <h2>Applications open Monday, April 18</h2>
     <p>We&lsquo;re not quite ready &mdash; check back here on the 11th to start the application process.</p>
     <p>
       <a class='button button--secondary' href='/'>Learn more about UniCamp&nbsp;&rarr;</a>
