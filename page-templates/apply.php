@@ -31,25 +31,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     </div>
     <hr />
     <h2>Don't have a code?</h2>
-    <p class='explainer'>Contact us if you think one of our programs is right for you. <a href='/programs'>Learn more about our programs&nbsp;&rarr;</a></p>
-    <div class='row'>
-      <div class='medium-6 columns'>
-        <h5>Session 1: College readiness and retention</h5>
-        <strong>Organizational partner:</strong> Project GRAD
-        <br />
-        <strong>Dates:</strong> June 19 - 25
-        <br />
-        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
-      </div>
-      <div class='medium-6 columns'>
-        <h5>Session 2: Social &amp; Emotional Learning</h5>
-        <strong>Organizational partner:</strong> Project GRAD
-        <br />
-        <strong>Dates:</strong> June 25 - July 1
-        <br />
-        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
-      </div>
-    </div>
+    <p class='explainer'>Email us for a code or apply for a session with open enrollment below. <a href='/programs'>Learn more about our programs&nbsp;&rarr;</a></p>
     <div class='row'>
       <div class='medium-6 columns'>
         <h5>Session 3: Community Building/Activism</h5>
@@ -57,45 +39,48 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <br />
         <strong>Dates:</strong> July 5 - July 10
         <br />
-        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
+        <strong>Contact:</strong> Email Tia "Tippy Top" Brandt at <a href='mailto:tbrandt@unicamp.org'>tbrandt@unicamp.org</a>
+        <br />
+        <em>Contact us for an application code if you think this session is right for you.</em>
       </div>
       <div class='medium-6 columns'>
-        <h5>Session 4: Literacy Intervention</h5>
-        <strong>Organizational partner:</strong> LA Times &amp; McCormick Fund
-        <br />
-        <strong>Dates:</strong> July 16 - 22
-        <br />
-        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
-      </div>
-    </div>
-    <div class='row'>
-      <div class='medium-6 columns'>
-        <h5>Session 5: Nonviolent Communication</h5>
-        <strong>Organizational partner:</strong> Dana Middle School
+        <h5>Session 5: Leadership Development for Urban Youth</h5>
+        <strong>Organizational partner:</strong> Determined To Succeed, HYPE LA, and Dana Middle School
         <br />
         <strong>Dates:</strong> July 24 - July 31
         <br />
-        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
+        <strong>Contact:</strong> Email Chris "Wild Thing" Ayala at <a href='mailto:cayala@unicamp.org'>cayala@unicamp.org</a>
+        <br />
+        <a class='button' href='#application-code=session5'>Apply Now&nbsp;&rarr;</a>
       </div>
+    </div>
+    <div class='row'>
       <div class='medium-6 columns'>
         <h5>Session 6: Healthy Lifestyles</h5>
         <strong>Organizational partner:</strong> Children's Hospital Los Angeles
         <br />
         <strong>Dates:</strong> July 31 - August 7
         <br />
-        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
+        <strong>Contact:</strong> Email Mike "Dr. Pepper" Scheipe at <a href='mailto:mscheipe@unicamp.org'>mscheipe@unicamp.org</a>
+        <br />
+        <em>Contact us for an application code if you think this session is right for you.</em>
       </div>
-    </div>
-    <div class='row'>
       <div class='medium-6 columns'>
         <h5>Session 7: Empowerment Through Art</h5>
         <strong>Organizational partner:</strong> TBD
         <br />
         <strong>Dates:</strong> August 7 - August 14
         <br />
-        <strong>Contact:</strong> Contact "Dr. Pepper" at <a href='mailto:mschipe@unicamp.org'>mschipe@unicamp.org</a> or call us at (844)UNI-CAMP.</p>
+        <strong>Contact:</strong> Email Isabella "Squirtle" Granados at <a href='mailto:igranados@unicamp.org'>igranados@unicamp.org</a>
+        <br />
+        <a class='button' href='#application-code=session7'>Apply Now&nbsp;&rarr;</a>
       </div>
     </div>
+    <hr />
+    <p class='explainer'>Enroll in one of our Older Camper Programs (CLIMB, UniCorps, and WALL). <a href='/programs#ocp'>Learn more about Older Camper Programs&nbsp;&rarr;</a></p>
+    <p class='center'>
+      <a class='button large' href='#application-code=ocp'>Apply for OCP&nbsp;&rarr;</a>
+    </p>
   </div>
 </section>
 

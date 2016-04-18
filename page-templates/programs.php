@@ -24,7 +24,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-1.jpg")'></div>
           <div class='hover-image__text'>
             <div class='hover-image__text__title'>
-              Session 1: College Readiness
+              Session 1: Social &amp; Emotional Learning
               <br />
               Project GRAD
             </div>
@@ -54,7 +54,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-2.jpg")'></div>
           <div class='hover-image__text'>
             <div class='hover-image__text__title'>
-              Session 2: Social &amp; Emotional Learning
+              Session 2: College Readiness
               <br />
               Project GRAD
             </div>
@@ -131,9 +131,9 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-5.jpg")'></div>
           <div class='hover-image__text'>
             <div class='hover-image__text__title'>
-              Session 5: Nonviolent Communication
+              Session 5: Leadership Development for Urban Youth
               <br />
-              Dana Middle School
+              Determined to Succeed
             </div>
             <div class='hover-image__text__blurb' style='display: none'>
               <a data-open='session5Modal' class='button'>Learn more</a>
@@ -146,9 +146,9 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           <span aria-hidden="true">&times;</span>
         </button>
         <h3>Session 5</h3>
-        <h4>Nonviolent Communication and Urban Youth Development</h4>
+        <h4>Leadership Development for Urban Youth</h4>
         <p>
-          <strong>Organizational Partner:</strong> Dana Middle School
+          <strong>Organizational Partners:</strong> Determined Fo Succeed, HYPE LA, and Dana Middle School
         </p>
         <p>
           Working with Dana Middle School, this session will address the immense influence that violence and bullying has on students of San Pedro and the surrounding areas. Programs will focus on teaching campers methods of nonviolent communication in order to address the many issues of violence and bullying in their community. Campers will learn to work with others, than against them, and understand the importance of building a community of inclusivity.
