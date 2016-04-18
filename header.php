@@ -16,13 +16,16 @@
     <img class='header__logo' src='<? echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png' alt='UCLA UniCamp Logo' />
   </a>
 
-  <div class='header__menu-contianer'>
+  <div class='header__menu-container header__menu-container--closed' id='header-menu'>
     <?php wp_nav_menu(array(
       'theme_location' => 'header-menu',
       'menu_class' => 'header__items',
       'container' => '',
       'depth' => 1,
     )); ?>
+    <div class='header__menu-container__expand'>
+     <i class="fa fa-bars" aria-hidden="true"></i>
+    </div>
   </div>
 
 </header>
