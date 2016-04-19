@@ -69,7 +69,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <h5>Session 7: Empowerment Through Art</h5>
         <strong>Organizational partner:</strong> TBD
         <br />
-        <strong>Dates:</strong> August 7 - August 14
+        <strong>Dates:</strong> August 7 - August 12
         <br />
         <strong>Contact:</strong> Email Isabella "Squirtle" Granados at <a href='mailto:igranados@unicamp.org'>igranados@unicamp.org</a>
         <br />
