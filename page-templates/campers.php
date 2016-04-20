@@ -60,8 +60,8 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
       <p class='explainer'>
         Session 3: Community Building/Activism (July 5 - July 10)<br />
         Session 5: Leadership Development for Urban Youth (July 24 - July 31)<br />
-        Session 6: Healthy Lifestyles (July 31 - August 7)<br />
-        Session 7: Empowerment Through Art (August 7 - August 14)<br />
+        Session 6: Healthy Lifestyles (July 31 - August 6)<br />
+        Session 7: Empowerment Through Art (August 6 - August 12)<br />
         Older Camper Programs (CLIMB, UniCorps, WALL)<br />
       </p>
 

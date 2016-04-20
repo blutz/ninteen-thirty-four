@@ -59,7 +59,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <h5>Session 6: Healthy Lifestyles</h5>
         <strong>Organizational partner:</strong> Children's Hospital Los Angeles
         <br />
-        <strong>Dates:</strong> July 31 - August 7
+        <strong>Dates:</strong> July 31 - August 6
         <br />
         <strong>Contact:</strong> Email Mike "Dr. Pepper" Scheipe at <a href='mailto:mscheipe@unicamp.org'>mscheipe@unicamp.org</a>
         <br />
@@ -69,7 +69,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <h5>Session 7: Empowerment Through Art</h5>
         <strong>Organizational partner:</strong> TBD
         <br />
-        <strong>Dates:</strong> August 7 - August 12
+        <strong>Dates:</strong> August 6 - August 12
         <br />
         <strong>Contact:</strong> Email Isabella "Squirtle" Granados at <a href='mailto:igranados@unicamp.org'>igranados@unicamp.org</a>
         <br />
