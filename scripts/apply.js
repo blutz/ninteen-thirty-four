@@ -26,7 +26,7 @@ var SESSION_INFO = {
   'session7': {
     'title': 'Session 7: Empowerment Through Art',
     'formId': '1AYFH-5TWtPI3UQKPMFdrde78M2PooXKvLCzZjkYgRXc',
-    'formOption': 'entry.608555151&entry.1412406208&entry.1180524671&entry.1626767169&entry.1811315605=Session+7+(Empowerment+Through+Art+/+August+7+-+August+14)&entry.1704779128&entry.901870482&entry.925488213&entry.315465932&entry.1296946437'
+    'formOption': 'entry.608555151&entry.1412406208&entry.1180524671&entry.1626767169&entry.1811315605=Session+7+(Empowerment+Through+Art+/+August+6+-+August+12)&entry.1704779128&entry.901870482&entry.925488213&entry.315465932&entry.1296946437'
   },
   'ocp': {
     'title': 'Older Camper Programs',
