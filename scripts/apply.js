@@ -44,7 +44,7 @@ var SESSION_INFO = {
 var APPLICATION_CODES = {
   'chla16': 'session6-chla',
   'healthy2016': 'session6-open',
-  'health16', :'session6-open',
+  'health16': 'session6-open',
   'session5': 'session5',
   'session7': 'session7',
   'tvn2016': 'session3',
