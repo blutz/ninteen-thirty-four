@@ -161,10 +161,10 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <h3>Session 5</h3>
         <h4>Leadership Development for Urban Youth</h4>
         <p>
-          <strong>Organizational Partners:</strong> Determined Fo Succeed, HYPE LA, and Dana Middle School
+          <strong>Organizational Partners:</strong> Determined To Succeed, HYPE LA, and Dana Middle School
         </p>
         <p>
-          Working with Dana Middle School, this session will address the immense influence that violence and bullying has on students of San Pedro and the surrounding areas. Programs will focus on teaching campers methods of nonviolent communication in order to address the many issues of violence and bullying in their community. Campers will learn to work with others, than against them, and understand the importance of building a community of inclusivity.
+          Working with Dana Middle School, this session will address the immense influence that violence and bullying has on students of San Pedro and the surrounding areas. Programs will focus on teaching campers methods of nonviolent communication in order to address the many issues of violence and bullying in their community. Campers will learn how to work with others, rather than against them, and understand the importance of building a community of inclusivity.
         </p>
       </div>
 
