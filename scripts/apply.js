@@ -12,10 +12,17 @@ var SESSION_INFO = {
     'subtitle': 'The Village Nation',
     'formId': '1y_SKQ5A592-1PEa8f61GXdjEXj8CG_RU9BB74yyNqr4'
   },
-  'session6': {
+  'session6-chla': {
     'title': 'Session 6: Healthy Lifestyles',
     'subtitle': "Children's Hospital Los Angeles",
-    'formId': '1uMB3YMnie2Pt3QibExqsN-SY1xqc3saJrR5cafvLBhQ'
+    'formId': '1uMB3YMnie2Pt3QibExqsN-SY1xqc3saJrR5cafvLBhQ',
+    'formOption': 'entry.608555151&entry.1412406208&entry.1180524671&entry.1626767169&entry.1424045282&entry.1704779128&entry.901870482&entry.925488213&entry.315465932&entry.1296946437&entry.1451578299=From+an+event+at+CHLA+or+a+CHLA-related+program'
+  },
+  'session6-open': {
+    'title': 'Session 6: Healthy Lifestyles',
+    'subtitle': "Children's Hospital Los Angeles",
+    'formId': '1uMB3YMnie2Pt3QibExqsN-SY1xqc3saJrR5cafvLBhQ',
+    'formOption': 'entry.608555151&entry.1412406208&entry.1180524671&entry.1626767169&entry.1424045282&entry.1704779128&entry.901870482&entry.925488213&entry.315465932&entry.1296946437&entry.1451578299=From+the+UniCamp+website,+and+emailed+for+an+access+code'
   },
   'session5': {
     'title': 'Session 5: Leadership Development for Urban Youth',
@@ -35,7 +42,8 @@ var SESSION_INFO = {
   }
 }
 var APPLICATION_CODES = {
-  'chla16': 'session6',
+  'chla16': 'session6-chla',
+  'healthy2016': 'session6-open',
   'session5': 'session5',
   'session7': 'session7',
   'tvn2016': 'session3',
