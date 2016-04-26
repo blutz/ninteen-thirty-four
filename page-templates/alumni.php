@@ -41,7 +41,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   </div>
   <div class='medium-4 columns overlay-image'>
     <img class='overlay-image__photo' src='<?php echo get_template_directory_uri(); ?>/images/photos/volunteers-alumni/FamilyCampWeekend.JPG' />
-    <a href='https://www.giveffect.com/campaigns/1993-woodsey-alumni-family-camp-weekend?ref=1&uid=6095' class='overlay-image__text'>
+    <a href='https://www.eventbrite.com/e/ucla-unicamp-family-camp-weekend-tickets-24973418166' class='overlay-image__text'>
       <span>
         <strong>Family Camp Weekend</strong>
         <br />
