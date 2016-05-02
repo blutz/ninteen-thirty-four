@@ -34,7 +34,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <p class='explainer'>Email us for a code or apply for a session with open enrollment below. <a href='/programs'>Learn more about our programs&nbsp;&rarr;</a></p>
     <div class='row'>
       <div class='medium-6 columns'>
-        <h5>Session 3: Community Building/Activism</h5>
+        <h5>Session 3: Community Building/Activism for African American Youth</h5>
         <strong>Organizational partner:</strong> The Village Nation
         <br />
         <strong>Dates:</strong> July 5 - July 10

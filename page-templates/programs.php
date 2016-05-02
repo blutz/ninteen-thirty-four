@@ -99,7 +99,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           <span aria-hidden="true">&times;</span>
         </button>
         <h3>Session 3</h3>
-        <h4>Community Building, Youth Empowerment, Social Activism</h4>
+        <h4>Community Building, Youth Empowerment, Social Activism for African American Youth</h4>
         <p>
           <strong>Organizational Partner:</strong> The Village Nation
         </p>

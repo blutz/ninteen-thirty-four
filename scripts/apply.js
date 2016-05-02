@@ -8,7 +8,7 @@ if (unicampPage != 'camper-application') return
 // Note: this is not actual security
 var SESSION_INFO = {
   'session3': {
-    'title': 'Session 3: Community Building/Activism',
+    'title': 'Session 3: Community Building/Activism for African American Youth',
     'subtitle': 'The Village Nation',
     'formId': '1y_SKQ5A592-1PEa8f61GXdjEXj8CG_RU9BB74yyNqr4'
   },
