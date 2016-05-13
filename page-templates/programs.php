@@ -14,7 +14,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 
 <section class='row content-row'>
   <div class='medium-12 columns'>
-    <h2>Initiave Sessions</h2>
+    <h2>Initiative Sessions</h2>
     <p class='explainer'>In 2011 UCLA UniCamp began partnering with local nonprofits and after school programs to expand UniCamp’s impact beyond a week over the summer. By working with other agencies UCLA UniCamp has been able to see how we impact our campers beyond the week of camp as agencies relay the impact they see in the campers throughout the year.</p>
     <div class='row initiatives'>
 
@@ -38,7 +38,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <button class="close-button" data-close aria-label="Close modal" type="button">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3>Sessions 1</h3>
+        <h3>Session 1</h3>
         <h4>Mental Health Awareness</h4>
         <p>
           <strong>Organizational Partner:</strong> Project GRAD, Los Angeles
@@ -68,7 +68,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <button class="close-button" data-close aria-label="Close modal" type="button">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3>Sessions 2</h3>
+        <h3>Session 2</h3>
         <h4>College Readiness/Retention</h4>
         <p>
           <strong>Organizational Partner:</strong> Project GRAD, Los Angeles
