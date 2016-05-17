@@ -44,18 +44,6 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <em>Contact us for an application code if you think this session is right for you.</em>
       </div>
       <div class='medium-6 columns'>
-        <h5>Session 5: Leadership Development for Urban Youth</h5>
-        <strong>Organizational partner:</strong> Determined To Succeed, HYPE LA, and Dana Middle School
-        <br />
-        <strong>Dates:</strong> July 24 - July 31
-        <br />
-        <strong>Contact:</strong> Email Chris "Wild Thing" Ayala at <a href='mailto:cayala@unicamp.org'>cayala@unicamp.org</a>
-        <br />
-        <a class='button' href='#application-code=session5'>Apply Now&nbsp;&rarr;</a>
-      </div>
-    </div>
-    <div class='row'>
-      <div class='medium-6 columns'>
         <h5>Session 6: Healthy Lifestyles</h5>
         <strong>Organizational partner:</strong> Children's Hospital Los Angeles
         <br />
@@ -65,6 +53,8 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <br />
         <em>Contact us for an application code if you think this session is right for you.</em>
       </div>
+    </div>
+    <div class='row'>
       <div class='medium-6 columns'>
         <h5>Session 7: Empowerment Through Art</h5>
         <strong>Organizational partner:</strong> TBD
