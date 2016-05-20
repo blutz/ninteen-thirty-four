@@ -41,7 +41,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <br />
         <strong>Contact:</strong> Email Tia "Tippy Top" Brandt at <a href='mailto:tbrandt@unicamp.org'>tbrandt@unicamp.org</a>
         <br />
-        <em>Contact us for an application code if you think this session is right for you.</em>
+        <a class='button' href='#application-code=session3'>Apply Now&nbsp;&rarr;</a>
       </div>
       <div class='medium-6 columns'>
         <h5>Session 6: Healthy Lifestyles</h5>

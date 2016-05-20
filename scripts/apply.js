@@ -48,6 +48,7 @@ var APPLICATION_CODES = {
   'session5': 'session5',
   'session7': 'session7',
   'tvn2016': 'session3',
+  'session3': 'session3',
   'ocp': 'ocp'
 }
 
