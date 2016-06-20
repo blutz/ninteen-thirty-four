@@ -41,7 +41,9 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <br />
         <strong>Contact:</strong> Email Tia "Tippy Top" Brandt at <a href='mailto:tbrandt@unicamp.org'>tbrandt@unicamp.org</a>
         <br />
-        <a class='button' href='#application-code=session3'>Apply Now&nbsp;&rarr;</a>
+        <em>Due to high interest, any applications to session 3 will be placed on a waitling list for registration.</em>
+        <br />
+        <a class='button' href='#application-code=session3'>Apply for Waitlist&nbsp;&rarr;</a>
       </div>
       <div class='medium-6 columns'>
         <h5>Session 6: Healthy Lifestyles</h5>
