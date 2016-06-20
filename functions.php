@@ -12,7 +12,7 @@ function ninteen_thirty_four_scripts() {
     array('jquery'), false, true);
   wp_enqueue_script('ninteen-thirty-four-script',
     get_template_directory_uri() . '/main.js',
-    array('jquery', 'foundation', 'jquery-bbq'), false, true);
+    array('jquery', 'foundation', 'jquery-bbq'), '1466413898', true);
 }
 add_action('wp_enqueue_scripts', 'ninteen_thirty_four_scripts');
 
