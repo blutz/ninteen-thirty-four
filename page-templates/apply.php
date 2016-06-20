@@ -51,7 +51,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <br />
         <strong>Dates:</strong> July 31 - August 6
         <br />
-        <strong>Contact:</strong> Email Mike "Dr. Pepper" Scheipe at <a href='mailto:mscheipe@unicamp.org'>mscheipe@unicamp.org</a>
+        <strong>Contact:</strong> Email Byron "Blitzen" Lutz at <a href='mailto:blutz@unicamp.org'>blutz@unicamp.org</a>
         <br />
         <em>Contact us for an application code if you think this session is right for you.</em>
       </div>
