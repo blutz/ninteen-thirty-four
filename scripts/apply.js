@@ -49,8 +49,9 @@ var APPLICATION_CODES = {
   'health16': 'session6-open',
   'session5': 'session5',
   'session7': 'session7',
-  'tvn2016': 'session3',
-  'session3': 'session3',
+  //'tvn2016': 'session3',
+  //'session3': 'session3',
+  'villagesesh3': 'session3',
   'ocp': 'ocp'
 }
 

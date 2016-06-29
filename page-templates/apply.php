@@ -34,18 +34,6 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <p class='explainer'>Email us for a code or apply for a session with open enrollment below. <a href='/programs'>Learn more about our programs&nbsp;&rarr;</a></p>
     <div class='row'>
       <div class='medium-6 columns'>
-        <h5>Session 3: Community Building/Activism for African American Youth</h5>
-        <strong>Organizational partner:</strong> The Village Nation
-        <br />
-        <strong>Dates:</strong> July 5 - July 10
-        <br />
-        <strong>Contact:</strong> Email Tia "Tippy Top" Brandt at <a href='mailto:tbrandt@unicamp.org'>tbrandt@unicamp.org</a>
-        <br />
-        <em>Due to high interest, any applications to session 3 will be placed on a waitling list for registration.</em>
-        <br />
-        <a class='button' href='#application-code=session3'>Apply for Waitlist&nbsp;&rarr;</a>
-      </div>
-      <div class='medium-6 columns'>
         <h5>Session 6: Healthy Lifestyles</h5>
         <strong>Organizational partner:</strong> Children's Hospital Los Angeles
         <br />
@@ -55,8 +43,6 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <br />
         <em>Contact us for an application code if you think this session is right for you.</em>
       </div>
-    </div>
-    <div class='row'>
       <div class='medium-6 columns'>
         <h5>Session 7: Empowerment Through Art</h5>
         <strong>Organizational partner:</strong> TBD
