@@ -52,7 +52,7 @@ var APPLICATION_CODES = {
   //'tvn2016': 'session3',
   //'session3': 'session3',
   'villagesesh3': 'session3',
-  'ocp': 'ocp'
+  'ocp16': 'ocp'
 }
 
 var els = {}

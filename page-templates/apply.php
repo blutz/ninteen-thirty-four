@@ -55,10 +55,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
       </div>
     </div>
     <hr />
-    <p class='explainer'>Enroll in one of our Older Camper Programs (CLIMB, UniCorps, and WALL). <a href='/programs#ocp'>Learn more about Older Camper Programs&nbsp;&rarr;</a></p>
-    <p class='center'>
-      <a class='button large' href='#application-code=ocp'>Apply for OCP&nbsp;&rarr;</a>
-    </p>
+    <p class='explainer'>Applications for our Older Camper Programs (CLIMB, UniCorps, and WALL) are now closed for the 2016 season. If you didn't get a chance to apply, we would love to see your application next year. Contact us if you have any questions.<br /><a href='/programs#ocp'>Learn more about Older Camper Programs&nbsp;&rarr;</a></p>
   </div>
 </section>
 
