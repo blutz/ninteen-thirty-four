@@ -15,7 +15,7 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/official-charity.jpg' />
   <div class='photo-block__content'>
     <h2>UCLA Student's Official Philanthropy</h2>
-    <h4>UniCamp is an indepently funded 501(c)3 that annually links 500 UCLA student volunteers with over 1,200 urban LA youth.</h4>
+    <h4>UniCamp is an independently funded 501(c)3 that annually links 500 UCLA student volunteers with over 1,200 urban LA youth.</h4>
     <div class='expand expand--collapsed'>
       <a href='#' class='button button--homepage expand__button'>
         More <i class='expand__button__icon'></i>
