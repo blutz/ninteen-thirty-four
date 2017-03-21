@@ -35,6 +35,10 @@ CSS and JS are compiled using gulp. The easiest way to compile the source is...
 1. Install node packages: `npm install`
 1. Watch files to build a new source: `npm run-script watch` (substitute `watch` with `build` if you just want to build once.)
 
+## Creating a local admin account
+
+TODO
+
 
 ## Other useful tips
 
