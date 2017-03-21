@@ -37,7 +37,7 @@
     -webkit-filter: blur(2px);
   }
   .hover-image__text__title {
-    @extend h2;
+    @include h2;
     font-size: 1.5em;
     color: white;
     display: block;

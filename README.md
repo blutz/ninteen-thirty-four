@@ -27,7 +27,7 @@ This should be automated in the future. You can look up the values needed from t
 
 If you don't have access to the prod server, talk to an existing developer. You can also proceed without a database dump. (In that case, don't make your own wp-config.php file since you'll want to go through the default WordPress setup process.)
 
-## Developing ASS/JS
+## Developing CSS/JS
 CSS and JS are compiled using gulp. The easiest way to compile the source is...
 
 1. Log into bash on a new web instance: `docker-compose run web /bin/bash`
