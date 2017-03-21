@@ -1,4 +1,21 @@
-.DS_Store
+# Adapted from https://stevegrunwell.github.io/wordpress-git
+
+# WordPress files we don't want to track
+/wp-content/themes/twenty*
+/wp-content/upgrade
+/wp-content/uploads
+/sitemap.*
+/wp-config.php
+*.sql
+
+# Our database init file
+/docker/db-config
+
+# Other temporary files
+*.DS_Store
+*Thumbs.db
+*.sass-cache*
+*~imageoptim*
 *.swp
 node_modules/
 npm-debug.log

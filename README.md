@@ -2,6 +2,23 @@
 
 UniCamp's WordPress theme
 
+* * *
+
+Ninteen Thirty-Four uses a docker image *for development only*. Because of hosting restrictions, production has its own Apache/PHP setup so this repo can just be cloned and configured there.
+
+## Get a database dump
+Log into the server and execute:
+
+    mysqldump --databases DB_NAME --host=DB_HOST --user=DB_USER --password DB_PASSWORD > DATE.sql
+
+This should be automated in the future but this works for a small number of developers.
+
+## Connect to MySQL
+
+    docker exec -it ninteenthirtyfour_db_1 mysql -uroot -pwordpress
+
+# TODO: Change the text below to reflect new setup instructions.
+
 ## Getting started
 
 ### Full install

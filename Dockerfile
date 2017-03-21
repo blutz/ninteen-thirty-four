@@ -1,4 +1,5 @@
-FROM wordpress
+FROM php:5.6-apache
 MAINTAINER Byron Lutz <byronlutz@gmail.com>
 
-RUN echo 'php_flag opcache.enable Off' >> /etc/apache2/apache2.conf
+COPY docker/php.ini /usr/local/etc/php/conf.d/
+COPY . /var/www/html/
