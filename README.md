@@ -37,8 +37,19 @@ CSS and JS are compiled using gulp. The easiest way to compile the source is...
 
 ## Creating a local admin account
 
-TODO
+[WP-CLI](http://wp-cli.org/) is installed on the Docker image. You can use it to create new users like this: (replace `USERNAME` and `EMAIL` with the new values you want)
 
+    docker-compose run web wp --allow-root user create USERNAME EMAIL --role=administrator
+
+This will create a new user and generate a password you can use to log in.
+
+You can also use WP-CLI to change existing users' passwords like `admin`.
+
+## Update to a new prod database
+
+1. Get the new database dump and put it in `docker/db-config` folder
+1. Make sure to delete the local database's volume using `docker-compose down -v` (Note that this will remove your local database.  You shouldn't be storing anything useful in it anyway.)
+1. Run `docker-compose up` to start like normal. The database container will detect that it's starting for the first time and will load the new database dump.
 
 ## Other useful tips
 
