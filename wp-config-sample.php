@@ -3,6 +3,8 @@
   * have to make any changes if you're developing using the provided docker
   * image.
   */
+/** Use this to temporarily force SSL off before turning it off in the dashboard */
+define('FORCE_SSL' , false);
 
 /** The website's URL */
 define('WP_HOME','http://localhost:8080');
