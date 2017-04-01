@@ -1,11 +1,17 @@
 <?php
-    get_header();
-    if ( have_posts() ) : while ( have_posts() ) : the_post();
-        the_content();
-    endwhile;
-    else :
-        _e( 'Sorry, no posts matched your criteria.', 'textdomain' );
-    endif;
-    get_sidebar();
-    get_footer(); 
-?>
+/**
+ * Front to the WordPress application. This file doesn't do anything, but loads
+ * wp-blog-header.php which does and tells WordPress to load the theme.
+ *
+ * @package WordPress
+ */
+
+/**
+ * Tells WordPress to load the WordPress theme and output it.
+ *
+ * @var bool
+ */
+define('WP_USE_THEMES', true);
+
+/** Loads the WordPress Environment and Template */
+require( dirname( __FILE__ ) . '/wp-blog-header.php' );

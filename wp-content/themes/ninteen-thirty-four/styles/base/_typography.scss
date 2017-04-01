@@ -1,0 +1,43 @@
+@mixin h2 {
+  font-family: $font-headings;
+  color: $primary-color-heading;
+}
+h2 {
+  @include h2;
+}
+h4 {
+  font-family: $font-secondary;
+  color: $primary-color-alt;
+}
+h5 {
+  font-weight: 500;
+  color: $primary-color-heading;
+  font-size: 1.4rem;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.small-title {
+  display: block;
+  text-align: center;
+  font-family: $font-primary;
+  font-weight: normal;
+  font-size: 1.25rem;
+}
+.explainer {
+  @include breakpoint(medium up) {
+    font-size: 1.4rem;
+    line-height: 1.3em;
+  }
+}
+.explainer a {
+  text-decoration: underline;
+}
+.explainer--left {
+  text-align: left;
+}
+.explainer strong {
+  color: $primary-color-heading;
+}
+.center {
+  text-align: center;
+}
