@@ -4,8 +4,8 @@
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg"); background-position-y: top;'>
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg' />
   <div class='photo-block__content'>
-    <h2>Apply for UCLA UniCamp Volunteer Positions</h2>
-    <h4>Older Camper Program and Head Counselor applications now open!</h4>
+    <h2>Apply to be a UniCamp Volunteer</h2>
+    <h4>New Woodsey volunteer applications are now open!</h4>
     <a class='button button--homepage' href='/apply'>Apply now &rarr;</a>
   </div>
 </section>

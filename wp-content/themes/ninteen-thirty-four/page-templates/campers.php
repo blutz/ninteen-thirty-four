@@ -48,25 +48,13 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 <section class='expand-block' id='publicCamperApplicationExpand'>
   <div class='row'>
     <div class='medium-12 columns'>
-      <h5>Key Dates for UCLA UniCamp’s 2016 Camper Application Process</h5>
+      <h5>Key Dates for UCLA UniCamp’s 2017 Camper Application Process</h5>
       <p class='explainer'>
-          Monday April 18, 2016 - Applications Released<br />
-          Monday May 9, 2016 - Applications Due Date<br />
-          Monday May 23, 2016 - All Responses out to Families<br />
-          Monday June 6, 2016 - All Registration Packets &amp; Payments Due<br />
+        Public camper applications will likely be released around April/May 2017. Check back here for more details. You can also sign up below for email updates about the public camper applications.
       </p>
 
-      <h5>Sessions/Programs with Public Camper Spots</h5>
-      <p class='explainer'>
-        Session 3: Community Building/Activism (July 5 - July 10)<br />
-        Session 5: Leadership Development for Urban Youth (July 24 - July 31)<br />
-        Session 6: Healthy Lifestyles (July 31 - August 6)<br />
-        Session 7: Empowerment Through Art (August 6 - August 12)<br />
-        Older Camper Programs (CLIMB, UniCorps, WALL)<br />
-      </p>
-
-      <a class='button large' href='/apply'>
-        Click here to start the application process &rarr;
+      <a class='button' href='http://eepurl.com/cJdVvL' target='_blank'>
+        Sign up for application email updates &rarr;
       </a>
     </div>
   </div>
