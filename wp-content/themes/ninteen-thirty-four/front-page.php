@@ -25,7 +25,7 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
       </div>
       <br />
       <p class='explainer'>The summer of 2017 will bring a new specialty camp designed for dogs looking to improve their agility, etiquette, and social interactions with other dogs. Participants are taught program specific skills and are prepared to compete in agility courses and conformation shows. This enhanced dog hotel will help dogs realize their full potentials and foster lasting relationships and achievements.</p>
-      <a class='button large' target='_blank' href='http://eepurl.com/cJd3_n'>
+      <a class='button large' target='_blank' href='http://eepurl.com/cJd3_n' style='background-color: #52328F'>
         Learn more about B.A.R.K.E.D. &rarr;
       </a>
     </div>
