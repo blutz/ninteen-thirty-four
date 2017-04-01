@@ -18,6 +18,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <p class='explainer'>In 2011 UCLA UniCamp began partnering with local nonprofits and after school programs to expand UniCamp’s impact beyond a week over the summer. By working with other agencies UCLA UniCamp has been able to see how we impact our campers beyond the week of camp as agencies relay the impact they see in the campers throughout the year.</p>
     <div class='row initiatives'>
 
+      <!--
       <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
@@ -225,6 +226,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           Campers will utilize art as a form of expression to help them navigate their lives at home. Utilizing outcome based programs to focus attention on the process of art, campers learn core values for success.. Arts and crafts, poetry, drama, and dance are all different art forms that campers will use to create a larger sense of engagement of their bodies and minds. The program will create opportunities for campers to engage in artful expression down the mountain as well.
         </p>
       </div>
+      -->
 
     </div>
   </div>
