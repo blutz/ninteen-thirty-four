@@ -1,0 +1,19 @@
+.af17-tag {
+  color: white;
+  background-color: #52328F;
+  font-style: italic;
+  display: block;
+  padding: 5px 11px;
+  margin-bottom: 32px;
+  text-align: center;
+}
+.af17-logo-col {
+  @include breakpoint(small down) {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+}
+.af17-logo {
+  max-width: 200px;
+  width: 100%;
+}

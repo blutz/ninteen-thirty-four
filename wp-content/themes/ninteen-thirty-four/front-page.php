@@ -10,6 +10,31 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
   </div>
 </section>
 
+<section class='content-row'>
+  <div class='row'>
+    <div class='medium-7 columns'>
+      <p class='af17-tag'>Specialty Camp Programs</p>
+      <div class='row'>
+        <div class='medium-4 columns af17-logo-col'>
+          <img alt='BARKED logo' src='<?php echo get_template_directory_uri() ?>/images/photos/home/barked-logo.png' class='af17-logo' />
+        </div>
+        <div class='medium-8 columns'>
+          <h2>B.A.R.K.E.D.</h2>
+          <h4>Beauty and Agility Realized through Keen Etiquette and Dreams</h4>
+        </div>
+      </div>
+      <br />
+      <p class='explainer'>The summer of 2017 will bring a new specialty camp designed for dogs looking to improve their agility, etiquette, and social interactions with other dogs. Participants are taught program specific skills and are prepared to compete in agility courses and conformation shows. This enhanced dog hotel will help dogs realize their full potentials and foster lasting relationships and achievements.</p>
+      <a class='button large' target='_blank' href='http://eepurl.com/cJd3_n'>
+        Learn more about B.A.R.K.E.D. &rarr;
+      </a>
+    </div>
+    <div class='medium-5 columns'>
+      <img alt='Happy dog participant in BARKED' src='<?php echo get_template_directory_uri() ?>/images/photos/home/barked1.jpg' />
+    </div>
+  </div>
+</section>
+
 <section id='official-philanthropy' class='photo-block'
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/official-charity.jpg")'>
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/official-charity.jpg' />
