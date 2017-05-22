@@ -175,7 +175,7 @@ style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/
     </div>
     <div class='large-5 columns end'>
       <?php echo do_shortcode("
-        [contact-form to='byronlutz@gmail.com' subject='[UniCamp.org Contact Form Submission'][contact-field label='Name' type='name' required='1'/][contact-field label='Email' type='email' required='1'/][contact-field label='How can we help you?' type='textarea' rows='10' required='1'/][/contact-form]");
+        [contact-form to='blutz@unicamp.org' subject='[UniCamp.org Contact Form Submission'][contact-field label='Name' type='name' required='1'/][contact-field label='Email' type='email' required='1'/][contact-field label='How can we help you?' type='textarea' rows='10' required='1'/][/contact-form]");
       ?>
     </div>
   </div>
