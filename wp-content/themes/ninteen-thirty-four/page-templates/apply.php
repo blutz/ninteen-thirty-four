@@ -8,65 +8,35 @@ class='photo-block'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.WhyCamp.jpg")'>
   <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.WhyCamp.jpg' />
   <div class='photo-block__content'>
-    <h2>Apply to UniCamp</h2>
-    <p class='explainer'>Thanks for your interest in UCLA UniCamp! Enter your application code below to get started. If chosen to attend, you will receive registration information separately.</p>
+    <h2>Apply to UCLA UniCamp</h2>
+    <p class='explainer'>Thanks for your interest in UCLA UniCamp! We currently have online applications open for a limited number of programs. To be the first to know if other programs have open space, sign up for our email list.</p>
   </div>
 </section>
 
-<section id='applicationIntro' class='row content-row apply__intro'>
-  <div class='medium-10 medium-offset-1 columns'>
-    <h2>Type your application code</h2>
-    <div class='row'>
-      <div class='large-8 large-offset-2 columns'>
-        <form id='applicationCodeForm'>
-          <div class='input-group apply__code-inputs'>
-            <input type='text' class='input-group-field' id='applicationCode' placeholder='Your application code...' required />
-            <div class='input-group-button'>
-              <input type='submit' class='button' value='Submit' />
-            </div>
-          </div>
-          <span class='form-error' id='applicationCodeFormError'>That's not a valid code; please try again. Contact us if it doesn't work after a few tries.</span>
-        </form>
-      </div>
-    </div>
-    <hr />
-    <h2>Don't have a code?</h2>
-    <p class='explainer'>Email us for a code or apply for a session with open enrollment below. <a href='/programs'>Learn more about our programs&nbsp;&rarr;</a></p>
-    <div class='row'>
-      <div class='medium-6 columns'>
-        <h5>Session 6: Healthy Lifestyles</h5>
-        <strong>Organizational partner:</strong> Children's Hospital Los Angeles
-        <br />
-        <strong>Dates:</strong> July 31 - August 6
-        <br />
-        <strong>Contact:</strong> Email Byron "Blitzen" Lutz at <a href='mailto:blutz@unicamp.org'>blutz@unicamp.org</a>
-        <br />
-        <em>Contact us for an application code if you think this session is right for you.</em>
-      </div>
-      <div class='medium-6 columns'>
-        <h5>Session 7: Empowerment Through Art</h5>
-        <strong>Organizational partner:</strong> TBD
-        <br />
-        <strong>Dates:</strong> August 6 - August 12
-        <br />
-        <strong>Contact:</strong> Email Isabella "Squirtle" Granados at <a href='mailto:igranados@unicamp.org'>igranados@unicamp.org</a>
-        <br />
-        <a class='button' href='#application-code=session7'>Apply Now&nbsp;&rarr;</a>
-      </div>
-    </div>
-    <hr />
-    <p class='explainer'>Applications for our Older Camper Programs (CLIMB, UniCorps, and WALL) are now closed for the 2016 season. If you didn't get a chance to apply, we would love to see your application next year. Contact us if you have any questions.<br /><a href='/programs#ocp'>Learn more about Older Camper Programs&nbsp;&rarr;</a></p>
+<section class='row content-row'>
+  <div class='medium-4 medium-offset-4 columns'>
+    <a class='button apply__large-button' href='http://eepurl.com/cJdVvL'>Sign up for our email list &rarr;</a>
   </div>
 </section>
 
-<section id='applicationDetails' class='row content-row apply__details'>
-  <div class='medium-10 medium-offset-1 columns'>
-    <a href='#' class='apply__back'>&larr; Apply to a different session</a>
-    <h2></h2>
-    <h4></h4>
-    <iframe class='apply__form' id='applicationForm' frameborder='0' marginheight='0' marginwidth='0'>Loading&hellip;</iframe>
+<section class='row content-row'>
+  <div class='medium-6 columns'>
+    <h2>Older Camper Programs</h2>
+    <p>Older camper programs are available for campers ages 15 - 17 and are designed to push campers out of their comfort zone and challenge them to become leaders within UniCamp.</p>
+    <p>Participants are taught program specific skills and asked to take on more leadership responsibilities around the campsite.</p>
+    <p><a href='/programs/#ocp'>Learn more about our Older Camper Programs &rarr;</a></p>
+    <p><strong>Submit completed applications to <a href='mailto:apply@unicamp.org'>apply@unicamp.org</a></strong></p>
+    <a class='button' href='http://assets.unicamp.org/registration/2017-ocp-open.pdf'>Download application (PDF) &rarr;</a>
+  </div>
+  <div class='medium-6 columns'>
+    <h2>The Village Session</h2>
+    <p>This session of camp is focused on empowering African American campers to achieve both academically and holistically by providing a platform to take ownership of their identity, legacy, and community.</p>
+    <p>This week of camp will serve as a culmination of the efforts of TVN’s efforts throughout the school year and will be lead by a group of compassionate, open-minded and close-knit volunteers and campers who are passionate about creating a safe space together: to get to know one another, recognize the leader within themselves and have an open dialogue about shaping our community. Campers also have the opportunity to have fun and be themselves through traditional camp activities such as archery, swimming, climbing, mountain biking, hiking, and much more.</p>
+    <p><strong>Submit completed applications to <a href='mailto:tvn@unicamp.org'>tvn@unicamp.org</a></strong></p>
+    <a class='button' href='http://assets.unicamp.org/registration/2017-classic-tvn.pdf'>Download application (PDF) &rarr;</a>
+    <a class='button' href='http://assets.unicamp.org/registration/2017-classic-tvn.docx'>Download application (Microsoft Word) &rarr;</a>
+
   </div>
 </section>
-
 
 <?php get_footer(); ?>

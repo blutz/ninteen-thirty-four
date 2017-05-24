@@ -4,9 +4,9 @@
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg"); background-position-y: top;'>
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg' />
   <div class='photo-block__content'>
-    <h2>Apply for Older Camper Programs</h2>
-    <h4>Registration for Older Camper Programs, for campers aged 14-17, are now open! Submit completed applications to apply@unicamp.org</h4>
-    <a class='button button--homepage' href='http://assets.unicamp.org/registration/2017-ocp-open.pdf'>Download application &rarr;</a>
+    <h2>Apply for UCLA UniCamp</h2>
+    <h4>Registration for Older Camper Programs and The Village Session are now open!</h4>
+    <a class='button button--homepage' href='/apply-campers'>More details &rarr;</a>
   </div>
 </section>
 
