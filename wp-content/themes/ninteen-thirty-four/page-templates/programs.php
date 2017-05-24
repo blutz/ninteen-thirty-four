@@ -18,14 +18,13 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <p class='explainer'>In 2011 UCLA UniCamp began partnering with local nonprofits and after school programs to expand UniCamp’s impact beyond a week over the summer. By working with other agencies UCLA UniCamp has been able to see how we impact our campers beyond the week of camp as agencies relay the impact they see in the campers throughout the year.</p>
     <div class='row initiatives'>
 
-      <!--
       <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-1.jpg")'></div>
+          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
           <div class='hover-image__text'>
             <div class='hover-image__text__title'>
-              Session 1: Mental Health Awareness
+              Life Skills &amp; Leadership Development
               <br />
               Project GRAD
             </div>
@@ -39,25 +38,24 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <button class="close-button" data-close aria-label="Close modal" type="button">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3>Session 1</h3>
-        <h4>Mental Health Awareness</h4>
+        <h4>Life Skills &amp; Leadership Development</h4>
         <p>
           <strong>Organizational Partner:</strong> Project GRAD, Los Angeles
         </p>
         <p>
-          Session one is partnered with Project Grad Los Angeles, an organization that works with urban youth from the San Fernando valley to prepare them for college applications as well as their lives as future university students. This week will be mainly focused on mental health with two primary goals: raise awareness and reduce stigmas. This session plans to combine and develop the students’ socio-emotional learning skills with new strategies to promote healthy minds. Through education of mental health, session one aims to provide resources to these students that will allow them to successfully transition from high school to college. Session one is working with a variety of on-campus organizations at UCLA that focus on mental health, enabling them to better train their volunteers and create better outcome based programming for their kids.
+          Focused on developing life skills and leadership for student volunteers and campers, we hope to empower participants by creating a safe space and using the principals of social/ emotional learning, self-awareness, and communication. We will provide tools necessary to successfuly navigate college and beyond. 
         </p>
       </div>
 
       <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-2.jpg")'></div>
+          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
           <div class='hover-image__text'>
             <div class='hover-image__text__title'>
-              Session 2: College Readiness
+              Session Beyond
               <br />
-              Project GRAD
+              LAUSD Beyond the Bell
             </div>
             <div class='hover-image__text__blurb' style='display: none'>
               <a data-open='session2Modal' class='button'>Learn more</a>
@@ -69,25 +67,22 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <button class="close-button" data-close aria-label="Close modal" type="button">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3>Session 2</h3>
-        <h4>College Readiness/Retention</h4>
+        <h4>Session Beyond</h4>
         <p>
-          <strong>Organizational Partner:</strong> Project GRAD, Los Angeles
+          <strong>Organizational Partner:</strong> LAUSD Beyond the Bell
         </p>
         <p>
-          PGLA works with urban youth from the San Fernando Valley to prepare them for college applications and life. These sessions will equip campers with skills necessary to properly navigate the college application process. A Social and Emotional Learning (SEL) component will teach campers to maintain positive mental health through the stressful process.
+          The Beyond the Bell program enriches youth from LAUSD with their social, emotional, and physical development programs. Our session's focus is to empower these students while encouraging physical and mental health awareness &amp; leadership development.
         </p>
       </div>
 
       <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-3.jpg")'></div>
+          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
           <div class='hover-image__text'>
             <div class='hover-image__text__title'>
-              Session 3: Community Building/Activism
-              <br />
-              The Village Nation
+              Outdoor Environmental Education
             </div>
             <div class='hover-image__text__blurb' style='display: none'>
               <a data-open='session3Modal' class='button'>Learn more</a>
@@ -99,25 +94,19 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <button class="close-button" data-close aria-label="Close modal" type="button">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3>Session 3</h3>
-        <h4>Community Building, Youth Empowerment, Social Activism for African American Youth</h4>
+        <h4>Outdoor Environmental Education</h4>
         <p>
-          <strong>Organizational Partner:</strong> The Village Nation
-        </p>
-        <p>
-          The Village Nation (TVN) is a non-profit that works with various schools in the greater Los Angeles area. Focusing on creating an engaging learning environment, TVN works to empower African-American youth and help them envision a brighter future for themselves and their community. The week of camp will serve as a culmination of the efforts of the school year to create a sense of community amongst the campers, and motivate them to be leaders within their community.
+          The Outdoor Education session seeks to fully take advantage of the natural setting of Camp River Glen to pass on life lessons to our campers. We will be learning more in depth about the ecosystem and the plants and animals that live up at camp and working to relate concepts from nature and biology to our own lives.
         </p>
       </div>
 
       <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-4.jpg")'></div>
+          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
           <div class='hover-image__text'>
             <div class='hover-image__text__title'>
-              Session 4: Academic Enrichment
-              <br />
-              LA Times &amp; McCormick Fund
+              Boys &amp; Girls Club Pasadena
             </div>
             <div class='hover-image__text__blurb' style='display: none'>
               <a data-open='session4Modal' class='button'>Learn more</a>
@@ -129,25 +118,21 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <button class="close-button" data-close aria-label="Close modal" type="button">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3>Session 4</h3>
-        <h4>Academic Enrichment/Addressing the Summer Learning Loss/Social Justice Education</h4>
+        <h4>Boys &amp; Girls Club Pasadena</h4>
         <p>
-          <strong>Organizational Partner:</strong> UCLA Community School/LA Times and McCormick Fund
-        </p>
-        <p>
-          Entering it’s fourth year, AcademiCamp is part of a seven week program focusing on addressing the summer learning loss at Horace Mann Middle School as part of the Mann Summer Institute. Before attending camp, campers participate in a rigorous four week academic intervention day camp to enhance reading, writing and math skills. The resident camp program focuses on creating an educational setting in the outdoors, reinforcing the skills they learned during the day camp program, and creating a community among the students and teachers of Mann. After camp, the students will return to Horace Mann Middle for a host of community enrichment programs.
+          This year, we're partnering up with the Boys and Girls Club of Pasadena and Burbank to create a week of camp dedicated to developing leadership and assisting the campers with their high school experience. Our volunteers will foster the campers with the motivation, experience, and the safe space that is necessary for them to grow into tomorrow's leaders.
         </p>
       </div>
 
       <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-5.jpg")'></div>
+          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
           <div class='hover-image__text'>
             <div class='hover-image__text__title'>
-              Session 5: Leadership Development for Urban Youth
+              The Village Session
               <br />
-              Determined to Succeed
+              The Village Nation
             </div>
             <div class='hover-image__text__blurb' style='display: none'>
               <a data-open='session5Modal' class='button'>Learn more</a>
@@ -159,25 +144,25 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <button class="close-button" data-close aria-label="Close modal" type="button">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3>Session 5</h3>
-        <h4>Leadership Development for Urban Youth</h4>
+        <h4>The Village Session</h4>
         <p>
-          <strong>Organizational Partners:</strong> Determined To Succeed, HYPE LA, and Dana Middle School
+          <strong>Organizational Partners:</strong> The Village Nation
         </p>
         <p>
-          Working with Dana Middle School, this session will address the immense influence that violence and bullying has on students of San Pedro and the surrounding areas. Programs will focus on teaching campers methods of nonviolent communication in order to address the many issues of violence and bullying in their community. Campers will learn how to work with others, rather than against them, and understand the importance of building a community of inclusivity.
+          Our session is inspired by the African proverb, "It takes a village to raise a child." Our week of camp will be dedicated to reconnecting African American students with their heritage as well as providing them a safe, culturally empowering space to express themselves and discuss current issues facing their communities.
         </p>
+        <p><a href='/apply-campers' class='button'>Apply for this session &rarr;</a></p>
       </div>
 
       <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-6.jpg")'></div>
+          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
           <div class='hover-image__text'>
             <div class='hover-image__text__title'>
-              Session 6: Healthy Lifestyles
+              AcademiCamp
               <br />
-              CHLA
+              UCLA Community School/LA Times and McCormick Fund
             </div>
             <div class='hover-image__text__blurb' style='display: none'>
               <a data-open='session6Modal' class='button'>Learn more</a>
@@ -189,23 +174,22 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <button class="close-button" data-close aria-label="Close modal" type="button">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3>Session 6</h3>
-        <h4>Healthy Lifestyles</h4>
+        <h4>AcademiCamp</h4>
         <p>
-          <strong>Organizational Partner:</strong> Children’s Hospital, Los Angeles
+          <strong>Organizational Partner:</strong> UCLA Community School/LA Times and McCormick Fund
         </p>
         <p>
-          This session will educate campers on the importance of healthy lifestyles. From nutrition and fitness, to mental health, CHLA medical professionals work with UCLA student leaders to develop a program that empowers campers to make healthy lifestyle choices on their own. Campers are referred from the CHLA Childhood Obesity and Diabetes Programs. Through a week of activities, educational programs, and fun, campers understand the value of maintaining healthy lifestyles year round.
+          AcademiCamp is part of a 7-week summer program for students of UCLA's Horace Mann Community School. The program focuses on social justice education, learning that emphasizes the students' cultural and social backgrounds to develop a sense of pride and self confidence in their potential. UniCamp volunteers have also been active in tutoring Horace Mann students in a credit recovery program.
         </p>
       </div>
 
-      <div class='large-4 large-offset-4 columns end'>
+      <div class='large-4 columns'>
         <div class='hover-image hover-image--square'>
           <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/photos/programs/session-7.jpg")'></div>
+          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
           <div class='hover-image__text'>
             <div class='hover-image__text__title'>
-              Session 7: Empowerment Through Art
+              Childhood Grief Support
             </div>
             <div class='hover-image__text__blurb' style='display: none'>
               <a data-open='session7Modal' class='button'>Learn more</a>
@@ -217,16 +201,35 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <button class="close-button" data-close aria-label="Close modal" type="button">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3>Session 7</h3>
-        <h4>Expression, Community, and Empowerment Through Art</h4>
+        <h4>Childhood Grief Support</h4>
         <p>
-          <strong>Organizational Partner:</strong> TBD
-        </p>
-        <p>
-          Campers will utilize art as a form of expression to help them navigate their lives at home. Utilizing outcome based programs to focus attention on the process of art, campers learn core values for success.. Arts and crafts, poetry, drama, and dance are all different art forms that campers will use to create a larger sense of engagement of their bodies and minds. The program will create opportunities for campers to engage in artful expression down the mountain as well.
+          Our mission is to provide children who have experienced the death of a loved one with a safe space to grieve and to heal within a community of those with a desire to understand. By the end, not only will they learn how to cope with their grief, but also recognize their own strength and personal growth.
         </p>
       </div>
-      -->
+
+      <div class='large-4 columns end'>
+        <div class='hover-image hover-image--square'>
+          <div class='hover-image__image'
+          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
+          <div class='hover-image__text'>
+            <div class='hover-image__text__title'>
+              Boys &amp; Girls Club Long Beach
+            </div>
+            <div class='hover-image__text__blurb' style='display: none'>
+              <a data-open='session9Modal' class='button'>Learn more</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='session9Modal' class='reveal' data-reveal aria-hidden=true role='dialog'>
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4>Boys &amp; Girls Club Long Beach</h4>
+        <p>
+          This session is centered around anti-bullying and teaches campers to build self-esteem and restore self-confidence. Our mission statement is: "Sometimes when you hear others' critiques, it helps to know that you're just unique. What makes you different makes you special. Believing in ourselves and others will make us successful. Because pulling someone down will never help you reach the top, so be a friend and we can teach the mountain top."
+        </p>
+      </div>
 
     </div>
   </div>
