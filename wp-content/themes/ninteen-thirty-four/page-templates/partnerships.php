@@ -69,13 +69,6 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
     <span class='small-title'>Partner Agencies</span>
     <div class='logo-table logo-table--3col'>
       <div class='logo-table__logo'>
-        <a href='http://www.chla.org/diabetes-and-obesity-program' target='_blank'>
-          <img
-          alt="Children's Hospital, Los Angeles"
-          src='<?php echo get_template_directory_uri(); ?>/images/logos/chla-logo.jpg' />
-        </a>
-      </div>
-      <div class='logo-table__logo'>
         <a href='http://www.projectgradla.org/' target='_blank'>
           <img
           alt='Project Grad'

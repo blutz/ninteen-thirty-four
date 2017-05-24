@@ -133,35 +133,12 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
         </a>
       </div>
       <div class='logo-table__logo'>
-        <a href='http://www.chla.org/diabetes-and-obesity-program' target='_blank'>
+        <a href='http://www.projectgradla.org/' target='_blank'>
           <img
-          alt="Children's Hospital, Los Angeles"
-          src='<?php echo get_template_directory_uri(); ?>/images/logos/chla-logo.jpg' />
+          alt='Project Grad'
+          src='<?php echo get_template_directory_uri(); ?>/images/logos/project-grad.jpg' />
         </a>
       </div>
-    </div>
-    <div class='expand expand--collapsed'>
-      <div class='expand__content'>
-        <div class='logo-table logo-table--3col'>
-          <div class='logo-table__logo'>
-            <a href='http://www.projectgradla.org/' target='_blank'>
-              <img
-              alt='Project Grad'
-              src='<?php echo get_template_directory_uri(); ?>/images/logos/project-grad.jpg' />
-            </a>
-          </div>
-          <div class='logo-table__logo'>
-            <a href='http://thevillagenation.com/' target='_blank'>
-              <img
-              alt='Village Nation'
-              src='<?php echo get_template_directory_uri(); ?>/images/logos/village-nation.jpg' />
-            </a>
-          </div>
-        </div>
-      </div>
-      <a href='#' class='expand__button expand__button--full'>
-        See all <i class='expand__button__icon'></i>
-      </a>
     </div>
   </div>
 </section>
