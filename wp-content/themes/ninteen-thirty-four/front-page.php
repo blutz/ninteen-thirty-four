@@ -5,7 +5,7 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg' />
   <div class='photo-block__content'>
     <h2>Apply for UCLA UniCamp</h2>
-    <h4>Registration for Older Camper Programs and The Village Session are now open!</h4>
+    <h4>Registration is now open!</h4>
     <a class='button button--homepage' href='/apply-campers'>More details &rarr;</a>
   </div>
 </section>
