@@ -31,7 +31,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   <div class='medium-6 columns'>
     <h2>July 16-22</h2>
     <p>Partnered with Boys &amp; Girls Clubs of Pasadena and Burbank, this session has a limited number of open classic camp spots for campers ages 10-14. Older campers can apply for our Older Camper Programs on this page.</p>
-    <p>The deadline for submitting an application/payment is <strong>Thursdsay, July 13 at 5 p.m.</strong>. Because the number of spots is limited, they'll be filled in the order we receive completed applications.</p>
+    <p>The deadline for submitting an application/payment is <strong>Thursday, July 13 at 5 p.m.</strong> Because the number of spots is limited, they'll be filled in the order we receive completed applications.</p>
     <p><strong>Submit completed applications to <a href='mailto:PasadenaBurbankBGC@unicamp.org'>PasadenaBurbankBGC@unicamp.org</a> AND bring the hard-copies at check-in.</strong></p>
     <a class='button' href='http://assets.unicamp.org/registration/2017-open-classic.pdf'>Download application (PDF) &rarr;</a>
     <br />
