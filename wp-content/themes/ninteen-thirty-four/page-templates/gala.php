@@ -22,13 +22,15 @@
       </div>
       <hr />
       <ul class='button-list'>
-        <!--<li><a href='http://www.eventbrite.com/e/the-campfire-gala-tickets-21688903093?aff=ehomesaved' target='_blank'><span>Tickets</span></a></li> -->
+        <li><a href='https://oss.ticketmaster.com/aps/uclacto2/EN/buy/details/m172925' target='_blank'><span>Tickets</span></a></li>
         <!--<li><a href='<?php echo get_template_directory_uri(); ?>/sites/gala/Campfire_Gala_Sponsor.Auction_Packet.pdf'><span>Sponsorship</span></a></li>-->
         <li><a href='https://goo.gl/photos/pXfJ9aQuhJ5xanqG8'><span>Photos</span></a></li>
         <!--<li><a href='#' class='button-list__disabled'><span>About the<br />Honoree</span></a></li>-->
       </ul>
       <hr />
-      <p>Very limited Early Bird tickets are available for purchase online only until <strong>September 1<sup>st</sup> or until sold out</strong>.</p>
+      <p>Early bird tickets available for $150 through September 22nd. General Admission will be $175 from September 23rd.</p>
+      <p>Ticket sales close October 11th.</p>
+      <p>To purchase tickets by mail or phone, please contact the UCLA Central Ticket Office at (310) 825-2101.</p>
       <p>Reception &ndash; 5 pm<br />Dinner &ndash; 7pm<p>
       <p><strong>UCLA Carnesale Commons</strong><br />251 Charles E Young Drive West, Los Angeles, CA 90095</p>
       <p>Cocktail Attire Requested</p>
