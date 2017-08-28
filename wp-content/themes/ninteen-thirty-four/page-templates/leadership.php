@@ -39,10 +39,10 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           Each session’s Session Program Director team will be supported by UniCabinet. They will be given more resources and space to focus on working with their partner and student volunteers to develop a unique summer camp experience tailored to meet the needs of their chosen target population.
         </p>
 
-        <a class='button' href='#lship'>Apply for LSHIP &rarr;</a>
+        <a class='button' href='#spd'>Apply to be a Session Program Director &rarr;</a>
         <p>
           <small>
-          <strong>SPD roles are open to all Woodsey volunteers. The application will be open until Tuesday, September 5 at 11:59pm.</strong>
+          <strong>SPD roles are open to all Woodsey volunteers. First-round interviews will take place September 6-8.</strong>
           UCLA UniCamp prides itself in being the official charity of the students of UCLA, and a student leadership development program. We will provide training, mentoring, and tools; our only requirement for applicants is a passion for the mission.
           </small>
         </p>
@@ -52,6 +52,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <h4>Watch our presentation...</h4>
     <div class='row'>
       <div class='medium-6 medium-offset-3 columns'>
+        <p>A version of this presentation was given to all student volunteers at on-site orientation.</p>
         <script async class="speakerdeck-embed" data-id="8c15616659c44459854c2123e5b5c04d" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
       </div>
     </div>
@@ -81,18 +82,21 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 
 <section class='row content-row'>
   <div class='medium-12 columns'>
-    <h2>Session Leadership</h2>
-    <p>Each session is led by a Session Program Director. Throughout LSHIP training, Head Counselors can apply to be part of a SPD’s team. LSHIP is the only group that cannot be a Classic Camp/OCP volunteer or a member of UniCabinet.</p>
-    <p>The interview process for LSHIP is:</p>
+    <h2>Session Program Director</h2>
+    <p>Each session is led by a Session Program Director. SPDs will recruit Head Counselors to be part of their team. Since SPDs and HCs will already be part of their own session, they are not eligible to be a Classic Camp/OCP volunteer or be part of UniCabinet.</p>
+    <p>The interview process for Session Program Director applicants is:</p>
     <ol>
-      <li>Online application (<a href='#lship'>Apply here!</a>)</li>
+      <li>Online application (<a href='#spd'>Apply here!</a>)</li>
       <li>Initial interviews</li>
-      <li>Acceptance as an LSHIP Candidate</li>
+      <li>Acceptance as an SPD candidate</li>
       <li>Summer/Fall Leadership Training</li>
-      <li><strong>(SPDs only)</strong> Development of a camp program that includes a partner, funding, and campers<br /><strong>(HCs only)</strong> Acceptance to an initiative's leadership team</li>
+      <li>Development of a camp program that includes a partner, funding, leadership team, and campers</li>
     </ol>
-    <p>Once accepted as an HC/SPD Candidate, you'll be part of Leadership Training and will be working with UniCabinet, professional staff, and alumni (through the Program Advisory Board) to bring your initiative from idea to reality. For some initiatives, this process can take more than one year.</p>
-    <a class='button' href='#lship'>Apply for LSHIP Online &rarr;</a>
+    <p>Once accepted as an SPD Candidate, you'll be part of Leadership Training and will be working with UniCabinet, professional staff, and alumni (through the Program Advisory Board) to bring your initiative from idea to reality. For some initiatives, this process can take more than one year.</p>
+    <p>
+      Head Counselor applications will be online in a few weeks.
+    </p>
+    <a class='button' href='#spd'>Apply to be an SPD online &rarr;</a>
   </div>
 </section>
 
@@ -113,6 +117,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <div class='row'>
       <div class='medium-6 columns'>
         <p><strong>Program Advisory Board (PAB)</strong> &mdash; PAB is composed of alumni who will have the responsibility of mentoring UniCabinet and providing resources and advice to current student leadership. If you’re interested in joining, email <a href='mailto:pab@unicamp.org'>pab@unicamp.org</a>.</p>
+        <p><strong>Head Counselor</strong> &mdash; Head Counselor applications will be availble online in the next few weeks.</p>
         <p><strong>Classic Camp Volunteer</strong> &mdash; Applications for volunteers will be released at the start of the 2017-2018 school year. Keep an eye out on Bruinwalk!</p>
         <p><strong>OCP PD/Advisor</strong> &mdash; More information about Older Camper Programs will be released in the next few weeks. Email the current OCP Program Directors for more information &mdash; contact CLIMB PDs at <a href='mailto:climbpds@unicamp.org'>climbpds@unicamp.org</a>, contact UniCorps PDs at <a href='mailto:ucpds@unicamp.org'>ucpds@unicamp.org</a>, and contact WALL PDs at <a href='mailto:wallpds@unicamp.org'>wallpds@unicamp.org</a>.</p>
       </div>
@@ -129,13 +134,13 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <h2>Applications</h2>
     <ul class="tabs" data-tabs id="application-tabs" data-deep-link="true" data-deep-link-smudge="true">
       <li class="tabs-title is-active"><a href="#cabinet" aria-selected="true">UniCabinet Application</a></li>
-      <li class="tabs-title"><a data-tabs-target="lship" href="#lship">LSHIP Application</a></li>
+      <li class="tabs-title"><a data-tabs-target="spd" href="#spd">Session Program Director Application</a></li>
     </ul>
     <div class="tabs-content" data-tabs-content="application-tabs">
       <div class="tabs-panel is-active" id="cabinet">
         <iframe class="airtable-embed" src="https://airtable.com/embed/shrHHb1oQsVkq8zio?backgroundColor=cyan" frameborder="0" onmousewheel="" width="100%" height="533" style="background: transparent; border: 1px solid #ccc;"></iframe>
       </div>
-      <div class="tabs-panel" id="lship">
+      <div class="tabs-panel" id="spd">
         <iframe class="airtable-embed" src="https://airtable.com/embed/shrlLZYllMLD2fwRH?backgroundColor=yellow" frameborder="0" onmousewheel="" width="100%" height="533" style="background: transparent; border: 1px solid #ccc;"></iframe>
       </div>
     </div>
@@ -158,7 +163,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         </p>
         <p>
           <strong>What if I can’t make it to leadership training?</strong>
-          Leadership training (DATES) is an important part of becoming part of UniCabinet or LSHIP. We will help you find transportation and housing in Westwood during the training. If you absolutely cannot make it, let us know on your application and we’ll reach out and try to work something out on a case-by-case basis.
+          Leadership training (September 18-22 and the weekend before/after) is an important part of becoming part of becoming an SPD or UniCabinet member. We will help you find transportation and housing in Westwood during the training. If you absolutely cannot make it, let us know on your application and we’ll reach out and try to work something out on a case-by-case basis.
         </p>
       </div>
       <div class='medium-6 columns'>
@@ -168,7 +173,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         </p>
         <p>
           <strong>What if I have suggestions or questions?</strong>
-          Please email the Program Advisory Board at pab@unicamp.org — we’d love to hear your feedback!
+          Please email the Program Advisory Board at <a href='mailto:pab@unicamp.org'>pab@unicamp.org</a> &mdash; we’d love to hear your feedback!
         </p>
       </div>
   </div>
