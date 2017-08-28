@@ -36,7 +36,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
       <div class='medium-6 columns'>
         <h4>Session Leadership (LSHIP)</h4>
         <p>
-          Each session’s LSHIP team will be supported by UniCabinet. They will be given more resources and space to focus on working with their partner and student volunteers to develop a unique summer camp experience tailored to meet the needs of their chosen target population. 
+          Each session’s Session Program Director team will be supported by UniCabinet. They will be given more resources and space to focus on working with their partner and student volunteers to develop a unique summer camp experience tailored to meet the needs of their chosen target population.
         </p>
 
         <a class='button' href='#lship'>Apply for LSHIP &rarr;</a>
@@ -145,24 +145,31 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   <div class='medium-12 columns'>
     <h2>FAQs</h2>
     <div class='row'>
-    <p>
-      <strong>Can I be a camp counselor and a UniCabinet member?</strong>
-      <br />
-      Yes! We think it’s valuable for all volunteers in UniCamp to interact with campers. UniCabinet members are encouraged to also be classic camp volunteers.
-    </p>
-
-    Why is UniCabinet only open to current UCLA students?
-    UCLA UniCamp is the official charity of the students of UCLA. As a student group, one of its primary missions is to give students the opportunity to grow, serve, and lead. Alumni and other Woodseys who don’t attend UCLA can still serve important roles elsewhere in the organization.
-
-    What if I can’t make it to leadership training?
-    Leadership training (DATES) is an important part of becoming part of UniCabinet or LSHIP. We will help you find transportation and housing in Westwood during the training. If you absolutely cannot make it, let us know on your application and we’ll reach out and try to work something out on a case-by-case basis.
-
-    Does this mean training meetings every week for the whole year!?
-    Nope! A big motivation behind these changes is to spread out training rather than concentrate it in one intense quarter. Volunteers will likely be asked to attend events roughly every 2-3 weeks throughout the year rather than once or twice a week for one quarter. We know life can get hectic throughout the quarter, so UniCabinet will be working on ways to make the time commitment easier for volunteers.
-
-    What if I have suggestions or questions?
-    Please email the Program Advisory Board at pab@unicamp.org — we’d love to hear your feedback!
-
+      <div class='medium-6 columns'>
+        <p>
+          <strong>Can I be a camp counselor and a UniCabinet member?</strong>
+          <br />
+          Yes! We think it’s valuable for all volunteers in UniCamp to interact with campers. UniCabinet members are encouraged to also be classic camp volunteers.
+        </p>
+        <p>
+          <strong>Why is UniCabinet only open to current UCLA students?</strong>
+          UCLA UniCamp is the official charity of the students of UCLA. As a student group, one of its primary missions is to give students the opportunity to grow, serve, and lead. Alumni and other Woodseys who don’t attend UCLA can still serve important roles elsewhere in the organization.
+        </p>
+        <p>
+          <strong>What if I can’t make it to leadership training?</strong>
+          Leadership training (DATES) is an important part of becoming part of UniCabinet or LSHIP. We will help you find transportation and housing in Westwood during the training. If you absolutely cannot make it, let us know on your application and we’ll reach out and try to work something out on a case-by-case basis.
+        </p>
+      </div>
+      <div class='medium-6 columns'>
+        <p>
+          <strong>Does this mean training meetings every week for the whole year!?</strong>
+          Nope! A big motivation behind these changes is to spread out training rather than concentrate it in one intense quarter. Volunteers will likely be asked to attend events roughly every 2-3 weeks throughout the year rather than once or twice a week for one quarter. We know life can get hectic throughout the quarter, so UniCabinet will be working on ways to make the time commitment easier for volunteers.
+        </p>
+        <p>
+          <strong>What if I have suggestions or questions?</strong>
+          Please email the Program Advisory Board at pab@unicamp.org — we’d love to hear your feedback!
+        </p>
+      </div>
   </div>
 </section>
 
