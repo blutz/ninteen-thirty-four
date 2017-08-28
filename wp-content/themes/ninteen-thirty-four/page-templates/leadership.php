@@ -28,13 +28,13 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <a class='button' href='#cabinet'>Apply for UniCabinet &rarr;</a>
         <p>
           <small>
-          <strong>UniCabinet is open to all current UCLA Students, regardless of experience. The application will be open until Tuesday, September 5 at 11:59pm.</strong>
+          <strong>UniCabinet is open to all current UCLA Students, regardless of experience. First-round interviews will take place September 6-8.</strong>
           UCLA UniCamp prides itself in being the official charity of the students of UCLA, and a student leadership development program. We will provide training, mentoring, and tools; our only requirement for applicants is a passion for the mission.
           </small>
         </p>
       </div>
       <div class='medium-6 columns'>
-        <h4>Session Leadership (LSHIP)</h4>
+        <h4>Session Program Director</h4>
         <p>
           Each session’s Session Program Director team will be supported by UniCabinet. They will be given more resources and space to focus on working with their partner and student volunteers to develop a unique summer camp experience tailored to meet the needs of their chosen target population.
         </p>
@@ -42,7 +42,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <a class='button' href='#lship'>Apply for LSHIP &rarr;</a>
         <p>
           <small>
-          <strong>LSHIP is open to all Woodsey volunteers. The application will be open until Tuesday, September 5 at 11:59pm.</strong>
+          <strong>SPD roles are open to all Woodsey volunteers. The application will be open until Tuesday, September 5 at 11:59pm.</strong>
           UCLA UniCamp prides itself in being the official charity of the students of UCLA, and a student leadership development program. We will provide training, mentoring, and tools; our only requirement for applicants is a passion for the mission.
           </small>
         </p>
@@ -80,7 +80,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 </section>
 
 <section class='row content-row'>
-  <div class='medium-10 medium-offset-1 columns'>
+  <div class='medium-12 columns'>
     <h2>Session Leadership</h2>
     <p>Each session is led by a Session Program Director. Throughout LSHIP training, Head Counselors can apply to be part of a SPD’s team. LSHIP is the only group that cannot be a Classic Camp/OCP volunteer or a member of UniCabinet.</p>
     <p>The interview process for LSHIP is:</p>
@@ -92,6 +92,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
       <li><strong>(SPDs only)</strong> Development of a camp program that includes a partner, funding, and campers<br /><strong>(HCs only)</strong> Acceptance to an initiative's leadership team</li>
     </ol>
     <p>Once accepted as an HC/SPD Candidate, you'll be part of Leadership Training and will be working with UniCabinet, professional staff, and alumni (through the Program Advisory Board) to bring your initiative from idea to reality. For some initiatives, this process can take more than one year.</p>
+    <a class='button' href='#lship'>Apply for LSHIP Online &rarr;</a>
   </div>
 </section>
 
