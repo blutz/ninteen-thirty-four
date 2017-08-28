@@ -4,7 +4,7 @@ function ninteen_thirty_four_scripts() {
   wp_deregister_script('jquery');
   wp_enqueue_script('jquery',
     get_template_directory_uri() . '/vendor/jquery.js',
-    array(), false, true);
+    array(), '1503952187', true);
   wp_enqueue_script('what-input',
     get_template_directory_uri() . '/vendor/what-input.js',
     array('jquery'), false, true);
