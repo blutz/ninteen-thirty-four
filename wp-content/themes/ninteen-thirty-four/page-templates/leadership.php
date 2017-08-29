@@ -94,8 +94,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     </ol>
     <p>Once accepted as an SPD Candidate, you'll be part of Leadership Training and will be working with UniCabinet, professional staff, and alumni (through the Program Advisory Board) to bring your initiative from idea to reality. For some initiatives, this process can take more than one year.</p>
     <p>
-      Head Counselor applications will be online in a few weeks.
-      <script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/signup-forms/popup/embed.js" data-dojo-config="usePlainJson: true, isDebug: false"></script><script type="text/javascript">require(["mojo/signup-forms/Loader"], function(L) { L.start({"baseUrl":"mc.us13.list-manage.com","uuid":"0fcb41f54ca069df3bc85f56c","lid":"f67edd7fba"}) })</script>
+      Head Counselor applications will be online in a few weeks. <a href='#hc'>Leave us your email address</a> if you'd like to be contacted with more information about HC positions.
     </p>
     <a class='button' href='#spd'>Apply to be an SPD online &rarr;</a>
   </div>
