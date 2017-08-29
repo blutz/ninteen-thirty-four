@@ -1,4 +1,5 @@
 $height-photo-block: 850px;
+$height-photo-block-short: $height-photo-block - 200px;
 
 .photo-block {
   @include breakpoint(large up) {
@@ -14,6 +15,11 @@ $height-photo-block: 850px;
   @include breakpoint(medium down) {
     background-image: none !important;
     background-color: $color-overlay-solid;
+  }
+}
+.photo-block {
+  @include breakpoint(large up) {
+    height: $height-photo-block-short;
   }
 }
 .photo-block__small-image {

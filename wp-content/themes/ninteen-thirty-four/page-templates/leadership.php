@@ -2,7 +2,7 @@
 <?php get_header(); ?>
 
 <section
-class='photo-block'
+class='photo-block photo-block--short'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.WhyCamp.jpg")'>
   <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.WhyCamp.jpg' />
   <div class='photo-block__content'>
