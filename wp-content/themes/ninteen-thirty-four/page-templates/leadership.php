@@ -36,7 +36,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
       <div class='medium-6 columns'>
         <h4>Session Program Director</h4>
         <p>
-          Each session’s Session Program Director team will be supported by UniCabinet. They will be given more resources and space to focus on working with their partner and student volunteers to develop a unique summer camp experience tailored to meet the needs of their chosen target population.
+          Each session’s Session Program Director will be supported by UniCabinet. They will be given more resources and space to focus on working with their partner and student volunteers to develop a unique summer camp experience tailored to meet the needs of their chosen target population.
         </p>
 
         <a class='button' href='#spd'>Apply to be a Session Program Director &rarr;</a>
@@ -95,6 +95,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <p>Once accepted as an SPD Candidate, you'll be part of Leadership Training and will be working with UniCabinet, professional staff, and alumni (through the Program Advisory Board) to bring your initiative from idea to reality. For some initiatives, this process can take more than one year.</p>
     <p>
       Head Counselor applications will be online in a few weeks.
+      <script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/signup-forms/popup/embed.js" data-dojo-config="usePlainJson: true, isDebug: false"></script><script type="text/javascript">require(["mojo/signup-forms/Loader"], function(L) { L.start({"baseUrl":"mc.us13.list-manage.com","uuid":"0fcb41f54ca069df3bc85f56c","lid":"f67edd7fba"}) })</script>
     </p>
     <a class='button' href='#spd'>Apply to be an SPD online &rarr;</a>
   </div>
@@ -135,6 +136,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <ul class="tabs" data-tabs id="application-tabs" data-deep-link="true" data-deep-link-smudge="true">
       <li class="tabs-title is-active"><a href="#cabinet" aria-selected="true">UniCabinet Application</a></li>
       <li class="tabs-title"><a data-tabs-target="spd" href="#spd">Session Program Director Application</a></li>
+      <li class="tabs-title"><a data-tabs-target="hc" href="#hc">Head Counselor Email Notification</a></li>
     </ul>
     <div class="tabs-content" data-tabs-content="application-tabs">
       <div class="tabs-panel is-active" id="cabinet">
@@ -142,6 +144,9 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
       </div>
       <div class="tabs-panel" id="spd">
         <iframe class="airtable-embed" src="https://airtable.com/embed/shrlLZYllMLD2fwRH?backgroundColor=yellow" frameborder="0" onmousewheel="" width="100%" height="533" style="background: transparent; border: 1px solid #ccc;"></iframe>
+      </div>
+      <div class="tabs-panel" id="hc">
+        <iframe class="airtable-embed" src="https://airtable.com/embed/shradTG1ZbWgDqwKw?backgroundColor=green" frameborder="0" onmousewheel="" width="100%" height="533" style="background: transparent; border: 1px solid #ccc;"></iframe>
       </div>
     </div>
   </div>
