@@ -4,8 +4,10 @@
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg"); background-position-y: top;'>
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg' />
   <div class='photo-block__content'>
-    <h2>Applications coming soon</h2>
-    <h4>Registration is closed for the 2017 season. Check back soon for volunteer and camper applications for the 2018 season!</h4>
+    <h2>We’re growing</h2>
+    <p class='explainer'>We’re adding a brand new leadership program to UniCamp this year. Join us and leave your mark on the organization!</p>
+    <p class='explainer'>Applications and information for UniCabinet and Program Director positions are online now!</p>
+    <a class='button button--homepage' href='/leadership'>Join us &rarr;</a>
   </div>
 </section>
 
