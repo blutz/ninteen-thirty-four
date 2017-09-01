@@ -23,16 +23,17 @@
       <hr />
       <ul class='button-list'>
         <li><a href='https://oss.ticketmaster.com/aps/uclacto2/EN/buy/details/m172925' target='_blank'><span>Tickets</span></a></li>
-        <!--<li><a href='<?php echo get_template_directory_uri(); ?>/sites/gala/Campfire_Gala_Sponsor.Auction_Packet.pdf'><span>Sponsorship</span></a></li>-->
+        <li><a href='<?php echo get_template_directory_uri(); ?>/sites/gala/CampfireGalaSponsorshipPacket.pdf'><span>Sponsorship</span></a></li>
+        <li><a href='<?php echo get_template_directory_uri(); ?>/sites/gala/CampfireGalaSponsorshipPacket.pdf'><span>Silent Auction Donations</span></a></li>
         <li><a href='https://goo.gl/photos/pXfJ9aQuhJ5xanqG8'><span>Photos</span></a></li>
         <!--<li><a href='#' class='button-list__disabled'><span>About the<br />Honoree</span></a></li>-->
       </ul>
       <hr />
-      <p>Early bird tickets available for $150 through September 22nd. General Admission will be $175 from September 23rd.</p>
+      <p>Early bird tickets available for $150 through September 30th. General Admission will be $175 from October 1st.</p>
       <p>Ticket sales close October 11th.</p>
       <p>To purchase tickets by mail or phone, please contact the UCLA Central Ticket Office at (310) 825-2101.</p>
       <p>Reception &ndash; 5 pm<br />Dinner &ndash; 7pm<p>
-      <p><strong>UCLA Carnesale Commons</strong><br />251 Charles E Young Drive West, Los Angeles, CA 90095</p>
+      <p><strong>Palisades Ballroom at UCLA Carnesale Commons</strong><br />251 Charles E Young Drive West, Los Angeles, CA 90095</p>
       <p>Cocktail Attire Requested</p>
       <p><small><strong>For more information, contact <a href='mailto:events@unicamp.org'>events@unicamp.org</strong></small></p>
     </div><!-- /cols -->
