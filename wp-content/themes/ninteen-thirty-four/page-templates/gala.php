@@ -23,6 +23,7 @@
       <hr />
       <ul class='button-list'>
         <li><a href='https://oss.ticketmaster.com/aps/uclacto2/EN/buy/details/m172925' target='_blank'><span>Tickets</span></a></li>
+        <li><a href='https://www.giveffect.com/checkout/731' target='_blank'><span>Donate</span></a></li>
         <li><a href='<?php echo get_template_directory_uri(); ?>/sites/gala/CampfireGalaSponsorship.pdf'><span>Sponsorship</span></a></li>
         <li><a href='<?php echo get_template_directory_uri(); ?>/sites/gala/CampfireGalaSilentAuction.pdf'><span>Silent Auction Donations</span></a></li>
         <li><a href='https://goo.gl/photos/pXfJ9aQuhJ5xanqG8'><span>Photos</span></a></li>
