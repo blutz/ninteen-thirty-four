@@ -30,8 +30,7 @@
         <!--<li><a href='#' class='button-list__disabled'><span>About the<br />Honoree</span></a></li>-->
       </ul>
       <hr />
-      <p>Early bird tickets available for $150 through September 30th. General Admission will be $175 from October 1st.</p>
-      <p>Ticket sales close October 11th.</p>
+      <p>Tickets available for $150. Sales close October 11th.</p>
       <p>To purchase tickets by mail or phone, please contact the UCLA Central Ticket Office at (310) 825-2101.</p>
       <p>Reception &ndash; 5 pm<br />Dinner &ndash; 7pm<p>
       <p><strong>Palisades Ballroom at UCLA Carnesale Commons</strong><br />251 Charles E Young Drive West, Los Angeles, CA 90095</p>
