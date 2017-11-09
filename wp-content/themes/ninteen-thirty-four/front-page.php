@@ -4,10 +4,9 @@
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg"); background-position-y: top;'>
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg' />
   <div class='photo-block__content'>
-    <h2>We’re growing</h2>
-    <p class='explainer'>We’re adding a brand new leadership program to UniCamp this year. Join us and leave your mark on the organization!</p>
-    <p class='explainer'>Applications and information for UniCabinet and Program Director positions are online now!</p>
-    <a class='button button--homepage' href='/leadership'>Join us &rarr;</a>
+    <h2>Be a Camp Counselor this Summer</h2>
+    <p class='explainer'>Applications for new and returning camp counselor positions (and Older Camper Program advisors) will be released soon. Check back tomorrow for more info!</p>
+    <!--<a class='button button--homepage' href='/apply'>Learn more &rarr;</a>-->
   </div>
 </section>
 
