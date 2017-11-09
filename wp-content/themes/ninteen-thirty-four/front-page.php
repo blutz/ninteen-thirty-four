@@ -4,9 +4,9 @@
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg"); background-position-y: top;'>
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg' />
   <div class='photo-block__content'>
-    <h2>Be a Camp Counselor this Summer</h2>
-    <p class='explainer'>Applications for new and returning camp counselor positions (and Older Camper Program advisors) will be released soon. Check back tomorrow for more info!</p>
-    <!--<a class='button button--homepage' href='/apply'>Learn more &rarr;</a>-->
+    <h2>Apply to be a student volunteer!</h2>
+    <p class='explainer'>Applications for new and returning camp counselor positions are now available! New volunteers should apply by November 22.</p>
+    <a class='button button--homepage' href='/apply'>Learn more &rarr;</a>
   </div>
 </section>
 
