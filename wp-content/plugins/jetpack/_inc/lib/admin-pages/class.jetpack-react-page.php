@@ -42,7 +42,6 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 
 	/**
 	 * Add Jetpack Dashboard sub-link and point it to AAG if the user can view stats, manage modules or if Protect is active.
-	 * Otherwise and only if user is allowed to see the Jetpack Admin, the Dashboard sub-link is added but pointed to Apps tab.
 	 *
 	 * Works in Dev Mode or when user is connected.
 	 *
@@ -204,18 +203,25 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 			wp_enqueue_script( 'jp-tracks', '//stats.wp.com/w.js', array(), gmdate( 'YW' ), true );
 		}
 
-		// Collecting roles that can view site stats
+		// Collecting roles that can view site stats.
 		$stats_roles = array();
 		$enabled_roles = function_exists( 'stats_get_option' ) ? stats_get_option( 'roles' ) : array( 'administrator' );
-		foreach( get_editable_roles() as $slug => $role ) {
+
+		if ( ! function_exists( 'get_editable_roles' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/user.php';
+		}
+		foreach ( get_editable_roles() as $slug => $role ) {
 			$stats_roles[ $slug ] = array(
 				'name' => translate_user_role( $role['name'] ),
 				'canView' => is_array( $enabled_roles ) ? in_array( $slug, $enabled_roles, true ) : false,
 			);
 		}
 
-		$response = rest_do_request( new WP_REST_Request( 'GET', '/jetpack/v4/module/all' ) );
-		$modules = $response->get_data();
+		// Load API endpoint base classes and endpoints for getting the module list fed into the JS Admin Page
+		require_once JETPACK__PLUGIN_DIR . '_inc/lib/core-api/class.jetpack-core-api-xmlrpc-consumer-endpoint.php';
+		require_once JETPACK__PLUGIN_DIR . '_inc/lib/core-api/class.jetpack-core-api-module-endpoints.php';
+		$moduleListEndpoint = new Jetpack_Core_API_Module_List_Endpoint();
+		$modules = $moduleListEndpoint->get_modules();
 
 		// Preparing translated fields for JSON encoding by transforming all HTML entities to
 		// respective characters.
@@ -260,6 +266,7 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 				'isPublic'	=> '1' == get_option( 'blog_public' ),
 				'isInIdentityCrisis' => Jetpack::validate_sync_error_idc_option(),
 			),
+			'connectUrl' => Jetpack::init()->build_connect_url( true, false, false ),
 			'dismissedNotices' => $this->get_dismissed_jetpack_notices(),
 			'isDevVersion' => Jetpack::is_development_version(),
 			'currentVersion' => JETPACK__VERSION,
@@ -299,7 +306,7 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 				 * @param bool $are_promotions_active Status of promotions visibility. True by default.
 				 */
 				'showPromotions' => apply_filters( 'jetpack_show_promotions', true ),
-				'isAutomatedTransfer' => jetpack_is_automated_transfer_site(),
+				'isAtomicSite' => jetpack_is_atomic_site(),
 			),
 			'themeData' => array(
 				'name'      => $current_theme->get( 'Name' ),

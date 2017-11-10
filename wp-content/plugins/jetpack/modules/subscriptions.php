@@ -166,6 +166,11 @@ class Jetpack_Subscriptions {
 			return false;
 		}
 
+		// Only posts are currently supported
+		if ( $post->post_type !== 'post' ) {
+			return false;
+		}
+
 		/**
 		 * Array of categories that will never trigger subscription emails.
 		 *
@@ -201,7 +206,6 @@ class Jetpack_Subscriptions {
 		if ( ! empty( $only_these_categories ) && ! in_category( $only_these_categories, $post->ID ) ) {
 			$should_email = false;
 		}
-
 
 		return $should_email;
 	}
@@ -662,7 +666,7 @@ class Jetpack_Subscriptions {
 		if ( isset( $_REQUEST['subscribe_blog'] ) )
 			$post_ids[] = 0;
 
-		Jetpack_Subscriptions::subscribe(
+		$result = Jetpack_Subscriptions::subscribe(
 									$comment->comment_author_email,
 									$post_ids,
 									true,
@@ -673,6 +677,18 @@ class Jetpack_Subscriptions {
 										'server_data'    => $_SERVER,
 									)
 		);
+
+		/**
+		 * Fires on each comment subscription form submission.
+		 *
+		 * @module subscriptions
+		 *
+		 * @since 5.5.0
+		 *
+		 * @param NULL|WP_Error $result Result of form submission: NULL on success, WP_Error otherwise.
+		 * @param Array $post_ids An array of post IDs that the user subscribed to, 0 means blog subscription.
+		 */
+		do_action( 'jetpack_subscriptions_comment_form_submission', $result, $post_ids );
 	}
 
 	/**
@@ -1043,8 +1059,16 @@ add_shortcode( 'jetpack_subscription_form', 'jetpack_do_subscription_form' );
 add_shortcode( 'blog_subscription_form', 'jetpack_do_subscription_form' );
 
 function jetpack_do_subscription_form( $instance ) {
+	if ( empty( $instance ) || ! is_array( $instance ) ) {
+		$instance = array();
+	}
 	$instance['show_subscribers_total'] = empty( $instance['show_subscribers_total'] ) ? false : true;
-	$instance = shortcode_atts( Jetpack_Subscriptions_Widget::defaults(), $instance, 'jetpack_subscription_form' );
+
+	$instance = shortcode_atts(
+		Jetpack_Subscriptions_Widget::defaults(),
+		$instance,
+		'jetpack_subscription_form'
+	);
 	$args = array(
 		'before_widget' => sprintf( '<div class="%s">', 'jetpack_subscription_widget' ),
 	);

@@ -133,7 +133,7 @@ class Jetpack_Protect_Module {
 				require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
 			}
 
-			if ( ! is_plugin_active_for_network( 'jetpack/jetpack.php' ) ) {
+			if ( ! ( is_plugin_active_for_network( 'jetpack/jetpack.php' ) || is_plugin_active_for_network( 'jetpack-dev/jetpack.php' ) ) ) {
 				add_action( 'load-index.php', array ( $this, 'prepare_jetpack_protect_multisite_notice' ) );
 			}
 		}
@@ -311,7 +311,11 @@ class Jetpack_Protect_Module {
 	 * a busy IP that has a lot of good logins along with some forgotten passwords. Also saves current user's ip
 	 * to the ip address whitelist
 	 */
-	public function log_successful_login( $user_login, $user ) {
+	public function log_successful_login( $user_login, $user = null ) {
+		if ( ! $user ) { // For do_action( 'wp_login' ) calls that lacked passing the 2nd arg.
+			$user = get_user_by( 'login', $user_login );
+		}
+
 		$this->protect_call( 'successful_login', array ( 'roles' => $user->roles ) );
 	}
 
@@ -593,6 +597,7 @@ class Jetpack_Protect_Module {
 			// If it fails we need access to $this->api_key_error
 			if ( $result ) {
 				wp_safe_redirect( Jetpack::module_configuration_url( 'protect' ) );
+				exit;
 			}
 		}
 
