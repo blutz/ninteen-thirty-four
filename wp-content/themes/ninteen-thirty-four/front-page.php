@@ -5,7 +5,7 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg' />
   <div class='photo-block__content'>
     <h2>Apply to be a student volunteer!</h2>
-    <p class='explainer'>Applications for new and returning camp counselor positions are now available! New volunteers should apply by November 22.</p>
+    <p class='explainer'>Applications for new and returning camp counselor positions, as well as OCP advisor positions, are now available!</p>
     <a class='button button--homepage' href='/apply'>Learn more &rarr;</a>
   </div>
 </section>
