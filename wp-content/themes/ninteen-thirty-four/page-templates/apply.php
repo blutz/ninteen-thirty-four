@@ -24,24 +24,27 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 <section class='row content-row'>
   <div class='medium-12 columns'>
     <h5>Older Camper Programs</h5>
-    <p class='explainer'>Applications to become an Older Camper Program advisor (for returning volunteers) are now available. Click the links below to apply for C.L.I.M.B., UniCorps, or W.A.L.L. <a href='/programs/#ocp'>Learn more about our Older Camper Programs</a>.</p>
+    <p class='explainer'>Applications to become an Older Camper Program advisor (for returning volunteers) are now available. Click the links below to apply for C.L.I.M.B., UniCorps, or W.A.L.L.<a href='/programs/#ocp'>Learn more about our Older Camper Programs</a>.</p>
   </div>
   <div class='medium-4 columns'>
     <img src='<?php echo get_template_directory_uri(); ?>/images/logos/climb-logo.jpg' style='width: 50%; display: block; clear: both; margin: auto;'>
     <strong>Core Lessons in Mind &amp; Body</strong>
     <p>If you have any questions about the application or interview process, email <a href='climbpds@unicamp.org'>climbpds@unicamp.org</a></p>
+    <p>The C.L.I.M.B. application is due by 11:59 p.m. on Thursday, November 16.</p>
     <a class='button' href='https://docs.google.com/document/d/1o_ZNy5CtLAKBYnGAnhhwK0-OhH8I76BLNRL6VYNzbxk/edit'>Apply for C.L.I.M.B. &rarr;</a>
   </div>
   <div class='medium-4 columns'>
     <img src='<?php echo get_template_directory_uri(); ?>/images/logos/unicorps-logo.jpg' style='width: 50%; display: block; clear: both; margin: auto;'>
     <strong>UniCorps</strong>
     <p>If you have any questions about the application or interview process, email <a href='climbpds@unicamp.org'>ucpds@unicamp.org</a></p>
+    <p>The UniCorps application is due by 11:30 p.m. on Wednesday, November 15.</p>
     <a class='button' href='https://docs.google.com/document/d/1XfqBoCWcT52oFKzttkkFdxNfPh48QVT82FZvU11RWlA/edit'>Apply for UniCorps &rarr;</a>
   </div>
   <div class='medium-4 columns'>
     <img src='<?php echo get_template_directory_uri(); ?>/images/logos/wall-logo.jpg' style='width: 50%; display: block; clear: both; margin: auto;'>
     <strong>Wilderness Adventures in Leadership and Learning</strong>
     <p>If you have any questions about the application or interview process, email <a href='climbpds@unicamp.org'>wallpds@unicamp.org</a></p>
+    <p>The W.A.L.L. application is due by 11:30 p.m. on Wednesday, November 15.</p>
     <a class='button' href='https://docs.google.com/document/d/1lnXTkGfOTT-o89csGzzXE1bAfKmwojnrxDJtBfvXd2I/edit'>Apply for W.A.L.L. &rarr;</a>
   </div>
 </section>
