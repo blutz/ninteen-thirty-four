@@ -49,7 +49,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           <li>Attend weekly training meetings at UCLA during Spring Quarter</li>
         </ul>
         <p class='explainer'>
-          Ready to become a Woodsey and join the UCLA UniCamp family? Volunteer recruitment usually begins in February of each year. Check back in January to receive more information on recruitment as it is released.
+          Ready to become a Woodsey and join the UCLA UniCamp family? Look out for us on Bruinwalk or check out <a href='/apply'>UniCamp.org/apply</a> for more info.
         </p>
       </div>
     </div>
