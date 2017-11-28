@@ -16,7 +16,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 <section class='row content-row'>
   <div class='medium-12 columns'>
     <h5>Classic Camp</h5>
-    <p class='explainer'>Be a camp counselor this summer with UCLA UniCamp! New volunteer applications are due November 22 and returning volunteer applications are due November 15.</p>
+    <p class='explainer'>Be a camp counselor this summer with UCLA UniCamp! New volunteer applications are due November 30 and returning volunteer applications are due November 15.</p>
     <p class='explainer'>Look out for us on Bruinwalk or email us at <a href='mailto:unicabinet@unicamp.org'>unicabinet@unicamp.org</a> to learn more.</p>
     <a class='button' href='https://docs.google.com/forms/d/e/1FAIpQLSe_C-X9T38gxSzyTp40DKXGu1_0FQF7nrIthjnwJSobqXBHjw/viewform?c=0&w=1' style='display: inline-block; margin: auto; font-size: 1.3rem; text-align: center; width: auto; position: relative; left: 50%; transform: translateX(-50%); '>Apply online! &rarr;</a>
   </div>
