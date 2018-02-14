@@ -149,7 +149,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           <strong>Organizational Partners:</strong> The Village Nation
         </p>
         <p>
-          Our session is inspired by the African proverb, "It takes a village to raise a child." Our week of camp will be dedicated to reconnecting African American students with their heritage as well as providing them a safe, culturally empowering space to express themselves and discuss current issues facing their communities.
+          Our session is guided by the Afrikan proverb "It takes a village to raise a child." Our week of camp celebrates Afrikan American heritage, history, and culture in a safe space that fosters camper expression, builds confidence to unlock campers' true potential, and develops leadership to advance the legacy of social justice.
         </p>
         <p><a href='/apply-campers' class='button'>Apply for this session &rarr;</a></p>
       </div>
