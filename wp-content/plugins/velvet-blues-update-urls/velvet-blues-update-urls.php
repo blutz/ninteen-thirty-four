@@ -6,11 +6,11 @@ Description: This plugin <strong>updates all urls in your website</strong> by re
 Author: VelvetBlues.com
 Author URI: http://www.velvetblues.com/
 Author Email: info@velvetblues.com
-Version: 3.2.7
+Version: 3.2.8
 License: GPLv2 or later
 Text Domain: velvet-blues-update-urls
 */
-/*  Copyright 2016  Velvet Blues Web Design  (email : info@velvetblues.com)
+/*  Copyright 2018  Velvet Blues Web Design  (email : info@velvetblues.com)
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -298,7 +298,7 @@ function VelvetBluesUU_management_page(){
 			</strong>
 			<?php _e('Contact us at','velvet-blues-update-urls'); ?>
 			<a href="mailto:info@velvetblues.com?subject=Move%20My%20WP%20Site">info@velvetblues.com</a>.
-			<?php _e('We will backup your website and move it for $65 OR update your URLs for only $29.','velvet-blues-update-urls'); ?>
+			<?php _e('We will backup your website and move it for $75 OR update your URLs for only $29.','velvet-blues-update-urls'); ?>
 			<?php endif; ?>
 		</p>
 		<?php

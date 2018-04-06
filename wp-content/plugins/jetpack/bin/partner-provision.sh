@@ -4,7 +4,7 @@
 # executes wp-cli command to provision Jetpack site for given partner
 
 usage () {
-	echo "Usage: partner-provision.sh --partner_id=partner_id --partner_secret=partner_secret [--user=wp_user_id] [--plan=plan_name] [--onboarding=1] [--wpcom_user_id=1234] [--url=http://example.com] [--force_connect=1] [--force_register=1] [--allow-root]"
+	echo "Usage: partner-provision.sh --partner_id=partner_id --partner_secret=partner_secret [--user=wp_user_id] [--plan=plan_name] [--onboarding=1] [--wpcom_user_id=1234] [--wpcom_user_email=wpcom_user_email] [--url=http://example.com] [--force_connect=1] [--force_register=1] [--allow-root] [--home_url] [--site_url] [--partner-tracking-id]"
 }
 
 GLOBAL_ARGS=""
@@ -23,6 +23,9 @@ for i in "$@"; do
 		-w=* | --wpcom_user_id=* )  WPCOM_USER_ID="${i#*=}"
 			shift
 			;;
+		-e=* | --wpcom_user_email=* ) WPCOM_USER_EMAIL="${i#*=}"
+			shift
+			;;
 		-p=* | --plan=* )           PLAN_NAME="${i#*=}"
 			shift
 			;;
@@ -36,6 +39,15 @@ for i in "$@"; do
 			shift
 			;;
 		--force_connect=* )         FORCE_CONNECT="${i#*=}"
+			shift
+			;;
+		--site_url=* )              WP_SITEURL="${i#*=}"
+			shift
+			;;
+		--home_url=* )              WP_HOME="${i#*=}"
+			shift
+			;;
+		--partner-tracking-id=* )   PARTNER_TRACKING_ID="${i#*=}"
 			shift
 			;;
 		--allow-root )              GLOBAL_ARGS="--allow-root"
@@ -92,12 +104,28 @@ if [ ! -z "$WPCOM_USER_ID" ]; then
 	ADDITIONAL_ARGS="$ADDITIONAL_ARGS --wpcom_user_id=$WPCOM_USER_ID"
 fi
 
+if [ ! -z "$WPCOM_USER_EMAIL" ]; then
+	ADDITIONAL_ARGS="$ADDITIONAL_ARGS --wpcom_user_email=$WPCOM_USER_EMAIL"
+fi
+
 if [ ! -z "$FORCE_REGISTER" ]; then
 	ADDITIONAL_ARGS="$ADDITIONAL_ARGS --force_register=$FORCE_REGISTER"
 fi
 
 if [ ! -z "$FORCE_CONNECT" ]; then
 	ADDITIONAL_ARGS="$ADDITIONAL_ARGS --force_connect=$FORCE_CONNECT"
+fi
+
+if [ ! -z "$WP_SITEURL" ]; then
+	ADDITIONAL_ARGS="$ADDITIONAL_ARGS --site_url=$WP_SITEURL"
+fi
+
+if [ ! -z "$WP_HOME" ]; then
+	ADDITIONAL_ARGS="$ADDITIONAL_ARGS --home_url=$WP_HOME"
+fi
+
+if [ ! -z "$PARTNER_TRACKING_ID" ]; then
+	ADDITIONAL_ARGS="$ADDITIONAL_ARGS --partner-tracking-id=$PARTNER_TRACKING_ID"
 fi
 
 # Remove leading whitespace

@@ -21,7 +21,9 @@ require_once( $json_endpoints_dir . 'class.wpcom-json-api-render-endpoint.php' )
 
 require_once( $json_endpoints_dir . 'class.wpcom-json-api-delete-media-endpoint.php' );
 require_once( $json_endpoints_dir . 'class.wpcom-json-api-get-comment-endpoint.php' );
+require_once( $json_endpoints_dir . 'class.wpcom-json-api-get-comment-counts-endpoint.php' );
 require_once( $json_endpoints_dir . 'class.wpcom-json-api-get-comments-tree-endpoint.php' );
+require_once( $json_endpoints_dir . 'class.wpcom-json-api-get-comment-history-endpoint.php' );
 require_once( $json_endpoints_dir . 'class.wpcom-json-api-get-media-endpoint.php' );
 require_once( $json_endpoints_dir . 'class.wpcom-json-api-get-post-endpoint.php' );
 require_once( $json_endpoints_dir . 'class.wpcom-json-api-render-shortcode-endpoint.php' );
@@ -79,10 +81,6 @@ require_once( $json_endpoints_dir . 'class.wpcom-json-api-bulk-restore-post-endp
 // Custom Menus
 require_once( $json_endpoints_dir . 'class.wpcom-json-api-menus-v1-1-endpoint.php' );
 
-// Users
-require_once( $json_endpoints_dir . 'class.wpcom-json-api-list-invites-endpoint.php' );
-require_once( $json_endpoints_dir . 'class.wpcom-json-api-update-invites-endpoint.php' );
-
 // Custom CSS
 require_once( $json_endpoints_dir . 'class.wpcom-json-api-get-customcss.php' );
 require_once( $json_endpoints_dir . 'class.wpcom-json-api-update-customcss.php' );
@@ -99,6 +97,9 @@ require_once( $json_endpoints_dir . 'class.wpcom-json-api-add-widget-endpoint.ph
 // **********
 // v1.2
 // **********
+
+// Comments
+require_once( $json_endpoints_dir . 'class.wpcom-json-api-get-comments-tree-v1-2-endpoint.php' );
 
 // Media
 require_once( $json_endpoints_dir . 'class.wpcom-json-api-list-media-v1-2-endpoint.php' );
@@ -121,4 +122,10 @@ require_once( $json_jetpack_endpoints_dir . 'json-api-jetpack-endpoints.php' );
 // **********
 
 require_once( $json_endpoints_dir . 'class.wpcom-json-api-site-settings-v1-3-endpoint.php' );
+
+// **********
+// v1.4
+// **********
+
+require_once( $json_endpoints_dir . 'class.wpcom-json-api-site-settings-v1-4-endpoint.php' );
 

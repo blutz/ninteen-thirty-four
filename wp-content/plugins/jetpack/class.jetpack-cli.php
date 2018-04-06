@@ -29,6 +29,9 @@ class Jetpack_CLI extends WP_CLI_Command {
 	 *
 	 */
 	public function status( $args, $assoc_args ) {
+
+		WP_CLI::line( sprintf( __( 'Checking status for %s', 'jetpack' ), esc_url( get_site_url() ) ) );
+
 		if ( ! Jetpack::is_active() ) {
 			WP_CLI::error( __( 'Jetpack is not currently connected to WordPress.com', 'jetpack' ) );
 		}
@@ -103,6 +106,9 @@ class Jetpack_CLI extends WP_CLI_Command {
 	 * @subcommand test-connection
 	 */
 	public function test_connection( $args, $assoc_args ) {
+
+		WP_CLI::line( sprintf( __( 'Testing connection for %s', 'jetpack' ), esc_url( get_site_url() ) ) );
+
 		if ( ! Jetpack::is_active() ) {
 			WP_CLI::error( __( 'Jetpack is not currently connected to WordPress.com', 'jetpack' ) );
 		}
@@ -191,7 +197,10 @@ class Jetpack_CLI extends WP_CLI_Command {
 			case 'blog':
 				Jetpack::log( 'disconnect' );
 				Jetpack::disconnect();
-				WP_CLI::success( __( 'Jetpack has been successfully disconnected.', 'jetpack' ) );
+				WP_CLI::success( sprintf(
+					__( 'Jetpack has been successfully disconnected for %s.', 'jetpack' ),
+					esc_url( get_site_url() )
+				) );
 				break;
 			case 'user':
 				if ( Jetpack::unlink_user( $user->ID ) ) {
@@ -244,7 +253,10 @@ class Jetpack_CLI extends WP_CLI_Command {
 				$options_to_reset = Jetpack_Options::get_options_for_reset();
 
 				// Reset the Jetpack options
-				_e( "Resetting Jetpack Options...\n", "jetpack" );
+				WP_CLI::line( sprintf(
+					__( "Resetting Jetpack Options for %s...\n", "jetpack" ),
+					esc_url( get_site_url() )
+				) );
 				sleep(1); // Take a breath
 				foreach ( $options_to_reset['jp_options'] as $option_to_reset ) {
 					Jetpack_Options::delete_option( $option_to_reset );
@@ -254,7 +266,7 @@ class Jetpack_CLI extends WP_CLI_Command {
 				}
 
 				// Reset the WP options
-				_e( "Resetting the jetpack options stored in wp_options...\n", "jetpack" );
+				WP_CLI::line( __( "Resetting the jetpack options stored in wp_options...\n", "jetpack" ) );
 				usleep( 500000 ); // Take a breath
 				foreach ( $options_to_reset['wp_options'] as $option_to_reset ) {
 					delete_option( $option_to_reset );
@@ -264,7 +276,7 @@ class Jetpack_CLI extends WP_CLI_Command {
 				}
 
 				// Reset to default modules
-				_e( "Resetting default modules...\n", "jetpack" );
+				WP_CLI::line( __( "Resetting default modules...\n", "jetpack" ) );
 				usleep( 500000 ); // Take a breath
 				$default_modules = Jetpack::get_default_modules();
 				Jetpack::update_active_modules( $default_modules );
@@ -329,10 +341,6 @@ class Jetpack_CLI extends WP_CLI_Command {
 				if ( 'all' == $args[1] ) {
 					$action = ( 'deactivate' == $action ) ? 'deactivate_all' : 'activate_all';
 				}
-				// VaultPress needs to be handled elsewhere.
-				if ( in_array( $action, array( 'activate', 'deactivate', 'toggle' ) ) && 'vaultpress' == $args[1] ) {
-					WP_CLI::error( sprintf( _x( 'Please visit %s to configure your VaultPress subscription.', '%s is a website', 'jetpack' ), esc_url( 'https://vaultpress.com/jetpack/' ) ) );
-				}
 			} else {
 				WP_CLI::line( __( 'Please specify a valid module.', 'jetpack' ) );
 				$action = 'list';
@@ -354,8 +362,11 @@ class Jetpack_CLI extends WP_CLI_Command {
 			case 'activate':
 				$module = Jetpack::get_module( $module_slug );
 				Jetpack::log( 'activate', $module_slug );
-				Jetpack::activate_module( $module_slug, false, false );
-				WP_CLI::success( sprintf( __( '%s has been activated.', 'jetpack' ), $module['name'] ) );
+				if ( Jetpack::activate_module( $module_slug, false, false ) ) {
+					WP_CLI::success( sprintf( __( '%s has been activated.', 'jetpack' ), $module['name'] ) );
+				} else {
+					WP_CLI::error( sprintf( __( '%s could not be activated.', 'jetpack' ), $module['name'] ) );
+				}
 				break;
 			case 'activate_all':
 				$modules = Jetpack::get_available_modules();
@@ -815,6 +826,10 @@ class Jetpack_CLI extends WP_CLI_Command {
 	 *
 	 * <token_json>
 	 * : JSON blob of WPCOM API token
+	 *  [--partner_tracking_id=<partner_tracking_id>]
+	 * : This is an optional ID that a host can pass to help identify a site in logs on WordPress.com
+	 *
+	 *  * @synopsis <token_json> [--partner_tracking_id=<partner_tracking_id>]
 	 */
 	public function partner_cancel( $args, $named_args ) {
 		list( $token_json ) = $args;
@@ -829,6 +844,13 @@ class Jetpack_CLI extends WP_CLI_Command {
 
 		if ( ! isset( $token->access_token ) ) {
 			$this->partner_provision_error( new WP_Error( 'missing_access_token', __( 'Missing or invalid access token', 'jetpack' ) ) );
+		}
+
+		if ( Jetpack::validate_sync_error_idc_option() ) {
+			$this->partner_provision_error( new WP_Error(
+				'site_in_safe_mode',
+				esc_html__( 'Can not cancel a plan while in safe mode. See: https://jetpack.com/support/safe-mode/', 'jetpack' )
+			) );
 		}
 
 		$site_identifier = Jetpack_Options::get_option( 'id' );
@@ -847,6 +869,9 @@ class Jetpack_CLI extends WP_CLI_Command {
 		);
 
 		$url = sprintf( 'https://%s/rest/v1.3/jpphp/%s/partner-cancel', $this->get_api_host(), $site_identifier );
+		if ( ! empty( $named_args ) && ! empty( $named_args['partner_tracking_id'] ) ) {
+			$url = esc_url_raw( add_query_arg( 'partner_tracking_id', $named_args['partner_tracking_id'], $url ) );
+		}
 
 		$result = Jetpack_Client::_wp_remote_request( $url, $request );
 
@@ -868,25 +893,31 @@ class Jetpack_CLI extends WP_CLI_Command {
 	 *
 	 * <token_json>
 	 * : JSON blob of WPCOM API token
-	 * --user_id=<user_id>
-	 * : Local ID of user to connect as (if omitted, user will be required to redirect via wp-admin)
 	 * [--plan=<plan_name>]
 	 * : Slug of the requested plan, e.g. premium
 	 * [--wpcom_user_id=<user_id>]
 	 * : WordPress.com ID of user to connect as (must be whitelisted against partner key)
+	 * [--wpcom_user_email=<wpcom_user_email>]
+	 * : Override the email we send to WordPress.com for registration
 	 * [--onboarding=<onboarding>]
 	 * : Guide the user through an onboarding wizard
 	 * [--force_register=<register>]
 	 * : Whether to force a site to register
 	 * [--force_connect=<force_connect>]
 	 * : Force JPS to not reuse existing credentials
+	 * [--home_url=<home_url>]
+	 * : Overrides the home option via the home_url filter, or the WP_HOME constant
+	 * [--site_url=<site_url>]
+	 * : Overrides the siteurl option via the site_url filter, or the WP_SITEURL constant
+	 * [--partner_tracking_id=<partner_tracking_id>]
+	 * : This is an optional ID that a host can pass to help identify a site in logs on WordPress.com
 	 *
 	 * ## EXAMPLES
 	 *
 	 *     $ wp jetpack partner_provision '{ some: "json" }' premium 1
 	 *     { success: true }
 	 *
-	 * @synopsis <token_json> [--wpcom_user_id=<user_id>] [--plan=<plan_name>] [--onboarding=<onboarding>] [--force_register=<register>] [--force_connect=<force_connect>]
+	 * @synopsis <token_json> [--wpcom_user_id=<user_id>] [--plan=<plan_name>] [--onboarding=<onboarding>] [--force_register=<register>] [--force_connect=<force_connect>] [--home_url=<home_url>] [--site_url=<site_url>] [--wpcom_user_email=<wpcom_user_email>] [--partner_tracking_id=<partner_tracking_id>]
 	 */
 	public function partner_provision( $args, $named_args ) {
 		list( $token_json ) = $args;
@@ -906,151 +937,55 @@ class Jetpack_CLI extends WP_CLI_Command {
 			$this->partner_provision_error( new WP_Error( 'missing_access_token', __( 'Missing or invalid access token', 'jetpack' ) ) );
 		}
 
-		$blog_id    = Jetpack_Options::get_option( 'id' );
-		$blog_token = Jetpack_Options::get_option( 'blog_token' );
+		require_once JETPACK__PLUGIN_DIR . '_inc/class.jetpack-provision.php';
 
-		if ( ! $blog_id || ! $blog_token || ( isset( $named_args['force_register'] ) && intval( $named_args['force_register'] ) ) ) {
-			// this code mostly copied from Jetpack::admin_page_load
-			Jetpack::maybe_set_version_option();
-			$registered = Jetpack::try_registration();
-			if ( is_wp_error( $registered ) ) {
-				$this->partner_provision_error( $registered );
-			} elseif ( ! $registered ) {
-				$this->partner_provision_error( new WP_Error( 'registration_error', __( 'There was an unspecified error registering the site', 'jetpack' ) ) );
-			}
+		$body_json = Jetpack_Provision::partner_provision( $token->access_token, $named_args );
 
-			$blog_id    = Jetpack_Options::get_option( 'id' );
-			$blog_token = Jetpack_Options::get_option( 'blog_token' );
-		}
-
-		// if the user isn't specified, but we have a current master user, then set that to current user
-		if ( ! get_current_user_id() && $master_user_id = Jetpack_Options::get_option( 'master_user' ) ) {
-			wp_set_current_user( $master_user_id );
-		}
-
-		$site_icon = ( function_exists( 'has_site_icon') && has_site_icon() )
-			? get_site_icon_url()
-			: false;
-
-		$auto_enable_sso = ( ! Jetpack::is_active() || Jetpack::is_module_active( 'sso' ) );
-
-		/** This filter is documented in class.jetpack-cli.php */
-		if ( apply_filters( 'jetpack_start_enable_sso', $auto_enable_sso ) ) {
-			$redirect_uri = add_query_arg(
-				array( 'action' => 'jetpack-sso', 'redirect_to' => urlencode( admin_url() ) ),
-				wp_login_url() // TODO: come back to Jetpack dashboard?
-			);
-		} else {
-			$redirect_uri = admin_url();
-		}
-
-		$request_body = array(
-			'jp_version'    => JETPACK__VERSION,
-			'redirect_uri'  => $redirect_uri
-		);
-
-		if ( $site_icon ) {
-			$request_body['site_icon'] = $site_icon;
-		}
-
-		if ( get_current_user_id() ) {
-			$user = wp_get_current_user();
-
-			// role
-			$role = Jetpack::translate_current_user_to_role();
-			$signed_role = Jetpack::sign_role( $role );
-
-			$secrets = Jetpack::init()->generate_secrets( 'authorize' );
-
-			// Jetpack auth stuff
-			$request_body['scope']  = $signed_role;
-			$request_body['secret'] = $secrets['secret_1'];
-
-			// User stuff
-			$request_body['user_id']    = $user->ID;
-			$request_body['user_email'] = $user->user_email;
-			$request_body['user_login'] = $user->user_login;
-		}
-
-		// optional additional params
-		if ( isset( $named_args['wpcom_user_id'] ) && ! empty( $named_args['wpcom_user_id'] ) ) {
-			$request_body['wpcom_user_id'] = $named_args['wpcom_user_id'];
-		}
-
-		if ( isset( $named_args['plan'] ) && ! empty( $named_args['plan'] ) ) {
-			$request_body['plan'] = $named_args['plan'];
-		}
-
-		if ( isset( $named_args['onboarding'] ) && ! empty( $named_args['onboarding'] ) ) {
-			$request_body['onboarding'] = intval( $named_args['onboarding'] );
-		}
-
-		if ( isset( $named_args['force_connect'] ) && ! empty( $named_args['force_connect'] ) ) {
-			$request_body['force_connect'] = intval( $named_args['force_connect'] );
-		}
-
-		if ( isset( $request_body['onboarding'] ) && (bool) $request_body['onboarding'] ) {
-			Jetpack::create_onboarding_token();
-		}
-
-		$request = array(
-			'headers' => array(
-				'Authorization' => "Bearer " . $token->access_token,
-				'Host'          => defined( 'JETPACK__WPCOM_JSON_API_HOST_HEADER' ) ? JETPACK__WPCOM_JSON_API_HOST_HEADER : 'public-api.wordpress.com',
-			),
-			'timeout' => 60,
-			'method'  => 'POST',
-			'body'    => json_encode( $request_body )
-		);
-
-		$url = sprintf( 'https://%s/rest/v1.3/jpphp/%d/partner-provision', $this->get_api_host(), $blog_id );
-
-		// add calypso env if set
-		if ( getenv( 'CALYPSO_ENV' ) ) {
-			$url = add_query_arg( array( 'calypso_env' => getenv( 'CALYPSO_ENV' ) ), $url );
-		}
-
-		$result = Jetpack_Client::_wp_remote_request( $url, $request );
-
-		if ( is_wp_error( $result ) ) {
-			$this->partner_provision_error( $result );
-		}
-
-		$response_code = wp_remote_retrieve_response_code( $result );
-		$body_json     = json_decode( wp_remote_retrieve_body( $result ) );
-
-		if( 200 !== $response_code ) {
-			if ( isset( $body_json->error ) ) {
-				$this->partner_provision_error( new WP_Error( $body_json->error, $body_json->message ) );
-			} else {
-				$this->partner_provision_error( new WP_Error( 'server_error', sprintf( __( "Request failed with code %s", 'jetpack' ), $response_code ) ) );
-			}
-		}
-
-		if ( isset( $body_json->access_token ) ) {
-			// authorize user and enable SSO
-			Jetpack::update_user_token( $user->ID, sprintf( '%s.%d', $body_json->access_token, $user->ID ), true );
-
-			/**
-			 * Auto-enable SSO module for new Jetpack Start connections
-			 *
-			 * @since 5.0.0
-			 *
-			 * @param bool $enable_sso Whether to enable the SSO module. Default to true.
-			 */
-			$other_modules = apply_filters( 'jetpack_start_enable_sso', true )
-				? array( 'sso' )
-				: array();
-
-			if ( $active_modules = Jetpack_Options::get_option( 'active_modules' ) ) {
-				Jetpack::delete_active_modules();
-				Jetpack::activate_default_modules( 999, 1, array_merge( $active_modules, $other_modules ), false );
-			} else {
-				Jetpack::activate_default_modules( false, false, $other_modules, false );
-			}
+		if ( is_wp_error( $body_json ) ) {
+			error_log( json_encode( array(
+				'success'       => false,
+				'error_code'    => $body_json->get_error_code(),
+				'error_message' => $body_json->get_error_message()
+			) ) );
+			exit( 1 );
 		}
 
 		WP_CLI::log( json_encode( $body_json ) );
+	}
+
+	/**
+	 * Manages your Jetpack sitemap
+	 *
+	 * ## OPTIONS
+	 *
+	 * rebuild : Rebuild all sitemaps
+	 * --purge : if set, will remove all existing sitemap data before rebuilding
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp jetpack sitemap rebuild
+	 *
+	 * @subcommand sitemap
+	 * @synopsis <rebuild> [--purge]
+	 */
+	public function sitemap( $args, $assoc_args ) {
+		if ( ! Jetpack::is_active() ) {
+			WP_CLI::error( __( 'Jetpack is not currently connected to WordPress.com', 'jetpack' ) );
+		}
+		if ( ! Jetpack::is_module_active( 'sitemaps' ) ) {
+			WP_CLI::error( __( 'Jetpack Sitemaps module is not currently active. Activate it first if you want to work with sitemaps.', 'jetpack' ) );
+		}
+		if ( ! class_exists( 'Jetpack_Sitemap_Builder' ) ) {
+			WP_CLI::error( __( 'Jetpack Sitemaps module is active, but unavailable. This can happen if your site is set to discourage search engine indexing. Please enable search engine indexing to allow sitemap generation.', 'jetpack' ) );
+		}
+
+		if ( isset( $assoc_args['purge'] ) && $assoc_args['purge'] ) {
+			$librarian = new Jetpack_Sitemap_Librarian();
+			$librarian->delete_all_stored_sitemap_data();
+		}
+
+		$sitemap_builder = new Jetpack_Sitemap_Builder();
+		$sitemap_builder->update_sitemap();
 	}
 
 	private function get_api_host() {

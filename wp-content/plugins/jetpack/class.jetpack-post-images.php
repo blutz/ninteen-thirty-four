@@ -174,6 +174,7 @@ class Jetpack_PostImages {
 			'numberposts' => 5,          // No more than 5
 			'post_type' => 'attachment', // Must be attachments
 			'post_mime_type' => 'image', // Must be images
+			'suppress_filters' => false,
 		) );
 
 		if ( ! $post_images ) {
@@ -564,9 +565,9 @@ class Jetpack_PostImages {
 			$media = self::from_attachment( $post_id, $args['width'], $args['height'] );
 		if ( !$media && $args['from_html'] ) {
 			if ( empty( $args['html_content'] ) )
-				$media = self::from_html( $post_id ); // Use the post_id, which will load the content
+				$media = self::from_html( $post_id, $args['width'], $args['height'] ); // Use the post_id, which will load the content
 			else
-				$media = self::from_html( $args['html_content'] ); // If html_content is provided, use that
+				$media = self::from_html( $args['html_content'], $args['width'], $args['height'] ); // If html_content is provided, use that
 		}
 
 		if ( !$media && $args['fallback_to_avatars'] ) {

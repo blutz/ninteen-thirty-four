@@ -112,6 +112,10 @@ abstract class SAL_Site {
 	}
 
 	public function get_post_by_id( $post_id, $context ) {
+		// Remove the skyword tracking shortcode for posts returned via the API.
+		remove_shortcode( 'skyword-tracking' );
+		add_shortcode( 'skyword-tracking', '__return_empty_string' );
+
 		$post = get_post( $post_id, OBJECT, $context );
 
 		if ( ! $post ) {
@@ -295,6 +299,7 @@ abstract class SAL_Site {
 			'name' => $name,
 			'numberposts' => 1,
 			'post_type' => $this->get_whitelisted_post_types(),
+		    'suppress_filters' => false,
 		) );
 
 		if ( ! $posts || ! isset( $posts[0]->ID ) || ! $posts[0]->ID ) {

@@ -31,9 +31,19 @@ class A8C_WPCOM_Masterbar {
 			return;
 		}
 
-		// Atomic only - override user setting that hides masterbar from site's front.
-		// https://github.com/Automattic/jetpack/issues/7667
+		Jetpack::dns_prefetch( array(
+			'//s0.wp.com',
+			'//s1.wp.com',
+			'//s2.wp.com',
+			'//0.gravatar.com',
+			'//1.gravatar.com',
+			'//2.gravatar.com',
+		) );
+
+		// Atomic only
 		if ( jetpack_is_atomic_site() ) {
+			// override user setting that hides masterbar from site's front.
+			// https://github.com/Automattic/jetpack/issues/7667
 			add_filter( 'show_admin_bar', '__return_true' );
 		}
 
@@ -75,7 +85,19 @@ class A8C_WPCOM_Masterbar {
 	}
 
 	public function maybe_logout_user_from_wpcom() {
-		if ( isset( $_GET['context'] ) && 'masterbar' === $_GET['context'] ) {
+		/**
+		 * Whether we should sign out from wpcom too when signing out from the masterbar.
+		 *
+		 * @since 5.9.0
+		 *
+		 * @param bool $masterbar_should_logout_from_wpcom True by default.
+		 */
+		$masterbar_should_logout_from_wpcom = apply_filters( 'jetpack_masterbar_should_logout_from_wpcom', true );
+		if (
+			isset( $_GET['context'] ) &&
+			'masterbar' === $_GET['context'] &&
+			$masterbar_should_logout_from_wpcom
+		) {
 			do_action( 'wp_masterbar_logout' );
 		}
 	}
@@ -123,8 +145,21 @@ class A8C_WPCOM_Masterbar {
 			wp_enqueue_style( 'noticons', $this->wpcom_static_url( '/i/noticons/noticons.css' ), array(), JETPACK__VERSION . '-' . gmdate( 'oW' ) );
 		}
 
-		wp_enqueue_script( 'jetpack-accessible-focus', plugins_url( '_inc/accessible-focus.js', JETPACK__PLUGIN_FILE ), array(), JETPACK__VERSION );
-		wp_enqueue_script( 'a8c_wpcom_masterbar_tracks_events', plugins_url( 'tracks-events.js', __FILE__ ), array( 'jquery' ), JETPACK__VERSION );
+		wp_enqueue_script(
+			'jetpack-accessible-focus',
+			Jetpack::get_file_url_for_environment( '_inc/build/accessible-focus.min.js', '_inc/accessible-focus.js' ),
+			array(),
+			JETPACK__VERSION
+		);
+		wp_enqueue_script(
+			'a8c_wpcom_masterbar_tracks_events',
+			Jetpack::get_file_url_for_environment(
+				'_inc/build/masterbar/tracks-events.min.js',
+				'modules/masterbar/tracks-events.js'
+			),
+			array( 'jquery' ),
+			JETPACK__VERSION
+		);
 
 		wp_enqueue_script( 'a8c_wpcom_masterbar_overrides', $this->wpcom_static_url( '/wp-content/mu-plugins/admin-bar/masterbar-overrides/masterbar.js' ), array( 'jquery' ), JETPACK__VERSION );
 	}
@@ -376,7 +411,12 @@ class A8C_WPCOM_Masterbar {
 		$user_info  = get_avatar( $this->user_email, 128, 'mm', '', array( 'force_display' => true ) );
 		$user_info .= '<span class="display-name">' . $this->display_name . '</span>';
 		$user_info .= '<a class="username" href="http://gravatar.com/' . $this->user_login . '">@' . $this->user_login . '</a>';
-		$user_info .= '<form action="' . $logout_url . '" method="post"><button class="ab-sign-out" type="submit">' . esc_html__( 'Sign Out', 'jetpack' ) . '</button></form>';
+
+		$user_info .= sprintf(
+			'<div><a href="%s" class="ab-sign-out">%s</a></div>',
+			$logout_url,
+			esc_html__( 'Sign Out', 'jetpack' )
+		);
 
 		$wp_admin_bar->add_menu( array(
 			'parent' => $id,
@@ -728,7 +768,7 @@ class A8C_WPCOM_Masterbar {
 			$wp_admin_bar->add_menu( array(
 				'parent' => 'publish',
 				'id'     => 'comments',
-				'title'  => __( 'Comments', 'jetpack' ),
+				'title'  => __( 'Comments' ),
 				'href'   => 'https://wordpress.com/comments/' . esc_attr( $this->primary_site_slug ),
 				'meta'   => array(
 					'class' => 'mb-icon',
@@ -833,7 +873,7 @@ class A8C_WPCOM_Masterbar {
 
 			$theme_title = $this->create_menu_item_pair(
 				array(
-					'url'   => 'https://wordpress.com/design/' . esc_attr( $this->primary_site_slug ),
+					'url'   => 'https://wordpress.com/themes/' . esc_attr( $this->primary_site_slug ),
 					'id'    => 'wp-admin-bar-themes',
 					'label' => esc_html__( 'Themes', 'jetpack' ),
 				),

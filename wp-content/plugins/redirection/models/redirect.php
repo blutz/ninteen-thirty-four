@@ -145,6 +145,7 @@ class Red_Item {
 		global $wpdb;
 
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}redirection_items WHERE id=%d", $this->id ) );
+		do_action( 'redirection_redirect_deleted', $this );
 
 		Red_Module::flush( $this->group_id );
 	}
@@ -158,14 +159,25 @@ class Red_Item {
 			return $data;
 		}
 
-		$data['status'] = isset( $details['status'] ) && $details['status'] === 'disabled' ? 'disabled' : 'enabled';
-		$data['position'] = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}redirection_items WHERE group_id=%d", $data['group_id'] ) );
+		$data['status'] = 'enabled';
+		if ( ( isset( $details['enabled'] ) && $details['enabled'] === 'disabled' ) || ( isset( $details['status'] ) && $details['status'] === 'disabled' ) ) {
+			$data['status'] = 'disabled';
+		}
+
+		if ( ! isset( $details['position'] ) || $details['position'] === 0 ) {
+			$data['position'] = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}redirection_items WHERE group_id=%d", $data['group_id'] ) );
+		}
+
 		$data = apply_filters( 'redirection_create_redirect', $data );
 
 		// Create
 		if ( $wpdb->insert( $wpdb->prefix.'redirection_items', $data ) !== false ) {
 			Red_Module::flush( $data['group_id'] );
-			return self::get_by_id( $wpdb->insert_id );
+
+			$redirect = self::get_by_id( $wpdb->insert_id );
+			do_action( 'redirection_redirect_updated', $wpdb->insert_id, $redirect );
+
+			return $redirect;
 		}
 
 		return new WP_Error( 'redirect', __( 'Unable to add new redirect' ) );
@@ -187,7 +199,10 @@ class Red_Item {
 		}
 
 		// Save this
+		$data = apply_filters( 'redirection_update_redirect', $data );
+
 		$wpdb->update( $wpdb->prefix.'redirection_items', $data, array( 'id' => $this->id ) );
+		do_action( 'redirection_redirect_updated', $this, self::get_by_id( $this->id) );
 
 		$this->load_from_data( (object) $data );
 
@@ -324,8 +339,8 @@ class Red_Item {
 		$offset = 0;
 		$where = '';
 
-		if ( isset( $params['orderBy'] ) && in_array( $params['orderBy'], array( 'url', 'last_count', 'last_access', 'position' ), true ) ) {
-			$orderby = $params['orderBy'];
+		if ( isset( $params['orderby'] ) && in_array( $params['orderby'], array( 'url', 'last_count', 'last_access', 'position' ), true ) ) {
+			$orderby = $params['orderby'];
 		}
 
 		if ( isset( $params['direction'] ) && in_array( $params['direction'], array( 'asc', 'desc' ), true ) ) {
@@ -340,8 +355,8 @@ class Red_Item {
 			}
 		}
 
-		if ( isset( $params['perPage'] ) ) {
-			$limit = intval( $params['perPage'], 10 );
+		if ( isset( $params['per_page'] ) ) {
+			$limit = intval( $params['per_page'], 10 );
 			$limit = min( RED_MAX_PER_PAGE, $limit );
 			$limit = max( 5, $limit );
 		}
@@ -414,7 +429,7 @@ class Red_Item_Sanitize {
 		$data['position'] = $this->get_position( $details );
 
 		if ( $data['title'] ) {
-			$data['title'] = substr( $data['title'], 0, 50 );
+			$data['title'] = substr( $data['title'], 0, 500 );
 		}
 
 		$matcher = Red_Match::create( isset( $details['match_type'] ) ? $details['match_type'] : false );
@@ -433,7 +448,7 @@ class Red_Item_Sanitize {
 		$data['match_type'] = $details['match_type'];
 
 		if ( isset( $details['action_data'] ) ) {
-			$match_data = $matcher->save( $details['action_data'], ! $this->is_url_type( $data['action_type'] ) );
+			$match_data = $matcher->save( $details['action_data'] ? $details['action_data'] : array(), ! $this->is_url_type( $data['action_type'] ) );
 			$data['action_data'] = is_array( $match_data ) ? serialize( $match_data ) : $match_data;
 		}
 

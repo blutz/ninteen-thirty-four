@@ -167,7 +167,7 @@ function jetpack_og_tags() {
 	// Get image info and build tags
 	if ( ! post_password_required() ) {
 		$image_info       = jetpack_og_get_image( $image_width, $image_height );
-		$tags['og:image'] = esc_url( $image_info['src'] );
+		$tags['og:image'] = $image_info['src'];
 
 		if ( ! empty( $image_info['width'] ) ) {
 			$tags['og:image:width'] = (int) $image_info['width'];
@@ -293,41 +293,9 @@ function jetpack_og_get_image( $width = 200, $height = 200, $max_images = 4 ) { 
 	if ( empty( $image ) && function_exists( 'blavatar_domain' ) ) {
 		$blavatar_domain = blavatar_domain( site_url() );
 		if ( blavatar_exists( $blavatar_domain ) ) {
-			$img_width  = '';
-			$img_height = '';
-
-			$image_url = blavatar_url( $blavatar_domain, 'img', $width, false, true );
-
-			/**
-			 * Build a hash of the Image URL. We'll use it later when building the transient.
-			 *
-			 * Transient names are 45 chars max.
-			 * Let's generate a hash that's never more than 40 chars long.
-			 */
-			$image_hash = sha1( $image_url );
-
-			// Look for data in our transient. If nothing, let's get an attachment ID.
-			$cached_image_id = get_transient( 'jp_' . $image_hash );
-			if ( ! is_int( $cached_image_id ) ) {
-				$image_id = attachment_url_to_postid( $image_url );
-				set_transient( 'jp_' . $image_hash, $image_id );
-			} else {
-				$image_id = $cached_image_id;
-			}
-
-			$image_size = wp_get_attachment_image_src( $image_id, $width >= 512
-				? 'full'
-				: array( $width, $width ) );
-			if ( isset( $image_size[1], $image_size[2] ) ) {
-				$img_width  = $image_size[1];
-				$img_height = $image_size[2];
-			}
-
-			if ( _jetpack_og_get_image_validate_size( $img_width, $img_height, $width, $height ) ) {
-				$image['src']    = $image_url;
-				$image['width']  = $img_width;
-				$image['height'] = $img_height;
-			}
+			$image['src']    = blavatar_url( $blavatar_domain, 'img', $width, false, true );
+			$image['width']  = $width;
+			$image['height'] = $height;
 		}
 	}
 

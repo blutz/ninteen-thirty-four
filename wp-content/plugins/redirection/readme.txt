@@ -1,22 +1,24 @@
 === Plugin Name ===
 Contributors: johnny5
-Donate link: http://urbangiraffe.com/about/
+Donate link: https://redirection.me/donation/
 Tags: redirect, htaccess, 301, 404, seo, permalink, apache, nginx, post, admin
-Requires at least: 4.4
-Tested up to: 4.9
-Stable tag: 2.9.1
-Requires PHP: 5.3
+Requires at least: 4.5
+Tested up to: 4.9.4
+Stable tag: 3.2
+Requires PHP: 5.4
 License: GPLv3
 
 Manage 301 redirections, keep track of 404 errors, and improve your site, with no knowledge of Apache or Nginx needed.
 
 == Description ==
 
-Redirection is the oldest and most popular redirect manager for WordPress. With it you can easily manage 301 redirections, with full logging, as well as keep track of 404 errors, and generally tidy up any loose ends your site may have. This can help reduce errors and improve your site ranking.
+Redirection is the most popular redirect manager for WordPress. With it you can easily manage 301 redirections, keep track of 404 errors, and generally tidy up any loose ends your site may have. This can help reduce errors and improve your site ranking.
 
 Redirection is designed to be used on sites with a few redirects to sites with thousands of redirects.
 
-It has been a WordPress plugin for over 10 years and has been recommended countless times. Best of all, it free!
+It has been a WordPress plugin for over 10 years and has been recommended countless times. And it's free!
+
+Full documentation can be found at [https://redirection.me](https://redirection.me)
 
 = Redirect manager =
 
@@ -24,7 +26,7 @@ Create and manage redirects quickly and easily without needing Apache or Nginx k
 
 There is full support for regular expressions so you can create redirect patterns to match any number of URLs.
 
-The plugin can also be configured to monitor when posts permalinks are changed and automatically create a redirect to the new post. It will also monitor pages, and even when something is deleted.
+The plugin can also be configured to monitor when post or page permalinks are changed and automatically create a redirect to the new URL.
 
 = Conditional redirects =
 
@@ -33,12 +35,17 @@ In addition to straightforward URL matching you can redirect based on other cond
 - Login status - redirect only if the user is logged in or logged out
 - Browser - redirect if the user is using a certain browser
 - Referrer - redirect if the user visited the link from another page
+- Cookies - redirect if a particular cookie is set
+- HTTP headers - redirect based on a HTTP header
+- Custom filter - redirect based on your own WordPress filter
 
 = Full logging =
 
 A configurable logging option allows to view all redirects occurring on your site, including information about the visitor, the browser used, and the referrer. A 'hit' count is maintained for each redirect so you can see if a URL is being used.
 
 Logs can be exported for external viewing, and can be searched and filtered for more detailed investigation.
+
+Display geographic information about an IP address, as well as a full user agent information, to try and understand who the visitor is.
 
 = Track 404 errors =
 
@@ -69,7 +76,7 @@ You can also import from the following plugins:
 
 = Wait, it's free? =
 
-Yes, it's really free. There's no premium version and no need to pay money to get access to other features. This is a dedicated redirect management plugin.
+Yes, it's really free. There's no premium version and no need to pay money to get access to features. This is a dedicated redirect management plugin.
 
 == Support ==
 
@@ -91,9 +98,18 @@ The plugin is simple to install:
 1. Go to the plugin management page and enable the plugin
 1. Configure the options from the `Manage/Redirection` page
 
-You can find full details of installing a plugin on the [plugin installation page](http://urbangiraffe.com/articles/how-to-install-a-wordpress-plugin/).
+You can find full details of installing a plugin on the [plugin installation page](https://redirection.me/support/installation/).
 
-Full documentation can be found on the [Redirection](http://urbangiraffe.com/plugins/redirection/) page.
+Full documentation can be found on the [Redirection](https://redirection.me/support/) page.
+
+== Screenshots ==
+
+1. Redirection management interface
+2. Adding a redirection
+3. Redirect logs
+4. Import/Export
+5. Options
+6. Support
 
 == Frequently Asked Questions ==
 
@@ -113,7 +129,71 @@ The plugin works in a similar manner to how WordPress handles permalinks and sho
 = 2.4 =
 * Another database change. Please backup your data
 
+= 3.0 =
+* Upgrades the database to support IPv6. Please backup your data and visit the Redirection settings to perform the upgrade
+* Switches to the WordPress REST API
+* Permissions changed from 'administrator' role to 'manage_options' capability
+
 == Changelog ==
+
+= 3.2 - 11th February 2018 =
+* Add cookie match - redirect based on a cookie
+* Add HTTP header match - redirect based on an HTTP header
+* Add custom filter match - redirect based on a custom WordPress filter
+* Add detection of REST API redirect, causing 'fetch error' on some sites
+* Update table responsiveness
+* Allow redirects for canonical WordPress URLs
+* Fix double include error on some sites
+* Fix delete action on some sites
+* Fix trailing slash redirect of API on some sites
+
+= 3.1.1 - 29th January 2018 =
+* Fix problem fetching data on sites without https
+
+= 3.1 - 27th January 2018 =
+* Add alternative REST API routes to help servers that block the API
+* Move DELETE API calls to POST, to help servers that block DELETE
+* Move API nonce to query param, to help servers that don't pass HTTP headers
+* Improve error messaging
+* Preload support page so it can be used when REST API isn't working
+* Fix bug editing Nginx redirects
+* Fix import from JSON not setting status
+
+= 3.0.1 - 21st Jan 2018 =
+* Don't show warning if per page setting is greater than max
+* Don't allow WP REST API to be redirected
+
+= 3.0 - 20th Jan 2018 =
+* Add support for IPv6
+* Add support for disabling or anonymising IP collection
+* Add support for monitoring custom post types
+* Add support for monitoring from quick edit mode
+* Default to last group used when editing
+* Permissions changed from 'administrator' role to 'manage_options' capability
+* Swap to WP REST API
+* Add new IP map service
+* Add new useragent service
+* Add 'add new' button to redirect page
+* Increase 'title' length
+* Fix position not saving on creation
+* Fix log pages not remembering table settings
+* Fix incorrect column used for HTTP code when importing CSV
+* Add support links from inside the plugin
+
+= 2.10.1 - 26th November 2017 =
+* Fix incorrect HTTP code reported in errors
+* Improve management page hook usage
+
+= 2.10 - 18th November 2017 =
+* Add support for WordPress multisite
+* Add new Redirection documentation
+* Add extra actions when creating redirects
+* Fix user agent dropdown not setting agent
+
+= 2.9.2 - 11th November 2017 =
+* Fix regex breaking .htaccess export
+* Fix error when saving Error or No action
+* Restore sortable table headers
 
 = 2.9.1 - 4th November 2017 =
 * Fix const issues with PHP 5

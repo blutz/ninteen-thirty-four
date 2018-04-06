@@ -15,10 +15,19 @@ class Jetpack_Admin {
 	private $jetpack;
 
 	static function init() {
+		if( isset( $_GET['page'] ) && $_GET['page'] === 'jetpack' ) {
+			add_filter( 'nocache_headers', array( 'Jetpack_Admin', 'add_no_store_header' ), 100 );
+		}
+
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new Jetpack_Admin;
 		}
 		return self::$instance;
+	}
+
+	static function add_no_store_header( $headers ) {
+		$headers['Cache-Control'] .= ', no-store';
+		return $headers;
 	}
 
 	private function __construct() {
@@ -60,12 +69,12 @@ class Jetpack_Admin {
 	// presentation like description, name, configuration url, etc.
 	function get_modules() {
 		include_once( JETPACK__PLUGIN_DIR . 'modules/module-info.php' );
-		$available_modules = $this->jetpack->get_available_modules();
-		$active_modules    = $this->jetpack->get_active_modules();
+		$available_modules = Jetpack::get_available_modules();
+		$active_modules    = Jetpack::get_active_modules();
 		$modules           = array();
 		$jetpack_active = Jetpack::is_active() || Jetpack::is_development_mode();
 		foreach ( $available_modules as $module ) {
-			if ( $module_array = $this->jetpack->get_module( $module ) ) {
+			if ( $module_array = Jetpack::get_module( $module ) ) {
 				/**
 				 * Filters each module's short description.
 				 *
@@ -184,7 +193,12 @@ class Jetpack_Admin {
 		if ( Jetpack::is_development_mode() ) {
 			return ! ( $module['requires_connection'] );
 		} else {
-			return Jetpack::is_active();
+			if ( ! Jetpack::is_active() ) {
+				return false;
+			}
+
+			$plan = Jetpack::get_active_plan();
+			return in_array( $module['module'], $plan['supports'] );
 		}
 	}
 

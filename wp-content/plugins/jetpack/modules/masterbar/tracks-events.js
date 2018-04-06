@@ -97,7 +97,7 @@
 			'#wp-admin-bar-user-info .ab-item,' +
 			'.mb-trackable .ab-secondary';
 
-			$( trackableLinks ).on( 'click touchstart', function( e ) {
+		$( trackableLinks ).on( 'click touchstart', function( e ) {
 			if ( ! window.jpTracksAJAX || 'function' !== typeof( window.jpTracksAJAX.record_ajax_event ) ) {
 				return;
 			}
@@ -105,7 +105,11 @@
 			var $target = $( e.target ),
 					$parent = $target.closest( 'li' );
 
-			if ( ! $parent ) {
+			if ( ! $target.is( 'a' ) ) {
+				$target = $target.closest( 'a' );
+			}
+
+			if ( ! $parent || ! $target ) {
 				return;
 			}
 
@@ -133,7 +137,7 @@
 			return;
 		}
 
-		var event = ! e.data && e.originalEvent.data ? e.originalEvent : event;
+		var event = ! e.data && e.originalEvent.data ? e.originalEvent : e;
 		if ( event.origin !== 'https://widgets.wp.com' ) {
 			return;
 		}

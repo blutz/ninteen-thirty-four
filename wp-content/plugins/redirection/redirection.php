@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Redirection
-Plugin URI: http://urbangiraffe.com/plugins/redirection/
+Plugin URI: https://redirection.me/
 Description: Manage all your 301 redirects and monitor 404 errors
-Version: 2.9.1
+Version: 3.2
 Author: John Godley
-Author URI: http://urbangiraffe.com
+Author URI: https://johngodley.com
 Text Domain: redirection
 Domain Path: /locale
 ============================================================================================================
@@ -21,11 +21,11 @@ For full license details see license.txt
 ============================================================================================================
 */
 
-define( 'REDIRECTION_DB_VERSION', '2.3.3' );     // DB schema version. Only change if DB needs changing
+define( 'REDIRECTION_DB_VERSION', '2.4' );     // DB schema version. Only change if DB needs changing
 define( 'REDIRECTION_FILE', __FILE__ );
 define( 'REDIRECTION_DEV_MODE', false );
 
-if ( !defined( 'REDIRECTION_FLYING_SOLO' ) ) {
+if ( ! defined( 'REDIRECTION_FLYING_SOLO' ) ) {
 	define( 'REDIRECTION_FLYING_SOLO', apply_filters( 'redirection_flying_solo', true ) );
 }
 
@@ -48,10 +48,6 @@ function red_is_wpcli() {
 }
 
 function red_is_admin() {
-	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
-		return true;
-	}
-
 	if ( is_admin() ) {
 		return true;
 	}
@@ -59,11 +55,24 @@ function red_is_admin() {
 	return false;
 }
 
-if ( red_is_wpcli() ) {
-	include dirname( __FILE__ ).'/redirection-admin.php';
-    include dirname( __FILE__ ).'/redirection-cli.php';
-} elseif ( red_is_admin() ) {
-	include dirname( __FILE__ ).'/redirection-admin.php';
-} else {
-	include dirname( __FILE__ ).'/redirection-front.php';
+function red_start_rest() {
+	include_once dirname( __FILE__ ).'/redirection-admin.php';
+	include_once dirname( __FILE__ ).'/redirection-api.php';
+
+	Redirection_Api::init();
+
+	remove_action( 'rest_api_init', 'red_start_rest' );
 }
+
+if ( red_is_admin() || red_is_wpcli() ) {
+	include_once dirname( __FILE__ ).'/redirection-admin.php';
+	include_once dirname( __FILE__ ).'/redirection-api.php';
+} else {
+	include_once dirname( __FILE__ ).'/redirection-front.php';
+}
+
+if ( red_is_wpcli() ) {
+	include_once dirname( __FILE__ ).'/redirection-cli.php';
+}
+
+add_action( 'rest_api_init', 'red_start_rest' );

@@ -3,8 +3,8 @@ Contributors: VelvetBlues.com
 Donate link: http://www.velvetblues.com/go/updateurlsdonate/
 Tags: permalinks, urls, links, update links, move wordpress, location, update urls, update permalinks, move, link, url, permalink, excerpt, content links, excerpt links, custom field links, meta, post meta
 Requires at least: 4.5
-Tested up to: 4.7
-Stable tag: 3.2.7
+Tested up to: 4.9.1
+Stable tag: 3.2.8
 License: GPLv2 or later
 
 Updates all urls and content links in your website.
@@ -36,7 +36,9 @@ Installation and uninstallation are extremely simple. You can use WordPress' aut
 
 = Usage: =
 
-Using this plugin is very simple. Once it has been activated, navigate to Tools -> Update URLs and follow the instructions.
+Using this plugin is very simple. Once it has been activated, navigate to Tools -> Update URLs and follow the instructions. Please Note: Changes are irreversible. If you haven't used this plugin before, please backup your website before proceeding.
+
+You can also contact us for assistance. Velvet Blues will backup your website and replace your URLs for only $29. If you need your website moved, we charge a flat fee of $75 and will finish your move within 48 hours - week days only. For same-day or weekend jobs, we charge a flat rate of $125. Contact us at info@velvetblues.com for more information.
 
 == Frequently Asked Questions ==
 
@@ -54,13 +56,17 @@ Make sure that the plugin is activated and that you are an administrator level u
 
 = I'm afraid to screw this up. Will you do it for me? =
 
-   Of course! Velvet Blues will backup your website and replace your URLs for only $29. If you need your website moved, we charge a flat fee of $65 and will finish your move within 48 hours - week days only. For same-day or weekend jobs, we charge a flat rate of $105. Contact us at info@velvetblues.com for more information.
+   Of course! Velvet Blues will backup your website and replace your URLs for only $29. If you need your website moved, we charge a flat fee of $75 and will finish your move within 48 hours - week days only. For same-day or weekend jobs, we charge a flat rate of $125. Contact us at info@velvetblues.com for more information.
 
 == Screenshots ==
 
 1. The Admin screen for the plugin. screenshot-1.png
 
 == Change Log ==
+
+= 3.2.8 =
+* Confirmed compatibility with WordPress 4.9.x releases.
+* Version Update.
 
 = 3.2.7 =
 * Maintenance Update.
