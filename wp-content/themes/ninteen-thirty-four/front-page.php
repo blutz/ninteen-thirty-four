@@ -10,6 +10,12 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
   </div>
 </section>
 
+<section class='row content-row'>
+  <h2>Looking to register a camper this summer?</h2>
+  <p class='explainer'>Online camper registration for the 2018 season hasn't started. Leave your email address and we'll let you know when applications are available!</p>
+  <a class='button' href='http://eepurl.com/cJdVvL' target='_blank'>Sign up for our email updates &rarr;</a>
+</section>
+
 <section id='official-philanthropy' class='photo-block'
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/official-charity.jpg")'>
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/official-charity.jpg' />
@@ -67,7 +73,6 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
   <div class='photo-block__content'>
     <h2>Serving LA youth since 1928</h2>
     <h4>UniCamp has served over 60,000 youth and over 10,000 volunteers over the past 80 years.</h4>
-    <a class='button button--homepage'>Learn More &rarr;</a>
   </div>
 </section>
 
@@ -109,35 +114,6 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
           </p>
           <a class='button button--homepage' href='/programs#ocp'>Learn more &rarr;</a>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class='row content-row'>
-  <div class='medium-12 columns'>
-    <span class='small-title'>Sponsors of UCLA UniCamp</span>
-    <div class='logo-table logo-table--3col'>
-      <div class='logo-table__logo'>
-        <a href='http://www.mccormickfoundation.org/page.aspx?pid=674' target='_blank'>
-          <img
-          alt='Los Angeles Times'
-          src='<?php echo get_template_directory_uri(); ?>/images/logos/latimes-logo.png' />
-        </a>
-      </div>
-      <div class='logo-table__logo'>
-        <a href='http://donate.mccormickfoundation.org/' target='_blank'>
-          <img
-          alt='Robert R. McCormick Foundation'
-          src='<?php echo get_template_directory_uri(); ?>/images/logos/mccormick-logo.png' />
-        </a>
-      </div>
-      <div class='logo-table__logo'>
-        <a href='http://www.projectgradla.org/' target='_blank'>
-          <img
-          alt='Project Grad'
-          src='<?php echo get_template_directory_uri(); ?>/images/logos/project-grad.jpg' />
-        </a>
       </div>
     </div>
   </div>

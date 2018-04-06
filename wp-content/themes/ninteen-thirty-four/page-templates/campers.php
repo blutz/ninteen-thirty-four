@@ -48,9 +48,9 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 <section class='expand-block' id='publicCamperApplicationExpand'>
   <div class='row'>
     <div class='medium-12 columns'>
-      <h5>Key Dates for UCLA UniCamp’s 2017 Camper Application Process</h5>
+      <h5>2018 Public Camper Application Process</h5>
       <p class='explainer'>
-        Public camper applications will likely be released around April/May 2017. Check back here for more details. You can also sign up below for email updates about the public camper applications.
+        Public camper applications aren't yet available. Check back soon for more details. You can also sign up below to be emailed when applications are released.
       </p>
 
       <a class='button' href='http://eepurl.com/cJdVvL' target='_blank'>

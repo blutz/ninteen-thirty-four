@@ -60,29 +60,12 @@ style='background-image: url("<?php echo get_template_directory_uri(); ?>/images
     <p class='explainer'>
       If you are interested in becoming a partner agency with UCLA UniCamp please contact us.
     </p>
-    <!--<em>Form coming soon &mdash; contact us directly.</em>-->
-  </div>
-</section>
-
-<section class='row content-row'>
-  <div class='medium-12 columns'>
-    <span class='small-title'>Partner Agencies</span>
-    <div class='logo-table logo-table--3col'>
-      <div class='logo-table__logo'>
-        <a href='http://www.projectgradla.org/' target='_blank'>
-          <img
-          alt='Project Grad'
-          src='<?php echo get_template_directory_uri(); ?>/images/logos/project-grad.jpg' />
-        </a>
-      </div>
-      <div class='logo-table__logo'>
-        <a href='http://thevillagenation.com/' target='_blank'>
-          <img
-          alt='Village Nation'
-          src='<?php echo get_template_directory_uri(); ?>/images/logos/village-nation.jpg' />
-        </a>
-      </div>
+    <div class='medium-6 medium-offset-3 columns end'>
+      <?php echo do_shortcode("
+        [contact-form to='blutz@unicamp.org' subject='[UniCamp.org Contact Form Submission'][contact-field label='Name' type='name' required='1'/][contact-field label='Email' type='email' required='1'/][contact-field label='How can we help you?' type='textarea' rows='10' required='1'/][/contact-form]");
+      ?>
     </div>
+    <!--<em>Form coming soon &mdash; contact us directly.</em>-->
   </div>
 </section>
 
