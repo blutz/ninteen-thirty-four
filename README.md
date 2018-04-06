@@ -55,4 +55,4 @@ You can also use WP-CLI to change existing users' passwords like `admin`.
 
 To connect to an interactive MySQL session:
 
-    docker exec -it ninteenthirtyfour_db_1 mysql -uroot -pwordpress
+    docker-compose exec db mysql -uroot -pwordpress
