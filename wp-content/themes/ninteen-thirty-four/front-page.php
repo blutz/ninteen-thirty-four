@@ -11,9 +11,11 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
 </section>
 
 <section class='row content-row'>
-  <h2>Looking to register a camper this summer?</h2>
-  <p class='explainer'>Online camper registration for the 2018 season hasn't started. Leave your email address and we'll let you know when applications are available!</p>
-  <a class='button' href='http://eepurl.com/cJdVvL' target='_blank'>Sign up for email updates &rarr;</a>
+  <div class='medium-12 columns'>
+    <h2>Looking to register a camper this summer?</h2>
+    <p class='explainer'>Online camper registration for the 2018 season hasn't started. Leave your email address and we'll let you know when applications are available!</p>
+    <a class='button' href='http://eepurl.com/cJdVvL' target='_blank'>Sign up for email updates &rarr;</a>
+  </div>
 </section>
 
 <section id='official-philanthropy' class='photo-block'
