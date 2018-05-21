@@ -50,11 +50,14 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <div class='medium-12 columns'>
       <h5>2018 Public Camper Application Process</h5>
       <p class='explainer'>
-        Public camper applications aren't yet available. Check back soon for more details. You can also sign up below to be emailed when applications are released.
+        Public camper applicatiosn are now available! You can <a href='https://apply.unicamp.org/login/open'>browse our open sessions</a> and enroll online today!
       </p>
-
-      <a class='button' href='http://eepurl.com/cJdVvL' target='_blank'>
-        Sign up for application email updates &rarr;
+      <p class='explainer'>
+        If you were referred to a specific session or you have an enrollment code, go to <a href='https://apply.unicamp.org/'>apply.unicamp.org</a> and type in your code.
+      </p>
+      <p class='explainer'>Email us at <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> if you have any questions.</p>
+      <a class='button' href='https://apply.unicamp.org/login/open'>
+        Sign up for camp! &rarr;
       </a>
     </div>
   </div>
