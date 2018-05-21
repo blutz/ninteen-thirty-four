@@ -4,17 +4,18 @@
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg"); background-position-y: top;'>
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg' />
   <div class='photo-block__content'>
-    <h2>Apply to be a student volunteer!</h2>
-    <p class='explainer'>Applications for new and returning camp counselor positions are now available!</p>
-    <a class='button button--homepage' href='/apply'>Learn more &rarr;</a>
+    <h2>Camper applications are now available!</h2>
+    <p class='explainer'>Apply online to go to camp this summer. You can use an application code or, if you're looking for a session, <a style='color: white' href='https://apply.unicamp.org/login/open'>browse our open enrollment</a> to find a week that works for you.</p>
+    <a class='button button--homepage' href='https://apply.unicamp.org'>Apply today! &rarr;</a>
   </div>
 </section>
 
 <section class='row content-row'>
   <div class='medium-12 columns'>
-    <h2>Looking to register a camper this summer?</h2>
-    <p class='explainer'>Online camper registration for the 2018 season hasn't started. Leave your email address and we'll let you know when applications are available!</p>
-    <a class='button' href='http://eepurl.com/cJdVvL' target='_blank'>Sign up for email updates &rarr;</a>
+    <h2>Will you be a UCLA student next year?</h2>
+    <p class='explainer'><strong>Volunteer with UCLA UniCamp!</strong> Applications are typically released around the end of Fall quarter. Keep an eye out on Bruinwalk or leave your email address to be notified when applications are released.</p>
+    <p class='explainer'>If you're an incoming freshman or transfer student, you might be eligible to volunteer at camp <em>this</em> summer! Make sure to mark that you're an incoming student on the form.</p>
+    <a class='button' href='http://eepurl.com/dvwCrL' target='_blank'>Learn more  &rarr;</a>
   </div>
 </section>
 

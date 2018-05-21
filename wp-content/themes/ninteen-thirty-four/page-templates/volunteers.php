@@ -15,7 +15,16 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 
 <section class='row content-row'>
   <div class='medium-12 columns'>
-    <h2>Reasons to do UCLA UniCamp</h2>
+    <h2>Will you be a UCLA student next year?</h2>
+    <p class='explainer'><strong>Volunteer with UCLA UniCamp!</strong> Applications are typically released around the end of Fall quarter. Keep an eye out on Bruinwalk or leave your email address to be notified when applications are released.</p>
+    <p class='explainer'>If you're an incoming freshman or transfer student, you might be eligible to volunteer at camp <em>this</em> summer! Make sure to mark that you're an incoming student on the form.</p>
+    <a class='button' href='http://eepurl.com/dvwCrL' target='_blank'>Learn more  &rarr;</a>
+  </div>
+</section>
+
+<section class='row content-row'>
+  <div class='medium-12 columns'>
+    <h4>Reasons to do UCLA UniCamp</h4>
     <h5>Rewarding Leadership Opportunities</h5>
     <p class='explainer'>UCLA Student Volunteers form the backbone of UCLA UniCamp. Students are given a lot of responsibility and in turn are given the opportunity to grow leaps and bounds. It will be hard to find another experience as rewarding as volunteering for UCLA UniCamp.</p>
     <h5>Forget about the stress of daily life and act like a kid again</h5>
