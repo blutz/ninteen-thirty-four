@@ -20,7 +20,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   </div>
   <div class='medium-6 columns'>
     <h5>Accelerated Transfer Leadership Program</h5>
-    <p class='explainer'>Come up to camp as a transfer admit this summer, and then become a leader your first year at UCLA! Applications are due May 31.</p>
+    <p class='explainer'>Come up to camp as a transfer admit this summer, and then become a leader your first year at UCLA! Applications are due June 15.</p>
     <p class='explainer'>Questions? Email <a href='mailto:fpandoy@unicamp.org'>fpandoy@unicamp.org</a> for more information</p>
     <a class='button' href='https://docs.google.com/forms/d/e/1FAIpQLSc3wtWP1Gu374JalMHwORowCs7Y2BCllqKoyE8OKAiv7h8Quw/viewform'>Learn more and apply online &rarr;</a>
     <br />
