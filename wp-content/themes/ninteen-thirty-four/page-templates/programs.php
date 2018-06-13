@@ -151,7 +151,6 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <p>
           Our session is guided by the Afrikan proverb "It takes a village to raise a child." Our week of camp celebrates Afrikan American heritage, history, and culture in a safe space that fosters camper expression, builds confidence to unlock campers' true potential, and develops leadership to advance the legacy of social justice.
         </p>
-        <p><a href='/apply-campers' class='button'>Apply for this session &rarr;</a></p>
       </div>
 
       <div class='large-4 columns'>
