@@ -30,7 +30,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
       <ul>
         <li>Adults to pay $50 to help cover cost of staffing and food. (If further financial assistnace is needed, please contact Jean at jlibby@saonet.ucla.edu)</li>
         <li>All Children are FREE</li>
-        <li>Check-In begins at 1:00 PM on Friday June 20</li>
+        <li>Check-In begins at 1:00 PM on Friday, July 20</li>
         <li>Transportation to Camp River Glen will be required (Carpools will be set-up for those who need)</li>
       </ul>
     </p>
