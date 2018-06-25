@@ -12,7 +12,7 @@
     <div class='medium-2 columns'>
       <h3>How you can help</h3>
       <ul class='footer__submenu'>
-        <li><a href='https://www.giveffect.com/charities/731-ucla-unicamp'>Donate</a></li>
+        <li><a href='https://donate.unicamp.org/'>Donate</a></li>
         <li><a href='/volunteers'>Volunteer</a></li>
         <!--<li><a href='#'>Become a Sponsor</a></li>-->
         <li><a href='/partnerships'>Become a Partner Agency</a></li>

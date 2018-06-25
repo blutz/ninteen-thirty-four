@@ -135,7 +135,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
       </div>
       <div class='medium-6 columns'>
         <p><strong>Camp River Glen Summer Seasonal Resident Camp Staff Positions</strong> &mdash; These are paid internship positions including program positions, food service, housekeeping, and site operations. Contact the professional staff at <a href='mailto:wwirick@unicamp.org'>wwirick@unicamp.org</a> and <a href='mailto:jliou@unicamp.org'>jliou@unicamp.org</a>.</p>
-        <p><strong>Donate</strong> &mdash; Even if you’re not able to volunteer, you can help us improve our program by <a href='https://www.giveffect.com/charities/731-ucla-unicamp'>donating online</a> or by <a href='/gala'>attending our gala in October</a>.
+        <p><strong>Donate</strong> &mdash; Even if you’re not able to volunteer, you can help us improve our program by <a href='https://donate.unicamp.org/'>donating online</a> or by <a href='/gala'>attending our gala in October</a>.
       </div>
     </div>
   </div>
