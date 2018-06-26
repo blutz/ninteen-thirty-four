@@ -21,8 +21,12 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   </div>
   <div class='medium-6 columns'>
     <h3>Registration</h3>
-    <p>Online registration will be available in the next few days.</p>
-    <a class='button' href='http://eepurl.com/dxEeZX' target='_blank'>Sign up to be notified when registration is available</a>
+    <p>You can now register online. Please be sure to register EVERY person who is attending.</p>
+    <a class='button' href='https://apply.unicamp.org/login/register/bwdAdult2018'>Register an adult &rarr;</a>
+    <br />
+    <a class='button' href='https://apply.unicamp.org/login/register/bwdChild2018'>Register a child &rarr;</a>
+    <p>To register additional people, log out of apply.unicamp.org, come back here, and register additional participants with the <strong>same email address</strong>. Contact <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> for questions about registration.</p>
+    <!--<a class='button' href='http://eepurl.com/dxEeZX' target='_blank'>Sign up to be notified when registration is available</a>-->
   </div>
   <div class='medium-6 columns'>
     <p>
