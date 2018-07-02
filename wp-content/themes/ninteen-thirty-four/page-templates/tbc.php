@@ -24,7 +24,6 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <h5>Extend your UCLA Orientation</h5>
     <p>Come to Camp River Glen, the home of UCLA's official charity, UniCamp. Leave from UCLA to embark on a three-day adventure where you'll get to know other incoming students and spend some time in the mountains learning about who you are and who you want to become. Planned and run by current UCLA students, the program will allow you to experience all of our camp activities while learning about the True Bruin Values of Respect, Accountability, Integrity, Service, and Excellence.</p>
     <p>What impact do you want to make over the next four years? What are your goals? True Bruin Camp will help you get an early start on fulfilling your UCLA dreams by meeting diverse but like-minded individuals who want to make a change.</p>
-    <p>UniCamp engages 500 UCLA student volunteers in providing a camp experience to over 1200 Los Angeles area urban youth ages 10-14.  Once you begin here in the Fall, consider applying to be a volunteer for UniCamp!  For more information, check back at www.unicamp.org in Fall.</p>
     <h5>Sessions</h5>
     <p>There are three True Bruin Camp sessions during the 2018 summer:</p>
     <ul>
@@ -32,6 +31,8 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
       <li><strong>July 20-22</strong> <a href='https://apply.unicamp.org/login/register/tbc18.2'>(register)</a> — after New Student Orientation session 102.</li>
       <li><strong>August 12-14</strong> <a href='https://apply.unicamp.org/login/register/tbc18.3'>(register)</a> — before New Student Orientation session 106. This session will come back to Los Angeles the night of August 14. You can request an early arrival from <a href='http://newstudents.ucla.edu/orientation-programs/first-year-students/'>New Student & Transition Programs</a> for an added $50 to spend the night at UCLA before your NSO session.</li>
     </ul>
+    <h5>About UniCamp</h5>
+    <p>UniCamp engages 500 UCLA student volunteers in providing a camp experience to over 1200 Los Angeles area urban youth ages 10-14.  Once you begin here in the Fall, consider applying to be a volunteer for UniCamp!  For more information, check back at www.unicamp.org in Fall.</p>
   </div>
   <div class='medium-6 columns'>
     <h5>Eligibility</h5>
