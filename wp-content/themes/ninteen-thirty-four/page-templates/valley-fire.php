@@ -46,7 +46,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           <li>Alyx Navarro</li>
           <li>Franklin Pandoy</li>
           <li>Parth Prashar</li>
-          <li>Christine Rosales</li>
+          <li>Cristina Rosales</li>
           <li>Samantha Valdarrago</li>
           <li>Don Wellington</li>
           <li>Vincent Wong</li>
