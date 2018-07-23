@@ -16,7 +16,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 <section class='row content-row'>
   <div class='medium-12 columns'>
     <p class='explainer'>
-   Pack some old clothes, grab a sleeping bag, put the family in the car, and join us for another amazing weekend at Camp River Glen. Hosted by UCLA UniCamp and it’s student volunteers, Students w/ Dependents Family Weekend is a chance for Bruins to get away from the busy city, relax in nature, breath fresh air, and share a camp experience with your family. UCLA UniCamp volunteers will staff program amenities of the campsite as you and your family can experience a traditional camp experience.
+   Pack some old clothes, grab a sleeping bag, put the family in the car, and join us for another amazing weekend at Camp River Glen. Hosted by UCLA UniCamp and it’s student volunteers, Students w/ Dependents Family Weekend is a chance for Bruins to get away from the busy city, relax in nature, breathe fresh air, and share a camp experience with your family. UCLA UniCamp volunteers will staff program amenities of the campsite as you and your family can experience a traditional camp experience.
     </p>
   </div>
   <div class='medium-6 columns'>

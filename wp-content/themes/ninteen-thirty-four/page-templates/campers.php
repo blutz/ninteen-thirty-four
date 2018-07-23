@@ -7,7 +7,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.WhyCamp.jpg' />
   <div class='photo-block__content'>
     <h2>Why UCLA UniCamp</h2>
-    <p class='explainer'>Children in LA have a hard time seeing the stars or listening to a flowing river as they go to bed. Camp offers the chance to experience nature while getting away from the stress of everyday life in the city. Camp gives us the chance to breath fresh air and drink clean water and stop trying to be cool and just be a kid. Plain and simple, camp is a place where you can reinvent yourself, meet new friends and just have fun.</p>
+    <p class='explainer'>Children in LA have a hard time seeing the stars or listening to a flowing river as they go to bed. Camp offers the chance to experience nature while getting away from the stress of everyday life in the city. Camp gives us the chance to breathe fresh air and drink clean water and stop trying to be cool and just be a kid. Plain and simple, camp is a place where you can reinvent yourself, meet new friends and just have fun.</p>
   </div>
 </section>
 
