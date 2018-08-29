@@ -31,23 +31,23 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   </div>
   <div class='medium-4 columns overlay-image'>
     <img class='overlay-image__photo' src='<?php echo get_template_directory_uri(); ?>/images/photos/volunteers-alumni/CampfireGalaUCLAColors.jpg' />
-    <a href='/gala' class='overlay-image__text'>
+    <div class='overlay-image__text'>
       <span>
         <strong>The Campfire Gala</strong>
         <br />
         May 7, 2016
       </span>
-    </a>
+    </div>
   </div>
   <div class='medium-4 columns overlay-image'>
     <img class='overlay-image__photo' src='<?php echo get_template_directory_uri(); ?>/images/photos/volunteers-alumni/FamilyCampWeekend.JPG' />
-    <a href='https://www.eventbrite.com/e/ucla-unicamp-family-camp-weekend-tickets-24973418166' class='overlay-image__text'>
+    <div class='overlay-image__text'>
       <span>
         <strong>Family Camp Weekend</strong>
         <br />
         July 22 - 24, 2016
       </span>
-    </a>
+    </div>
   </div>
   <div class='medium-4 columns overlay-image'>
     <img class='overlay-image__photo' src='<?php echo get_template_directory_uri(); ?>/images/photos/volunteers-alumni/Woodsey-Alumni-Tailgate.jpg' />

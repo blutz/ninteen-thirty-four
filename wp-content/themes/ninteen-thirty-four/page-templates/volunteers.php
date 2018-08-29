@@ -17,7 +17,6 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   <div class='medium-12 columns'>
     <h2>Will you be a UCLA student next year?</h2>
     <p class='explainer'><strong>Volunteer with UCLA UniCamp!</strong> Applications are typically released around the end of Fall quarter. Keep an eye out on Bruinwalk or leave your email address to be notified when applications are released.</p>
-    <p class='explainer'>If you're an incoming freshman or transfer student, you might be eligible to volunteer at camp <em>this</em> summer! Make sure to mark that you're an incoming student on the form.</p>
     <a class='button' href='http://eepurl.com/dvwCrL' target='_blank'>Learn more  &rarr;</a>
   </div>
 </section>
@@ -41,7 +40,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   <div class='photo-block__content'>
     <h2>UniCamp's Volunteers</h2>
     <p class='explainer'>
-      UCLA UniCamp has approximately 500 UCLA Student Volunteers every year. Volunteers are recruited in Winter Quarter (February/ March) and spend the Spring training and bonding with their session. If you are interested in becoming a UCLA UniCamp volunteer learn more below:
+      UCLA UniCamp has approximately 500 UCLA Student Volunteers every year. Volunteers are typically recruited around the end of Fall Quarter through Winter Quarter and spend the Spring training and bonding with their session. If you are interested in becoming a UCLA UniCamp volunteer learn more below:
     </p>
     <div class='expand expand--collapsed'>
       <a href='#' class='button expand__button'>
@@ -54,7 +53,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <ul class='explainer explainer--left'>
           <li>Current UCLA student or Alumni UCLA UniCamp camper</li>
           <li>At least 18 years of age</li>
-          <li>$500 fundraising goal</li>
+          <li>$450 fundraising goal</li>
           <li>Attend weekly training meetings at UCLA during Spring Quarter</li>
         </ul>
         <p class='explainer'>

@@ -48,17 +48,9 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 <section class='expand-block' id='publicCamperApplicationExpand'>
   <div class='row'>
     <div class='medium-12 columns'>
-      <h5>2018 Public Camper Application Process</h5>
-      <p class='explainer'>
-        Public camper applicatiosn are now available! You can <a href='https://apply.unicamp.org/login/open'>browse our open sessions</a> and enroll online today!
-      </p>
-      <p class='explainer'>
-        If you were referred to a specific session or you have an enrollment code, go to <a href='https://apply.unicamp.org/'>apply.unicamp.org</a> and type in your code.
-      </p>
+      <h5>2019 Public Camper Application Process</h5>
+      <p class='explainer'>Camper applications for summer 2019 will be available in Spring 2019. <a href='http://eepurl.com/duJVeP'>Sign up for our email list</a> to be notified once applications are released.</p>
       <p class='explainer'>Email us at <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> if you have any questions.</p>
-      <a class='button' href='https://apply.unicamp.org/login/open'>
-        Sign up for camp! &rarr;
-      </a>
     </div>
   </div>
 </section>

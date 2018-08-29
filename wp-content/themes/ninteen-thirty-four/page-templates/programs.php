@@ -16,222 +16,47 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   <div class='medium-12 columns'>
     <h2>Initiative Sessions</h2>
     <p class='explainer'>In 2011 UCLA UniCamp began partnering with local nonprofits and after school programs to expand UniCamp’s impact beyond a week over the summer. By working with other agencies UCLA UniCamp has been able to see how we impact our campers beyond the week of camp as agencies relay the impact they see in the campers throughout the year.</p>
-    <p class='explainer'>Initiative sessions for 2018 will be announced soon. The initiative sessions from 2017 were...</p>
-    <div class='row initiatives'>
+    <p class='explainer'>The initiatives from summer 2018 were:</p>
+
+    <div class='row'>
       <div class='large-4 columns'>
-        <div class='hover-image hover-image--square'>
-          <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
-          <div class='hover-image__text'>
-            <div class='hover-image__text__title'>
-              Life Skills &amp; Leadership Development
-              <br />
-              Project GRAD
-            </div>
-            <div class='hover-image__text__blurb' style='display: none'>
-              <a data-open='session1Modal' class='button'>Learn more</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id='session1Modal' class='reveal' data-reveal aria-hidden=true role='dialog'>
-        <button class="close-button" data-close aria-label="Close modal" type="button">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4>Life Skills &amp; Leadership Development</h4>
-        <p>
-          <strong>Organizational Partner:</strong> Project GRAD, Los Angeles
-        </p>
-        <p>
-          Focused on developing life skills and leadership for student volunteers and campers, we hope to empower participants by creating a safe space and using the principals of social/ emotional learning, self-awareness, and communication. We will provide tools necessary to successfuly navigate college and beyond. 
-        </p>
+        <h5>Health, Nutrition, and Fitness</h5>
+        <p>Focuses on education about nutrition, importance of balanced diet, and mental health.</p>
       </div>
 
       <div class='large-4 columns'>
-        <div class='hover-image hover-image--square'>
-          <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
-          <div class='hover-image__text'>
-            <div class='hover-image__text__title'>
-              Session Beyond
-              <br />
-              LAUSD Beyond the Bell
-            </div>
-            <div class='hover-image__text__blurb' style='display: none'>
-              <a data-open='session2Modal' class='button'>Learn more</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id='session2Modal' class='reveal' data-reveal aria-hidden=true role='dialog'>
-        <button class="close-button" data-close aria-label="Close modal" type="button">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4>Session Beyond</h4>
-        <p>
-          <strong>Organizational Partner:</strong> LAUSD Beyond the Bell
-        </p>
-        <p>
-          The Beyond the Bell program enriches youth from LAUSD with their social, emotional, and physical development programs. Our session's focus is to empower these students while encouraging physical and mental health awareness &amp; leadership development.
-        </p>
+        <h5>AcademiCamp</h5>
+        <p>Aims to provide a fun, nurturing environment for all students to be appreciated and celebrated for their individuality and potential through education.</p>
       </div>
 
       <div class='large-4 columns'>
-        <div class='hover-image hover-image--square'>
-          <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
-          <div class='hover-image__text'>
-            <div class='hover-image__text__title'>
-              Outdoor Environmental Education
-            </div>
-            <div class='hover-image__text__blurb' style='display: none'>
-              <a data-open='session3Modal' class='button'>Learn more</a>
-            </div>
-          </div>
-        </div>
+        <h5>Outdoor Environmental Science</h5>
+        <p>Takes full advantage of camp's natural setting to engage campers with hands on activities and experiments to explore Earth Science, Climate Science, environmental policy, and more.</p>
       </div>
-      <div id='session3Modal' class='reveal' data-reveal aria-hidden=true role='dialog'>
-        <button class="close-button" data-close aria-label="Close modal" type="button">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4>Outdoor Environmental Education</h4>
-        <p>
-          The Outdoor Education session seeks to fully take advantage of the natural setting of Camp River Glen to pass on life lessons to our campers. We will be learning more in depth about the ecosystem and the plants and animals that live up at camp and working to relate concepts from nature and biology to our own lives.
-        </p>
-      </div>
-
-      <div class='large-4 columns'>
-        <div class='hover-image hover-image--square'>
-          <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
-          <div class='hover-image__text'>
-            <div class='hover-image__text__title'>
-              Boys &amp; Girls Club Pasadena
-            </div>
-            <div class='hover-image__text__blurb' style='display: none'>
-              <a data-open='session4Modal' class='button'>Learn more</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id='session4Modal' class='reveal' data-reveal aria-hidden=true role='dialog'>
-        <button class="close-button" data-close aria-label="Close modal" type="button">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4>Boys &amp; Girls Club Pasadena</h4>
-        <p>
-          This year, we're partnering up with the Boys and Girls Club of Pasadena and Burbank to create a week of camp dedicated to developing leadership and assisting the campers with their high school experience. Our volunteers will foster the campers with the motivation, experience, and the safe space that is necessary for them to grow into tomorrow's leaders.
-        </p>
-      </div>
-
-      <div class='large-4 columns'>
-        <div class='hover-image hover-image--square'>
-          <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
-          <div class='hover-image__text'>
-            <div class='hover-image__text__title'>
-              The Village Session
-              <br />
-              The Village Nation
-            </div>
-            <div class='hover-image__text__blurb' style='display: none'>
-              <a data-open='session5Modal' class='button'>Learn more</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id='session5Modal' class='reveal' data-reveal aria-hidden=true role='dialog'>
-        <button class="close-button" data-close aria-label="Close modal" type="button">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4>The Village Session</h4>
-        <p>
-          <strong>Organizational Partners:</strong> The Village Nation
-        </p>
-        <p>
-          Our session is guided by the Afrikan proverb "It takes a village to raise a child." Our week of camp celebrates Afrikan American heritage, history, and culture in a safe space that fosters camper expression, builds confidence to unlock campers' true potential, and develops leadership to advance the legacy of social justice.
-        </p>
-      </div>
-
-      <div class='large-4 columns'>
-        <div class='hover-image hover-image--square'>
-          <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
-          <div class='hover-image__text'>
-            <div class='hover-image__text__title'>
-              AcademiCamp
-              <br />
-              UCLA Community School/LA Times and McCormick Fund
-            </div>
-            <div class='hover-image__text__blurb' style='display: none'>
-              <a data-open='session6Modal' class='button'>Learn more</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id='session6Modal' class='reveal' data-reveal aria-hidden=true role='dialog'>
-        <button class="close-button" data-close aria-label="Close modal" type="button">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4>AcademiCamp</h4>
-        <p>
-          <strong>Organizational Partner:</strong> UCLA Community School/LA Times and McCormick Fund
-        </p>
-        <p>
-          AcademiCamp is part of a 7-week summer program for students of UCLA's Horace Mann Community School. The program focuses on social justice education, learning that emphasizes the students' cultural and social backgrounds to develop a sense of pride and self confidence in their potential. UniCamp volunteers have also been active in tutoring Horace Mann students in a credit recovery program.
-        </p>
-      </div>
-
-      <div class='large-4 columns'>
-        <div class='hover-image hover-image--square'>
-          <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
-          <div class='hover-image__text'>
-            <div class='hover-image__text__title'>
-              Childhood Grief Support
-            </div>
-            <div class='hover-image__text__blurb' style='display: none'>
-              <a data-open='session7Modal' class='button'>Learn more</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id='session7Modal' class='reveal' data-reveal aria-hidden=true role='dialog'>
-        <button class="close-button" data-close aria-label="Close modal" type="button">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4>Childhood Grief Support</h4>
-        <p>
-          Our mission is to provide children who have experienced the death of a loved one with a safe space to grieve and to heal within a community of those with a desire to understand. By the end, not only will they learn how to cope with their grief, but also recognize their own strength and personal growth.
-        </p>
-      </div>
-
-      <div class='large-4 columns end'>
-        <div class='hover-image hover-image--square'>
-          <div class='hover-image__image'
-          style='background-image:url("<?php echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png")'></div>
-          <div class='hover-image__text'>
-            <div class='hover-image__text__title'>
-              Boys &amp; Girls Club Long Beach
-            </div>
-            <div class='hover-image__text__blurb' style='display: none'>
-              <a data-open='session9Modal' class='button'>Learn more</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id='session9Modal' class='reveal' data-reveal aria-hidden=true role='dialog'>
-        <button class="close-button" data-close aria-label="Close modal" type="button">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4>Boys &amp; Girls Club Long Beach</h4>
-        <p>
-          This session is centered around anti-bullying and teaches campers to build self-esteem and restore self-confidence. Our mission statement is: "Sometimes when you hear others' critiques, it helps to know that you're just unique. What makes you different makes you special. Believing in ourselves and others will make us successful. Because pulling someone down will never help you reach the top, so be a friend and we can teach the mountain top."
-        </p>
-      </div>
-
     </div>
-  </div>
+
+    <div class='row'>
+      <div class='large-4 columns'>
+        <h5>Camp Comforting Hearts</h5>
+        <p>Provides campers with a safe space to grieve, heal, and be among peers with similar experiences.</p>
+      </div>
+
+      <div class='large-4 columns'>
+        <h5>Transitional Youth Empowerment</h5>
+        <p>Provides mentorship, educational support, and empowerment for the foster youth community.</p>
+      </div>
+ 
+      <div class='large-4 columns'>
+        <h5>Social Justice &amp; Activism</h5>
+        <p>Aims to create an open dialogue for students and give them an understanding of what they can do to become socially active leaders in the university environment.</p>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='large-4 columns'>
+        <h5>The Village Session</h5>
+        <p>Empowers Black American youth to achieve their full potential by providing them with guidance from elders, resources for success, and immersing them in African culture.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -277,7 +102,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         Learn More <i class='expand__button__icon'></i>
       </a>
       <div class='expand__content'>
-        UniCorps is an Older Camper Program that focuses on leadership, service learning, and educational awareness. Campers will engage in community service projects that will improve upon the natural beauty and aesthetic of the UniCamp campsite. Campers also lead younger campers in outcome based programs. Campers who complete this program earn 40 hours of community service towards their high school graduation requirement. Led by UCLA students and alumni, UniCorps provides the perfect opportunity for your child to learn how to get to college from those who have already made it.
+        UniCorps is an Older Camper Program that focuses on leadership, service learning, and educational awareness. Campers will engage in community service projects that will improve upon the natural beauty and aesthetic of the UniCamp campsite. Campers also lead younger campers in outcome based programs. Campers who complete this program earn 30 hours of community service towards their high school graduation requirement. Led by UCLA students and alumni, UniCorps provides the perfect opportunity for your child to learn how to get to college from those who have already made it.
       </div>
     </div>
   </div>

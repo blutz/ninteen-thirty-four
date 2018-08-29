@@ -1,12 +1,13 @@
 <?php get_header(); ?>
 
 <section class='photo-block'
-style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg"); background-position-y: top;'>
-  <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/sign-up.jpg' />
+style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/2018spds.jpg"); background-position-y: top;'>
+  <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/2018spds.jpg' />
   <div class='photo-block__content'>
-    <h2>Camper applications are now available!</h2>
-    <p class='explainer'>Apply online to go to camp this summer. You can use an application code or, if you're looking for a session, <a style='color: white' href='https://apply.unicamp.org/login/open'>browse our open enrollment</a> to find a week that works for you.</p>
-    <a class='button button--homepage' href='https://apply.unicamp.org'>Apply today! &rarr;</a>
+    <h2>Lead a UniCamp session next summer!</h2>
+    <p class='explainer'>UniCamp is looking for Session Program Directors (SPDs) for the upcoming 2018-2019 school year! Interested in creating, leading, and inspiring a session? Apply now! SPD applications due <strong style='color:white'>September 1</strong> and Head Counselor (HC) applications will be available after.</p>
+    <p class='explainer'>If you have any further questions or are interested in other leadership roles in UniCamp, please email <a style='color:white' href='mailto:unicabinet@unicamp.org'>unicabinet@unicamp.org</a>.</p>
+    <a class='button button--homepage' href='https://unicamp.org/spd2019'>Apply to be an SPD &rarr;</a>
   </div>
 </section>
 
