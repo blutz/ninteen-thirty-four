@@ -19,10 +19,15 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     </div>
   </div>
   <div class='medium-6 columns'>
-    <h5>LSHIP (Session Program Director & Head Counselor)</h5>
-    <p class='explainer'>UniCamp is looking for Session Program Directors (SPDs) for the upcoming 2018-2019 school year! Interested in creating, leading, and inspiring a session? Apply now! SPD applications due September 1 and Head Counselor (HC) applications will be available after.</p>
-    <p class='explainer'>If you have any further questions or are interested in other leadership roles in UniCamp, please email <a href='mailto:unicabinet@unicamp.org'>unicabinet@unicamp.org</a>.</p>
-    <a class='button' href='https://unicamp.org/spd2019'>Learn more and apply online &rarr;</a>
+    <h5>Older Camper Programs (OCP)</h5>
+    <p class='explainer'><strong>C.L.I.M.B.</strong> stands for Core Lessons In Mind and Body. Our mission is to use the core tenets of climbing (climbing, belaying, slack lining, rappelling and anchor building) to teach awareness of mind and body, as well as promote balance, growth, leadership, and responsibility. Each of these skills poses unique challenges to the campers and also provides excellent yet difficult learning opportunities for all involved. At the end of the week, there is an off-site climbing trip where the campers are able to apply their newly learned talents in an outdoor setting with awe inspiring views for a trip that they (and you) will never forget.</p>
+    <p class='explainer'>For more information e-mail <a href='mailto:climbpds@unicamp.org'>climbpds@unicamp.org.</a></p>
+    <a class='button' href='https://docs.google.com/document/d/1o_ZNy5CtLAKBYnGAnhhwK0-OhH8I76BLNRL6VYNzbxk/edit?fbclid=IwAR0R5szQ_0z5zR5-tEPwLRyQr6zcL2-03w-ASlfGI6c5-jp5lLJ7fN3EC1k'>Apply for CLIMB online &rarr;</a>
+    <br />
+    <br />
+    <p class='explainer'><strong>UniCorps</strong> is an Older Camper Program that focuses on leadership, service learning, and postsecondary preparation. UniCorps Advisors will take on the responsibility of acting as a role model, and inspire their campers to do the same. Campers will engage in community service projects and leadership development programs, while also planning and implementing their own programs for the younger camper population. Campers who complete this program earn 40 hours of community service towards their high school graduation requirement.</p>
+    <p class='explainer'>For more information e-mail <a href='mailto:ucpds@unicamp.org'>ucpds@unicamp.org.</a></p>
+    <a class='button' href='https://docs.google.com/document/d/1FMeKTOfcSCFit3E6qWB2PH0Elrk0ANi9EXuX0iKuRQI/edit?fbclid=IwAR2jB77BnqaxJSTCy3ox4w9YIHvKuvVBpxMkIfyPnYzab3r2NYJYRL-ey1s'>Apply for UniCorps online &rarr;</a>
     <br />
   </div>
   <div class='medium-6 columns'>

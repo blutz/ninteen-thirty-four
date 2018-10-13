@@ -4,10 +4,12 @@
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/2018spds.jpg"); background-position-y: top;'>
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/2018spds.jpg' />
   <div class='photo-block__content'>
-    <h2>Lead a UniCamp session next summer!</h2>
-    <p class='explainer'>UniCamp is looking for Session Program Directors (SPDs) for the upcoming 2018-2019 school year! Interested in creating, leading, and inspiring a session? Apply now! SPD applications due <strong style='color:white'>September 1</strong> and Head Counselor (HC) applications will be available after.</p>
-    <p class='explainer'>If you have any further questions or are interested in other leadership roles in UniCamp, please email <a style='color:white' href='mailto:unicabinet@unicamp.org'>unicabinet@unicamp.org</a>.</p>
-    <a class='button button--homepage' href='https://unicamp.org/spd2019'>Apply to be an SPD &rarr;</a>
+    <h2>Apply to be an Older Camper Program Advisor</h2>
+    <p class='explainer'>Applications for OCP Advisor positions for summer 2019 are now available. Apply for UniCorps by October 18 and CLIMB by October 19.</p>
+    <a class='button button--homepage' href='https://docs.google.com/document/d/1o_ZNy5CtLAKBYnGAnhhwK0-OhH8I76BLNRL6VYNzbxk/edit?fbclid=IwAR0R5szQ_0z5zR5-tEPwLRyQr6zcL2-03w-ASlfGI6c5-jp5lLJ7fN3EC1k'>Apply for CLIMB &rarr;</a>
+    <a class='button button--homepage' href='https://docs.google.com/document/d/1FMeKTOfcSCFit3E6qWB2PH0Elrk0ANi9EXuX0iKuRQI/edit?fbclid=IwAR2jB77BnqaxJSTCy3ox4w9YIHvKuvVBpxMkIfyPnYzab3r2NYJYRL-ey1s'>Apply for UniCorps &rarr;</a>
+    <br />
+    <a class='button button--homepage' href='/apply' style='margin: 10px 0;'>Learn more &rarr;</a>
   </div>
 </section>
 
