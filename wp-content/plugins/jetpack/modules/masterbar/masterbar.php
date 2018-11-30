@@ -509,17 +509,7 @@ class A8C_WPCOM_Masterbar {
 				'class' => 'mb-icon user-info-item',
 			),
 		) );
-
-		$wp_admin_bar->add_menu( array(
-			'parent' => $id,
-			'id'     => 'next-steps',
-			'title'  => esc_html__( 'Next Steps', 'jetpack' ),
-			'href'   => 'https://wordpress.com/me/next',
-			'meta'   => array(
-				'class' => 'mb-icon user-info-item',
-			),
-		) );
-
+		
 		$help_link = 'https://jetpack.com/support/';
 
 		if ( jetpack_is_atomic_site() ) {
@@ -648,6 +638,18 @@ class A8C_WPCOM_Masterbar {
 				'id'     => 'blog-stats',
 				'title'  => esc_html__( 'Stats', 'jetpack' ),
 				'href'   => 'https://wordpress.com/stats/' . esc_attr( $this->primary_site_slug ),
+				'meta'   => array(
+					'class' => 'mb-icon',
+				),
+			) );
+		}
+
+		if ( current_user_can( 'manage_options' ) ) {
+			$wp_admin_bar->add_menu( array(
+				'parent' => 'blog',
+				'id'     => 'activity',
+				'title'  => esc_html__( 'Activity', 'jetpack' ),
+				'href'   => 'https://wordpress.com/activity-log/' . esc_attr( $this->primary_site_slug ),
 				'meta'   => array(
 					'class' => 'mb-icon',
 				),
@@ -873,14 +875,14 @@ class A8C_WPCOM_Masterbar {
 
 			$theme_title = $this->create_menu_item_pair(
 				array(
-					'url'   => 'https://wordpress.com/themes/' . esc_attr( $this->primary_site_slug ),
-					'id'    => 'wp-admin-bar-themes',
-					'label' => esc_html__( 'Themes', 'jetpack' ),
-				),
-				array(
 					'url'   => $customizer_url,
 					'id'    => 'wp-admin-bar-cmz',
 					'label' => esc_html_x( 'Customize', 'admin bar customize item label', 'jetpack' ),
+				),
+				array(
+					'url'   => 'https://wordpress.com/themes/' . esc_attr( $this->primary_site_slug ),
+					'id'    => 'wp-admin-bar-themes',
+					'label' => esc_html__( 'Themes', 'jetpack' ),
 				)
 			);
 			$meta = array( 'class' => 'mb-icon', 'class' => 'inline-action' );
@@ -1028,7 +1030,7 @@ class A8C_WPCOM_Masterbar {
 			/**
 			 * Fires when menu items are added to the masterbar "My Sites" menu.
 			 *
-			 * @since 5.4
+			 * @since 5.4.0
 			 */
 			do_action( 'jetpack_masterbar' );
 		}
