@@ -4,21 +4,9 @@
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/2018spds.jpg"); background-position-y: top;'>
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/2018spds.jpg' />
   <div class='photo-block__content'>
-    <h2>Apply to be an Older Camper Program Advisor</h2>
-    <p class='explainer'>Applications for OCP Advisor positions for summer 2019 are now available. Apply for UniCorps by October 18 and CLIMB by October 19.</p>
-    <a class='button button--homepage' href='https://docs.google.com/document/d/1o_ZNy5CtLAKBYnGAnhhwK0-OhH8I76BLNRL6VYNzbxk/edit?fbclid=IwAR0R5szQ_0z5zR5-tEPwLRyQr6zcL2-03w-ASlfGI6c5-jp5lLJ7fN3EC1k'>Apply for CLIMB &rarr;</a>
-    <a class='button button--homepage' href='https://docs.google.com/document/d/1FMeKTOfcSCFit3E6qWB2PH0Elrk0ANi9EXuX0iKuRQI/edit?fbclid=IwAR2jB77BnqaxJSTCy3ox4w9YIHvKuvVBpxMkIfyPnYzab3r2NYJYRL-ey1s'>Apply for UniCorps &rarr;</a>
-    <br />
+    <h2>Volunteer at UniCamp This Summer</h2>
+    <p class='explainer'>Applications for volunteer positions will be available on January 8, 2019.</p>
     <a class='button button--homepage' href='/apply' style='margin: 10px 0;'>Learn more &rarr;</a>
-  </div>
-</section>
-
-<section class='row content-row'>
-  <div class='medium-12 columns'>
-    <h2>Will you be a UCLA student next year?</h2>
-    <p class='explainer'><strong>Volunteer with UCLA UniCamp!</strong> Applications are typically released around the end of Fall quarter. Keep an eye out on Bruinwalk or leave your email address to be notified when applications are released.</p>
-    <p class='explainer'>If you're an incoming freshman or transfer student, you might be eligible to volunteer at camp <em>this</em> summer! Make sure to mark that you're an incoming student on the form.</p>
-    <a class='button' href='http://eepurl.com/dvwCrL' target='_blank'>Learn more  &rarr;</a>
   </div>
 </section>
 

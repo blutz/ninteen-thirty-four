@@ -22,7 +22,7 @@
       <h3>Programs</h3>
       <ul class='footer__submenu'>
         <li><a href='/programs'>Classic UniCamp</a></li>
-        <li><a href='/programs#wall'>W.A.L.L.</a></li>
+        <!--<li><a href='/programs#wall'>W.A.L.L.</a></li>-->
         <li><a href='/programs#unicorps'>UniCorps</a></li>
         <li><a href='/programs#climb'>C.L.I.M.B.</a></li>
         <!--<li><a href='#'>AcademiCamp</a></li>-->
