@@ -94,17 +94,18 @@ class WP_Block_Type {
 	 *
 	 * @since 0.6.0
 	 *
-	 * @param array $attributes Optional. Block attributes. Default empty array.
+	 * @param array  $attributes Optional. Block attributes. Default empty array.
+	 * @param string $content    Optional. Block content. Default empty string.
 	 * @return string Rendered block type output.
 	 */
-	public function render( $attributes = array() ) {
+	public function render( $attributes = array(), $content = '' ) {
 		if ( ! $this->is_dynamic() ) {
 			return '';
 		}
 
 		$attributes = $this->prepare_attributes_for_render( $attributes );
 
-		return (string) call_user_func( $this->render_callback, $attributes );
+		return (string) call_user_func( $this->render_callback, $attributes, $content );
 	}
 
 	/**
@@ -119,36 +120,47 @@ class WP_Block_Type {
 
 	/**
 	 * Validates attributes against the current block schema, populating
-	 * defaulted and missing values, and omitting unknown attributes.
+	 * defaulted and missing values.
 	 *
 	 * @param  array $attributes Original block attributes.
 	 * @return array             Prepared block attributes.
 	 */
 	public function prepare_attributes_for_render( $attributes ) {
+		// If there are no attribute definitions for the block type, skip
+		// processing and return vebatim.
 		if ( ! isset( $this->attributes ) ) {
 			return $attributes;
 		}
 
-		$prepared_attributes = array();
-
-		foreach ( $this->attributes as $attribute_name => $schema ) {
-			$value = null;
-
-			if ( isset( $attributes[ $attribute_name ] ) ) {
-				$is_valid = rest_validate_value_from_schema( $attributes[ $attribute_name ], $schema );
-				if ( ! is_wp_error( $is_valid ) ) {
-					$value = $attributes[ $attribute_name ];
-				}
+		foreach ( $attributes as $attribute_name => $value ) {
+			// If the attribute is not defined by the block type, it cannot be
+			// validated.
+			if ( ! isset( $this->attributes[ $attribute_name ] ) ) {
+				continue;
 			}
 
-			if ( is_null( $value ) && isset( $schema['default'] ) ) {
-				$value = $schema['default'];
-			}
+			$schema = $this->attributes[ $attribute_name ];
 
-			$prepared_attributes[ $attribute_name ] = $value;
+			// Validate value by JSON schema. An invalid value should revert to
+			// its default, if one exists. This occurs by virtue of the missing
+			// attributes loop immediately following. If there is not a default
+			// assigned, the attribute value should remain unset.
+			$is_valid = rest_validate_value_from_schema( $value, $schema );
+			if ( is_wp_error( $is_valid ) ) {
+				unset( $attributes[ $attribute_name ] );
+			}
 		}
 
-		return $prepared_attributes;
+		// Populate values of any missing attributes for which the block type
+		// defines a default.
+		$missing_schema_attributes = array_diff_key( $this->attributes, $attributes );
+		foreach ( $missing_schema_attributes as $attribute_name => $schema ) {
+			if ( isset( $schema['default'] ) ) {
+				$attributes[ $attribute_name ] = $schema['default'];
+			}
+		}
+
+		return $attributes;
 	}
 
 	/**
@@ -159,14 +171,39 @@ class WP_Block_Type {
 	 * @param array|string $args Array or string of arguments for registering a block type.
 	 */
 	public function set_props( $args ) {
-		$args = wp_parse_args( $args, array(
-			'render_callback' => null,
-		) );
+		$args = wp_parse_args(
+			$args,
+			array(
+				'render_callback' => null,
+			)
+		);
 
 		$args['name'] = $this->name;
 
 		foreach ( $args as $property_name => $property_value ) {
 			$this->$property_name = $property_value;
 		}
+	}
+
+	/**
+	 * Get all available block attributes including possible layout attribute from Columns block.
+	 *
+	 * @return array Array of attributes.
+	 */
+	public function get_attributes() {
+		return is_array( $this->attributes ) ?
+			array_merge(
+				$this->attributes,
+				array(
+					'layout' => array(
+						'type' => 'string',
+					),
+				)
+			) :
+			array(
+				'layout' => array(
+					'type' => 'string',
+				),
+			);
 	}
 }
