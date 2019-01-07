@@ -1,11 +1,11 @@
 <?php get_header(); ?>
 
 <section class='photo-block'
-style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/2018spds.jpg"); background-position-y: top;'>
+style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/2018allcamp.jpg"); background-position-y: top;'>
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/2018spds.jpg' />
   <div class='photo-block__content'>
-    <h2>Volunteer at UniCamp This Summer</h2>
-    <p class='explainer'>Applications for volunteer positions will be available on January 8, 2019.</p>
+    <h2>Be a UniCamp Volunteer this summer!</h2>
+    <p class='explainer'>Applications are now online! Apply by Friday of 2nd week, January 18, at 11:59 p.m.</p>
     <a class='button button--homepage' href='/apply' style='margin: 10px 0;'>Learn more &rarr;</a>
   </div>
 </section>
