@@ -17,21 +17,19 @@
     <div class='large-6 large-offset-3 medium-8 medium-offset-2 columns'>
       <div id='main-heading'>
         <h2 class='supporting-h2'>UCLA UniCamp presents:</h2>
-        <h2 class='main-h2'>The 3<sup>rd</sup> Annual Campfire Gala</h2>
-        <h2 class='supporting-h2'>Saturday, October 14, 2017</h2>
+        <h2 class='main-h2'>The 4<sup>th</sup> Annual Campfire Gala</h2>
+        <h2 class='supporting-h2'>Saturday, March 30, 2019</h2>
       </div>
-      <hr />
+      <!--<hr />
       <ul class='button-list'>
         <li><a href='https://oss.ticketmaster.com/aps/uclacto2/EN/buy/details/m172925' target='_blank'><span>Tickets</span></a></li>
         <li><a href='https://www.giveffect.com/checkout/5178' target='_blank'><span>Donate</span></a></li>
         <li><a href='<?php echo get_template_directory_uri(); ?>/sites/gala/CampfireGalaSponsorship.pdf'><span>Sponsorship</span></a></li>
         <li><a href='<?php echo get_template_directory_uri(); ?>/sites/gala/CampfireGalaSilentAuction.pdf'><span>Silent Auction Donations</span></a></li>
         <li><a href='https://goo.gl/photos/pXfJ9aQuhJ5xanqG8'><span>Photos</span></a></li>
-        <!--<li><a href='#' class='button-list__disabled'><span>About the<br />Honoree</span></a></li>-->
-      </ul>
+      </ul>-->
       <hr />
-      <p>Tickets available for $150. Sales close October 11th.</p>
-      <p>To purchase tickets by mail or phone, please contact the UCLA Central Ticket Office at (310) 825-2101.</p>
+      <p>Tickets available soon for $150. Sales close March 27.</p>
       <p>Reception &ndash; 5 pm<br />Dinner &ndash; 7pm<p>
       <p><strong>Palisades Ballroom at UCLA Carnesale Commons</strong><br />251 Charles E Young Drive West, Los Angeles, CA 90095</p>
       <p>Cocktail Attire Requested</p>
