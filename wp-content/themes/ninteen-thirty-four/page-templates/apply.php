@@ -42,7 +42,11 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   </div>
   <div class='medium-3 columns end'>
     <h4>Info Sessions</h4>
-    <p>Dates/times for info sessions will be announced soon! <a href='https://unicamp.us13.list-manage.com/subscribe?u=0fcb41f54ca069df3bc85f56c&id=10b0187a6d'>Sign up to get an email reminder.</a></p>
+    <p>Learn more about volunteering for UCLA UniCamp at an info session during week 2:</p>
+    <p>
+      <strong>Jan. 15</strong>. 7:30pm – 8:30pm in <a href='https://map.ucla.edu/?k=true&id=213'>Slichter 2834</a><br />
+      <strong>Jan. 17</strong>. 6pm – 7pm or 8pm – 9pm in <a href='https://map.ucla.edu/?k=false&id=83876'>Sunset Rec Mesa Room</a><br />
+    </ul>
     <h4>Learn more</h4>
     <p>Learn more by <a href='https://instagram.com/uclaunicamp'>following us on Instagram @uclaunicamp</a>, stopping by our table on Bruinwalk winter weeks 1-2, or by emailing <a href='mailto:volunteer@unicamp.org'>volunteer@unicamp.org</a>.
   </div>
