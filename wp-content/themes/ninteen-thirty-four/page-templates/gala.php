@@ -20,14 +20,14 @@
         <h2 class='main-h2'>The 4<sup>th</sup> Annual Campfire Gala</h2>
         <h2 class='supporting-h2'>Saturday, March 30, 2019</h2>
       </div>
-      <!--<hr />
+      <hr />
       <ul class='button-list'>
-        <li><a href='https://oss.ticketmaster.com/aps/uclacto2/EN/buy/details/m172925' target='_blank'><span>Tickets</span></a></li>
-        <li><a href='https://www.giveffect.com/checkout/5178' target='_blank'><span>Donate</span></a></li>
-        <li><a href='<?php echo get_template_directory_uri(); ?>/sites/gala/CampfireGalaSponsorship.pdf'><span>Sponsorship</span></a></li>
-        <li><a href='<?php echo get_template_directory_uri(); ?>/sites/gala/CampfireGalaSilentAuction.pdf'><span>Silent Auction Donations</span></a></li>
-        <li><a href='https://goo.gl/photos/pXfJ9aQuhJ5xanqG8'><span>Photos</span></a></li>
-      </ul>-->
+        <!--<li><a href='https://oss.ticketmaster.com/aps/uclacto2/EN/buy/details/m172925' target='_blank'><span>Tickets</span></a></li>-->
+        <!--<li><a href='https://www.giveffect.com/checkout/5178' target='_blank'><span>Donate</span></a></li>-->
+        <li><a href='<?php echo get_template_directory_uri(); ?>/sites/gala/sponsorship.pdf'><span>Sponsorship</span></a></li>
+        <li><a href='<?php echo get_template_directory_uri(); ?>/sites/gala/silentauction.pdf'><span>Silent Auction Donations</span></a></li>
+        <!--<li><a href='https://goo.gl/photos/pXfJ9aQuhJ5xanqG8'><span>Photos</span></a></li>-->
+      </ul>
       <hr />
       <p>Tickets available soon for $150. Sales close March 27.</p>
       <p>Reception &ndash; 5 pm<br />Dinner &ndash; 7pm<p>
