@@ -85,7 +85,7 @@
       <br />
       University Camps Inc. is a registered 501(c)3 nonprofit organization. All donations are tax deductible in full or in part.
       <br />
-      &copy; 2016 University Camps Inc. All rights resersved.
+      &copy; 2019 University Camps Inc. All rights reserved.
     </p>
   </div>
 </footer>
