@@ -34,7 +34,7 @@
 .contact-block .contact-form input[type=text] {
   width: 100%;
 }
-.contact-block input[type='submit'] {
+.contact-block button[type='submit'] {
   @extend .button;
   width: 100%;
 }

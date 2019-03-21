@@ -1,6 +1,6 @@
 <?php
 function ninteen_thirty_four_scripts() {
-  wp_enqueue_style('ninteen-thirty-four-style', get_stylesheet_uri());
+  wp_enqueue_style('ninteen-thirty-four-style', get_stylesheet_uri(), $ver = "1553141113");
   wp_deregister_script('jquery');
   wp_enqueue_script('jquery',
     get_template_directory_uri() . '/vendor/jquery.js',
