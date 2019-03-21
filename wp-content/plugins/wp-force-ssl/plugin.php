@@ -8,9 +8,9 @@ if( !defined( 'ABSPATH' ) ) {
 define('FORCE_SSL' , true);
 
 if (defined('FORCE_SSL'))
-  add_action('template_redirect', 'force_ssl');
+  add_action('template_redirect', 'wpfssl_core');
 
-function force_ssl(){
+function wpfssl_core(){
 
 if ( FORCE_SSL && !is_ssl () )
  {

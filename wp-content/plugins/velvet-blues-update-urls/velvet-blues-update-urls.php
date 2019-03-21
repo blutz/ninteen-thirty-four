@@ -6,11 +6,11 @@ Description: This plugin <strong>updates all urls in your website</strong> by re
 Author: VelvetBlues.com
 Author URI: http://www.velvetblues.com/
 Author Email: info@velvetblues.com
-Version: 3.2.8
+Version: 3.2.9
 License: GPLv2 or later
 Text Domain: velvet-blues-update-urls
 */
-/*  Copyright 2018  Velvet Blues Web Design  (email : info@velvetblues.com)
+/*  Copyright 2019  Velvet Blues Web Design  (email : info@velvetblues.com)
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -148,7 +148,7 @@ function VelvetBluesUU_management_page(){
 		if(($vbuu_oldurl && $vbuu_oldurl != 'http://www.oldurl.com' && trim($vbuu_oldurl) != '') && ($vbuu_newurl && $vbuu_newurl != 'http://www.newurl.com' && trim($vbuu_newurl) != '')){
 			$results = VB_update_urls($vbuu_update_links,$vbuu_oldurl,$vbuu_newurl);
 			$empty = true;
-			$emptystring = '<strong>'.__('Why do the results show 0 URLs updated?','velvet-blues-update-urls').'</strong><br/>'.__('This happens if a URL is incorrect OR if it is not found in the content. Check your URLs and try again.','velvet-blues-update-urls').'<br/><br/><strong>'.__('Want us to do it for you?','velvet-blues-update-urls').'</strong><br/>'.__('Contact us at','velvet-blues-update-urls').' <a href="mailto:info@velvetblues.com?subject=Move%20My%20WP%20Site">info@velvetblues.com</a>. '.__('We will backup your website and move it for $65 OR simply update your URLs for only $29.','velvet-blues-update-urls');
+			$emptystring = '<strong>'.__('Why do the results show 0 URLs updated?','velvet-blues-update-urls').'</strong><br/>'.__('This happens if a URL is incorrect OR if it is not found in the content. Check your URLs and try again.','velvet-blues-update-urls').'<br/><br/><strong>'.__('Want us to do it for you?','velvet-blues-update-urls').'</strong><br/>'.__('Contact us at','velvet-blues-update-urls').' <a href="mailto:info@velvetblues.com?subject=Move%20My%20WP%20Site">info@velvetblues.com</a>. '.__('We will backup your website and move it for $75 OR simply update your URLs for only $39.','velvet-blues-update-urls');
 
 			$resultstring = '';
 			foreach($results as $result){

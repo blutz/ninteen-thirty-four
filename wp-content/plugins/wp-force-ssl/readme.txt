@@ -2,8 +2,8 @@
 Contributors: kosvrouvas, codesignsgr
 Tags: ssl, force, https, security, ssl certificate, certificate, redirect
 Requires at least: 3.9
-Tested up to: 4.7.2
-Stable Tag: 1.3
+Tested up to: 5.0
+Stable Tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,6 +25,9 @@ You need to <strong>add https to the WordPress Address (URL) and Site Address (U
 4. Done.
 
 == Changelog ==
+= 1.4 =
+- Changed function naming to avoid conflicts reported by users.
+
 = 1.3 =
 - Dropping support for PHP 5.3: Only 15.9% of the people that use WordPress use PHP 5.3, it reached end of life and you should ask your host to upgrade.
 

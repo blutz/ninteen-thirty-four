@@ -1,11 +1,11 @@
 <?php
 /*
 	Plugin Name: WP Force SSL
-	Plugin URI: https://www.codesigns.gr/
+	Plugin URI: https://www.kosvrouvas.com
 	Description: Redirect all traffic from HTTP to HTTPS to all pages of your WordPress website.
-	Stable Tag: 1.3
+	Stable Tag: 1.4
 	Author: Kostas Vrouvas
-	Version: 1.3
+	Version: 1.4
  */
 
 //
@@ -61,6 +61,11 @@ function wpfssl_welcome_screen_content() {
 	<hr>
 	<h1>Changelog:</h1>
 	<br>
+	<h4>1.4</h4>
+		<p><small>Release date: December 9th, 2018</small></p>
+		<ul class="ul-disc">
+			<li>Changed function naming to avoid conflicts reported by users.</li>
+		</ul>
 	<h4>1.3</h4>
 		<p><small>Release date: February 11th, 2016</small></p>
 		<ul class="ul-disc">

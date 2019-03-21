@@ -10,7 +10,7 @@ exit;
 *
 * @return bool
 */
-function wp_force_ssl_deactivate_self() {
+function wpfssl_deactivate_self() {
 if( ! current_user_can( 'activate_plugins' ) ) {
 return false;
 }
@@ -21,13 +21,13 @@ if( isset( $_GET['activate'] ) ) {
 unset( $_GET['activate'] );
 }
 // show notice to user
-add_action( 'admin_notices', 'wp_force_ssl_requirement_notice' );
+add_action( 'admin_notices', 'wpfssl_requirement_notice' );
 return true;
 }
 /**
 * Outputs a notice telling the user that the plugin deactivated itself
 */
-function wp_force_ssl_requirement_notice() {
+function wpfssl_requirement_notice() {
 ?>
 <div class="updated">
 <p><?php _e( 'WP Force SSL did not activate because it requires your server to run PHP 5.4 or higher. <a href="http://www.wpupdatephp.com/update/" target="_blank">Learn More</a>', 'wp-force-ssl' ); ?></p>
@@ -35,5 +35,5 @@ function wp_force_ssl_requirement_notice() {
 <?php
 }
 // Hook into `admin_init`
-add_action( 'admin_init', 'wp_force_ssl_deactivate_self' );
+add_action( 'admin_init', 'wpfssl_deactivate_self' );
 ?>
