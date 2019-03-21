@@ -1,6 +1,15 @@
 $height-photo-block: 850px;
 $height-photo-block-short: $height-photo-block - 200px;
 
+.photo-block--home-small {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 20px;
+}
+
 .photo-block {
   @include breakpoint(large up) {
     height: $height-photo-block;
@@ -20,6 +29,17 @@ $height-photo-block-short: $height-photo-block - 200px;
 .photo-block {
   @include breakpoint(large up) {
     height: $height-photo-block-short;
+  }
+}
+.photo-block--short {
+  @include breakpoint(large up) {
+  height: $height-photo-block/4;
+  }
+}
+.photo-block--half {
+  @include breakpoint(large up) {
+    float: left;
+    width: 50%;
   }
 }
 .photo-block__small-image {

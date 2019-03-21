@@ -1,14 +1,29 @@
 <?php get_header(); ?>
 
 <section class='photo-block'
-style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/2018allcamp.jpg"); background-position-y: top;'>
-  <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/2018spds.jpg' />
+style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/bear-campers.jpg"); background-position-y: top;'>
+  <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/bear-campers.jpg' />
   <div class='photo-block__content'>
-    <h2>Be a UniCamp Volunteer this summer!</h2>
-    <p class='explainer'>Applications are now online! Apply by Friday of 2nd week, January 18, at 11:59 p.m.</p>
-    <a class='button button--homepage' href='/apply' style='margin: 10px 0;'>Learn more &rarr;</a>
+    <h2>Camper Registration Available Soon!</h2>
+    <p class='explainer'>Online camper registration will open soon. Be one of the first to register by signing up for an email reminder by clicking below.</p>
+    <a class='button button--homepage' href='/summer' style='margin: 10px 0;'>More info &rarr;</a>
   </div>
 </section>
+
+<section class='photo-block--half photo-block--short photo-block--home-small' style='background-color: #003B5C; color: white;'>
+  <h3>Volunteer as a Camp Counselor</h3>
+  <p class='explainer'>Rolling applications are now available. Must be a UCLA student or past camper and at least 18 years old.</p>
+  <div>
+    <a class='button button--homepage' href='/apply' style='margin: 10px 0;'>Apply online &rarr;</a>
+  </div>
+</section>
+
+<section class='photo-block--half photo-block--short photo-block--home-small' style='background: #005587; color: white;'>
+  <h3>Become a Student Leader</h3>
+  <p class='explainer'>UniCabinet and UniCommittee applications will be available here soon!</p>
+</section>
+
+<div style='clear:both;width:100%;'></div>
 
 <section id='official-philanthropy' class='photo-block'
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/official-charity.jpg")'>

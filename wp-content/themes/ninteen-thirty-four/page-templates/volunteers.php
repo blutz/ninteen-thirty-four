@@ -10,14 +10,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <p class='explainer'>
     UCLA UniCamp is the “Official Philanthropy of the Students of UCLA”. Started in 1934 by 11 UCLA Students. UniCamp is one of UCLA’s largest and longest running traditions. on the surface, UniCamp provides an outlet for UCLA Student Volunteers to give back to their community and make a difference in the lives of LA’s urban youth. And if you dig a little deeper you will find that UCLA Student Volunteers end up walking away having grown more from their experience than the campers may have.
     </p>
-  </div>
-</section>
-
-<section class='row content-row'>
-  <div class='medium-12 columns'>
-    <h2>Will you be a UCLA student next year?</h2>
-    <p class='explainer'><strong>Volunteer with UCLA UniCamp!</strong> Applications are typically released around the end of Fall quarter. Keep an eye out on Bruinwalk or leave your email address to be notified when applications are released.</p>
-    <a class='button' href='http://eepurl.com/dvwCrL' target='_blank'>Learn more  &rarr;</a>
+    <a class='button button--homepage' href='http://eepurl.com/dvwCrL' target='_blank'>Apply to be a volunteer! &rarr;</a>
   </div>
 </section>
 
@@ -48,7 +41,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
       </a>
       <div class='expand__content'>
         <p class='explainer explainer--left'>
-          <strong>UCLA UniCamp Volunteer Expectations:</strong>
+          <strong style='color: white'>UCLA UniCamp Volunteer Expectations:</strong>
         </p>
         <ul class='explainer explainer--left'>
           <li>Current UCLA student or Alumni UCLA UniCamp camper</li>
@@ -57,7 +50,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
           <li>Attend weekly training meetings at UCLA during Spring Quarter</li>
         </ul>
         <p class='explainer'>
-          Ready to become a Woodsey and join the UCLA UniCamp family? Look out for us on Bruinwalk or check out <a href='/apply'>UniCamp.org/apply</a> for more info.
+          Ready to become a Woodsey and join the UCLA UniCamp family? Check out <a href='/apply' style='color: white'>UniCamp.org/apply</a> for more info and to apply!
         </p>
       </div>
     </div>

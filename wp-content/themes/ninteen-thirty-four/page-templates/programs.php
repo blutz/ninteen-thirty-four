@@ -7,7 +7,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/programs/classic-camp.jpg' />
   <div class='photo-block__content'>
     <h2>Classic UniCamp</h2>
-    <p class='explainer'>Classic UniCamp serves campers ages 10 - 14 and is our most traditional residential camp program. Campers have the opportunity to explore the outdoors and participate in traditional camp programs such as: archery, arts &amp; crafts, or rec. and also have the chance to push themselves with programs such as: the alpine climbing tower, sailing, or mountain biking.</p>
+    <p class='explainer'>Classic UniCamp serves campers ages 10 - 14 and is our most traditional residential camp program. Campers have the opportunity to explore the outdoors and participate in traditional camp programs such as: archery, arts &amp; crafts, or rec. and also have the chance to push themselves with programs such as: the alpine climbing tower, swimming, and mountain biking.</p>
     <p class='explainer'>In addition to the traditional camp experience, each Classic UniCamp session partners with a Los Angeles area nonprofit or after-school program to address a specific social initiative. Throughout each camp session there will be special programs to address that week’s initiative.</p>
   </div>
 </section>
@@ -16,9 +16,30 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   <div class='medium-12 columns'>
     <h2>Initiative Sessions</h2>
     <p class='explainer'>In 2011 UCLA UniCamp began partnering with local nonprofits and after school programs to expand UniCamp’s impact beyond a week over the summer. By working with other agencies UCLA UniCamp has been able to see how we impact our campers beyond the week of camp as agencies relay the impact they see in the campers throughout the year.</p>
-    <p class='explainer'>The initiatives from summer 2018 were:</p>
+    <p class='explainer'>The initiatives for summer 2019 are:</p>
 
     <div class='row'>
+      <div class='large-4 columns'>
+        <h5>Transitional Youth Empowerment</h5>
+        <p>Provides mentorship, educational support, and empowerment for the foster youth community.</p>
+      </div>
+
+      <div class='large-4 columns'>
+        <h5>Camp Comforting Hearts</h5>
+        <p>Provides campers with a safe space to grieve, heal, and be among peers with similar experiences.</p>
+      </div>
+
+      <div class='large-4 columns'>
+        <h5>The Village Session</h5>
+        <p>Empowers Black American youth to achieve their full potential by providing them with guidance from elders, resources for success, and immersing them in African culture.</p>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='large-4 columns'>
+        <h5>Leadership Development and Life&nbsp;Skills</h5>
+        <p>Empowers youth to gain the confidence and leadership skills needed to reach their full potential as productive, caring, and responsible individuals.</p>
+      </div>
+
       <div class='large-4 columns'>
         <h5>Health, Nutrition, and Fitness</h5>
         <p>Focuses on education about nutrition, importance of balanced diet, and mental health.</p>
@@ -28,33 +49,11 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
         <h5>AcademiCamp</h5>
         <p>Aims to provide a fun, nurturing environment for all students to be appreciated and celebrated for their individuality and potential through education.</p>
       </div>
-
+    </div>
+    <div class='row'>
       <div class='large-4 columns'>
-        <h5>Outdoor Environmental Science</h5>
+        <h5>Outdoor Environmental Education</h5>
         <p>Takes full advantage of camp's natural setting to engage campers with hands on activities and experiments to explore Earth Science, Climate Science, environmental policy, and more.</p>
-      </div>
-    </div>
-
-    <div class='row'>
-      <div class='large-4 columns'>
-        <h5>Camp Comforting Hearts</h5>
-        <p>Provides campers with a safe space to grieve, heal, and be among peers with similar experiences.</p>
-      </div>
-
-      <div class='large-4 columns'>
-        <h5>Transitional Youth Empowerment</h5>
-        <p>Provides mentorship, educational support, and empowerment for the foster youth community.</p>
-      </div>
- 
-      <div class='large-4 columns'>
-        <h5>Social Justice &amp; Activism</h5>
-        <p>Aims to create an open dialogue for students and give them an understanding of what they can do to become socially active leaders in the university environment.</p>
-      </div>
-    </div>
-    <div class='row'>
-      <div class='large-4 columns'>
-        <h5>The Village Session</h5>
-        <p>Empowers Black American youth to achieve their full potential by providing them with guidance from elders, resources for success, and immersing them in African culture.</p>
       </div>
     </div>
   </div>

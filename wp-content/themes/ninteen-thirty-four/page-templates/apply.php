@@ -8,8 +8,8 @@ class='photo-block'
 style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.WhyCamp.jpg")'>
   <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.WhyCamp.jpg' />
   <div class='photo-block__content'>
-    <h2>Volunteer with UCLA UniCamp</h2>
-    <p class='explainer'>Applications due January 18 at 11:59 p.m.</p>
+    <h2>Volunteer with UCLA UniCamp this Summer!</h2>
+    <p class='explainer'>Make a difference by being a camp counselor. Rolling applications available!</p>
   </div>
 </section>
 
@@ -22,7 +22,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <p style='text-align: center'>
       <a class='button' href='https://docs.google.com/forms/d/e/1FAIpQLSeJ2UvbMJiWiKczpsCdCHzHBIlQ5Mx03iHT7Z1lNu7XWDLjwg/viewform'>Apply Online &rarr;</a>
       <br />
-      <small><em>Applications due January 18 by 11:59 p.m.</em></small>
+      <small><em>Application deadline is rolling. Submit early before spots fill up!</em></small>
     </p>
   </div>
   <div class='medium-7 medium-offset-1 columns'>
@@ -41,21 +41,15 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <p>Each has on-campus weekly trainings winter and spring quarters starting Winter Week 5. Days/times vary by session but are generally Tuesday, Wednesday, OR Thursday evenings.</p>
   </div>
   <div class='medium-3 columns end'>
-    <h4>Info Sessions</h4>
-    <p>Learn more about volunteering for UCLA UniCamp at an info session during week 2:</p>
-    <p>
-      <strong>Jan. 15</strong>. 7:30pm – 8:30pm in <a href='https://map.ucla.edu/?k=true&id=213'>Slichter 2834</a><br />
-      <strong>Jan. 17</strong>. 6pm – 7pm or 8pm – 9pm in <a href='https://map.ucla.edu/?k=false&id=83876'>Sunset Rec Mesa Room</a><br />
-    </ul>
     <h4>Learn more</h4>
-    <p>Learn more by <a href='https://instagram.com/uclaunicamp'>following us on Instagram @uclaunicamp</a>, stopping by our table on Bruinwalk winter weeks 1-2, or by emailing <a href='mailto:volunteer@unicamp.org'>volunteer@unicamp.org</a>.
+    <p>Learn more by <a href='https://instagram.com/uclaunicamp'>following us on Instagram @uclaunicamp</a> or by emailing <a href='mailto:volunteer@unicamp.org'>volunteer@unicamp.org</a>.
   </div>
   <div class='medium-6 medium-offset-3 columns end'>
     <h4>Frequenty Asked Questions</h4>
     <h5>Who is eligible to apply?</h5>
     <p>To volunteer with UCLA UniCamp, you must be at least 18 years old by June 18, 2019. In addition, you must be either a UCLA student or former UniCamp volunteer/camper (former campers must have finished high school by January 1, 2019).</p>
     <h5>What is the time commitment?</h5>
-    <p>During the school year: roughly 2 hours per week plus two all-day weekend events. Events are not held during finals week. You will attend your one week of camp during summer.</p>
+    <p>During the school year: roughly 2 hours per week plus two all-day weekend events. Events are not held during 10th week or finals week. You will attend your one week of camp during summer.</p>
     <h5>What if I am unsure of what session I’m most interested in?</h5>
     <p>In the application, you will rate each session based on your interest in the initiative and your availability for training and summer.</p>
     <h5>What if I am unsure of my summer plans?</h5>
