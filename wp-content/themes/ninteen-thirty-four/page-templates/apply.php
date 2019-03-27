@@ -14,7 +14,10 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 </section>
 
 <section class='row content-row'>
-  <div class='medium-12 columns'>
+  <div class='medium-6 medium-offset-3 columns'>
+    <div class="callout primary">
+      <strong>Looking for camper applications?</strong> <a href='/summer'>Click here</a> to learn more and apply online!
+    </div>
   </div>
   <div class='medium-6 medium-offset-3 columns'>
     <p class='explainer' style='text-align: center'>Sing songs. Play games. Change minds.</p>
@@ -64,9 +67,6 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <p style='text-align: center'>
       <a class='button' href='https://docs.google.com/forms/d/e/1FAIpQLSeJ2UvbMJiWiKczpsCdCHzHBIlQ5Mx03iHT7Z1lNu7XWDLjwg/viewform'>Apply Online Today! &rarr;</a>
     </p>
-    <div class="callout primary">
-      <strong>Looking for camper applications?</strong> Go to <a href='https://apply.unicamp.org'>apply.unicamp.org</a> to learn more and get reminded when applications are released.
-    </div>
   </div>
 </section>
 <?php get_footer(); ?>
