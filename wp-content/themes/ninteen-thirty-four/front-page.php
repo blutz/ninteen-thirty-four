@@ -20,7 +20,10 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
 
 <section class='photo-block--half photo-block--short photo-block--home-small' style='background: #005587; color: white;'>
   <h3>Become a Student Leader</h3>
-  <p class='explainer'>UniCabinet and UniCommittee applications will be available here soon!</p>
+  <p class='explainer'>Apply for 2019-2020 UniCabinet by April 7. UniCommittee applications will be available soon.</p>
+  <div>
+    <a class='button button--homepage' href='https://docs.google.com/forms/d/e/1FAIpQLSecWY2QEC2z6NMhsLvWVgQfnourT5rTV5OSHNVvheNJkLD7ZA/viewform' style='margin: 10px 0;'>More info &rarr;</a>
+  </div>
 </section>
 
 <div style='clear:both;width:100%;'></div>
