@@ -9,18 +9,20 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/programs/classic-camp.jpg' />
   <div class='photo-block__content'>
     <h2>Camper Registration 2019</h2>
-    <p class='explainer'>Come to UCLA UniCamp this summer! Applications will be available online soon.</p>
+    <p class='explainer'>Come to UCLA UniCamp this summer! Applications now online</p>
   </div>
 </section>
 
 <section class='row content-row'>
   <div class='medium-6 medium-offset-3 columns end'>
-    <p class='explainer' style='text-align: center'>Get an email when applications are released:</p>
+    <p class='explainer' style='text-align: center'><a href='https://apply.unicamp.org' class='button'>Click here to apply online &rarr;</a></p>
+    <!--<p class='explainer' style='text-align: center'>Get an email when applications are released:</p>-->
 
 
 <!-- Begin Mailchimp Signup Form -->
 <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
 <style type="text/css">
+#mc_embed_signup{display: none;}
 	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width:100%;}
 	/* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
 	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */

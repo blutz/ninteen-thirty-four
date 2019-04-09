@@ -4,8 +4,8 @@
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/bear-campers.jpg"); background-position-y: top;'>
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/bear-campers.jpg' />
   <div class='photo-block__content'>
-    <h2>Camper Registration Available Soon!</h2>
-    <p class='explainer'>Online camper registration will open soon. Be one of the first to register by signing up for an email reminder by clicking below.</p>
+    <h2>Camper Registration Has Started!</h2>
+    <p class='explainer'>Click below to learn more and register for our programs this summer</p>
     <a class='button button--homepage' href='/summer' style='margin: 10px 0;'>More info &rarr;</a>
   </div>
 </section>
@@ -20,10 +20,7 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
 
 <section class='photo-block--half photo-block--short photo-block--home-small' style='background: #005587; color: white;'>
   <h3>Become a Student Leader</h3>
-  <p class='explainer'>Apply for 2019-2020 UniCabinet by April 7. UniCommittee applications will be available soon.</p>
-  <div>
-    <a class='button button--homepage' href='https://docs.google.com/forms/d/e/1FAIpQLSecWY2QEC2z6NMhsLvWVgQfnourT5rTV5OSHNVvheNJkLD7ZA/viewform' style='margin: 10px 0;'>More info &rarr;</a>
-  </div>
+  <p class='explainer'>UniCommittee applications will be available soon.</p>
 </section>
 
 <div style='clear:both;width:100%;'></div>
