@@ -30,7 +30,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <p style='text-align: center'>
       <a href='https://photos.google.com/share/AF1QipP9QGWlk_4eq2N85BbA45wlMHxihSAJxxxyqXNBXLkUbfH3gvSq_9IigQcCa8-4ZA?key=RDUzQk8zUDdJV1E3Y0owUU5sWDk3YXliUWc2WC1n' target='_blank' rel='noopener nofollow'>See photos of damage &rarr;</a>
       <br />
-      <a href='https://donate.unicamp.org/checkout/731' class='button' style='font-size: 1.3em; margin: 1em;'>Donate Online</a>
+      <a href='https://donate.unicamp.org/checkout/10803' class='button' style='font-size: 1.3em; margin: 1em;'>Donate Online</a>
     </p>
     <hr />
     <h5>Work Weekends</h5>
