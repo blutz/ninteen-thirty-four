@@ -51,10 +51,10 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <ul>
       <li>June 22-28: <strong>Transitional Youth Empowerment (Foster Youth)</strong></li>
       <li>June 28 - July 3: <strong>Camp Comforting Hearts (Bereavement)</strong></li>
-      <li>July 8-14: <strong>The Village Session (African American Youth Empowerment)</strong></li>
+      <!--<li>July 8-14: <strong>The Village Session (African American Youth Empowerment)</strong></li>-->
       <li>July 14-21: <strong>Leadership Development &amp; Life Skills</strong></li>
       <li>July 21-28: <strong>Health, Nutrition, &amp; Fitness</strong></li>
-      <li>July 28 - August 3: <strong>AcademiCamp (Social/Emotional Learning)</strong></li>
+      <!--<li>July 28 - August 3: <strong>AcademiCamp (Social/Emotional Learning)</strong></li>-->
       <li>August 3-9: <strong>Outdoor Environmental Science</strong></li>
     </ul>
     <h4>Registration Process</h4>

@@ -34,10 +34,10 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <ul style='margin: 0'>
       <li><strong>Transitional Youth Empowerment:</strong> June&nbsp;22&#8209;28</li>
       <li><strong>Camp Comforting Hearts (Bereavement):</strong> June&nbsp;28&#8209;July&nbsp;3</li>
-      <!--<li><strong>The Village Session (African American Youth Empowerment):</strong> July&nbsp;8&#8209;14</li>-->
+      <li><strong>The Village Session (African American Youth Empowerment):</strong> July&nbsp;8&#8209;14</li>
       <li><strong>Leadership Development &amp; Life Skills:</strong> July&nbsp;14&#8209;21</li>
       <li><strong>Health, Nutrition, &amp; Fitness:</strong> July&nbsp;21&#8209;28</li>
-      <!--<li><strong>AcademiCamp (Social Justice Education):</strong> July&nbsp;28&#8209;August&nbsp;3</li>-->
+      <li><strong>AcademiCamp (Social Justice Education):</strong> July&nbsp;28&#8209;August&nbsp;3</li>
       <li><strong>Outdoor Environmental Education:</strong> August&nbsp;3&#8209;9</li>
     </ul>
     <br />
