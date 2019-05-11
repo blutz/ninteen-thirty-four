@@ -28,7 +28,8 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
     <a class='button' href='https://apply.unicamp.org/login/register/bwdChild2018'>Register a child &rarr;</a>
     <p>To register additional people, log out of apply.unicamp.org, come back here, and register additional participants with the <strong>same email address</strong>. Contact <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> for questions about registration.</p>
     -->
-    Registration will begin soon! <a class='button' href='http://eepurl.com/gqVehD' target='_blank'>Sign up here to be notified when registration is available</a>.
+    Registration will begin soon!
+    <a class='button' href='http://eepurl.com/gqVehD' target='_blank'>Sign up here to be notified when registration is available</a>
   </div>
   <div class='medium-6 columns'>
     <p>
@@ -36,7 +37,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
       <ul>
         <li>Adults to pay $50 to help cover cost of staffing and food. (If further financial assistnace is needed, please contact Jean at jlibby@saonet.ucla.edu)</li>
         <li>All Children are FREE</li>
-        <li>Check-In begins at 1:00 PM on <strong>Friday, July 5</strong>. The camp lasts through <strong>Sunday, July 7</strongL.</li>
+        <li>Check-In begins at 1:00 PM on <strong>Friday, July 5</strong>. The camp lasts through <strong>Sunday, July 7</strong>.</li>
         <li>Transportation to Camp River Glen will be required (Carpools will be set-up for those who need)</li>
       </ul>
     </p>
