@@ -21,15 +21,13 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   </div>
   <div class='medium-6 columns'>
     <h3>Registration</h3>
-    <!--
     <p>You can now register online. Please be sure to register EVERY person who is attending.</p>
-    <a class='button' href='https://apply.unicamp.org/login/register/bwdAdult2018'>Register an adult &rarr;</a>
+    <a class='button' href='https://apply.unicamp.org/login/register/ee844e09-5a6b-4b88-b26d-47e59ae075ae'>Register an adult &rarr;</a>
     <br />
-    <a class='button' href='https://apply.unicamp.org/login/register/bwdChild2018'>Register a child &rarr;</a>
-    <p>To register additional people, log out of apply.unicamp.org, come back here, and register additional participants with the <strong>same email address</strong>. Contact <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> for questions about registration.</p>
-    -->
-    Registration will begin soon!
-    <a class='button' href='http://eepurl.com/gqVehD' target='_blank'>Sign up here to be notified when registration is available</a>
+    <a class='button' href='https://apply.unicamp.org/login/register/7ba4310d-c299-475b-8552-533b607899f7'>Register a child &rarr;</a>
+    <p>To register additional people, come back here and click on the appropriate button. Contact <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> for questions about registration.</p>
+    <!--Registration will begin soon!
+    <a class='button' href='http://eepurl.com/gqVehD' target='_blank'>Sign up here to be notified when registration is available</a>-->
   </div>
   <div class='medium-6 columns'>
     <p>
