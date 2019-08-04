@@ -37,7 +37,7 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
   <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.Registration.jpg' />
   <div class='photo-block__content'>
     <h2>Camper Registration</h2>
-    <p class='explainer'>In an effort to create more impactful programming, UCLA UniCamp has begun partnering with local nonprofits and after school programs to design each week of camp. This has been a great opportunity but it does limit the number of camper spots available to the public in some sessions. Online camper registration begins around April each year.</p>
+    <p class='explainer'>In an effort to create more impactful programming, UCLA UniCamp has begun partnering with local nonprofits and after school programs to design each week of camp. This has been a great opportunity but it does limit the number of camper spots available to the public in some sessions. Online camper registration begins early in the calendar year.</p>
     <div class='expand expand--collapsed' data-expand='publicCamperApplicationExpand'>
       <a class='button expand__button'>
         More <i class='expand__button__icon'></i>
@@ -48,8 +48,8 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 <section class='expand-block' id='publicCamperApplicationExpand'>
   <div class='row'>
     <div class='medium-12 columns'>
-      <h5>2019 Camper Registration</h5>
-      <p class='explainer'>Applications for summer 2019 will be available in April 2019. <a href='http://eepurl.com/duJVeP'>Sign up for our email list</a> to be notified once applications are released. <a href='/summer'>Click here to learn more about our summer dates</a>.</p>
+      <h5>2029 Camper Registration</h5>
+      <p class='explainer'>Applications for summer 2020 will be available in early 2029. <a href='http://eepurl.com/duJVeP'>Sign up for our email list</a> to be notified once applications are released. <!--<a href='/summer'>Click here to learn more about our summer dates</a>.</p>-->
       <p class='explainer'>Email us at <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> if you have any questions.</p>
     </div>
   </div>

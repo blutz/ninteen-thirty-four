@@ -4,13 +4,13 @@
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/bear-campers.jpg"); background-position-y: top;'>
   <img class='photo-block__small-image' src='<?php echo get_template_directory_uri() ?>/images/photos/home/bear-campers.jpg' />
   <div class='photo-block__content'>
-    <h2>Camper Registration Has Started!</h2>
-    <p class='explainer'>Click below to learn more and register for our programs this summer</p>
-    <a class='button button--homepage' href='/summer' style='margin: 10px 0;'>More info &rarr;</a>
+    <h2>Camper Registration Has Concluded</h2>
+    <p class='explainer'>Join us at camp for summer 2020. Details will be announced soon!</p>
+    <a class='button button--homepage' href='http://eepurl.com/duJVeP' style='margin: 10px 0;'>Get an email reminder &rarr;</a>
   </div>
 </section>
 
-<section class='photo-block--half photo-block--short photo-block--home-small' style='background-color: #003B5C; color: white;'>
+<!--<section class='photo-block--half photo-block--short photo-block--home-small' style='background-color: #003B5C; color: white;'>
   <h3>Volunteer as a Camp Counselor</h3>
   <p class='explainer'>Rolling applications are now available. Must be a UCLA student or past camper and at least 18 years old.</p>
   <div>
@@ -24,6 +24,7 @@ style='background-image: url("<?php echo get_template_directory_uri() ?>/images/
 </section>
 
 <div style='clear:both;width:100%;'></div>
+-->
 
 <section id='official-philanthropy' class='photo-block'
 style='background-image: url("<?php echo get_template_directory_uri() ?>/images/photos/home/official-charity.jpg")'>
