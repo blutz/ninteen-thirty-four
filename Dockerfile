@@ -5,12 +5,9 @@ MAINTAINER Byron Lutz <byronlutz@gmail.com>
 RUN a2enmod rewrite
 RUN docker-php-ext-install -j$(nproc) pdo pdo_mysql mysqli
 
-# Install node
+# Install libsass/sassc
 RUN apt-get update
-RUN apt-get install -y gnupg # Requirement for node
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
-RUN apt-get install -y nodejs
-RUN apt-get update && apt-get install -y build-essential
+RUN apt-get install -y sassc
 
 # Install WP-CLI
 RUN curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > /usr/local/bin/wp

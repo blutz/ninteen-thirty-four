@@ -1,32 +1,58 @@
+<?php
+/**
+ * The header for our theme
+ *
+ * This is the template that displays all of the <head> section and everything up until <div id="content">
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
+ *
+ * @package ninteen-thirty-four
+ */
+
+?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
-  <meta charset='<?php bloginfo('charset'); ?>' />
-  <meta name='viewport' content='width=device-width' />
-  <title><? bloginfo('name'); ?><? wp_title('|'); ?></title>
-  <link rel="icon" type="image/png" sizes="192x192"  href="<? echo get_template_directory_uri(); ?>/images/favicon-192x192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="<? echo get_template_directory_uri(); ?>/images/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="<? echo get_template_directory_uri(); ?>/images/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="<? echo get_template_directory_uri(); ?>/images/favicon-16x16.png">
-  <?php wp_head(); ?>
+	<meta charset="<?php bloginfo( 'charset' ); ?>">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="profile" href="https://gmpg.org/xfn/11">
+
+	<?php wp_head(); ?>
 </head>
+
 <body <?php body_class(); ?>>
-<?php include_once('analytics.php'); ?>
-<header>
-  <a href='<? echo get_home_url(); ?>'>
-    <img class='header__logo' src='<? echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png' alt='UCLA UniCamp Logo' />
-  </a>
+<div id="page" class="site">
+	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'ninteen-thirty-four' ); ?></a>
 
-  <div class='header__menu-container header__menu-container--closed' id='header-menu'>
-    <?php wp_nav_menu(array(
-      'theme_location' => 'header-menu',
-      'menu_class' => 'header__items',
-      'container' => '',
-      'depth' => 1,
-    )); ?>
-    <div class='header__menu-container__expand'>
-     <i class="fa fa-bars" aria-hidden="true"></i>
-    </div>
-  </div>
+	<header id="masthead" class="site-header">
+		<div class="site-branding">
+			<?php
+			the_custom_logo();
+			if ( is_front_page() && is_home() ) :
+				?>
+				<h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
+				<?php
+			else :
+				?>
+				<p class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></p>
+				<?php
+			endif;
+			$ninteen_thirty_four_description = get_bloginfo( 'description', 'display' );
+			if ( $ninteen_thirty_four_description || is_customize_preview() ) :
+				?>
+				<p class="site-description"><?php echo $ninteen_thirty_four_description; /* WPCS: xss ok. */ ?></p>
+			<?php endif; ?>
+		</div><!-- .site-branding -->
 
-</header>
+		<nav id="site-navigation" class="main-navigation">
+			<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><?php esc_html_e( 'Primary Menu', 'ninteen-thirty-four' ); ?></button>
+			<?php
+			wp_nav_menu( array(
+				'theme_location' => 'menu-1',
+				'menu_id'        => 'primary-menu',
+			) );
+			?>
+		</nav><!-- #site-navigation -->
+	</header><!-- #masthead -->
+
+	<div id="content" class="site-content">
