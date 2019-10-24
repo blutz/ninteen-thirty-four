@@ -51,6 +51,7 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 		'meta'              => '(object) Meta data',
 		'quota'             => '(array) An array describing how much space a user has left for uploads',
 		'launch_status'     => '(string) A string describing the launch status of a site',
+		'is_fse_active'     => '(bool) If the site has Full Site Editing active or not.',
 	);
 
 	protected static $no_member_fields = array(
@@ -70,6 +71,7 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 		'is_following',
 		'meta',
 		'launch_status',
+		'is_fse_active',
 	);
 
 	protected static $site_options_format = array(
@@ -111,6 +113,7 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 		'wordads',
 		'publicize_permanently_disabled',
 		'frame_nonce',
+		'jetpack_frame_nonce',
 		'page_on_front',
 		'page_for_posts',
 		'headstart',
@@ -122,12 +125,14 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 		'podcasting_archive',
 		'is_domain_only',
 		'is_automated_transfer',
+		'is_wpcom_atomic',
 		'is_wpcom_store',
 		'signup_is_store',
 		'has_pending_automated_transfer',
 		'woocommerce_is_active',
 		'design_type',
 		'site_goals',
+		'site_segment',
 	);
 
 	protected static $jetpack_response_field_additions = array(
@@ -143,11 +148,13 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 		'publicize_permanently_disabled',
 		'ak_vp_bundle_enabled',
 		'is_automated_transfer',
+		'is_wpcom_atomic',
 		'is_wpcom_store',
 		'woocommerce_is_active',
 		'frame_nonce',
+		'jetpack_frame_nonce',
 		'design_type',
-		'wordads'
+		'wordads',
 	);
 
 	private $site;
@@ -365,8 +372,11 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 			case 'quota' :
 				$response[ $key ] = $this->site->get_quota();
 				break;
-			case 'launch_status' : 
+			case 'launch_status' :
 				$response[ $key ] = $this->site->get_launch_status();
+				break;
+			case 'is_fse_active':
+				$response[ $key ] = $this->site->is_fse_active();
 				break;
 		}
 
@@ -494,6 +504,9 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 				case 'frame_nonce' :
 					$options[ $key ] = $site->get_frame_nonce();
 					break;
+				case 'jetpack_frame_nonce' :
+					$options[ $key ] = $site->get_jetpack_frame_nonce();
+					break;
 				case 'page_on_front' :
 					if ( $custom_front_page ) {
 						$options[ $key ] = $site->get_page_on_front();
@@ -534,6 +547,9 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 				case 'blog_public':
 					$options[ $key ] = $site->get_blog_public();
 					break;
+				case 'is_wpcom_atomic':
+					$options[ $key ] = $site->is_wpcom_atomic();
+					break;
 				case 'is_wpcom_store':
 					$options[ $key ] = $site->is_wpcom_store();
 					break;
@@ -561,6 +577,9 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 					break;
 				case 'site_goals':
 					$options[ $key ] = $site->get_site_goals();
+					break;
+				case 'site_segment':
+					$options[ $key ] = $site->get_site_segment();
 					break;
 			}
 		}

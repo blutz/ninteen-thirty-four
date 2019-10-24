@@ -1,10 +1,14 @@
 <?php
+
+use Automattic\Jetpack\Assets;
+
 if ( ! defined( 'WP_SHARING_PLUGIN_URL' ) ) {
 	define( 'WP_SHARING_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 	define( 'WP_SHARING_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 }
 
 class Sharing_Admin {
+
 	public function __construct() {
 		require_once WP_SHARING_PLUGIN_DIR . 'sharing-service.php';
 
@@ -24,7 +28,7 @@ class Sharing_Admin {
 	public function sharing_head() {
 		wp_enqueue_script(
 			'sharing-js',
-			Jetpack::get_file_url_for_environment(
+			Assets::get_file_url_for_environment(
 				'_inc/build/sharedaddy/admin-sharing.min.js',
 				'modules/sharedaddy/admin-sharing.js'
 			),
@@ -210,7 +214,7 @@ class Sharing_Admin {
 
 		if ( false == function_exists( 'mb_stripos' ) ) {
 			echo '<div id="message" class="updated fade"><h3>' . __( 'Warning! Multibyte support missing!', 'jetpack' ) . '</h3>';
-			echo '<p>' . sprintf( __( 'This plugin will work without it, but multibyte support is used <a href="%s" rel="noopener noreferrer" target="_blank">if available</a>. You may see minor problems with Tweets and other sharing services.', 'jetpack' ), 'http://www.php.net/manual/en/mbstring.installation.php' ) . '</p></div>';
+			echo '<p>' . sprintf( __( 'This plugin will work without it, but multibyte support is used <a href="%s" rel="noopener noreferrer" target="_blank">if available</a>. You may see minor problems with Tweets and other sharing services.', 'jetpack' ), 'https://www.php.net/manual/en/mbstring.installation.php' ) . '</p></div>';
 		}
 
 		if ( isset( $_GET['update'] ) && $_GET['update'] == 'saved' ) {
@@ -553,29 +557,86 @@ class Sharing_Admin {
 }
 
 /**
+ * Callback to get the value for the jetpack_sharing_enabled field.
+ *
+ * When the sharing_disabled post_meta is unset, we follow the global setting in Sharing.
+ * When it is set to 1, we disable sharing on the post, regardless of the global setting.
+ * It is not possible to enable sharing on a post if it is disabled globally.
+ */
+function jetpack_post_sharing_get_value( array $post ) {
+	// if sharing IS disabled on this post, enabled=false, so negate the meta
+	return (bool) ! get_post_meta( $post['id'], 'sharing_disabled', true );
+}
+
+/**
+ * Callback to set sharing_disabled post_meta when the
+ * jetpack_sharing_enabled field is updated.
+ *
+ * When the sharing_disabled post_meta is unset, we follow the global setting in Sharing.
+ * When it is set to 1, we disable sharing on the post, regardless of the global setting.
+ * It is not possible to enable sharing on a post if it is disabled globally.
+ *
+ */
+function jetpack_post_sharing_update_value( $enable_sharing, $post_object ) {
+	if ( $enable_sharing ) {
+		// delete the override if we want to enable sharing
+		return delete_post_meta( $post_object->ID, 'sharing_disabled' );
+	} else {
+		return update_post_meta( $post_object->ID, 'sharing_disabled', true );
+	}
+}
+
+/**
  * Add Sharing post_meta to the REST API Post response.
  *
  * @action rest_api_init
- * @uses register_meta
+ * @uses register_rest_field
+ * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/modifying-responses/
  */
-function jetpack_post_sharing_register_meta() {
-	register_meta(
-		'post', 'sharing_disabled',
-		array(
-			'type'			=> 'boolean',
-			'single'		=> true,
-			'show_in_rest'	=> true,
-		)
-	);
+function jetpack_post_sharing_register_rest_field() {
+	$post_types = get_post_types( array( 'public' => true ) );
+	foreach ( $post_types as $post_type ) {
+		register_rest_field(
+			$post_type,
+			'jetpack_sharing_enabled',
+			array(
+				'get_callback'    => 'jetpack_post_sharing_get_value',
+				'update_callback' => 'jetpack_post_sharing_update_value',
+				'schema'          => array(
+					'description' => __( 'Are sharing buttons enabled?', 'jetpack' ),
+					'type'        => 'boolean',
+				),
+			)
+		);
+
+		/**
+		 * Ensures all public internal post-types support `sharing`
+		 * This feature support flag is used by the REST API and Gutenberg.
+		 */
+		add_post_type_support( $post_type, 'jetpack-sharing-buttons' );
+	}
 }
 
 // Add Sharing post_meta to the REST API Post response.
-add_action( 'rest_api_init', 'jetpack_post_sharing_register_meta' );
+add_action( 'rest_api_init', 'jetpack_post_sharing_register_rest_field' );
+
+// Some CPTs (e.g. Jetpack portfolios and testimonials) get registered with
+// restapi_theme_init because they depend on theme support, so let's also hook to that
+add_action( 'restapi_theme_init', 'jetpack_post_likes_register_rest_field', 20 );
 
 function sharing_admin_init() {
 	global $sharing_admin;
 
 	$sharing_admin = new Sharing_Admin();
 }
+
+/**
+ * Set the Likes and Sharing Gutenberg extension as available
+ */
+function jetpack_sharing_set_extension_availability() {
+	Jetpack_Gutenberg::set_extension_available( 'sharing' );
+}
+
+add_action( 'jetpack_register_gutenberg_extensions', 'jetpack_sharing_set_extension_availability' );
 
 add_action( 'init', 'sharing_admin_init' );

@@ -1,5 +1,9 @@
 <?php
 
+use Automattic\Jetpack\Connection\Client;
+use Automattic\Jetpack\Roles;
+use Automattic\Jetpack\Tracking;
+
 /**
  * Client = Plugin
  * Client Server = API Methods the Plugin must respond to
@@ -12,18 +16,24 @@ class Jetpack_Client_Server {
 	function client_authorize() {
 		$data              = stripslashes_deep( $_GET );
 		$data['auth_type'] = 'client';
-		$role              = Jetpack::translate_current_user_to_role();
+		$roles             = new Roles();
+		$role              = $roles->translate_current_user_to_role();
 		$redirect          = isset( $data['redirect'] ) ? esc_url_raw( (string) $data['redirect'] ) : '';
 
 		check_admin_referer( "jetpack-authorize_{$role}_{$redirect}" );
 
-		$result = $this->authorize( $data );
+		$tracking = new Tracking();
+		$result   = $this->authorize( $data );
 		if ( is_wp_error( $result ) ) {
 			Jetpack::state( 'error', $result->get_error_code() );
-			JetpackTracking::record_user_event( 'jpc_client_authorize_fail', array(
-				'error_code' => $result->get_error_code(),
-				'error_message' => $result->get_error_message()
-			) );
+
+			$tracking->record_user_event(
+				'jpc_client_authorize_fail',
+				array(
+					'error_code'    => $result->get_error_code(),
+					'error_message' => $result->get_error_message(),
+				)
+			);
 		} else {
 			/**
 			 * Fires after the Jetpack client is authorized to communicate with WordPress.com.
@@ -43,7 +53,7 @@ class Jetpack_Client_Server {
 			wp_safe_redirect( Jetpack::admin_url() );
 		}
 
-		JetpackTracking::record_user_event( 'jpc_client_authorize_success' );
+		$tracking->record_user_event( 'jpc_client_authorize_success' );
 
 		$this->do_exit();
 	}
@@ -56,14 +66,14 @@ class Jetpack_Client_Server {
 		if ( ! $jetpack_unique_connection ) {
 			// jetpack_unique_connection option has never been set
 			$jetpack_unique_connection = array(
-				'connected'     => 0,
-				'disconnected'  => 0,
-				'version'       => '3.6.1',
+				'connected'    => 0,
+				'disconnected' => 0,
+				'version'      => '3.6.1',
 			);
 
 			update_option( 'jetpack_unique_connection', $jetpack_unique_connection );
 
-			//track unique connection
+			// track unique connection
 			$jetpack = $this->get_jetpack();
 
 			$jetpack->stat( 'connections', 'unique-connection' );
@@ -74,13 +84,14 @@ class Jetpack_Client_Server {
 		$jetpack_unique_connection['connected'] += 1;
 		Jetpack_Options::update_option( 'unique_connection', $jetpack_unique_connection );
 
-		$role = Jetpack::translate_current_user_to_role();
+		$roles = new Roles();
+		$role  = $roles->translate_current_user_to_role();
 
 		if ( ! $role ) {
 			return new Jetpack_Error( 'no_role', 'Invalid request.', 400 );
 		}
 
-		$cap = Jetpack::translate_role_to_cap( $role );
+		$cap = $roles->translate_role_to_cap( $role );
 		if ( ! $cap ) {
 			return new Jetpack_Error( 'no_cap', 'Invalid request.', 400 );
 		}
@@ -153,7 +164,7 @@ class Jetpack_Client_Server {
 	}
 
 	public static function deactivate_plugin( $probable_file, $probable_title ) {
-		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		include_once ABSPATH . 'wp-admin/includes/plugin.php';
 		if ( is_plugin_active( $probable_file ) ) {
 			deactivate_plugins( $probable_file );
 			return 1;
@@ -176,7 +187,8 @@ class Jetpack_Client_Server {
 	 * @return object|WP_Error
 	 */
 	function get_token( $data ) {
-		$role = Jetpack::translate_current_user_to_role();
+		$roles = new Roles();
+		$role  = $roles->translate_current_user_to_role();
 
 		if ( ! $role ) {
 			return new Jetpack_Error( 'role', __( 'An administrator for this blog must set up the Jetpack connection.', 'jetpack' ) );
@@ -187,42 +199,46 @@ class Jetpack_Client_Server {
 			return new Jetpack_Error( 'client_secret', __( 'You need to register your Jetpack before connecting it.', 'jetpack' ) );
 		}
 
-		$redirect = isset( $data['redirect'] ) ? esc_url_raw( (string) $data['redirect'] ) : '';
+		$redirect     = isset( $data['redirect'] ) ? esc_url_raw( (string) $data['redirect'] ) : '';
 		$redirect_uri = ( 'calypso' === $data['auth_type'] )
 			? $data['redirect_uri']
-			: add_query_arg( array(
-				'action' => 'authorize',
-				'_wpnonce' => wp_create_nonce( "jetpack-authorize_{$role}_{$redirect}" ),
-				'redirect' => $redirect ? urlencode( $redirect ) : false,
-			), menu_page_url( 'jetpack', false ) );
+			: add_query_arg(
+				array(
+					'action'   => 'authorize',
+					'_wpnonce' => wp_create_nonce( "jetpack-authorize_{$role}_{$redirect}" ),
+					'redirect' => $redirect ? urlencode( $redirect ) : false,
+				),
+				menu_page_url( 'jetpack', false )
+			);
 
 		// inject identity for analytics
-		$tracks_identity = jetpack_tracks_get_identity( get_current_user_id() );
+		$tracks          = new Automattic\Jetpack\Tracking();
+		$tracks_identity = $tracks->tracks_get_identity( get_current_user_id() );
 
 		$body = array(
-			'client_id' => Jetpack_Options::get_option( 'id' ),
+			'client_id'     => Jetpack_Options::get_option( 'id' ),
 			'client_secret' => $client_secret->secret,
-			'grant_type' => 'authorization_code',
-			'code' => $data['code'],
-			'redirect_uri' => $redirect_uri,
-			'_ui' => $tracks_identity['_ui'],
-			'_ut' => $tracks_identity['_ut'],
+			'grant_type'    => 'authorization_code',
+			'code'          => $data['code'],
+			'redirect_uri'  => $redirect_uri,
+			'_ui'           => $tracks_identity['_ui'],
+			'_ut'           => $tracks_identity['_ut'],
 		);
 
-		$args = array(
-			'method' => 'POST',
-			'body' => $body,
+		$args     = array(
+			'method'  => 'POST',
+			'body'    => $body,
 			'headers' => array(
 				'Accept' => 'application/json',
 			),
 		);
-		$response = Jetpack_Client::_wp_remote_request( Jetpack::fix_url_for_bad_hosts( Jetpack::api_url( 'token' ) ), $args );
+		$response = Client::_wp_remote_request( Jetpack::fix_url_for_bad_hosts( Jetpack::connection()->api_url( 'token' ) ), $args );
 
 		if ( is_wp_error( $response ) ) {
 			return new Jetpack_Error( 'token_http_request_failed', $response->get_error_message() );
 		}
 
-		$code = wp_remote_retrieve_response_code( $response );
+		$code   = wp_remote_retrieve_response_code( $response );
 		$entity = wp_remote_retrieve_body( $response );
 
 		if ( $entity ) {
@@ -258,11 +274,12 @@ class Jetpack_Client_Server {
 			return new Jetpack_Error( 'scope', 'Malformed Scope', $code );
 		}
 
-		if ( Jetpack::sign_role( $role ) !== $json->scope ) {
+		if ( Jetpack::connection()->sign_role( $role ) !== $json->scope ) {
 			return new Jetpack_Error( 'scope', 'Invalid Scope', $code );
 		}
 
-		if ( ! $cap = Jetpack::translate_role_to_cap( $role ) ) {
+		$cap = $roles->translate_role_to_cap( $role );
+		if ( ! $cap ) {
 			return new Jetpack_Error( 'scope', 'No Cap', $code );
 		}
 

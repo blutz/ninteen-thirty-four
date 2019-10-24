@@ -310,7 +310,7 @@ class Jetpack_Top_Posts_Widget extends WP_Widget {
 		if ( ! $posts ) {
 			$link = 'https://jetpack.com/support/getting-more-views-and-traffic/';
 			if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
-				$link = 'http://en.support.wordpress.com/getting-more-site-traffic/';
+				$link = 'https://en.support.wordpress.com/getting-more-site-traffic/';
 			}
 
 			if ( current_user_can( 'edit_theme_options' ) ) {
@@ -363,7 +363,7 @@ class Jetpack_Top_Posts_Widget extends WP_Widget {
 					$image         = Jetpack_PostImages::get_image(
 						$post['post_id'],
 						array(
-							'fallback_to_avatars' => true,
+							'fallback_to_avatars' => (bool) $get_image_options['fallback_to_avatars'],
 							'width'               => (int) $width,
 							'height'              => (int) $height,
 							'avatar_size'         => (int) $get_image_options['avatar_size'],

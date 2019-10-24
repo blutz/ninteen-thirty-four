@@ -1,4 +1,7 @@
 <?php
+
+use Automattic\Jetpack\Tracking;
+
 /**
  * Disable direct access and execution.
  */
@@ -34,7 +37,6 @@ class Jetpack_Plugin_Search {
 		static $instance = null;
 
 		if ( ! $instance ) {
-			jetpack_require_lib( 'tracks/client' );
 			$instance = new Jetpack_Plugin_Search();
 		}
 
@@ -173,16 +175,29 @@ class Jetpack_Plugin_Search {
 	}
 
 	/**
-	 * Checks that the module slug passed, the hint, is not in the list of previously dismissed hints.
+	 * Checks that the module slug passed should be displayed.
 	 *
-	 * @since 7.1.0
+	 * A feature hint will be displayed if it has not been dismissed before or if 2 or fewer other hints have been dismissed.
+	 *
+	 * @since 7.2.1
 	 *
 	 * @param string $hint The hint id, which is a Jetpack module slug.
 	 *
-	 * @return bool True if $hint wasn't already dismissed.
+	 * @return bool True if $hint should be displayed.
 	 */
-	protected function is_not_dismissed( $hint ) {
-		return ! in_array( $hint, $this->get_dismissed_hints(), true );
+	protected function should_display_hint( $hint ) {
+		$dismissed_hints = $this->get_dismissed_hints();
+		// If more than 2 hints have been dismissed, then show no more.
+		if ( 2 < count( $dismissed_hints ) ) {
+			return false;
+		}
+
+		$plan = Jetpack_Plan::get();
+		if ( isset( $plan['class'] ) && ( 'free' === $plan['class'] || 'personal' === $plan['class'] ) && 'vaultpress' === $hint ) {
+			return false;
+		}
+
+		return ! in_array( $hint, $dismissed_hints, true );
 	}
 
 	public function load_plugins_search_script() {
@@ -193,6 +208,7 @@ class Jetpack_Plugin_Search {
 			array(
 				'nonce'          => wp_create_nonce( 'wp_rest' ),
 				'base_rest_url'  => rest_url( '/jetpack/v4' ),
+				'poweredBy'      => esc_html__( 'by Jetpack (installed)', 'jetpack' ),
 				'manageSettings' => esc_html__( 'Configure', 'jetpack' ),
 				'activateModule' => esc_html__( 'Activate Module', 'jetpack' ),
 				'getStarted'     => esc_html__( 'Get started', 'jetpack' ),
@@ -200,9 +216,14 @@ class Jetpack_Plugin_Search {
 				'activating'     => esc_html__( 'Activating', 'jetpack' ),
 				'logo'           => 'https://ps.w.org/jetpack/assets/icon.svg?rev=1791404',
 				'legend'         => esc_html__(
-					'Jetpack is trusted by millions to help secure and speed up their WordPress site. Make the most of it today.',
+					'This suggestion was made by Jetpack, the security and performance plugin already installed on your site.',
 					'jetpack'
 				),
+				'supportText'    => esc_html__(
+					'Learn more about these suggestions.',
+					'jetpack'
+				),
+				'supportLink'    => 'https://jetpack.com/redirect/?source=plugin-hint-learn-support',
 				'hideText'       => esc_html__( 'Hide this suggestion', 'jetpack' ),
 			)
 		);
@@ -263,10 +284,10 @@ class Jetpack_Plugin_Search {
 	 * Intercept the plugins API response and add in an appropriate card for Jetpack
 	 */
 	public function inject_jetpack_module_suggestion( $result, $action, $args ) {
-
 		// Looks like a search query; it's matching time
 		if ( ! empty( $args->search ) ) {
 			require_once JETPACK__PLUGIN_DIR . 'class.jetpack-admin.php';
+			$tracking = new Tracking();
 			$jetpack_modules_list = array_intersect_key(
 				array_merge( $this->get_extra_features(), Jetpack_Admin::init()->get_modules() ),
 				array_flip( array(
@@ -287,8 +308,10 @@ class Jetpack_Plugin_Search {
 			);
 			uasort( $jetpack_modules_list, array( $this, 'by_sorting_option' ) );
 
-			// Record event when user searches for a term
-			JetpackTracking::record_user_event( 'wpa_plugin_search_term', array( 'search_term' => $args->search ) );
+			// Record event when user searches for a term over 3 chars (less than 3 is not very useful.)
+			if ( strlen( $args->search ) >= 3 ) {
+				$tracking->record_user_event( 'wpa_plugin_search_term', array( 'search_term' => $args->search ) );
+			}
 
 			// Lowercase, trim, remove punctuation/special chars, decode url, remove 'jetpack'
 			$normalized_term = $this->sanitize_search_term( $args->search );
@@ -297,15 +320,27 @@ class Jetpack_Plugin_Search {
 
 			// Try to match a passed search term with module's search terms
 			foreach ( $jetpack_modules_list as $module_slug => $module_opts ) {
-				if ( false !== stripos( $module_opts['search_terms'] . ', ' . $module_opts['name'], $normalized_term ) ) {
+				/*
+				* Does the site's current plan support the feature?
+				* We don't use Jetpack_Plan::supports() here because
+				* that check always returns Akismet as supported,
+				* since Akismet has a free version.
+				*/
+				$current_plan         = Jetpack_Plan::get();
+				$is_supported_by_plan = in_array( $module_slug, $current_plan['supports'], true );
+
+				if (
+					false !== stripos( $module_opts['search_terms'] . ', ' . $module_opts['name'], $normalized_term )
+					&& $is_supported_by_plan
+				) {
 					$matching_module = $module_slug;
 					break;
 				}
 			}
 
-			if ( isset( $matching_module ) && $this->is_not_dismissed( $matching_module ) ) {
+			if ( isset( $matching_module ) && $this->should_display_hint( $matching_module ) ) {
 				// Record event when a matching feature is found
-				JetpackTracking::record_user_event( 'wpa_plugin_search_match_found', array( 'feature' => $matching_module ) );
+				$tracking->record_user_event( 'wpa_plugin_search_match_found', array( 'feature' => $matching_module ) );
 
 				$inject = (array) self::get_jetpack_plugin_data();
 				$image_url = plugins_url( 'modules/plugin-search/psh', JETPACK__PLUGIN_FILE );
@@ -338,17 +373,18 @@ class Jetpack_Plugin_Search {
 	}
 
 	/**
-	 * Remove cards for Akismet, Jetpack and VaultPress plugins since we don't want duplicates.
+	 * Remove cards for Jetpack plugins since we don't want duplicates.
+	 *
+	 * @since 7.1.0
+	 * @since 7.2.0 Only remove Jetpack.
+	 * @since 7.4.0 Simplify for WordPress 5.1+.
 	 *
 	 * @param array|object $plugin
 	 *
 	 * @return bool
 	 */
 	function filter_cards( $plugin ) {
-		// Take in account that before WordPress 5.1, the list of plugins is an array of objects.
-		// With WordPress 5.1 the list of plugins is an array of arrays.
-		$slug = is_array( $plugin ) ? $plugin['slug'] : $plugin->slug;
-		return ! in_array( $slug, array( 'akismet', 'jetpack', 'vaultpress' ), true );
+		return ! in_array( $plugin['slug'], array( 'jetpack' ), true );
 	}
 
 	/**
@@ -411,13 +447,13 @@ class Jetpack_Plugin_Search {
 		switch ( $feature ) {
 			case 'sharing':
 			case 'publicize':
-				$configure_url = "https://wordpress.com/sharing/$siteFragment";
+				$configure_url = "https://wordpress.com/marketing/connections/$siteFragment";
 				break;
 			case 'seo-tools':
-				$configure_url = "https://wordpress.com/settings/traffic/$siteFragment#seo";
+				$configure_url = "https://wordpress.com/marketing/traffic/$siteFragment#seo";
 				break;
 			case 'google-analytics':
-				$configure_url = "https://wordpress.com/settings/traffic/$siteFragment#analytics";
+				$configure_url = "https://wordpress.com/marketing/traffic/$siteFragment#analytics";
 				break;
 			case 'wordads':
 				$configure_url = "https://wordpress.com/ads/settings/$siteFragment";
@@ -450,21 +486,15 @@ class Jetpack_Plugin_Search {
 			// Jetpack installed, active, feature not enabled; prompt to enable.
 		} elseif (
 			current_user_can( 'jetpack_activate_modules' ) &&
-			! Jetpack::is_module_active( $plugin['module'] )
+			! Jetpack::is_module_active( $plugin['module'] ) &&
+			Jetpack_Plan::supports( $plugin['module'] )
 		) {
-			$links[] = Jetpack::active_plan_supports( $plugin['module'] )
-				? '<button
+			$links[] = '<button
 					id="plugin-select-activate"
 					class="jetpack-plugin-search__primary button"
 					data-module="' . esc_attr( $plugin['module'] ) . '"
 					data-configure-url="' . esc_url( $this->get_configure_url( $plugin['module'], $plugin['configure_url'] ) ) . '"
-					> ' . esc_html__( 'Enable', 'jetpack' ) . '</button>'
-				: '<a
-					class="jetpack-plugin-search__primary button"
-					href="' . esc_url( $this->get_upgrade_url( $plugin['module'] ) ) . '"
-					data-module="' . esc_attr( $plugin['module'] ) . '"
-					data-track="purchase"
-					> ' . esc_html__( 'Purchase', 'jetpack' ) . '</button>';
+					> ' . esc_html__( 'Enable', 'jetpack' ) . '</button>';
 
 			// Jetpack installed, active, feature enabled; link to settings.
 		} elseif (

@@ -1,5 +1,7 @@
 <?php
 
+use Automattic\Jetpack\Assets;
+
 // Exit if file is accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -115,18 +117,12 @@ class Jetpack_Related_Posts_Customize {
 
 	/**
 	 * Check whether the current post contains a Related Posts block.
-	 * If we're on WP < 5.0, this automatically means it doesn't,
-	 * because block support is intrododuced in WP 5.0.
 	 *
 	 * @since 6.9.0
 	 *
 	 * @return bool
 	 */
 	public static function contains_related_posts_block() {
-		if ( ! function_exists( 'has_block' ) ) {
-			return false;
-		}
-
 		if ( has_block( 'jetpack/related-posts' ) ) {
 			return true;
 		}
@@ -178,10 +174,7 @@ class Jetpack_Related_Posts_Customize {
 	function get_options( $wp_customize ) {
 		$transport = isset( $wp_customize->selective_refresh ) ? 'postMessage' : 'refresh';
 
-		// Get the correct translated string for preview in WP 4.7 and later.
-		$switched_locale = function_exists( 'switch_to_locale' )
-			? switch_to_locale( get_user_locale() )
-			: false;
+		$switched_locale = switch_to_locale( get_user_locale() );
 		$headline = __( 'Related', 'jetpack' );
 		if ( $switched_locale ) {
 			restore_previous_locale();
@@ -277,7 +270,7 @@ class Jetpack_Related_Posts_Customize {
 	function customize_controls_enqueue_scripts() {
 		wp_enqueue_script(
 			'jetpack_related-posts-customizer',
-			Jetpack::get_file_url_for_environment(
+			Assets::get_file_url_for_environment(
 				'_inc/build/related-posts/related-posts-customizer.min.js',
 				'modules/related-posts/related-posts-customizer.js'
 			),
@@ -306,4 +299,4 @@ class Jetpack_Message_Control extends WP_Customize_Control {
 } // class end
 
 // Initialize controls
-new Jetpack_Related_Posts_Customize;
+new Jetpack_Related_Posts_Customize();

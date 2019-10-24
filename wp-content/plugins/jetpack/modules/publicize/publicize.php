@@ -329,7 +329,7 @@ abstract class Publicize_Base {
 		} elseif ( 'facebook' == $service_name && isset( $cmeta['connection_data']['meta']['facebook_page'] ) ) {
 			return 'https://facebook.com/' . $cmeta['connection_data']['meta']['facebook_page'];
 		} elseif ( 'tumblr' == $service_name && isset( $cmeta['connection_data']['meta']['tumblr_base_hostname'] ) ) {
-			 return 'http://' . $cmeta['connection_data']['meta']['tumblr_base_hostname'];
+			 return 'https://' . $cmeta['connection_data']['meta']['tumblr_base_hostname'];
 		} elseif ( 'twitter' == $service_name ) {
 			return 'https://twitter.com/' . substr( $cmeta['external_display'], 1 ); // Has a leading '@'
 		} else if ( 'linkedin' == $service_name ) {
@@ -347,7 +347,7 @@ abstract class Publicize_Base {
 				return false;
 			}
 
-			return esc_url_raw( add_query_arg( 'id', urlencode( $id ), 'http://www.linkedin.com/profile/view' ) );
+			return esc_url_raw( add_query_arg( 'id', urlencode( $id ), 'https://www.linkedin.com/profile/view' ) );
 		} else {
 			return false; // no fallback. we just won't link it
 		}
@@ -1234,7 +1234,7 @@ abstract class Publicize_Base {
 }
 
 function publicize_calypso_url() {
-	$calypso_sharing_url = 'https://wordpress.com/sharing/';
+	$calypso_sharing_url = 'https://wordpress.com/marketing/connections/';
 	if ( class_exists( 'Jetpack' ) && method_exists( 'Jetpack', 'build_raw_urls' ) ) {
 		$site_suffix = Jetpack::build_raw_urls( home_url() );
 	} elseif ( class_exists( 'WPCOM_Masterbar' ) && method_exists( 'WPCOM_Masterbar', 'get_calypso_site_slug' ) ) {

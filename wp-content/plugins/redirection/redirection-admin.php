@@ -67,6 +67,10 @@ class Redirection_Admin {
 	}
 
 	public function update_nag() {
+		if ( ! $this->user_has_access() ) {
+			return;
+		}
+
 		$status = new Red_Database_Status();
 
 		$message = false;
@@ -153,8 +157,6 @@ class Redirection_Admin {
 	function redirection_head() {
 		global $wp_version;
 
-		$this->check_rest_api();
-
 		if ( isset( $_REQUEST['action'] ) && isset( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'wp_rest' ) ) {
 			if ( $_REQUEST['action'] === 'fixit' ) {
 				$this->run_fixit();
@@ -198,8 +200,16 @@ class Redirection_Admin {
 		$status->check_tables_exist();
 
 		wp_localize_script( 'redirection', 'Redirectioni10n', array(
-			'WP_API_root' => esc_url_raw( red_get_rest_api() ),
-			'WP_API_nonce' => wp_create_nonce( 'wp_rest' ),
+			'api' => [
+				'WP_API_root' => esc_url_raw( red_get_rest_api() ),
+				'WP_API_nonce' => wp_create_nonce( 'wp_rest' ),
+				'current' => $options['rest_api'],
+				'routes' => [
+					REDIRECTION_API_JSON => red_get_rest_api( REDIRECTION_API_JSON ),
+					REDIRECTION_API_JSON_INDEX => red_get_rest_api( REDIRECTION_API_JSON_INDEX ),
+					REDIRECTION_API_JSON_RELATIVE => red_get_rest_api( REDIRECTION_API_JSON_RELATIVE ),
+				],
+			],
 			'pluginBaseUrl' => plugins_url( '', REDIRECTION_FILE ),
 			'pluginRoot' => admin_url( 'tools.php?page=redirection.php' ),
 			'per_page' => $this->get_per_page(),
@@ -245,23 +255,6 @@ class Redirection_Admin {
 		return $validate;
 	}
 
-	public function check_rest_api() {
-		$options = red_get_options();
-
-		if ( $options['rest_api'] === false || ( defined( 'REDIRECTION_FORCE_UPDATE' ) && REDIRECTION_FORCE_UPDATE ) ) {
-			include_once dirname( REDIRECTION_FILE ) . '/models/fixer.php';
-
-			$fixer = new Red_Fixer();
-			$status = $fixer->get_rest_status();
-
-			if ( $status['status'] === 'problem' ) {
-				$fixer->fix_rest();
-			} elseif ( $options['rest_api'] === false ) {
-				red_set_options( array( 'rest_api' => 0 ) );
-			}
-		}
-	}
-
 	private function run_fixit() {
 		if ( $this->user_has_access() ) {
 			include_once dirname( REDIRECTION_FILE ) . '/models/fixer.php';
@@ -276,17 +269,19 @@ class Redirection_Admin {
 	}
 
 	private function set_rest_api( $api ) {
-		if ( $api >= 0 && $api <= REDIRECTION_API_POST ) {
+		if ( $api >= 0 && $api <= REDIRECTION_API_JSON_RELATIVE ) {
 			red_set_options( array( 'rest_api' => intval( $api, 10 ) ) );
 		}
 	}
 
 	private function get_preload_data() {
 		if ( $this->get_menu_page() === 'support' ) {
-			$api = new Redirection_Api_Plugin( REDIRECTION_API_NAMESPACE );
+			include_once dirname( REDIRECTION_FILE ) . '/models/fixer.php';
+
+			$fixer = new Red_Fixer();
 
 			return array(
-				'pluginStatus' => $api->route_status( new WP_REST_Request() ),
+				'pluginStatus' => $fixer->get_json(),
 			);
 		}
 
@@ -335,7 +330,7 @@ class Redirection_Admin {
 	}
 
 	public function admin_menu() {
-		$hook = add_management_page( 'Redirection', 'Redirection', $this->get_access_role(), basename( REDIRECTION_FILE ), [ &$this, 'admin_screen' ] );
+		$hook = add_management_page( 'Redirection', 'Redirection', $this->get_access_role(), basename( REDIRECTION_FILE ), [ $this, 'admin_screen' ] );
 		add_action( 'load-' . $hook, [ $this, 'redirection_head' ] );
 	}
 
@@ -539,3 +534,14 @@ class Redirection_Admin {
 register_activation_hook( REDIRECTION_FILE, array( 'Redirection_Admin', 'plugin_activated' ) );
 
 add_action( 'init', array( 'Redirection_Admin', 'init' ) );
+
+// This is causing a lot of problems with the REST API - disable qTranslate
+add_filter( 'qtranslate_language_detect_redirect', function( $lang, $url ) {
+	$url = Redirection_Request::get_request_url();
+
+	if ( strpos( $url, '/wp-json/' ) !== false || strpos( $url, 'index.php?rest_route' ) !== false ) {
+		return false;
+	}
+
+	return $lang;
+}, 10, 2 );

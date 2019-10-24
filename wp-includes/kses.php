@@ -1657,6 +1657,7 @@ function wp_kses_html_error( $string ) {
  * @return string Sanitized content.
  */
 function wp_kses_bad_protocol_once( $string, $allowed_protocols, $count = 1 ) {
+	$string  = preg_replace( '/(&#0*58(?![;0-9])|&#x0*3a(?![;a-f0-9]))/i', '$1;', $string );
 	$string2 = preg_split( '/:|&#0*58;|&#x0*3a;/i', $string, 2 );
 	if ( isset( $string2[1] ) && ! preg_match( '%/\?%', $string2[0] ) ) {
 		$string   = trim( $string2[1] );
@@ -2062,6 +2063,7 @@ function safecss_filter_attr( $css, $deprecated = '' ) {
 	 * @since 4.6.0 Added support for `list-style-type`.
 	 * @since 5.0.0 Added support for `background-image`.
 	 * @since 5.1.0 Added support for `text-transform`.
+	 * @since 5.2.0 Added support for `background-position` and `grid-template-columns`
 	 *
 	 * @param string[] $attr Array of allowed CSS attributes.
 	 */
@@ -2071,6 +2073,7 @@ function safecss_filter_attr( $css, $deprecated = '' ) {
 			'background',
 			'background-color',
 			'background-image',
+			'background-position',
 
 			'border',
 			'border-width',
@@ -2138,6 +2141,7 @@ function safecss_filter_attr( $css, $deprecated = '' ) {
 			'overflow',
 			'vertical-align',
 			'list-style-type',
+			'grid-template-columns',
 		)
 	);
 

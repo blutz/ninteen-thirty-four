@@ -76,7 +76,16 @@ class Jetpack_WordAds_Gutenblock {
 		global $wordads;
 
 		/** This filter is already documented in modules/wordads/wordads.php `insert_ad()` */
-		if ( empty( $wordads ) || is_feed() || apply_filters( 'wordads_inpost_disable', false ) ) {
+		if (
+			empty( $wordads )
+			|| empty( $wordads->params )
+			|| is_feed()
+			|| apply_filters( 'wordads_inpost_disable', false )
+		) {
+			return '';
+		}
+
+		if ( ! empty( $attr['hideMobile'] ) && $wordads->params->is_mobile() ) {
 			return '';
 		}
 
@@ -101,7 +110,7 @@ class Jetpack_WordAds_Gutenblock {
 
 		$height  = $ad_tag_ids[ $format ]['height'];
 		$width   = $ad_tag_ids[ $format ]['width'];
-		$snippet = $wordads->get_ad_snippet( $section_id, $height, $width, 'inline', $wordads->get_solo_unit_css() );
+		$snippet = $wordads->get_ad_snippet( $section_id, $height, $width, 'gutenberg', $wordads->get_solo_unit_css() );
 		return $wordads->get_ad_div( 'inline', $snippet, array( $align ) );
 	}
 }
