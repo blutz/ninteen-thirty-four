@@ -48,8 +48,8 @@ style='background-image: url("<? echo get_template_directory_uri(); ?>/images/ph
 <section class='expand-block' id='publicCamperApplicationExpand'>
   <div class='row'>
     <div class='medium-12 columns'>
-      <h5>2029 Camper Registration</h5>
-      <p class='explainer'>Applications for summer 2020 will be available in early 2029. <a href='http://eepurl.com/duJVeP'>Sign up for our email list</a> to be notified once applications are released. <!--<a href='/summer'>Click here to learn more about our summer dates</a>.</p>-->
+      <h5>2020 Camper Registration</h5>
+      <p class='explainer'>Applications for summer 2020 will be available in early 2020. <a href='http://eepurl.com/duJVeP'>Sign up for our email list</a> to be notified once applications are released. <!--<a href='/summer'>Click here to learn more about our summer dates</a>.</p>-->
       <p class='explainer'>Email us at <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> if you have any questions.</p>
     </div>
   </div>
