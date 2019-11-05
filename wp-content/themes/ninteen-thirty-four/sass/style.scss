@@ -24,6 +24,7 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
 >>> TABLE OF CONTENTS:
 ----------------------------------------------------------------
 # Normalize
+# Breakpoints
 # Typography
 # Elements
 # Forms
@@ -49,6 +50,11 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
 # Normalize
 --------------------------------------------------------------*/
 @import "normalize";
+
+/*--------------------------------------------------------------
+# Breakpoints
+--------------------------------------------------------------*/
+@import "breakpoints";
 
 /*--------------------------------------------------------------
 # Typography

@@ -23,6 +23,7 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
 >>> TABLE OF CONTENTS:
 ----------------------------------------------------------------
 # Normalize
+# Breakpoints
 # Typography
 # Elements
 # Forms
@@ -345,6 +346,9 @@ template {
   display: none; }
 
 /*--------------------------------------------------------------
+# Breakpoints
+--------------------------------------------------------------*/
+/*--------------------------------------------------------------
 # Typography
 --------------------------------------------------------------*/
 body,
@@ -459,6 +463,12 @@ figure {
 table {
   margin: 0 0 1.5em;
   width: 100%; }
+
+.site {
+  margin: auto;
+  padding: 0 30px;
+  display: grid;
+  max-width: 1400px; }
 
 /*--------------------------------------------------------------
 # Forms
@@ -726,7 +736,7 @@ a {
 
 .post,
 .page {
-  margin: 0 0 1.5em; }
+  margin: 0 0; }
 
 .updated:not(.published) {
   display: none; }
