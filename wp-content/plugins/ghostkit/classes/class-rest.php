@@ -1196,7 +1196,7 @@ class GhostKit_Rest extends WP_REST_Controller {
             $requested_templates = wp_remote_get(
                 add_query_arg(
                     array(
-                        'ghostkit_version'     => '2.7.0',
+                        'ghostkit_version'     => '2.7.1',
                         'ghostkit_pro'         => function_exists( 'ghostkit_pro' ),
                         'ghostkit_pro_version' => function_exists( 'ghostkit_pro' ) ? ghostkit_pro()->plugin_version : null,
                     ), $url
@@ -1399,7 +1399,7 @@ class GhostKit_Rest extends WP_REST_Controller {
                         add_query_arg(
                             array(
                                 'id'                   => $id,
-                                'ghostkit_version'     => '2.7.0',
+                                'ghostkit_version'     => '2.7.1',
                                 'ghostkit_pro'         => function_exists( 'ghostkit_pro' ),
                                 'ghostkit_pro_version' => function_exists( 'ghostkit_pro' ) ? ghostkit_pro()->plugin_version : null,
                             ), $url

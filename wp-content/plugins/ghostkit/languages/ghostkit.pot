@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Ghost Kit plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ghost Kit 2.7.0\n"
+"Project-Id-Version: Ghost Kit 2.7.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/src\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-10-27T22:09:04+00:00\n"
+"POT-Creation-Date: 2019-11-03T09:50:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.3.0\n"
 "X-Domain: ghostkit\n"
@@ -365,24 +365,28 @@ msgstr ""
 msgid "Add Accordion Item"
 msgstr ""
 
-#: gutenberg/blocks/accordion/index.jsx:25
+#: gutenberg/blocks/accordion/index.jsx:26
 msgid "Accordion"
 msgstr ""
 
-#: gutenberg/blocks/accordion/index.jsx:26
+#: gutenberg/blocks/accordion/index.jsx:27
 msgid "Toggle the visibility of content across your project."
 msgstr ""
 
-#: gutenberg/blocks/accordion/index.jsx:29
+#: gutenberg/blocks/accordion/index.jsx:30
 msgid "accordion"
 msgstr ""
 
-#: gutenberg/blocks/accordion/index.jsx:30
+#: gutenberg/blocks/accordion/index.jsx:31
 msgid "collapsible"
 msgstr ""
 
-#: gutenberg/blocks/accordion/index.jsx:31
+#: gutenberg/blocks/accordion/index.jsx:32
 msgid "collapse"
+msgstr ""
+
+#: gutenberg/blocks/accordion/transforms.jsx:30
+msgid "Accordion Item"
 msgstr ""
 
 #: gutenberg/blocks/alert/edit.jsx:70
@@ -1673,7 +1677,7 @@ msgid "This Tabs block has a legacy structure. To use new tabs, add it again fro
 msgstr ""
 
 #: gutenberg/blocks/tabs-legacy/index.jsx:98
-#: gutenberg/blocks/tabs/index.jsx:25
+#: gutenberg/blocks/tabs/index.jsx:26
 msgid "Tabs"
 msgstr ""
 
@@ -1695,12 +1699,12 @@ msgid "Tabs."
 msgstr ""
 
 #: gutenberg/blocks/tabs-legacy/index.jsx:175
-#: gutenberg/blocks/tabs/index.jsx:29
+#: gutenberg/blocks/tabs/index.jsx:30
 msgid "tabs"
 msgstr ""
 
 #: gutenberg/blocks/tabs-legacy/index.jsx:176
-#: gutenberg/blocks/tabs/index.jsx:30
+#: gutenberg/blocks/tabs/index.jsx:31
 msgid "tab"
 msgstr ""
 
@@ -1730,7 +1734,7 @@ msgstr ""
 msgid "Add Tab"
 msgstr ""
 
-#: gutenberg/blocks/tabs/index.jsx:26
+#: gutenberg/blocks/tabs/index.jsx:27
 msgid "Separate content on the tabs with titles."
 msgstr ""
 

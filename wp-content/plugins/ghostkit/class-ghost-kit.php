@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Ghost Kit
  * Description:  Blocks collection and extensions for Gutenberg
- * Version:      2.7.0
+ * Version:      2.7.1
  * Author:       nK
  * Author URI:   https://nkdev.info
  * License:      GPLv2 or later

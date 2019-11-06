@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Advanced WordPress Backgrounds
  * Description:  Parallax, Video, Images Backgrounds
- * Version:      1.6.0
+ * Version:      1.6.1
  * Author:       nK
  * Author URI:   https://nkdev.info
  * License:      GPLv2 or later
@@ -102,11 +102,10 @@ class NK_AWB {
      * Register scripts that will be used in the future when portfolio will be printed.
      */
     public function register_scripts() {
-        wp_register_script( 'resize-observer-polyfill', nk_awb()->plugin_url . 'assets/vendor/resize-observer-polyfill/ResizeObserver.global.min.js', array(), '1.5.0', true );
-        wp_register_script( 'jarallax', nk_awb()->plugin_url . 'assets/vendor/jarallax/jarallax.min.js', array( 'jquery', 'resize-observer-polyfill' ), '1.11.0', true );
-        wp_register_script( 'jarallax-video', nk_awb()->plugin_url . 'assets/vendor/jarallax/jarallax-video.min.js', array( 'jarallax' ), '1.11.0', true );
+        wp_register_script( 'jarallax', nk_awb()->plugin_url . 'assets/vendor/jarallax/jarallax.min.js', array( 'jquery' ), '1.12.0', true );
+        wp_register_script( 'jarallax-video', nk_awb()->plugin_url . 'assets/vendor/jarallax/jarallax-video.min.js', array( 'jarallax' ), '1.12.0', true );
         wp_register_script( 'object-fit-images', nk_awb()->plugin_url . 'assets/vendor/object-fit-images/ofi.min.js', array(), '3.2.4', true );
-        wp_register_script( 'nk-awb', nk_awb()->plugin_url . 'assets/awb/awb.min.js', array( 'jquery', 'jarallax', 'jarallax-video', 'object-fit-images' ), '1.6.0', true );
+        wp_register_script( 'nk-awb', nk_awb()->plugin_url . 'assets/awb/awb.min.js', array( 'jquery', 'jarallax', 'jarallax-video', 'object-fit-images' ), '1.6.1', true );
 
         wp_localize_script( 'nk-awb', 'AWBData', array(
             'settings' => array(
@@ -116,7 +115,7 @@ class NK_AWB {
             ),
         ));
 
-        wp_register_style( 'nk-awb', nk_awb()->plugin_url . 'assets/awb/awb.min.css', '', '1.6.0' );
+        wp_register_style( 'nk-awb', nk_awb()->plugin_url . 'assets/awb/awb.min.css', '', '1.6.1' );
     }
 
     /**
