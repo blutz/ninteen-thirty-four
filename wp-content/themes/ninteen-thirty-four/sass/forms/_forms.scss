@@ -1,3 +1,41 @@
+// This has to be super specific to override Jetpack :(
+[id^="contact-form"] {
+  max-width: 500px;
+  margin: auto;
+}
+[id^="contact-form"] .contact-form {
+  .contact-submit { text-align: right; }
+  input,
+  textarea,
+  input[type="text"],
+  input[type="email"] {
+    border: 1px solid lighten($color__primary, 20%);
+    padding: 30px 5px 5px 5px;
+    border-radius: 0;
+    width: 100%;
+    &:focus {
+      outline: none;
+      border-color: $color__primary;
+    }
+  }
+  .grunion-field-label span { visibility: hidden; }
+  .grunion-field-label span::before {
+    content: '*';
+    color: $color__alert;
+    visibility: visible;
+  }
+  .grunion-field-wrap {
+    position: relative;
+  }
+  label {
+    position: absolute;
+    left: 5px;
+    top: 3px;
+    color: $color__primary;
+    font-weight: normal;
+  }
+}
+
 @import "buttons";
 
 @import "fields";

@@ -1,6 +1,20 @@
 h1, h2, h3, h4, h5, h6 {
   clear: both;
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em;
 }
-h1, h2 {
+h1, h2, h3 {
   font-family: $font__secondary;
+}
+h1 {
+  background: $gradient__primary;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: normal;
+  font-size: 3.2rem;
+}
+h3 {
+  font-size: 2rem;
+  font-weight: normal;
 }

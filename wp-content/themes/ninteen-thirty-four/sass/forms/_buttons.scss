@@ -20,10 +20,12 @@ input[type="submit"] {
     border-color: $color__border-button-focus;
   }
 }
-.wp-block-button__link {
+.wp-block-button__link, button, [type="submit"] {
+  cursor: pointer;
+  color: #fff;
   background: $gradient__primary;
   border: none;
-  padding: 5px 15px;
+  padding: 10px 25px;
   border-radius: 4px;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
   font-size: 1rem;

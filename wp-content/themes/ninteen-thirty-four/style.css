@@ -364,13 +364,29 @@ textarea {
   line-height: 1.5; }
 
 h1, h2, h3, h4, h5, h6 {
-  clear: both; }
+  clear: both;
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em; }
 
-h1, h2 {
+h1, h2, h3 {
   font-family: "Londrina Solid", cursive; }
 
+h1 {
+  background: radial-gradient(ellipse at bottom -25% right -25%, #2774ae 0%, #07385a 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: normal;
+  font-size: 3.2rem; }
+
+h3 {
+  font-size: 2rem;
+  font-weight: normal; }
+
 p {
-  margin-bottom: 1.5em; }
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em;
+  margin-bottom: 0.5em; }
 
 dfn, cite, em, i {
   font-style: italic; }
@@ -473,6 +489,46 @@ table {
 /*--------------------------------------------------------------
 # Forms
 --------------------------------------------------------------*/
+[id^="contact-form"] {
+  max-width: 500px;
+  margin: auto; }
+
+[id^="contact-form"] .contact-form .contact-submit {
+  text-align: right; }
+
+[id^="contact-form"] .contact-form input,
+[id^="contact-form"] .contact-form textarea,
+[id^="contact-form"] .contact-form input[type="text"],
+[id^="contact-form"] .contact-form input[type="email"] {
+  border: 1px solid #60a6db;
+  padding: 30px 5px 5px 5px;
+  border-radius: 0;
+  width: 100%; }
+  [id^="contact-form"] .contact-form input:focus,
+  [id^="contact-form"] .contact-form textarea:focus,
+  [id^="contact-form"] .contact-form input[type="text"]:focus,
+  [id^="contact-form"] .contact-form input[type="email"]:focus {
+    outline: none;
+    border-color: #2774AE; }
+
+[id^="contact-form"] .contact-form .grunion-field-label span {
+  visibility: hidden; }
+
+[id^="contact-form"] .contact-form .grunion-field-label span::before {
+  content: '*';
+  color: #C3112F;
+  visibility: visible; }
+
+[id^="contact-form"] .contact-form .grunion-field-wrap {
+  position: relative; }
+
+[id^="contact-form"] .contact-form label {
+  position: absolute;
+  left: 5px;
+  top: 3px;
+  color: #2774AE;
+  font-weight: normal; }
+
 button,
 input[type="button"],
 input[type="reset"],
@@ -500,16 +556,18 @@ input[type="submit"] {
   input[type="submit"]:focus {
     border-color: #aaa #bbb #bbb; }
 
-.wp-block-button__link {
+.wp-block-button__link, button, [type="submit"] {
+  cursor: pointer;
+  color: #fff;
   background: radial-gradient(ellipse at bottom -25% right -25%, #2774ae 0%, #07385a 100%);
   border: none;
-  padding: 5px 15px;
+  padding: 10px 25px;
   border-radius: 4px;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
   font-size: 1rem;
   font-weight: bold;
   transition: box-shadow 0.2s; }
-  .wp-block-button__link:hover {
+  .wp-block-button__link:hover, button:hover, [type="submit"]:hover {
     box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.2); }
 
 .button--secondary .wp-block-button__link {
