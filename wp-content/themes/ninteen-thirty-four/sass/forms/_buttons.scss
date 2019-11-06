@@ -20,3 +20,25 @@ input[type="submit"] {
     border-color: $color__border-button-focus;
   }
 }
+.wp-block-button__link {
+  background: $gradient__primary;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 4px;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+  font-size: 1rem;
+  font-weight: bold;
+  transition: box-shadow 0.2s;
+  &:hover {
+    box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.2);
+  }
+}
+.button--secondary .wp-block-button__link {
+  background: $gradient__secondary;
+}
+
+.wp-block-button__link .svg-inline--fa {
+  font-size: 0.8rem;
+  margin-bottom: 1px;
+  margin-left: 7px;
+}

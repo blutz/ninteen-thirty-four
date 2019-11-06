@@ -10,9 +10,11 @@
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-  <header class="entry-header">
-    <?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
-  </header><!-- .entry-header -->
+  <?php if(!get_page_template_slug() == 'full-page.php'): ?>
+    <header class="entry-header">
+      <?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
+    </header><!-- .entry-header -->
+  <?php endif; ?>
 
   <?php ninteen_thirty_four_post_thumbnail(); ?>
 
