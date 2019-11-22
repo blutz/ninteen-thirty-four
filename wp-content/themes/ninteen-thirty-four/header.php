@@ -26,12 +26,22 @@
 
   <header id="masthead" class="site-header">
     <nav id="site-navigation" class="main-navigation">
-      <button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><?php esc_html_e( 'Primary Menu', 'ninteen-thirty-four' ); ?></button>
+      <div class='mobile-navigation'>
+        <?php
+        wp_nav_menu( array(
+          'theme_location' => 'menu-2',
+          'menu_id'        => 'mobile-quicklinks',
+          'menu_class'     => 'mobile-quicklinks',
+        ) );
+        ?>
+        <button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false">Menu&nbsp;&nbsp;<i class='fas fa-bars'></i></button>
+      </div>
       <?php the_custom_logo(); ?>
       <?php
       wp_nav_menu( array(
         'theme_location' => 'menu-1',
         'menu_id'        => 'primary-menu',
+        'menu_class'     => 'primary-menu',
       ) );
       ?>
     </nav><!-- #site-navigation -->
