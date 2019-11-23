@@ -15,7 +15,6 @@
 </div><!-- #page -->
 
 <footer id="colophon" class="site-footer">
-  <img class='footer__image' src='<? echo get_template_directory_uri() . '/img/sunset.jpg' ?>' />
   <div class='footer__wrap'>
     <div class='footer__content'>
       <div class='footer__content__info'>

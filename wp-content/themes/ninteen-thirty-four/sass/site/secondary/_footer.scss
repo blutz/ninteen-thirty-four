@@ -1,20 +1,17 @@
 .site-footer { }
-.footer__image {
-  display: block;
-  -webkit-mask-image: linear-gradient(transparent 15%, rgba(0, 0, 0, 0.5) 25%, black 30%);
-  mask-image: linear-gradient(transparent 15%, rgba(0, 0, 0, 0.5) 25%, black 30%);
-  margin-top: -100px;
-}
 
 .footer__wrap {
   padding: 50px;
-  padding-top: 100px;
-  margin-top: -300px;
+  padding-top: 350px;
   z-index: 10;
   position: relative;
   min-height: 300px;
   background-color: black;
-  background: linear-gradient(transparent, black 100px);
+  background: linear-gradient(transparent 200px, black 350px), url('img/sunset.jpg');
+  -webkit-mask-image: linear-gradient(transparent, rgba(0, 0, 0, 0.5) 40px, black 70px);
+  background-position: 60% 30%;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .footer__content {
