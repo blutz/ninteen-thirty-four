@@ -934,7 +934,8 @@ a {
   min-height: 300px;
   background-color: black;
   background: linear-gradient(transparent 200px, black 350px), url("img/sunset.jpg");
-  -webkit-mask-image: linear-gradient(transparent, rgba(0, 0, 0, 0.5) 40px, black 70px);
+  -webkit-mask-image: linear-gradient(transparent, rgba(0, 0, 0, 0.1) 10px, rgba(0, 0, 0, 0.5) 40px, black 70px);
+  mask-image: linear-gradient(transparent, rgba(0, 0, 0, 0.1) 10px, rgba(0, 0, 0, 0.5) 40px, black 70px);
   background-position: 60% 30%;
   background-size: cover;
   background-repeat: no-repeat; }
