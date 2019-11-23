@@ -71,6 +71,11 @@
   }
 }
 
+.custom-logo-link {
+  z-index: 1;
+  position: relative;
+}
+
 /* Small menu. */
 .menu-toggle,
 .main-navigation.toggled .primary-menu {
@@ -218,6 +223,28 @@ $height_site_header: 45px;
   .custom-logo-link {
     padding: 10px;
     width: 90px;
+  }
+  .main-navigation .primary-menu {
+    background: $color__primary;
+    top: $height_site_header;
+    position: absolute;
+    width: 100%;
+  }
+  .primary-menu .menu-item {
+    display: block;
+  }
+  .primary-menu .menu-item a {
+    padding-left: 110px;
+    padding-right: 110px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    padding: 8px 110px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    .menu-item:last-child & {
+     border-bottom: none;
+    }
+    &:hover { text-align: none; }
   }
 }
 @media (max-width: 370px) {

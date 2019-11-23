@@ -679,6 +679,10 @@ a {
     display: block;
     text-decoration: none; }
 
+.custom-logo-link {
+  z-index: 1;
+  position: relative; }
+
 /* Small menu. */
 .menu-toggle,
 .main-navigation.toggled .primary-menu {
@@ -796,7 +800,26 @@ a {
     padding-right: 20px; }
   .custom-logo-link {
     padding: 10px;
-    width: 90px; } }
+    width: 90px; }
+  .main-navigation .primary-menu {
+    background: #2774AE;
+    top: 45px;
+    position: absolute;
+    width: 100%; }
+  .primary-menu .menu-item {
+    display: block; }
+  .primary-menu .menu-item a {
+    padding-left: 110px;
+    padding-right: 110px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    padding: 8px 110px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25); }
+    .menu-item:last-child .primary-menu .menu-item a {
+      border-bottom: none; }
+    .primary-menu .menu-item a:hover {
+      text-align: none; } }
 
 @media (max-width: 370px) {
   .mobile-quicklinks li:first-child {
