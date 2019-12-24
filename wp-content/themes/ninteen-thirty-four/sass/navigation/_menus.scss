@@ -34,14 +34,6 @@
       a {
         width: 200px;
       }
-
-      :hover > a,
-      .focus > a {
-      }
-
-      a:hover,
-      a.focus {
-      }
     }
 
     li:hover > ul,
@@ -53,10 +45,6 @@
   li {
     position: relative;
     display: inline-block;
-
-    &:hover > a,
-    &.focus > a {
-    }
   }
 
   a {
@@ -151,8 +139,11 @@
     color: inherit;
     padding: 7px 15px;
     &:hover {
-      background: $color__primary-dark;
+      background: $color__primary;
     }
+  }
+  .main-navigation .current-menu-item a {
+    background: $color__primary-dark;
   }
 }
 @include lg {

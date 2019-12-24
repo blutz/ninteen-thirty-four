@@ -745,7 +745,9 @@ a {
     color: inherit;
     padding: 7px 15px; }
     .main-navigation li a:hover {
-      background: #205E8A; } }
+      background: #2774AE; }
+  .main-navigation .current-menu-item a {
+    background: #205E8A; } }
 
 @media (min-width: 992px) {
   .main-navigation li {
