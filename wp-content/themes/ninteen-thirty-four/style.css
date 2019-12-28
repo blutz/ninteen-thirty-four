@@ -359,6 +359,7 @@ optgroup,
 textarea {
   color: #404040;
   font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-display: block;
   font-size: 16px;
   font-size: 1rem;
   line-height: 1.5; }
@@ -369,7 +370,8 @@ h1, h2, h3, h4, h5, h6 {
   margin-block-end: 0.5em; }
 
 h1, h2, h3 {
-  font-family: "Londrina Solid", sans-serif; }
+  font-family: "Londrina Solid", sans-serif;
+  font-display: block; }
 
 h1 {
   background: radial-gradient(ellipse at bottom -25% right -25%, #2774ae 0%, #07385a 100%);
