@@ -3,8 +3,8 @@ Contributors: johnny5
 Donate link: https://redirection.me/donation/
 Tags: redirect, htaccess, 301, 404, seo, permalink, apache, nginx, post, admin
 Requires at least: 4.9
-Tested up to: 5.3
-Stable tag: 4.5.1
+Tested up to: 5.3.2
+Stable tag: 4.6.1
 Requires PHP: 5.4
 License: GPLv3
 
@@ -74,6 +74,10 @@ You can match query parameters exactly, ignore them, and even pass them through 
 By default Redirection will manage all redirects using WordPress. However you can configure it so redirects are automatically saved to a .htaccess file and handled by Apache itself.
 
 If you use Nginx then you can export redirects to an Nginx rewrite rules file.
+
+= Fine-grained permissions =
+
+Fine-grained permissions are available so you can customise the plugin for different users. This makes it particularly suitable for client sites where you may want to prevent certain actions, and remove functionality.
 
 = Import & Export =
 
@@ -157,6 +161,14 @@ The plugin works in a similar manner to how WordPress handles permalinks and sho
 * Alters database to support case insensitivity, trailing slashes, and query params. Please backup your data
 
 == Changelog ==
+
+= 4.6.1 - 30th December 2019 =
+* Back-compatibility fix for old PHP versions
+
+= 4.6 - 27th December 2019 =
+* Add fine-grained permissions allowing greater customisation of the plugin, and removal of functionality
+* Add an import step to the install wizard
+* Remove overriding of default WordPress 'old slugs'
 
 = 4.5.1 - 23rd November 2019 =
 * Fix broken canonical redirects

@@ -1,16 +1,62 @@
 <?php
 
-include_once dirname( __FILE__ ) . '/api/api-group.php';
-include_once dirname( __FILE__ ) . '/api/api-redirect.php';
-include_once dirname( __FILE__ ) . '/api/api-log.php';
-include_once dirname( __FILE__ ) . '/api/api-404.php';
-include_once dirname( __FILE__ ) . '/api/api-settings.php';
-include_once dirname( __FILE__ ) . '/api/api-plugin.php';
-include_once dirname( __FILE__ ) . '/api/api-import.php';
-include_once dirname( __FILE__ ) . '/api/api-export.php';
+require_once __DIR__ . '/api-group.php';
+require_once __DIR__ . '/api-redirect.php';
+require_once __DIR__ . '/api-log.php';
+require_once __DIR__ . '/api-404.php';
+require_once __DIR__ . '/api-settings.php';
+require_once __DIR__ . '/api-plugin.php';
+require_once __DIR__ . '/api-import.php';
+require_once __DIR__ . '/api-export.php';
 
 define( 'REDIRECTION_API_NAMESPACE', 'redirection/v1' );
 
+/**
+ * @apiDefine 401Error
+ *
+ * @apiError (Error 401) rest_forbidden You are not authorized to access this API endpoint
+ * @apiErrorExample {json} 401 Error Response:
+ *     HTTP/1.1 401 Bad Request
+ *     {
+ *       "code": "rest_forbidden",
+ *       "message": "Sorry, you are not allowed to do that."
+ *     }
+ */
+
+/**
+ * @apiDefine 404Error
+ *
+ * @apiError (Error 404) rest_no_route Endpoint not found
+ * @apiErrorExample {json} 404 Error Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "code": "rest_no_route",
+ *       "message": "No route was found matching the URL and request method"
+ *     }
+ */
+
+/**
+ * @apiDefine 400Error
+ *
+ * @apiError rest_forbidden You are not authorized to access this API endpoint
+ * @apiErrorExample {json} 400 Error Response:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": "invalid",
+ *       "message": "Invalid request"
+ *     }
+ */
+
+/**
+ * @apiDefine 400MissingError
+ * @apiError (Error 400) rest_missing_callback_param Some required parameters are not present or not in the correct format
+ * @apiErrorExample {json} 400 Error Response:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "code": "rest_missing_callback_param",
+ *       "message": "Missing parameter(s): PARAM"
+ *     }
+ */
 class Redirection_Api_Route {
 	protected function add_error_details( WP_Error $error, $line, $code = 400 ) {
 		global $wpdb;
@@ -29,15 +75,15 @@ class Redirection_Api_Route {
 	}
 
 	public function permission_callback( WP_REST_Request $request ) {
-		return current_user_can( apply_filters( 'redirection_role', 'manage_options' ) );
+		return Redirection_Capabilities::has_access( Redirection_Capabilities::CAP_PLUGIN );
 	}
 
-	public function get_route( $method, $callback ) {
-		return array(
+	public function get_route( $method, $callback, $permissions = false ) {
+		return [
 			'methods' => $method,
-			'callback' => array( $this, $callback ),
-			'permission_callback' => array( $this, 'permission_callback' ),
-		);
+			'callback' => [ $this, $callback ],
+			'permission_callback' => $permissions ? $permissions : [ $this, 'permission_callback' ],
+		];
 	}
 }
 
@@ -94,9 +140,9 @@ class Redirection_Api_Filter_Route extends Redirection_Api_Route {
 		);
 	}
 
-	public function register_bulk( $namespace, $route, $orders, $callback ) {
+	public function register_bulk( $namespace, $route, $orders, $callback, $permissions = false ) {
 		register_rest_route( $namespace, $route, array(
-			$this->get_route( WP_REST_Server::EDITABLE, $callback ),
+			$this->get_route( WP_REST_Server::EDITABLE, $callback, $permissions ),
 			'args' => array_merge( $this->get_filter_args( $orders ), array(
 				'items' => array(
 					'description' => 'Comma separated list of item IDs to perform action on',
@@ -112,7 +158,7 @@ class Redirection_Api {
 	private static $instance = null;
 	private $routes = array();
 
-	static function init() {
+	public static function init() {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new Redirection_Api();
 		}
