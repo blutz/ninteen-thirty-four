@@ -12,4 +12,6 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.php [L]
 </IfModule>
 
+RedirectMatch 404 /\.git
+
 # END WordPress
