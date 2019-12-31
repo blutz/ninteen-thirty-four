@@ -1,13 +1,35 @@
-<?php get_header(); ?>
+<?php
+/**
+ * The template for displaying 404 pages (not found)
+ *
+ * @link https://codex.wordpress.org/Creating_an_Error_404_Page
+ *
+ * @package ninteen-thirty-four
+ */
 
-<section
-class='photo-block'
-style='background-image: url("<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.WhyCamp.jpg")'>
-  <img class='photo-block__small-image' src='<? echo get_template_directory_uri(); ?>/images/photos/campers-families/CampersFamilies.WhyCamp.jpg' />
-  <div class='photo-block__content'>
-    <h2>Page not found</h2>
-    <p class='explainer'>Sorry, we couldn't find the page you're looking for (404). If you think this is an error, please let us know.</p>
-  </div>
-</section>
+get_header();
+?>
 
-<?php get_footer(); ?>
+  <div id="primary" class="content-area">
+    <main id="main" class="site-main">
+
+      <section class="error-404 not-found">
+        <header class="page-header">
+          <h1 class="page-title"><?php esc_html_e( "Sorry, there's nothing here", 'ninteen-thirty-four' ); ?></h1>
+        </header><!-- .page-header -->
+
+        <div class="page-content">
+          <p>🙁<?php esc_html_e( 'Content not found (error 404). Check your spelling or email registration@unicamp.org for help.', 'ninteen-thirty-four' ); ?></p>
+
+          <?php
+          get_search_form();
+          ?>
+
+        </div><!-- .page-content -->
+      </section><!-- .error-404 -->
+
+    </main><!-- #main -->
+  </div><!-- #primary -->
+
+<?php
+get_footer();

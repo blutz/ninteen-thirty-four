@@ -3,7 +3,6 @@
 # WordPress files we don't want to track
 /wp-content/themes/twenty*
 /wp-content/upgrade
-/wp-content/uploads
 /sitemap.*
 /wp-config.php
 *.sql
@@ -20,3 +19,6 @@
 node_modules/
 npm-debug.log
 .sass-cache
+
+# LetsEncrypt
+/.well-known

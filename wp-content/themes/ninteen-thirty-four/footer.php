@@ -1,94 +1,46 @@
-<footer>
-  <div class='row footer__menu'>
-    <div class='medium-2 columns'>
-      <h3>About Us</h3>
-      <ul class='footer__submenu'>
-        <li><a href='/#official-philanthropy'>Mission &amp; Vision</a></li>
-        <!--<li><a href='#'>FAQs</a></li>-->
-        <!--<li><a href='#'>Job Opportunities</a></li>-->
-        <!--<li><a href='#'>Our Relationship with UCLA</a></li>-->
-      </ul>
-    </div>
-    <div class='medium-2 columns'>
-      <h3>How you can help</h3>
-      <ul class='footer__submenu'>
-        <li><a href='https://donate.unicamp.org/'>Donate</a></li>
-        <li><a href='/volunteers'>Volunteer</a></li>
-        <!--<li><a href='#'>Become a Sponsor</a></li>-->
-        <li><a href='/partnerships'>Become a Partner Agency</a></li>
-      </ul>
-    </div>
-    <div class='medium-2 columns'>
-      <h3>Programs</h3>
-      <ul class='footer__submenu'>
-        <li><a href='/programs'>Classic UniCamp</a></li>
-        <!--<li><a href='/programs#wall'>W.A.L.L.</a></li>-->
-        <li><a href='/programs#unicorps'>UniCorps</a></li>
-        <li><a href='/programs#climb'>C.L.I.M.B.</a></li>
-        <!--<li><a href='#'>AcademiCamp</a></li>-->
-      </ul>
-    </div>
-    <div class='medium-2 columns end'>
-      <h3>Alumni</h3>
-      <ul class='footer__submenu'>
-        <li><a href='/alumni'>Get Involved</a></li>
-        <li><a href='/alumni#events'>Special Events</a></li>
-        <li><a href='https://biffebreeze.com'>Biff "E" Breeze Blog</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class='row'>
-    <div class='footer__contact medium-6 columns'>
-      <div class='footer__contact__address'>
-        <strong>UCLA UniCamp Office</strong><br />
-        2131 John Wooden Center<br />
-        Los Angeles, CA 90095-1612
+<?php
+/**
+ * The template for displaying the footer
+ *
+ * Contains the closing of the #content div and all content after.
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
+ *
+ * @package ninteen-thirty-four
+ */
+
+?>
+
+  </div><!-- #content -->
+</div><!-- #page -->
+
+<footer id="colophon" class="site-footer">
+  <div class='footer__wrap'>
+    <div class='footer__content'>
+      <div class='footer__content__info'>
+        <img class='footer__content__info__logo' src='<? echo get_template_directory_uri() . '/img/university-camps.png' ?>' />
+        <div class='footer__content__info__text'>
+          <em>UCLA UniCamp is a program of University Camps, Inc.</em>
+          <br />
+          <strong>&copy; <?php echo date('Y'); ?> University Camps, Inc.</strong>
+        </div>
       </div>
-      <div class='footer__contact__phone'>
-        310.208.UCLA<br />
-        844.UNICAMP
-      </div>
-    </div>
-    <div class='footer__social medium-3 columns'>
-      <span class='footer__social__title'>find us on social media:</span>
-      <ul class='footer__social__icons'>
+      <ul class='footer__content__contact'>
         <li>
-          <a href='https://www.facebook.com/uclaunicamp' target='_blank'>
-            <img alt='Facebook' src='<?php echo get_template_directory_uri(); ?>/images/social/facebook_square.svg' />
-          </a>
+          <a class='footer__content__contact__title' href='mailto:registration@unicamp.org'><strong>registration@unicamp.org</strong></a> <i class='fas fa-envelope'></i>
         </li>
         <li>
-          <a href='https://twitter.com/uclaunicamp' target='_blank'>
-            <img alt='Twitter' src='<?php echo get_template_directory_uri(); ?>/images/social/twitter_square.svg' />
-          </a>
+          <a class='footer__content__contact__title' href='tel:3102088252'><strong>(310) 208-8252</strong></a> <i class='fas fa-phone'></i>
         </li>
         <li>
-          <a href='https://www.instagram.com/uclaunicamp/' target='_blank'>
-            <img alt='Instagram' src='<?php echo get_template_directory_uri(); ?>/images/social/instagram_square.svg' />
-          </a>
-        </li>
-        <li>
-          <a href='https://www.youtube.com/user/uclaunicamp' target='_blank'>
-            <img alt='YouTube' src='<?php echo get_template_directory_uri(); ?>/images/social/youtube_square.svg' />
-          </a>
+          <a class='footer__content__contact__title' href='https://goo.gl/maps/2945ma54RCvs5nNYA'><strong>UCLA UniCamp Office</strong><br />2131 John Wooden Center<br />Los Angeles, CA 90095-1612</a> <i class='fas fa-building'></i>
         </li>
       </ul>
     </div>
   </div>
-  <div class='row footer__legal'>
-    <p class='footer__legal__org'>
-      <img class='footer__legal__org__logo' alt='University Camps Inc.' src='<?php echo get_template_directory_uri(); ?>/images/university-camps-logo-small.png' />
-      UCLA UniCamp is a University Camps Inc. Program
-    </p>
-    <p class='footer__legal__details'>
-      <a href='#'>Privacy Policy</a> | <a href='#'>Terms of Use</a>
-      <br />
-      University Camps Inc. is a registered 501(c)3 nonprofit organization. All donations are tax deductible in full or in part.
-      <br />
-      &copy; 2019 University Camps Inc. All rights reserved.
-    </p>
-  </div>
-</footer>
+</footer><!-- #colophon -->
+
 <?php wp_footer(); ?>
+
 </body>
 </html>

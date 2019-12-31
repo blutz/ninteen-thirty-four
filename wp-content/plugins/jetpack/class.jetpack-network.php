@@ -7,7 +7,9 @@
 
 use Automattic\Jetpack\Connection\Client;
 use Automattic\Jetpack\Connection\Manager;
+use Automattic\Jetpack\Connection\Utils as Connection_Utils;
 use Automattic\Jetpack\Constants;
+use Automattic\Jetpack\Status;
 
 /**
  * Used to manage Jetpack installation on Multisite Network installs
@@ -250,8 +252,10 @@ class Jetpack_Network {
 
 		if ( is_string( $args ) ) {
 			$name = $args;
-		} else {
+		} else if ( is_array( $args ) ) {
 			$name = $args['name'];
+		} else {
+			return $url;
 		}
 
 		switch ( $name ) {
@@ -430,7 +434,7 @@ class Jetpack_Network {
 			return;
 		}
 
-		if ( Jetpack::is_development_mode() ) {
+		if ( ( new Status() )->is_development_mode() ) {
 			return;
 		}
 
@@ -468,7 +472,7 @@ class Jetpack_Network {
 	 */
 	public function filter_register_user_token( $token ) {
 		$is_master_user = ! Jetpack::is_active();
-		Jetpack::update_user_token(
+		Connection_Utils::update_user_token(
 			get_current_user_id(),
 			sprintf( '%s.%d', $token->secret, get_current_user_id() ),
 			$is_master_user
@@ -541,7 +545,7 @@ class Jetpack_Network {
 		restore_current_blog();
 
 		// If we are in dev mode, just show the notice and bail.
-		if ( Jetpack::is_development_mode() ) {
+		if ( ( new Status() )->is_development_mode() ) {
 			Jetpack::show_development_mode_notice();
 			return;
 		}

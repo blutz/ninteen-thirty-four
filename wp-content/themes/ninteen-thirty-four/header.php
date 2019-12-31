@@ -1,32 +1,50 @@
+<?php
+/**
+ * The header for our theme
+ *
+ * This is the template that displays all of the <head> section and everything up until <div id="content">
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
+ *
+ * @package ninteen-thirty-four
+ */
+
+?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
-  <meta charset='<?php bloginfo('charset'); ?>' />
-  <meta name='viewport' content='width=device-width' />
-  <title><? bloginfo('name'); ?><? wp_title('|'); ?></title>
-  <link rel="icon" type="image/png" sizes="192x192"  href="<? echo get_template_directory_uri(); ?>/images/favicon-192x192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="<? echo get_template_directory_uri(); ?>/images/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="<? echo get_template_directory_uri(); ?>/images/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="<? echo get_template_directory_uri(); ?>/images/favicon-16x16.png">
+  <meta charset="<?php bloginfo( 'charset' ); ?>">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="profile" href="https://gmpg.org/xfn/11">
+
   <?php wp_head(); ?>
 </head>
+
 <body <?php body_class(); ?>>
-<?php include_once('analytics.php'); ?>
-<header>
-  <a href='<? echo get_home_url(); ?>'>
-    <img class='header__logo' src='<? echo get_template_directory_uri(); ?>/images/unicamp-logo-small.png' alt='UCLA UniCamp Logo' />
-  </a>
+<div id="page" class="site">
+  <a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'ninteen-thirty-four' ); ?></a>
 
-  <div class='header__menu-container header__menu-container--closed' id='header-menu'>
-    <?php wp_nav_menu(array(
-      'theme_location' => 'header-menu',
-      'menu_class' => 'header__items',
-      'container' => '',
-      'depth' => 1,
-    )); ?>
-    <div class='header__menu-container__expand'>
-     <i class="fa fa-bars" aria-hidden="true"></i>
-    </div>
-  </div>
+  <header id="masthead" class="site-header">
+    <nav id="site-navigation" class="main-navigation">
+      <div class='mobile-navigation'>
+        <?php
+        wp_nav_menu( array(
+          'theme_location' => 'menu-2',
+          'menu_id'        => 'mobile-quicklinks',
+          'menu_class'     => 'mobile-quicklinks',
+        ) );
+        ?>
+        <button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false">Menu&nbsp;&nbsp;<i class='fas fa-bars'></i></button>
+      </div>
+      <?php the_custom_logo(); ?>
+      <?php
+      wp_nav_menu( array(
+        'theme_location' => 'menu-1',
+        'menu_id'        => 'primary-menu',
+        'menu_class'     => 'primary-menu',
+      ) );
+      ?>
+    </nav><!-- #site-navigation -->
+  </header><!-- #masthead -->
 
-</header>
+  <div id="content" class="site-content">

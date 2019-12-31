@@ -1,0 +1,244 @@
+# Copyright (C) 2019 Advanced WordPress Backgrounds
+# This file is distributed under the same license as the Advanced WordPress Backgrounds package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Advanced WordPress Backgrounds\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: nK <https://nkdev.info>\n"
+"Last-Translator: nK <https://nkdev.info>\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: dist/advanced-backgrounds/classes/class-rest.php:64
+msgid "Provide image ID."
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-rest.php:135
+msgid "Image not found."
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-settings.php:82
+msgid "AWB Settings"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-settings.php:83
+msgid "AWB"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-settings.php:99, dist/advanced-backgrounds/classes/class-vc-extend.php:141
+msgid "General"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-settings.php:103
+msgid "PRO"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-settings.php:120
+msgid "Disable parallax"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-settings.php:136
+msgid "Disable video"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-settings.php:180
+msgid "Advanced WordPress Backgrounds Settings"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:81, dist/advanced-backgrounds/classes/class-vc-extend.php:81
+msgid "Select File"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:81, dist/advanced-backgrounds/classes/class-vc-extend.php:81
+msgid "&times;"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:133, dist/advanced-backgrounds/classes/class-vc-extend.php:136
+msgid "Background [AWB]"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:144
+msgid "Advanced WordPress Backgrounds"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:160
+msgid "Custom Classes"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:175
+msgid "CSS"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:177
+msgid "Design Options"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:199
+msgid "Background Type"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:201
+msgid "None"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:202, dist/advanced-backgrounds/classes/class-vc-extend.php:465
+msgid "Color"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:203, dist/advanced-backgrounds/classes/class-vc-extend.php:234
+msgid "Image"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:204
+msgid "YouTube / Vimeo"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:205
+msgid "Local Video"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:218
+msgid "Stretch"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:246
+msgid "Poster Image"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:290
+msgid "Cover"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:291
+msgid "Contain"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:292
+msgid "Pattern"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:306
+msgid "Image position. Example: 50% 50%"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:323
+msgid "Youtube / Vimeo"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:336
+msgid "Supported YouTube and Vimeo URLs"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:353
+msgid "Video"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:365
+msgid "MP4"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:378
+msgid "WEBM"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:391
+msgid "OGV"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:404, dist/advanced-backgrounds/classes/class-vc-extend.php:553
+msgid "Enable on Mobile Devices"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:420
+msgid "Start Time"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:421
+msgid "Start time in seconds when video will be started (this value will be applied also after loop)"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:434
+msgid "End Time"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:435
+msgid "End time in seconds when video will be ended"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:448
+msgid "Always play"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:449
+msgid "Play video also when not in viewport."
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:477
+msgid "Overlay Color"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:504
+msgid "Parallax"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:516
+msgid "Type"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:518
+msgid "Disabled"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:519
+msgid "Scroll"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:520
+msgid "Scale"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:521
+msgid "Opacity"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:522
+msgid "Opacity + Scroll"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:523
+msgid "Opacity + Scale"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:538, dist/advanced-backgrounds/classes/class-vc-extend.php:610
+msgid "Speed"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:539
+msgid "Provide number from -1.0 to 2.0"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:569
+msgid "Mouse Parallax"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:581
+msgid "Enable"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:595
+msgid "Size"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:596
+msgid "pixels"
+msgstr ""
+
+#: dist/advanced-backgrounds/classes/class-vc-extend.php:611
+msgid "milliseconds"
+msgstr ""
