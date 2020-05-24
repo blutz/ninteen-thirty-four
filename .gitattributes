@@ -1,0 +1,1 @@
+docker/db-config/** filter=git-crypt diff=git-crypt

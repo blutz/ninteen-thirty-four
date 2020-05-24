@@ -7,9 +7,6 @@
 /wp-config.php
 *.sql
 
-# Our database init file
-/docker/db-config
-
 # Other temporary files
 *.DS_Store
 *Thumbs.db
