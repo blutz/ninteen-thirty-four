@@ -5,7 +5,6 @@
 /wp-content/upgrade
 /sitemap.*
 /wp-config.php
-*.sql
 
 # Other temporary files
 *.DS_Store
