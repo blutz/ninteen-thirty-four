@@ -1,6 +1,6 @@
 {
 	"name": "ghostkit/pricing-table",
-	"category": "ghostkit",
+	"category": "layout",
     "supports": {
         "html": false,
         "className": false,
@@ -15,6 +15,9 @@
         "gap": {
             "type": "string",
             "default": "md"
+        },
+        "gapCustom": {
+            "type": "number"
         },
         "verticalAlign": {
             "type": "string",

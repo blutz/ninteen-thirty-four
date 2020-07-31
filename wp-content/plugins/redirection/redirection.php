@@ -4,9 +4,8 @@
 Plugin Name: Redirection
 Plugin URI: https://redirection.me/
 Description: Manage all your 301 redirects and monitor 404 errors
-Version: 4.6.1
+Version: 4.8
 Author: John Godley
-Author URI: https://johngodley.com
 Text Domain: redirection
 Domain Path: /locale
 ============================================================================================================
@@ -30,13 +29,13 @@ if ( ! defined( 'REDIRECTION_FLYING_SOLO' ) ) {
 	define( 'REDIRECTION_FLYING_SOLO', apply_filters( 'redirection_flying_solo', true ) );
 }
 
-// This file must support PHP < 5.4 so as not to crash
-if ( version_compare( phpversion(), '5.4' ) < 0 ) {
+// This file must support PHP < 5.6 so as not to crash
+if ( version_compare( phpversion(), '5.6' ) < 0 ) {
 	add_action( 'plugin_action_links_' . basename( dirname( REDIRECTION_FILE ) ) . '/' . basename( REDIRECTION_FILE ), 'red_deprecated_php', 10, 4 );
 
 	function red_deprecated_php( $links ) {
 		/* translators: 1: server PHP version. 2: required PHP version. */
-		array_unshift( $links, '<a href="https://redirection.me/support/problems/php-version/" style="color: red; text-decoration: underline">' . sprintf( __( 'Disabled! Detected PHP %1$s, need PHP %2$s+', 'redirection' ), phpversion(), '5.4' ) . '</a>' );
+		array_unshift( $links, '<a href="https://redirection.me/support/problems/php-version/" style="color: red; text-decoration: underline">' . sprintf( __( 'Disabled! Detected PHP %1$s, need PHP %2$s+', 'redirection' ), phpversion(), '5.6' ) . '</a>' );
 		return $links;
 	}
 

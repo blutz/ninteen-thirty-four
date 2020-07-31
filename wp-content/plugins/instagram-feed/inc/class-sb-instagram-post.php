@@ -150,7 +150,7 @@ class SB_Instagram_Post
 			"'" . date( 'Y-m-d H:i:s' ) . "'",
 			"'" . esc_sql( $parsed_data['id'] ) . "'",
 			"'" . esc_sql( $timestamp ) . "'",
-			"'" . esc_sql( wp_json_encode( $this->instagram_api_data ) ) . "'",
+			"'" . esc_sql( sbi_json_encode( $this->instagram_api_data ) ) . "'",
 			"'pending'",
 			"'pending'",
 			0,
@@ -345,7 +345,7 @@ class SB_Instagram_Post
 		}
 
 		$to_update = array(
-			'json_data' => wp_json_encode( $this->instagram_api_data )
+			'json_data' => sbi_json_encode( $this->instagram_api_data )
 		);
 
 		if ( $update_last_requested ) {
@@ -496,7 +496,7 @@ class SB_Instagram_Post
 
 			$username = isset( $this->instagram_api_data['username'] ) ? $this->instagram_api_data['username'] : '';
 			$permalink = isset( $this->instagram_api_data['permalink'] ) ? $this->instagram_api_data['permalink'] : '';
-			$children = isset( $this->instagram_api_data['children'] ) ? wp_json_encode( $this->instagram_api_data['children'] ) : '';
+			$children = isset( $this->instagram_api_data['children'] ) ? sbi_json_encode( $this->instagram_api_data['children'] ) : '';
 
 			$parsed_data['caption'] = $caption;
 			$parsed_data['media_url'] = $media_url;

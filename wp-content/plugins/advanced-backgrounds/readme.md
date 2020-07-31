@@ -2,9 +2,10 @@
 
 * Contributors: nko
 * Tags: parallax, video, youtube, background, gutenberg
-* Requires at least: 4.0.0
-* Tested up to: 5.3
-* Stable tag: 1.6.1
+* Requires at least: 5.4
+* Tested up to: 5.4
+* Requires PHP: 5.5.9
+* Stable tag: 1.6.5
 * License: GPLv2 or later
 * License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 
@@ -47,11 +48,12 @@ AWB let you to use parallax backgrounds with images, videos, youtube and vimeo. 
 
 = Real Usage Examples =
 
-* [Skylith - Multipurpose Gutenberg Theme](https://demo.nkdev.info/#skylith)
-* [Youplay - Gaming Theme](https://demo.nkdev.info/#youplay)
-* [Godlike - Gaming Theme](https://demo.nkdev.info/#godlike)
-* [Khaki - Multipurpose Theme](https://demo.nkdev.info/#khaki.corporate)
-* [Snow - Portfolio Theme](https://demo.nkdev.info/#snow)
+* [SquadForce - eSports Gaming WordPress Theme](https://wp.nkdev.info/squadforce/)
+* [Skylith - Multipurpose Gutenberg Theme](https://wp.nkdev.info/skylith/)
+* [Youplay - Gaming Theme](https://wp.nkdev.info/youplay/)
+* [Godlike - Gaming Theme](https://wp.nkdev.info/godlike/)
+* [Khaki - Multipurpose Theme](https://wp.nkdev.info/khaki/)
+* [Snow - Portfolio Theme](https://wp.nkdev.info/snow/)
 
 ## Installation
 
@@ -69,41 +71,7 @@ The manual installation method involves downloading our AWB plugin and uploading
 
 ### How to enable `Stretch` with Gutenberg
 
-Since the Gutenberg support `Wide` blocks, you can make stretch for AWB in theme code:
-
-1. Enable support for `Wide` blocks in theme. [Read here how](https://wordpress.org/gutenberg/handbook/extensibility/theme-support/#wide-alignment)
-2. Add this JS code to your theme or in 3rd-party plugin:
-
-  ```javascript
-  (function ($) {
-      var $body = $('body');
-
-      // fullwidth gutenberg feature.
-      function stretchAWB() {
-          var wndW = $body.width();
-
-          $('.nk-awb.alignfull > .nk-awb-wrap').each(function () {
-              var $this = $(this);
-
-              var rect = this.getBoundingClientRect();
-              var left = rect.left;
-              var right = wndW - rect.right;
-
-              var ml = parseFloat($this.css('margin-left') || 0);
-              var mr = parseFloat($this.css('margin-right') || 0);
-
-              $this.css({
-                  'margin-left': ml - left,
-                  'margin-right': mr - right,
-              });
-          });
-      }
-      stretchAWB();
-      $(window).on('resize orientationchange load', stretchAWB);
-  }(jQuery));
-  ```
-
-Note: this code for example only, your theme may not work with it properly (it may not work correctly with theme sidebars). So, you will need to change this code manually depending on your theme styles.
+[Read in documentation](https://wpbackgrounds.com/documentation/enable-stretch-option-with-gutenberg/)
 
 ## Screenshots
 
@@ -114,6 +82,24 @@ Note: this code for example only, your theme may not work with it properly (it m
 5. Extended WPBakery Page Builder ROW options
 
 ## Changelog
+
+= 1.6.5 =
+
+* added Gutenberg block inner blocks inserter (better UI)
+
+= 1.6.4 =
+
+* fixed GhostKit 2.10.0 and WordPress 5.4 compatibility issues
+
+= 1.6.3 =
+
+* fixed stretch script calculation with the latest Ghost Kit Grid
+
+= 1.6.2 =
+
+* added shortcode inserter in Classic block in Gutenberg
+* fixed background integration for Ghost Kit Grid and Columns
+* fixed WPB column background position
 
 = 1.6.1 =
 

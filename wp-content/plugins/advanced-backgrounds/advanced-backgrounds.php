@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Advanced WordPress Backgrounds
  * Description:  Parallax, Video, Images Backgrounds
- * Version:      1.6.1
+ * Version:      1.6.5
  * Author:       nK
  * Author URI:   https://nkdev.info
  * License:      GPLv2 or later
@@ -24,21 +24,21 @@ class NK_AWB {
     /**
      * The single class instance.
      *
-     * @var $_instance
+     * @var $instance
      */
-    private static $_instance = null;
+    private static $instance = null;
 
     /**
      * Main Instance
      * Ensures only one instance of this class exists in memory at any one time.
      */
     public static function instance() {
-        if ( is_null( self::$_instance ) ) {
-            self::$_instance = new self();
-            self::$_instance->init();
-            self::$_instance->init_hooks();
+        if ( is_null( self::$instance ) ) {
+            self::$instance = new self();
+            self::$instance->init();
+            self::$instance->init_hooks();
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
@@ -67,7 +67,7 @@ class NK_AWB {
      */
     public function init() {
         $this->plugin_path = plugin_dir_path( __FILE__ );
-        $this->plugin_url = plugin_dir_url( __FILE__ );
+        $this->plugin_url  = plugin_dir_url( __FILE__ );
 
         // load textdomain.
         load_plugin_textdomain( 'advanced-backgrounds', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
@@ -77,9 +77,6 @@ class NK_AWB {
 
         // include helper files.
         $this->include_dependencies();
-
-        // clear caches.
-        $this->clear_expired_caches();
 
         // init classes.
         new NK_AWB_Rest();
@@ -105,17 +102,21 @@ class NK_AWB {
         wp_register_script( 'jarallax', nk_awb()->plugin_url . 'assets/vendor/jarallax/jarallax.min.js', array( 'jquery' ), '1.12.0', true );
         wp_register_script( 'jarallax-video', nk_awb()->plugin_url . 'assets/vendor/jarallax/jarallax-video.min.js', array( 'jarallax' ), '1.12.0', true );
         wp_register_script( 'object-fit-images', nk_awb()->plugin_url . 'assets/vendor/object-fit-images/ofi.min.js', array(), '3.2.4', true );
-        wp_register_script( 'nk-awb', nk_awb()->plugin_url . 'assets/awb/awb.min.js', array( 'jquery', 'jarallax', 'jarallax-video', 'object-fit-images' ), '1.6.1', true );
+        wp_register_script( 'nk-awb', nk_awb()->plugin_url . 'assets/awb/awb.min.js', array( 'jquery', 'jarallax', 'jarallax-video', 'object-fit-images' ), '1.6.5', true );
 
-        wp_localize_script( 'nk-awb', 'AWBData', array(
-            'settings' => array(
-                'disable_parallax' => array_keys( AWB_Settings::get_option( 'disable_parallax', 'awb_general', array() ) ? : array() ),
-                'disable_video' => array_keys( AWB_Settings::get_option( 'disable_video', 'awb_general', array() ) ? : array() ),
-                'full_width_fallback' => ! get_theme_support( 'align-wide' ),
-            ),
-        ));
+        wp_localize_script(
+            'nk-awb',
+            'AWBData',
+            array(
+                'settings' => array(
+                    'disable_parallax'    => array_keys( AWB_Settings::get_option( 'disable_parallax', 'awb_general', array() ) ? AWB_Settings::get_option( 'disable_parallax', 'awb_general', array() ) : array() ),
+                    'disable_video'       => array_keys( AWB_Settings::get_option( 'disable_video', 'awb_general', array() ) ? AWB_Settings::get_option( 'disable_video', 'awb_general', array() ) : array() ),
+                    'full_width_fallback' => ! get_theme_support( 'align-wide' ),
+                ),
+            )
+        );
 
-        wp_register_style( 'nk-awb', nk_awb()->plugin_url . 'assets/awb/awb.min.css', '', '1.6.1' );
+        wp_register_style( 'nk-awb', nk_awb()->plugin_url . 'assets/awb/awb.min.css', '', '1.6.5' );
     }
 
     /**
@@ -131,21 +132,22 @@ class NK_AWB {
      * https://wordpress.org/support/topic/video-does-not-loop/#post-10102519
      */
     public function fix_youtube_embed_plus_plugin() {
-        wp_add_inline_script( '__ytprefs__', '
-        (function () {
-            if (window._EPYT_ && window._EPYT_.evselector) {
-                var selectors = window._EPYT_.evselector.split(", ");
-                window._EPYT_.evselector = "";
+        wp_add_inline_script(
+            '__ytprefs__',
+            '(function () {
+                if (window._EPYT_ && window._EPYT_.evselector) {
+                    var selectors = window._EPYT_.evselector.split(", ");
+                    window._EPYT_.evselector = "";
 
-                for (var k = 0; k < selectors.length; k++) {
-                    if (window._EPYT_.evselector) {
-                        window._EPYT_.evselector += ", ";
+                    for (var k = 0; k < selectors.length; k++) {
+                        if (window._EPYT_.evselector) {
+                            window._EPYT_.evselector += ", ";
+                        }
+                        window._EPYT_.evselector += ":not([id*=\"jarallax-container\"]) > " + selectors[k];
                     }
-                    window._EPYT_.evselector += ":not([id*=\"jarallax-container\"]) > " + selectors[k];
                 }
-            }
-        }());
-        ' );
+            }());'
+        );
     }
 
     /**
@@ -163,144 +165,12 @@ class NK_AWB {
      * Include dependencies
      */
     private function include_dependencies() {
-        require_once( $this->plugin_path . 'classes/class-settings.php' );
-        require_once( $this->plugin_path . 'classes/class-rest.php' );
-        require_once( $this->plugin_path . 'classes/class-shortcode.php' );
-        require_once( $this->plugin_path . 'classes/class-vc-extend.php' );
-        require_once( $this->plugin_path . 'classes/class-tinymce.php' );
-        require_once( $this->plugin_path . 'classes/class-gutenberg.php' );
-    }
-
-
-    /**
-     * Options
-     */
-
-    /**
-     * Get options
-     *
-     * @return mixed
-     */
-    private function get_options() {
-        $options_slug = 'nk_awb_options';
-        return unserialize( get_option( $options_slug, 'a:0:{}' ) );
-    }
-
-    /**
-     * Update option
-     *
-     * @param string $name - option name.
-     * @param mixed  $value - option value.
-     */
-    public function update_option( $name, $value ) {
-        $options_slug = 'nk_awb_options';
-        $options = self::get_options();
-        $options[ self::sanitize_key( $name ) ] = $value;
-        update_option( $options_slug, serialize( $options ) );
-    }
-
-    /**
-     * Get option
-     *
-     * @param string $name - option name.
-     * @param mixed  $default - option default value.
-     *
-     * @return null
-     */
-    public function get_option( $name, $default = null ) {
-        $options = self::get_options();
-        $name = self::sanitize_key( $name );
-        return isset( $options[ $name ] ) ? $options[ $name ] : $default;
-    }
-
-    /**
-     * Sanitize option name
-     *
-     * @param string $key - string to sanitize.
-     *
-     * @return mixed
-     */
-    private function sanitize_key( $key ) {
-        return preg_replace( '/[^A-Za-z0-9\_]/i', '', str_replace( array( '-', ':' ), '_', $key ) );
-    }
-
-
-    /**
-     * Cache
-     */
-
-    /**
-     * Get all caches
-     *
-     * @return null
-     */
-    private function get_caches() {
-        $caches_slug = 'cache';
-        return $this->get_option( $caches_slug, array() );
-    }
-
-    /**
-     * Set cache
-     *
-     * @param string $name - cache name.
-     * @param mixed  $value - cache value.
-     * @param int    $time - cache time in seconds.
-     */
-    public function set_cache( $name, $value, $time = 3600 ) {
-        if ( ! $time || $time <= 0 ) {
-            return;
-        }
-        $caches_slug = 'cache';
-        $caches = self::get_caches();
-
-        $caches[ self::sanitize_key( $name ) ] = array(
-            'value'   => $value,
-            'expired' => time() + ( (int) $time ? $time : 0 ),
-        );
-        $this->update_option( $caches_slug, $caches );
-    }
-
-    /**
-     * Get cache
-     *
-     * @param string $name - cache name.
-     * @param mixed  $default cache default value.
-     *
-     * @return null
-     */
-    public function get_cache( $name, $default = null ) {
-        $caches = self::get_caches();
-        $name = self::sanitize_key( $name );
-        return isset( $caches[ $name ]['value'] ) ? $caches[ $name ]['value'] : $default;
-    }
-
-    /**
-     * Clear cache
-     *
-     * @param string $name - cache name.
-     */
-    public function clear_cache( $name ) {
-        $caches_slug = 'cache';
-        $caches = self::get_caches();
-        $name = self::sanitize_key( $name );
-        if ( isset( $caches[ $name ] ) ) {
-            $caches[ $name ] = null;
-            $this->update_option( $caches_slug, $caches );
-        }
-    }
-
-    /**
-     * Clear all expired caches
-     */
-    public function clear_expired_caches() {
-        $caches_slug = 'cache';
-        $caches = self::get_caches();
-        foreach ( $caches as $k => $cache ) {
-            if ( isset( $cache ) && isset( $cache['expired'] ) && $cache['expired'] < time() ) {
-                $caches[ $k ] = null;
-            }
-        }
-        $this->update_option( $caches_slug, $caches );
+        require_once $this->plugin_path . 'classes/class-settings.php';
+        require_once $this->plugin_path . 'classes/class-rest.php';
+        require_once $this->plugin_path . 'classes/class-shortcode.php';
+        require_once $this->plugin_path . 'classes/class-vc-extend.php';
+        require_once $this->plugin_path . 'classes/class-tinymce.php';
+        require_once $this->plugin_path . 'classes/class-gutenberg.php';
     }
 }
 

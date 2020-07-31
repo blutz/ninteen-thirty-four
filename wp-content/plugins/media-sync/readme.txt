@@ -1,9 +1,9 @@
 === Media Sync ===
 Contributors: erolsk8
 Donate link: https://www.paypal.me/erolsk8
-Tags: media, sync, import, uploads, ftp
+Tags: media, uploads, import, ftp, server
 Requires at least: 3.0.1
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 5.4
 Stable tag: trunk
 License: GPLv2+
@@ -21,10 +21,13 @@ You can also use FTP to upload your files to "uploads" directory and use this pl
 = Why I created this plugin =
 I once copied WordPress site to a different server and Media Library ended up being empty, even tho all files were in "uploads" directory and database was copied. So I had to use some other plugin which required me to manually enter each directory and import files in batches per each directory. But I needed something to just import everything at once, so I created this plugin.
 
-Files that are ignored:
+= Ignored files =
 - index.php,
-- various hidden files,
-- WP generated thumbnails - anything ending with for example -100x100.jpg.
+- various hidden files (.DS_Store, .htaccess),
+- WP generated thumbnails (files ending with for example -100x100.jpg),
+- WP generated scaled images (files ending with -scaled).
+
+This is now configurable with a custom hook function and it can totally overwrite these rules or add additional ones.
 
 
 == Installation ==
@@ -41,9 +44,38 @@ Files that are ignored:
 
 == Frequently Asked Questions ==
 Q: Stuck at importing / spins endlessly
-A: Please try to increase `max_execution_time` in `php.ini` on server (as described [here](https://thimpress.com/knowledge-base/how-to-increase-maximum-execution-time-for-wordpress-site/)).
+A: Please try to increase `max_execution_time` in `php.ini` on server (as described [here](https://thimpress.com/knowledge-base/how-to-increase-maximum-execution-time-for-wordpress-site/)). Or if you have too many files, try going to Settings -> Media Sync and change "Scan directory" to some inner folder.
+
+Q: Files not showing up in Media Library
+A: Please make sure "Dry Run" option is NOT checked. This is a safety mechanism to make sure you know what you're doing, so be careful, try it first with just one file.
+
+Q: Doesn't work
+A: Please first try to turn on debugging by adding this: `define('WP_DEBUG', true);` to your `wp-config.php` and check [Network tab in Chrome DevTools](https://www.section.io/blog/chrome-developer-tools-tutorial-network/) to see what is going on in the background. Then report actual errors since it's hard to help without knowing the error which is causing the problem.
 
 == Changelog ==
+
+= 1.1.8 =
+* Fix handling big ("-scaled.jpg") images [introduced in WordPress 5.3](https://make.wordpress.org/core/2019/10/09/introducing-handling-of-big-images-in-wordpress-5-3/). These files will now be skipped and won't be imported multiple times.
+* Add handy "Re-scan" button.
+
+= 1.1.7 =
+* Fix issues when importing files containing special characters
+
+= 1.1.6 =
+* Slight improvements with error handling in JavaScript
+
+= 1.1.5 =
+* Always convert backslashes ("\") to forward slashes ("/") to fix various issues when using Windows Server.
+
+= 1.1.4 =
+* Important backslash ("\") vs forward slash ("/") fix for use on Windows Server.
+
+= 1.1.3 =
+* New option to set "Scan directory" in settings which will allow checking only certain sub directory.
+* New hook function `media_sync_filter_is_scan_object_ignored` which can be used to overwrite which files are ignored by default or to just skip additional files.
+
+= 1.1.2 =
+* Fix Smart File Time on Windows server
 
 = 1.1.1 =
 * Reduce the maximum number of items to import per batch from 20 to 10.

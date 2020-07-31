@@ -43,8 +43,6 @@ class GhostKit_Settings {
      * Register and enqueue admin-specific style sheet.
      */
     public function admin_enqueue_scripts() {
-        global $post;
-
         $screen = get_current_screen();
 
         wp_enqueue_style(
@@ -56,9 +54,9 @@ class GhostKit_Settings {
 
         wp_enqueue_style(
             'ghostkit-settings',
-            ghostkit()->plugin_url . 'assets/admin/css/settings.min.css',
+            ghostkit()->plugin_url . 'settings/style.min.css',
             array(),
-            filemtime( ghostkit()->plugin_path . 'assets/admin/css/settings.min.css' )
+            filemtime( ghostkit()->plugin_path . 'settings/style.min.css' )
         );
 
         if ( 'toplevel_page_ghostkit' !== $screen->id ) {
@@ -68,7 +66,7 @@ class GhostKit_Settings {
         $block_categories = array();
         if ( function_exists( 'get_block_categories' ) ) {
             $block_categories = get_block_categories( get_post() );
-        } else if ( function_exists( 'gutenberg_get_block_categories' ) ) {
+        } elseif ( function_exists( 'gutenberg_get_block_categories' ) ) {
             $block_categories = gutenberg_get_block_categories( get_post() );
         }
 
@@ -86,16 +84,20 @@ class GhostKit_Settings {
             'ghostkit-settings',
             ghostkit()->plugin_url . 'settings/index.min.js',
             array( 'ghostkit-helper', 'wp-data', 'wp-element', 'wp-components', 'wp-api', 'wp-api-request', 'wp-i18n' ),
-            filemtime( ghostkit()->plugin_path . 'settings/index.min.js' )
+            filemtime( ghostkit()->plugin_path . 'settings/index.min.js' ),
+            true
         );
 
         wp_localize_script(
-            'ghostkit-settings', 'ghostkitSettingsData', array(
+            'ghostkit-settings',
+            'ghostkitSettingsData',
+            array(
                 'api_nonce' => wp_create_nonce( 'wp_rest' ),
-                'api_url' => rest_url( 'ghostkit/v1/' ),
+                'api_url'   => rest_url( 'ghostkit/v1/' ),
             )
         );
 
+        // phpcs:ignore
         do_action( 'enqueue_block_editor_assets' );
 
         wp_enqueue_style( 'wp-components' );
@@ -106,11 +108,14 @@ class GhostKit_Settings {
      * Redirect to the Pro purchase page.
      */
     public function go_pro_redirect() {
-        if ( empty( $_GET['page'] ) ) {
+        // phpcs:ignore
+        if ( ! isset( $_GET['page'] ) || empty( $_GET['page'] ) ) {
             return;
         }
 
+        // phpcs:ignore
         if ( 'ghostkit_go_pro' === $_GET['page'] ) {
+            // phpcs:ignore
             wp_redirect( ghostkit()->go_pro_link() );
             exit();
         }
@@ -150,6 +155,13 @@ class GhostKit_Settings {
             esc_html__( 'Typography', 'ghostkit' ),
             'manage_options',
             'admin.php?page=ghostkit&sub_page=typography'
+        );
+        add_submenu_page(
+            'ghostkit',
+            '',
+            esc_html__( 'Fonts', 'ghostkit' ),
+            'manage_options',
+            'admin.php?page=ghostkit&sub_page=fonts'
         );
         add_submenu_page(
             'ghostkit',

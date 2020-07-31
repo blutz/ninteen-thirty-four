@@ -1,0 +1,502 @@
+0000.006 (0) Opened log file at time: Fri, 17 Jul 2020 09:35:10 +0000 on https://www.unicamp.org
+0000.007 (0) UpdraftPlus WordPress backup plugin (https://updraftplus.com): 1.16.25 WP: 5.4.2 PHP: 7.2.30 (cgi-fcgi, Linux enterprise 4.14.117-grsec-grsec+ #1 SMP Fri May 10 17:15:47 PDT 2019 x86_64) MySQL: 5.7.29-log WPLANG: en_US Server: Apache safe_mode: 0 max_execution_time: 900 memory_limit: 256M (used: 37.7M | 2M) multisite: N openssl: OpenSSL 1.1.0g  2 Nov 2017 mcrypt: N LANG:  ZipArchive::addFile: Y
+0000.008 (0) Free space on disk containing Updraft's temporary directory: 468865.7 MB
+0000.012 (0) Tasks: Backup files: 1 (schedule: weekly) Backup DB:  (schedule: weekly)
+0000.012 (0) Processed schedules. Combining jobs from identical schedules. Tasks now: Backup files: 1 Backup DB: 1
+0000.092 (0) Requesting semaphore lock (fd) (apparently via scheduler: last_scheduled_action_called_at=1594373725, seconds_ago=604785)
+0000.094 (0) Set semaphore last lock (fd) time to 2020-07-17 09:35:10
+0000.095 (0) Semaphore lock (fd) complete
+0000.098 (0) Backup run: resumption=0, nonce=16402ab02e7b, file_nonce=16402ab02e7b begun at=1594978510 (0s ago), job type=backup
+0000.100 (0) Scheduling a resumption (1) after 300 seconds (1594978810) in case this run gets aborted
+0000.170 (0) Checking if we have a zip executable available
+0000.172 (0) Testing: /usr/bin/zip
+0000.187 (0) Output: zip warning: binziptest/test.zip not found or empty
+0000.189 (0) Output: adding: binziptest/subdir1/	(in=0) (out=0) (stored 0%)
+0000.190 (0) Output: adding: binziptest/subdir1/subdir2/	(in=0) (out=0) (stored 0%)
+0000.191 (0) Output: adding: binziptest/subdir1/subdir2/test.html	(in=131) (out=107) (deflated 18%)
+0000.191 (0) Output: total bytes=131, compressed=107 -> 18% savings
+0000.206 (0) Output: adding: binziptest/subdir1/subdir2/test2.html	(in=138) (out=113) (deflated 18%)
+0000.208 (0) Output: total bytes=269, compressed=220 -> 18% savings
+0000.239 (0) Working binary zip found: /usr/bin/zip
+0000.242 (0) Zip engine: found/will use a binary zip: /usr/bin/zip
+0000.243 (0) Creation of backups of directories: beginning
+0000.246 (0) Beginning creation of dump of plugins (split every: 400 MB)
+0015.949 (0) Total entities for the zip file: 1290 directories, 7494 files (0 skipped as non-modified), 120.2 MB
+0015.953 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 2.0 seconds have passed since the last write (0 MB, 1 (1) files added so far); re-opening (prior size: 0 KB)
+0016.070 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: size is now: 0.30 MB
+0016.083 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 100 files added (on-disk size: 297.3 KB)
+0016.094 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 200 files added (on-disk size: 297.3 KB)
+0016.105 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 300 files added (on-disk size: 297.3 KB)
+0016.116 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 400 files added (on-disk size: 297.3 KB)
+0016.126 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 500 files added (on-disk size: 297.3 KB)
+0016.128 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (14.3 MB, 7494 files batched, 501 (502) added so far); re-opening (prior size: 297.3 KB)
+0020.684 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: size is now: 8.50 MB
+0020.697 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 600 files added (on-disk size: 8684.5 KB)
+0020.707 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 700 files added (on-disk size: 8684.5 KB)
+0020.718 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 800 files added (on-disk size: 8684.5 KB)
+0020.729 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 900 files added (on-disk size: 8684.5 KB)
+0020.740 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 1000 files added (on-disk size: 8684.5 KB)
+0020.741 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (15.4 MB, 7494 files batched, 501 (1003) added so far); re-opening (prior size: 8684.5 KB)
+0025.964 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: size is now: 12.60 MB
+0025.977 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 1100 files added (on-disk size: 12911 KB)
+0025.988 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 1200 files added (on-disk size: 12911 KB)
+0025.998 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 1300 files added (on-disk size: 12911 KB)
+0026.009 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 1400 files added (on-disk size: 12911 KB)
+0026.020 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 1500 files added (on-disk size: 12911 KB)
+0026.021 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (2.3 MB, 7494 files batched, 501 (1504) added so far); re-opening (prior size: 12911 KB)
+0029.624 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 1600 files added (on-disk size: 13706.3 KB)
+0029.635 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 1700 files added (on-disk size: 13706.3 KB)
+0029.646 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 1800 files added (on-disk size: 13706.3 KB)
+0029.657 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 1900 files added (on-disk size: 13706.3 KB)
+0029.668 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 2000 files added (on-disk size: 13706.3 KB)
+0029.670 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (9.7 MB, 7494 files batched, 501 (2005) added so far); re-opening (prior size: 13706.3 KB)
+0034.200 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 2100 files added (on-disk size: 16431.2 KB)
+0034.212 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 2200 files added (on-disk size: 16431.2 KB)
+0034.223 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 2300 files added (on-disk size: 16431.2 KB)
+0034.234 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 2400 files added (on-disk size: 16431.2 KB)
+0034.245 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 2500 files added (on-disk size: 16431.2 KB)
+0034.247 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (10.4 MB, 7494 files batched, 501 (2506) added so far); re-opening (prior size: 16431.2 KB)
+0038.335 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: size is now: 19.70 MB
+0038.354 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 2600 files added (on-disk size: 20162.7 KB)
+0038.368 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 2700 files added (on-disk size: 20162.7 KB)
+0038.379 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 2800 files added (on-disk size: 20162.7 KB)
+0038.391 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 2900 files added (on-disk size: 20162.7 KB)
+0038.402 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 3000 files added (on-disk size: 20162.7 KB)
+0038.403 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (9.2 MB, 7494 files batched, 501 (3007) added so far); re-opening (prior size: 20162.7 KB)
+0042.165 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 3100 files added (on-disk size: 23363.5 KB)
+0042.177 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 3200 files added (on-disk size: 23363.5 KB)
+0042.187 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 3300 files added (on-disk size: 23363.5 KB)
+0042.198 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 3400 files added (on-disk size: 23363.5 KB)
+0042.208 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 3500 files added (on-disk size: 23363.5 KB)
+0042.210 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (3.4 MB, 7494 files batched, 501 (3508) added so far); re-opening (prior size: 23363.5 KB)
+0046.221 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 3600 files added (on-disk size: 24491.6 KB)
+0046.232 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 3700 files added (on-disk size: 24491.6 KB)
+0046.243 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 3800 files added (on-disk size: 24491.6 KB)
+0046.254 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 3900 files added (on-disk size: 24491.6 KB)
+0046.265 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 4000 files added (on-disk size: 24491.6 KB)
+0046.267 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (10.9 MB, 7494 files batched, 501 (4009) added so far); re-opening (prior size: 24491.6 KB)
+0051.252 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 4100 files added (on-disk size: 27663.4 KB)
+0051.264 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 4200 files added (on-disk size: 27663.4 KB)
+0051.275 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 4300 files added (on-disk size: 27663.4 KB)
+0051.286 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 4400 files added (on-disk size: 27663.4 KB)
+0051.298 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 4500 files added (on-disk size: 27663.4 KB)
+0051.300 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (1.6 MB, 7494 files batched, 501 (4510) added so far); re-opening (prior size: 27663.4 KB)
+0057.165 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 4600 files added (on-disk size: 28290.7 KB)
+0057.176 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 4700 files added (on-disk size: 28290.7 KB)
+0057.187 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 4800 files added (on-disk size: 28290.7 KB)
+0057.198 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 4900 files added (on-disk size: 28290.7 KB)
+0057.209 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 5000 files added (on-disk size: 28290.7 KB)
+0057.211 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (10.2 MB, 7494 files batched, 501 (5011) added so far); re-opening (prior size: 28290.7 KB)
+0061.898 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 5100 files added (on-disk size: 30587.1 KB)
+0061.909 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 5200 files added (on-disk size: 30587.1 KB)
+0061.920 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 5300 files added (on-disk size: 30587.1 KB)
+0061.936 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 5400 files added (on-disk size: 30587.1 KB)
+0061.948 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 5500 files added (on-disk size: 30587.1 KB)
+0061.950 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (6.6 MB, 7494 files batched, 501 (5512) added so far); re-opening (prior size: 30587.1 KB)
+0066.683 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 5600 files added (on-disk size: 32199.2 KB)
+0066.695 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 5700 files added (on-disk size: 32199.2 KB)
+0066.706 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 5800 files added (on-disk size: 32199.2 KB)
+0066.718 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 5900 files added (on-disk size: 32199.2 KB)
+0066.729 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 6000 files added (on-disk size: 32199.2 KB)
+0066.732 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (15.5 MB, 7494 files batched, 501 (6013) added so far); re-opening (prior size: 32199.2 KB)
+0072.461 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 6100 files added (on-disk size: 36019.3 KB)
+0072.473 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 6200 files added (on-disk size: 36019.3 KB)
+0072.484 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 6300 files added (on-disk size: 36019.3 KB)
+0072.496 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 6400 files added (on-disk size: 36019.3 KB)
+0072.507 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 6500 files added (on-disk size: 36019.3 KB)
+0072.510 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (3.2 MB, 7494 files batched, 501 (6514) added so far); re-opening (prior size: 36019.3 KB)
+0076.693 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 6600 files added (on-disk size: 37451.4 KB)
+0076.705 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 6700 files added (on-disk size: 37451.4 KB)
+0076.716 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 6800 files added (on-disk size: 37451.4 KB)
+0076.727 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 6900 files added (on-disk size: 37451.4 KB)
+0076.738 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 7000 files added (on-disk size: 37451.4 KB)
+0076.740 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 500 files added on this batch (4.6 MB, 7494 files batched, 501 (7015) added so far); re-opening (prior size: 37451.4 KB)
+0080.511 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 7100 files added (on-disk size: 38797.3 KB)
+0080.523 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 7200 files added (on-disk size: 38797.3 KB)
+0080.534 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 7300 files added (on-disk size: 38797.3 KB)
+0080.546 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip.tmp: 7400 files added (on-disk size: 38797.3 KB)
+0089.504 (0) Created plugins zip (0) - 39744 KB in 89.3 s (445.3 KB/s) (sha1: a2c616ab973dd9cec49e0221fb6b975451adbd65, sha256: 1300d33622661f3ba24708a86e99dd9463d2470fc95a90d672c0d84c98586ceb)
+0089.513 (0) Beginning creation of dump of themes (split every: 400 MB)
+0089.845 (0) Total entities for the zip file: 48 directories, 168 files (0 skipped as non-modified), 3.1 MB
+0089.857 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-themes.zip.tmp: 100 files added (on-disk size: 0 KB)
+0091.551 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-themes.zip.tmp: size is now: 2.40 MB
+0091.609 (0) Created themes zip (0) - 2433.3 KB in 2.1 s (1162.7 KB/s) (sha1: 216e293537e0057e7ab2442cb2f69cea8fa234cc, sha256: 0a446568768f75c316e713551ca89c1d88430dcfc893c26c0d6efdf6c741e51a)
+0091.615 (0) Exclusion option setting (uploads): backup*,*backups,backwpup*,wp-clone,snapshots
+0091.616 (0) Looking for candidates to backup in: /home/uclaunicamp/unicamp.org/wp-content/uploads
+0091.618 (0) finding files: 2018: adding to list (1)
+0091.619 (0) finding files: 2019: adding to list (2)
+0091.620 (0) finding files: sb-instagram-feed-images: adding to list (3)
+0091.621 (0) finding files: ao_ccss: adding to list (4)
+0091.622 (0) finding files: 2020: adding to list (5)
+0091.623 (0) finding files: woocommerce_uploads: adding to list (6)
+0091.624 (0) finding files: wc-logs: adding to list (7)
+0091.625 (0) finding files: woocommerce-placeholder.png: adding to list (8)
+0091.627 (0) finding files: woocommerce-placeholder-300x300.png: adding to list (9)
+0091.628 (0) finding files: woocommerce-placeholder-1024x1024.png: adding to list (10)
+0091.628 (0) finding files: woocommerce-placeholder-150x150.png: adding to list (11)
+0091.629 (0) finding files: woocommerce-placeholder-768x768.png: adding to list (12)
+0091.631 (0) finding files: woocommerce-placeholder-500x500.png: adding to list (13)
+0091.631 (0) finding files: woocommerce-placeholder-800x800.png: adding to list (14)
+0091.632 (0) Beginning creation of dump of uploads (split every: 400 MB)
+0092.244 (0) Total entities for the zip file: 29 directories, 491 files (0 skipped as non-modified), 67.4 MB
+0092.255 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-uploads.zip.tmp: 100 files added (on-disk size: 0 KB)
+0092.261 (0) Adding batch to zip file (UpdraftPlus_BinZip): over 25 MB added on this batch (25.1 MB, 491 files batched, 153 (153) added so far); re-opening (prior size: 0 KB)
+0094.194 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-uploads.zip.tmp: size is now: 25.10 MB
+0094.197 (0) A useful amount of data was added after this amount of zip processing: 2.8 s (normalised: 2.8 s, rate: 9301.6 KB/s)
+0094.199 (0) Performance is good - will increase the amount of data we attempt to batch (time=2.7582330703735, normalised_time=2.752204015054, max_time=94.192616939545, data points known=1, old_max_bytes=26214400, new_max_bytes=209715200)
+0094.206 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-uploads.zip.tmp: 200 files added (on-disk size: 25691.7 KB)
+0094.217 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-uploads.zip.tmp: 300 files added (on-disk size: 25691.7 KB)
+0094.228 (0) Zip: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-uploads.zip.tmp: 400 files added (on-disk size: 25691.7 KB)
+0098.924 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-uploads.zip.tmp: size is now: 67.00 MB
+0100.368 (0) Created uploads zip (0) - 68598.1 KB in 8.7 s (7856.1 KB/s) (sha1: efc70c1478a61e7e30469fd91c003889948fdb31, sha256: aaf9d903c0141b845124d906b8f6e4565bf0566fe8811154d87c26cb0cf1be0a)
+0100.374 (0) Beginning backup of other directories found in the content directory (index: 0)
+0100.375 (0) Exclusion option setting (others): upgrade,cache,updraft,backup*,*backups,mysql.sql,debug.log
+0100.376 (0) Looking for candidates to backup in: /home/uclaunicamp/unicamp.org/wp-content
+0100.377 (0) finding files: index.php: adding to list (1)
+0100.377 (0) finding files: plugins: skipping: this is the plugins directory
+0100.378 (0) finding files: themes: skipping: this is the themes directory
+0100.379 (0) finding files: upgrade: skipping: excluded by options
+0100.379 (0) finding files: uploads: skipping: this is the uploads directory
+0100.380 (0) finding files: cache: skipping: excluded by options
+0100.381 (0) finding files: advanced-cache.php: adding to list (2)
+0100.382 (0) finding files: updraft: skipping: this is the updraft directory
+0100.387 (0) Total entities for the zip file: 0 directories, 2 files (0 skipped as non-modified), 0 MB
+0100.429 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-others.zip.tmp: size is now: 0.00 MB
+0100.435 (0) Created others zip (0) - 2.2 KB in 0 s (44.6 KB/s) (sha1: f6497e1a29d40bd091992d897bdf53d4612c7a76, sha256: 868a577ca96c77604eb1390eba0e6f36de460ed4c1ec07aee5e4ab180dad0e08)
+0100.444 (0) Saving backup status to database (elements: 8)
+0100.449 (0) Beginning creation of database dump (WordPress DB)
+0100.452 (0) Testing potential mysqldump binary: /usr/bin/mysqldump
+0100.843 (0) Output: /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;\n/*!40103 SET TIME_ZONE='+00:00' */;\n/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;\n/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;\n/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;\n/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;\nDROP TABLE IF EXISTS `wp_options`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCRE (truncated - 1225 bytes total)
+0100.846 (0) Working binary mysqldump found: /usr/bin/mysqldump
+0100.872 (0) Table wp_options: Total expected rows (approximate): 521
+0100.909 (0) Table wp_options: Total rows added: 521 in 0.04 seconds
+0100.911 (0) Table wp_options: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_options.table.gz - 101.5 KB)
+0100.916 (0) Table wp_users: Total expected rows (approximate): 0
+0100.918 (0) Table wp_users: Total rows added: 2 in 0.00 seconds
+0100.920 (0) Table wp_users: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_users.table.gz - 0.6 KB)
+0100.924 (0) Table wp_usermeta: Total expected rows (approximate): 74
+0100.927 (0) Table wp_usermeta: Total rows added: 74 in 0.00 seconds
+0100.928 (0) Table wp_usermeta: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_usermeta.table.gz - 2.9 KB)
+0100.932 (0) Table wp_commentmeta: Total expected rows (approximate): 0
+0100.934 (0) Table wp_commentmeta: Total rows added: 0 in 0.00 seconds
+0100.935 (0) Table wp_commentmeta: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_commentmeta.table.gz - 0.4 KB)
+0100.940 (0) Table wp_comments: Total expected rows (approximate): 4
+0100.943 (0) Table wp_comments: Total rows added: 4 in 0.00 seconds
+0100.944 (0) Table wp_comments: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_comments.table.gz - 0.9 KB)
+0100.948 (0) Table wp_links: Total expected rows (approximate): 0
+0100.950 (0) Table wp_links: Total rows added: 0 in 0.00 seconds
+0100.952 (0) Table wp_links: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_links.table.gz - 0.4 KB)
+0100.955 (0) Table wp_postmeta: Total expected rows (approximate): 11529
+0102.494 (0) Table wp_postmeta: binary mysqldump finished (writes: 44) in 1.54 seconds
+0102.497 (0) Table wp_postmeta: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_postmeta.table.gz - 3755.4 KB)
+0102.502 (0) Table wp_posts: Total expected rows (approximate): 5502
+0104.224 (0) Table wp_posts: Total rows added: 6430 in 1.72 seconds
+0104.228 (0) Table wp_posts: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_posts.table.gz - 4525.5 KB)
+0104.233 (0) Table wp_term_relationships: Total expected rows (approximate): 10
+0104.236 (0) Table wp_term_relationships: Total rows added: 12 in 0.00 seconds
+0104.237 (0) Table wp_term_relationships: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_term_relationships.table.gz - 0.4 KB)
+0104.241 (0) Table wp_term_taxonomy: Total expected rows (approximate): 17
+0104.243 (0) Table wp_term_taxonomy: Total rows added: 17 in 0.00 seconds
+0104.244 (0) Table wp_term_taxonomy: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_term_taxonomy.table.gz - 0.5 KB)
+0104.249 (0) Table wp_termmeta: Total expected rows (approximate): 0
+0104.252 (0) Table wp_termmeta: Total rows added: 1 in 0.00 seconds
+0104.252 (0) Table wp_termmeta: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_termmeta.table.gz - 0.4 KB)
+0104.256 (0) Table wp_terms: Total expected rows (approximate): 17
+0104.258 (0) Table wp_terms: Total rows added: 17 in 0.00 seconds
+0104.259 (0) Table wp_terms: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_terms.table.gz - 0.6 KB)
+0104.261 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_commentmeta
+0104.262 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_comments
+0104.263 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_links
+0104.264 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_options
+0104.265 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_postmeta
+0104.265 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_posts
+0104.266 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_redirection_404
+0104.267 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_redirection_groups
+0104.268 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_redirection_items
+0104.268 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_redirection_logs
+0104.269 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_sbi_instagram_feeds_posts
+0104.270 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_sbi_instagram_posts
+0104.271 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_term_relationships
+0104.271 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_term_taxonomy
+0104.272 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_termmeta
+0104.273 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_terms
+0104.274 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_usermeta
+0104.274 (0) Skipping table (lacks our prefix (wp_)): 20191226_193931__wp_users
+0104.278 (0) Table wp_actionscheduler_actions: Total expected rows (approximate): 6
+0104.281 (0) Table wp_actionscheduler_actions: Total rows added: 7 in 0.00 seconds
+0104.282 (0) Table wp_actionscheduler_actions: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_actionscheduler_actions.table.gz - 0.9 KB)
+0104.286 (0) Table wp_actionscheduler_claims: Total expected rows (approximate): 0
+0104.289 (0) Table wp_actionscheduler_claims: Total rows added: 0 in 0.00 seconds
+0104.290 (0) Table wp_actionscheduler_claims: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_actionscheduler_claims.table.gz - 0.4 KB)
+0104.294 (0) Table wp_actionscheduler_groups: Total expected rows (approximate): 0
+0104.297 (0) Table wp_actionscheduler_groups: Total rows added: 2 in 0.00 seconds
+0104.298 (0) Table wp_actionscheduler_groups: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_actionscheduler_groups.table.gz - 0.4 KB)
+0104.302 (0) Table wp_actionscheduler_logs: Total expected rows (approximate): 18
+0104.305 (0) Table wp_actionscheduler_logs: Total rows added: 19 in 0.00 seconds
+0104.306 (0) Table wp_actionscheduler_logs: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_actionscheduler_logs.table.gz - 0.7 KB)
+0104.309 (0) Table wp_mailchimp_carts: Total expected rows (approximate): 0
+0104.312 (0) Table wp_mailchimp_carts: Total rows added: 0 in 0.00 seconds
+0104.313 (0) Table wp_mailchimp_carts: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_mailchimp_carts.table.gz - 0.3 KB)
+0104.317 (0) Table wp_mailchimp_jobs: Total expected rows (approximate): 0
+0104.320 (0) Table wp_mailchimp_jobs: Total rows added: 0 in 0.00 seconds
+0104.320 (0) Table wp_mailchimp_jobs: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_mailchimp_jobs.table.gz - 0.3 KB)
+0104.324 (0) Table wp_redirection_404: Total expected rows (approximate): 2121
+0104.369 (0) Table wp_redirection_404: Total rows added: 2134 in 0.04 seconds
+0104.371 (0) Table wp_redirection_404: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_redirection_404.table.gz - 52.2 KB)
+0104.375 (0) Table wp_redirection_groups: Total expected rows (approximate): 3
+0104.378 (0) Table wp_redirection_groups: Total rows added: 3 in 0.00 seconds
+0104.379 (0) Table wp_redirection_groups: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_redirection_groups.table.gz - 0.5 KB)
+0104.383 (0) Table wp_redirection_items: Total expected rows (approximate): 72
+0104.387 (0) Table wp_redirection_items: Total rows added: 78 in 0.00 seconds
+0104.389 (0) Table wp_redirection_items: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_redirection_items.table.gz - 4.5 KB)
+0104.393 (0) Table wp_redirection_logs: Total expected rows (approximate): 281
+0104.402 (0) Table wp_redirection_logs: Total rows added: 283 in 0.01 seconds
+0104.404 (0) Table wp_redirection_logs: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_redirection_logs.table.gz - 9.2 KB)
+0104.409 (0) Table wp_sbi_instagram_feeds_posts: Total expected rows (approximate): 71
+0104.412 (0) Table wp_sbi_instagram_feeds_posts: Total rows added: 77 in 0.00 seconds
+0104.413 (0) Table wp_sbi_instagram_feeds_posts: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_sbi_instagram_feeds_posts.table.gz - 1.7 KB)
+0104.446 (0) Table wp_sbi_instagram_posts: Total expected rows (approximate): 67
+0104.462 (0) Table wp_sbi_instagram_posts: Total rows added: 77 in 0.02 seconds
+0104.464 (0) Table wp_sbi_instagram_posts: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_sbi_instagram_posts.table.gz - 44.1 KB)
+0104.468 (0) Table wp_wc_admin_note_actions: Total expected rows (approximate): 3
+0104.471 (0) Table wp_wc_admin_note_actions: Total rows added: 3 in 0.00 seconds
+0104.472 (0) Table wp_wc_admin_note_actions: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_admin_note_actions.table.gz - 0.6 KB)
+0104.476 (0) Table wp_wc_admin_notes: Total expected rows (approximate): 2
+0104.479 (0) Table wp_wc_admin_notes: Total rows added: 2 in 0.00 seconds
+0104.480 (0) Table wp_wc_admin_notes: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_admin_notes.table.gz - 0.7 KB)
+0104.485 (0) Table wp_wc_category_lookup: Total expected rows (approximate): 0
+0104.487 (0) Table wp_wc_category_lookup: Total rows added: 0 in 0.00 seconds
+0104.488 (0) Table wp_wc_category_lookup: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_category_lookup.table.gz - 0.3 KB)
+0104.492 (0) Table wp_wc_customer_lookup: Total expected rows (approximate): 0
+0104.495 (0) Table wp_wc_customer_lookup: Total rows added: 1 in 0.00 seconds
+0104.496 (0) Table wp_wc_customer_lookup: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_customer_lookup.table.gz - 0.6 KB)
+0104.501 (0) Table wp_wc_download_log: Total expected rows (approximate): 0
+0104.503 (0) Table wp_wc_download_log: Total rows added: 0 in 0.00 seconds
+0104.504 (0) Table wp_wc_download_log: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_download_log.table.gz - 0.4 KB)
+0104.508 (0) Table wp_wc_order_coupon_lookup: Total expected rows (approximate): 0
+0104.511 (0) Table wp_wc_order_coupon_lookup: Total rows added: 0 in 0.00 seconds
+0104.512 (0) Table wp_wc_order_coupon_lookup: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_order_coupon_lookup.table.gz - 0.4 KB)
+0104.516 (0) Table wp_wc_order_product_lookup: Total expected rows (approximate): 0
+0104.520 (0) Table wp_wc_order_product_lookup: Total rows added: 1 in 0.00 seconds
+0104.521 (0) Table wp_wc_order_product_lookup: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_order_product_lookup.table.gz - 0.5 KB)
+0104.530 (0) Table wp_wc_order_stats: Total expected rows (approximate): 0
+0104.533 (0) Table wp_wc_order_stats: Total rows added: 1 in 0.00 seconds
+0104.534 (0) Table wp_wc_order_stats: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_order_stats.table.gz - 0.5 KB)
+0104.539 (0) Table wp_wc_order_tax_lookup: Total expected rows (approximate): 0
+0104.541 (0) Table wp_wc_order_tax_lookup: Total rows added: 0 in 0.00 seconds
+0104.543 (0) Table wp_wc_order_tax_lookup: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_order_tax_lookup.table.gz - 0.4 KB)
+0104.547 (0) Table wp_wc_product_meta_lookup: Total expected rows (approximate): 0
+0104.550 (0) Table wp_wc_product_meta_lookup: Total rows added: 1 in 0.00 seconds
+0104.551 (0) Table wp_wc_product_meta_lookup: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_product_meta_lookup.table.gz - 0.6 KB)
+0104.555 (0) Table wp_wc_tax_rate_classes: Total expected rows (approximate): 2
+0104.558 (0) Table wp_wc_tax_rate_classes: Total rows added: 2 in 0.00 seconds
+0104.559 (0) Table wp_wc_tax_rate_classes: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_tax_rate_classes.table.gz - 0.4 KB)
+0104.563 (0) Table wp_wc_webhooks: Total expected rows (approximate): 0
+0104.565 (0) Table wp_wc_webhooks: Total rows added: 0 in 0.00 seconds
+0104.566 (0) Table wp_wc_webhooks: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_webhooks.table.gz - 0.5 KB)
+0104.571 (0) Table wp_woocommerce_api_keys: Total expected rows (approximate): 0
+0104.574 (0) Table wp_woocommerce_api_keys: Total rows added: 1 in 0.00 seconds
+0104.575 (0) Table wp_woocommerce_api_keys: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_api_keys.table.gz - 0.6 KB)
+0104.579 (0) Table wp_woocommerce_attribute_taxonomies: Total expected rows (approximate): 0
+0104.582 (0) Table wp_woocommerce_attribute_taxonomies: Total rows added: 0 in 0.00 seconds
+0104.583 (0) Table wp_woocommerce_attribute_taxonomies: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_attribute_taxonomies.table.gz - 0.4 KB)
+0104.587 (0) Table wp_woocommerce_downloadable_product_permissions: Total expected rows (approximate): 0
+0104.590 (0) Table wp_woocommerce_downloadable_product_permissions: Total rows added: 0 in 0.00 seconds
+0104.591 (0) Table wp_woocommerce_downloadable_product_permissions: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_downloadable_product_permissions.table.gz - 0.5 KB)
+0104.595 (0) Table wp_woocommerce_log: Total expected rows (approximate): 0
+0104.598 (0) Table wp_woocommerce_log: Total rows added: 0 in 0.00 seconds
+0104.599 (0) Table wp_woocommerce_log: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_log.table.gz - 0.4 KB)
+0104.603 (0) Table wp_woocommerce_order_itemmeta: Total expected rows (approximate): 15
+0104.606 (0) Table wp_woocommerce_order_itemmeta: Total rows added: 16 in 0.00 seconds
+0104.607 (0) Table wp_woocommerce_order_itemmeta: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_order_itemmeta.table.gz - 0.6 KB)
+0104.612 (0) Table wp_woocommerce_order_items: Total expected rows (approximate): 2
+0104.615 (0) Table wp_woocommerce_order_items: Total rows added: 2 in 0.00 seconds
+0104.616 (0) Table wp_woocommerce_order_items: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_order_items.table.gz - 0.4 KB)
+0104.620 (0) Table wp_woocommerce_payment_tokenmeta: Total expected rows (approximate): 0
+0104.623 (0) Table wp_woocommerce_payment_tokenmeta: Total rows added: 0 in 0.00 seconds
+0104.624 (0) Table wp_woocommerce_payment_tokenmeta: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_payment_tokenmeta.table.gz - 0.4 KB)
+0104.629 (0) Table wp_woocommerce_payment_tokens: Total expected rows (approximate): 0
+0104.632 (0) Table wp_woocommerce_payment_tokens: Total rows added: 0 in 0.00 seconds
+0104.633 (0) Table wp_woocommerce_payment_tokens: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_payment_tokens.table.gz - 0.4 KB)
+0104.637 (0) Table wp_woocommerce_sessions: Total expected rows (approximate): 0
+0104.640 (0) Table wp_woocommerce_sessions: Total rows added: 1 in 0.00 seconds
+0104.641 (0) Table wp_woocommerce_sessions: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_sessions.table.gz - 1.2 KB)
+0104.645 (0) Table wp_woocommerce_shipping_zone_locations: Total expected rows (approximate): 0
+0104.648 (0) Table wp_woocommerce_shipping_zone_locations: Total rows added: 1 in 0.00 seconds
+0104.648 (0) Table wp_woocommerce_shipping_zone_locations: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_shipping_zone_locations.table.gz - 0.4 KB)
+0104.653 (0) Table wp_woocommerce_shipping_zone_methods: Total expected rows (approximate): 0
+0104.656 (0) Table wp_woocommerce_shipping_zone_methods: Total rows added: 1 in 0.00 seconds
+0104.657 (0) Table wp_woocommerce_shipping_zone_methods: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_shipping_zone_methods.table.gz - 0.4 KB)
+0104.661 (0) Table wp_woocommerce_shipping_zones: Total expected rows (approximate): 0
+0104.665 (0) Table wp_woocommerce_shipping_zones: Total rows added: 1 in 0.00 seconds
+0104.666 (0) Table wp_woocommerce_shipping_zones: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_shipping_zones.table.gz - 0.4 KB)
+0104.671 (0) Table wp_woocommerce_tax_rate_locations: Total expected rows (approximate): 0
+0104.673 (0) Table wp_woocommerce_tax_rate_locations: Total rows added: 0 in 0.00 seconds
+0104.674 (0) Table wp_woocommerce_tax_rate_locations: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_tax_rate_locations.table.gz - 0.4 KB)
+0104.679 (0) Table wp_woocommerce_tax_rates: Total expected rows (approximate): 0
+0104.681 (0) Table wp_woocommerce_tax_rates: Total rows added: 0 in 0.00 seconds
+0104.683 (0) Table wp_woocommerce_tax_rates: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_tax_rates.table.gz - 0.4 KB)
+0104.687 (0) Table wp_wpmm_subscribers: Total expected rows (approximate): 0
+0104.690 (0) Table wp_wpmm_subscribers: Total rows added: 0 in 0.00 seconds
+0104.691 (0) Table wp_wpmm_subscribers: finishing file (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wpmm_subscribers.table.gz - 0.3 KB)
+0104.694 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_options.table.gz (1/69): adding to final database dump
+0104.717 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_users.table.gz (2/69): adding to final database dump
+0104.719 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_usermeta.table.gz (3/69): adding to final database dump
+0104.720 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_commentmeta.table.gz (4/69): adding to final database dump
+0104.721 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_comments.table.gz (5/69): adding to final database dump
+0104.722 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_links.table.gz (6/69): adding to final database dump
+0104.723 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_postmeta.table.gz (7/69): adding to final database dump
+0105.681 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_posts.table.gz (8/69): adding to final database dump
+0106.981 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_term_relationships.table.gz (9/69): adding to final database dump
+0106.983 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_term_taxonomy.table.gz (10/69): adding to final database dump
+0106.984 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_termmeta.table.gz (11/69): adding to final database dump
+0106.985 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_terms.table.gz (12/69): adding to final database dump
+0106.986 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_actionscheduler_actions.table.gz (13/69): adding to final database dump
+0106.987 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_actionscheduler_claims.table.gz (14/69): adding to final database dump
+0106.988 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_actionscheduler_groups.table.gz (15/69): adding to final database dump
+0106.989 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_actionscheduler_logs.table.gz (16/69): adding to final database dump
+0106.990 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_mailchimp_carts.table.gz (17/69): adding to final database dump
+0106.993 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_mailchimp_jobs.table.gz (18/69): adding to final database dump
+0106.994 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_redirection_404.table.gz (19/69): adding to final database dump
+0107.022 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_redirection_groups.table.gz (20/69): adding to final database dump
+0107.024 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_redirection_items.table.gz (21/69): adding to final database dump
+0107.027 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_redirection_logs.table.gz (22/69): adding to final database dump
+0107.031 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_sbi_instagram_feeds_posts.table.gz (23/69): adding to final database dump
+0107.033 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_sbi_instagram_posts.table.gz (24/69): adding to final database dump
+0107.045 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_admin_note_actions.table.gz (25/69): adding to final database dump
+0107.046 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_admin_notes.table.gz (26/69): adding to final database dump
+0107.047 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_category_lookup.table.gz (27/69): adding to final database dump
+0107.048 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_customer_lookup.table.gz (28/69): adding to final database dump
+0107.049 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_download_log.table.gz (29/69): adding to final database dump
+0107.050 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_order_coupon_lookup.table.gz (30/69): adding to final database dump
+0107.051 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_order_product_lookup.table.gz (31/69): adding to final database dump
+0107.052 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_order_stats.table.gz (32/69): adding to final database dump
+0107.053 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_order_tax_lookup.table.gz (33/69): adding to final database dump
+0107.055 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_product_meta_lookup.table.gz (34/69): adding to final database dump
+0107.056 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_tax_rate_classes.table.gz (35/69): adding to final database dump
+0107.057 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wc_webhooks.table.gz (36/69): adding to final database dump
+0107.059 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_api_keys.table.gz (37/69): adding to final database dump
+0107.060 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_attribute_taxonomies.table.gz (38/69): adding to final database dump
+0107.062 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_downloadable_product_permissions.table.gz (39/69): adding to final database dump
+0107.063 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_log.table.gz (40/69): adding to final database dump
+0107.063 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_order_itemmeta.table.gz (41/69): adding to final database dump
+0107.065 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_order_items.table.gz (42/69): adding to final database dump
+0107.066 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_payment_tokenmeta.table.gz (43/69): adding to final database dump
+0107.067 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_payment_tokens.table.gz (44/69): adding to final database dump
+0107.068 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_sessions.table.gz (45/69): adding to final database dump
+0107.069 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_shipping_zone_locations.table.gz (46/69): adding to final database dump
+0107.070 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_shipping_zone_methods.table.gz (47/69): adding to final database dump
+0107.071 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_shipping_zones.table.gz (48/69): adding to final database dump
+0107.072 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_tax_rate_locations.table.gz (49/69): adding to final database dump
+0107.073 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_woocommerce_tax_rates.table.gz (50/69): adding to final database dump
+0107.074 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db-table-wp_wpmm_subscribers.table.gz (51/69): adding to final database dump
+0107.085 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db.gz: finished writing out complete database file (8488 KB)
+0107.280 (0) Total database tables backed up: 51 (backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db.gz, size: 8707691, sha1: 61c703656f26f942935c1398b860cbdff2f88cf8, sha256: d9f0f1562c3f8211d8b269270cc87f3ec0f4f9c1216bbd094b314767226f0b30)
+0107.288 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip: plugins: This file has not yet been successfully uploaded: will queue
+0107.288 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-themes.zip: themes: This file has not yet been successfully uploaded: will queue
+0107.289 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-uploads.zip: uploads: This file has not yet been successfully uploaded: will queue
+0107.290 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-others.zip: others: This file has not yet been successfully uploaded: will queue
+0107.291 (0) backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db.gz: db: This file has not yet been successfully uploaded: will queue
+0107.292 (0) Saving backup history. Total backup size: 116.5 MB
+0107.295 (0) Requesting upload of the files that have not yet been successfully uploaded (5)
+0107.298 (0) Cloud backup selection (1/1): s3 with instance (1/1) (last)
+0107.299 (0) Beginning dispatch of backup to remote (s3) (instance identifier s-cb6fe5cd927f388eb6b44f925f8c7840)
+0107.786 (0) Amazon S3: Set region: us-west-2
+0107.787 (0) Amazon S3: upload (us-west-2): backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip (chunks: 8) -> s3://unicamp-site-backup/backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip
+0108.217 (0) Amazon S3: chunked upload: got multipart ID: Qx2jH9zE3mg4LL4BjJgsnnggxupDaZ.aX4qf8t1JsiYS1TPNnIed5YwGQcC_81LJ_yZJ7f409GFOO.Y_eYgxx02SltIM36k2FjynRItxKIcwFx6Y50KBimwL7y8weGsy
+0108.644 (0) S3 chunked upload: 12.5 % uploaded (1, "2ee8e38bbc8d6daa25893b74d06b6e0d")
+0109.015 (0) S3 chunked upload: 25 % uploaded (2, "585ce91ba0059933493b92858b499699")
+0109.394 (0) S3 chunked upload: 37.5 % uploaded (3, "f5e00f5912d649ff673451027f768707")
+0109.781 (0) S3 chunked upload: 50 % uploaded (4, "a59d6e65dbc49fe9cb39c6c2c48f6521")
+0110.225 (0) S3 chunked upload: 62.5 % uploaded (5, "27042e69b2aa7566bd24e3ace11cab1d")
+0110.628 (0) S3 chunked upload: 75 % uploaded (6, "899a53d6678a5f8a0f67deec0538bb0b")
+0111.013 (0) S3 chunked upload: 87.5 % uploaded (7, "1ad321efe1fbf691ee64b78c91719d3f")
+0111.355 (0) S3 chunked upload: 100 % uploaded (8, "d1c6cb341f5b50cb48cb29a43019922a")
+0111.359 (0) Amazon S3: upload: all chunks uploaded; will now instruct S3 to re-assemble
+0111.468 (0) Amazon S3: upload (plugins0): re-assembly succeeded
+0111.470 (0) Recording as successfully uploaded: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip
+0111.515 (0) Deleting local file: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-plugins.zip: OK
+0111.516 (0) Amazon S3: upload (us-west-2): backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-themes.zip (chunks: 1) -> s3://unicamp-site-backup/backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-themes.zip
+0111.746 (0) Amazon S3: regular upload: success
+0111.748 (0) Recording as successfully uploaded: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-themes.zip
+0111.753 (0) Deleting local file: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-themes.zip: OK
+0111.754 (0) Amazon S3: upload (us-west-2): backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-uploads.zip (chunks: 14) -> s3://unicamp-site-backup/backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-uploads.zip
+0111.833 (0) Amazon S3: chunked upload: got multipart ID: OZ.g8EFRnF3fBufoPeJvOpNGE37KhkOssG.TVtQNxb78FEUEFuRtt1bwtCuvXsyqKAmg2.7AC0V_ZIqf99u_y2tod86aB0ujZUT1svP.1UeYdJTCHMS1xB2RP_u2R5TF
+0112.239 (0) S3 chunked upload: 7.1 % uploaded (1, "affe72e2e01d21df75e1bc8ff492030c")
+0112.663 (0) S3 chunked upload: 14.3 % uploaded (2, "76bfc7ee2ad4a0334bf59926bafd8339")
+0113.066 (0) S3 chunked upload: 21.4 % uploaded (3, "48cab07a639a8e9b14d8c39907e37977")
+0113.466 (0) S3 chunked upload: 28.6 % uploaded (4, "0057f6a2536d516831eca056abbdc96f")
+0113.874 (0) S3 chunked upload: 35.7 % uploaded (5, "b6eadec83214f2ca0e10b918704780d7")
+0114.351 (0) S3 chunked upload: 42.9 % uploaded (6, "fe3748d932e9f36c11c7af4fee0faf30")
+0114.797 (0) S3 chunked upload: 50 % uploaded (7, "602552d708b8db0ecb7baac1c7275218")
+0115.183 (0) S3 chunked upload: 57.1 % uploaded (8, "7305038c128df2d4e555b16078cba8c9")
+0115.586 (0) S3 chunked upload: 64.3 % uploaded (9, "0011d8c7772f093bc2c4ffd61688cc19")
+0116.008 (0) S3 chunked upload: 71.4 % uploaded (10, "adfc12eb58a31fcd8620e109c3df5fa6")
+0116.425 (0) S3 chunked upload: 78.6 % uploaded (11, "761f5e4c6a281530667a066fb641f4a4")
+0116.817 (0) S3 chunked upload: 85.7 % uploaded (12, "3c404915cee6e2cb2dd00673911b8b4e")
+0117.232 (0) S3 chunked upload: 92.9 % uploaded (13, "60ac9330b348ff3966d7f800157c6a18")
+0117.451 (0) S3 chunked upload: 100 % uploaded (14, "578d3ed72457744a2297b5bca3a8a583")
+0117.455 (0) Amazon S3: upload: all chunks uploaded; will now instruct S3 to re-assemble
+0117.558 (0) Amazon S3: upload (uploads0): re-assembly succeeded
+0117.560 (0) Recording as successfully uploaded: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-uploads.zip
+0117.628 (0) Deleting local file: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-uploads.zip: OK
+0117.629 (0) Amazon S3: upload (us-west-2): backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-others.zip (chunks: 1) -> s3://unicamp-site-backup/backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-others.zip
+0117.666 (0) Amazon S3: regular upload: success
+0117.668 (0) Recording as successfully uploaded: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-others.zip
+0117.671 (0) Deleting local file: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-others.zip: OK
+0117.672 (0) Amazon S3: upload (us-west-2): backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db.gz (chunks: 2) -> s3://unicamp-site-backup/backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db.gz
+0117.692 (0) Amazon S3: chunked upload: got multipart ID: 9jN9oFLXvdrw1xgclQ5ol21aySBUl_lsIXDcoEgolIp91UizMy3zdqapjDWX0oLF655IumLheRaU6lUjXZUIWMre5CRfEXOwQKThLpFEOI_6o9e21jPMrz9mMsh8cSKK
+0118.090 (0) S3 chunked upload: 50 % uploaded (1, "68a1d5745c7902b9c50b18fc221e4d32")
+0118.399 (0) S3 chunked upload: 100 % uploaded (2, "1dd374cdc120100dcbf46a124b6dcec2")
+0118.403 (0) Amazon S3: upload: all chunks uploaded; will now instruct S3 to re-assemble
+0118.487 (0) Amazon S3: upload (db0): re-assembly succeeded
+0118.489 (0) Recording as successfully uploaded: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db.gz
+0118.500 (0) Deleting local file: backup_2020-07-17-0235_UCLA_UniCamp_16402ab02e7b-db.gz: OK
+0118.505 (0) Retain: beginning examination of existing backup sets; user setting: retain_files=2, retain_db=2
+0118.506 (0) Number of backup sets in history: 3; groups (db): 1
+0118.507 (0) Examining (for databases) backup set with group_id=0, nonce=16402ab02e7b, datestamp=1594978510 (Jul 17 2020 09:35:10)
+0118.508 (0) This backup set is the backup set just made, so will not be deleted.
+0118.508 (0) Examining (for databases) backup set with group_id=0, nonce=8377c725dc90, datestamp=1594373725 (Jul 10 2020 09:35:25)
+0118.508 (0) This backup set remains non-empty (f=1/d=1); will retain in history
+0118.509 (0) Examining (for databases) backup set with group_id=0, nonce=72659f66a73f, datestamp=1593768947 (Jul 03 2020 09:35:47)
+0118.509 (0) 1593768947: db: this set includes a database (backup_2020-07-03-0235_UCLA_UniCamp_72659f66a73f-db.gz); db count is now 2
+0118.509 (0) 1593768947: db: over retain limit (2); will delete this database
+0118.509 (0) Delete file: backup_2020-07-03-0235_UCLA_UniCamp_72659f66a73f-db.gz, service=s3
+0118.510 (0) Amazon S3: Delete remote: bucket=unicamp-site-backup, URI=backup_2020-07-03-0235_UCLA_UniCamp_72659f66a73f-db.gz
+0118.529 (0) Amazon S3: delete failed (Aws\S3\Exception\AccessDeniedException): Access Denied (line: 91, file: /home/uclaunicamp/unicamp.org/wp-content/plugins/updraftplus/vendor/aws/aws-sdk-php/src/Aws/Common/Exception/NamespaceExceptionFactory.php)
+0118.531 (0) This backup set remains non-empty (f=1/d=0); will retain in history
+0118.532 (0) Number of backup sets in history: 3; groups (files): 1
+0118.533 (0) Examining (for files) backup set with nonce=16402ab02e7b, datestamp=1594978510 (Jul 17 2020 09:35:10)
+0118.533 (0) This backup set is the backup set just made, so will not be deleted.
+0118.534 (0) This backup set is the backup set just made, so will not be deleted.
+0118.534 (0) This backup set is the backup set just made, so will not be deleted.
+0118.534 (0) This backup set is the backup set just made, so will not be deleted.
+0118.534 (0) This backup set remains non-empty (f=1/d=1); will retain in history
+0118.535 (0) Examining (for files) backup set with nonce=8377c725dc90, datestamp=1594373725 (Jul 10 2020 09:35:25)
+0118.535 (0) This backup set remains non-empty (f=1/d=1); will retain in history
+0118.535 (0) Examining (for files) backup set with nonce=72659f66a73f, datestamp=1593768947 (Jul 03 2020 09:35:47)
+0118.535 (0) plugins: over retain limit (2); will delete this file entity
+0118.535 (0) themes: over retain limit (2); will delete this file entity
+0118.535 (0) uploads: over retain limit (2); will delete this file entity
+0118.535 (0) others: over retain limit (2); will delete this file entity
+0118.536 (0) Delete file: backup_2020-07-03-0235_UCLA_UniCamp_72659f66a73f-plugins.zip, service=s3
+0118.536 (0) Delete file: backup_2020-07-03-0235_UCLA_UniCamp_72659f66a73f-themes.zip, service=s3
+0118.537 (0) Delete file: backup_2020-07-03-0235_UCLA_UniCamp_72659f66a73f-uploads.zip, service=s3
+0118.538 (0) Delete file: backup_2020-07-03-0235_UCLA_UniCamp_72659f66a73f-others.zip, service=s3
+0118.539 (0) Amazon S3: Delete remote: bucket=unicamp-site-backup, URI=backup_2020-07-03-0235_UCLA_UniCamp_72659f66a73f-plugins.zip
+0118.556 (0) Amazon S3: delete failed (Aws\S3\Exception\AccessDeniedException): Access Denied (line: 91, file: /home/uclaunicamp/unicamp.org/wp-content/plugins/updraftplus/vendor/aws/aws-sdk-php/src/Aws/Common/Exception/NamespaceExceptionFactory.php)
+0118.557 (0) Amazon S3: Delete remote: bucket=unicamp-site-backup, URI=backup_2020-07-03-0235_UCLA_UniCamp_72659f66a73f-themes.zip
+0118.574 (0) Amazon S3: delete failed (Aws\S3\Exception\AccessDeniedException): Access Denied (line: 91, file: /home/uclaunicamp/unicamp.org/wp-content/plugins/updraftplus/vendor/aws/aws-sdk-php/src/Aws/Common/Exception/NamespaceExceptionFactory.php)
+0118.575 (0) Amazon S3: Delete remote: bucket=unicamp-site-backup, URI=backup_2020-07-03-0235_UCLA_UniCamp_72659f66a73f-uploads.zip
+0118.590 (0) Amazon S3: delete failed (Aws\S3\Exception\AccessDeniedException): Access Denied (line: 91, file: /home/uclaunicamp/unicamp.org/wp-content/plugins/updraftplus/vendor/aws/aws-sdk-php/src/Aws/Common/Exception/NamespaceExceptionFactory.php)
+0118.591 (0) Amazon S3: Delete remote: bucket=unicamp-site-backup, URI=backup_2020-07-03-0235_UCLA_UniCamp_72659f66a73f-others.zip
+0118.606 (0) Amazon S3: delete failed (Aws\S3\Exception\AccessDeniedException): Access Denied (line: 91, file: /home/uclaunicamp/unicamp.org/wp-content/plugins/updraftplus/vendor/aws/aws-sdk-php/src/Aws/Common/Exception/NamespaceExceptionFactory.php)
+0118.608 (0) This backup set is now empty; will remove from history
+0118.609 (0) Deleting log file (log.72659f66a73f.txt)
+0118.610 (0) Retain: saving new backup history (sets now: 2) and finishing retain operation
+0118.614 (0) Resume backup (16402ab02e7b, 0): finish run
+0118.616 (0) Decremented the semaphore (fd) by 1
+0118.617 (0) Semaphore (fd) unlocked
+0118.618 (0) There were no errors in the uploads, so the 'resume' event (1) is being unscheduled
+0118.622 (0) No email will/can be sent - the user has not configured an email address.
+0118.623 (0) The backup apparently succeeded and is now complete

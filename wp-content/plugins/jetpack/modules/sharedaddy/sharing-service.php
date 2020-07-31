@@ -11,6 +11,15 @@ class Sharing_Service {
 	private $global               = false;
 	public $default_sharing_label = '';
 
+	/**
+	 * Initialize the sharing service.
+	 * Only run this method once upon module loading.
+	 */
+	public static function init() {
+		add_filter( 'the_content', 'sharing_display', 19 );
+		add_filter( 'the_excerpt', 'sharing_display', 19 );
+	}
+
 	public function __construct() {
 		$this->default_sharing_label = __( 'Share this:', 'jetpack' );
 	}
@@ -658,7 +667,7 @@ function sharing_process_requests() {
 	global $post;
 
 	// Only process if: single post and share=X defined
-	if ( ( is_page() || is_single() ) && isset( $_GET['share'] ) ) {
+	if ( ( is_page() || is_single() ) && isset( $_GET['share'] ) && is_string( $_GET['share'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$sharer = new Sharing_Service();
 
 		$service = $sharer->get_service( $_GET['share'] );
@@ -944,8 +953,6 @@ function sharing_display( $text = '', $echo = false ) {
 	}
 }
 
-add_filter( 'the_content', 'sharing_display', 19 );
-add_filter( 'the_excerpt', 'sharing_display', 19 );
 function get_base_recaptcha_lang_code() {
 
 	$base_recaptcha_lang_code_mapping = array(
@@ -971,3 +978,5 @@ function get_base_recaptcha_lang_code() {
 	// if no base mapping is found return default 'en'
 	return 'en';
 }
+
+Sharing_Service::init();

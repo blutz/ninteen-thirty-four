@@ -25,17 +25,8 @@ class NK_AWB_TinyMCE {
      */
     public function init_hooks() {
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
-        add_action( 'admin_head', array( $this, 'admin_head' ) );
-    }
-
-    /**
-     * Admin head action
-     */
-    public function admin_head() {
-        if ( current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) ) {
-            add_filter( 'mce_external_plugins', array( $this, 'mce_external_plugins' ) );
-            add_filter( 'mce_buttons', array( $this, 'mce_buttons' ) );
-        }
+        add_filter( 'mce_external_plugins', array( $this, 'mce_external_plugins' ) );
+        add_filter( 'mce_buttons', array( $this, 'mce_buttons' ) );
     }
 
     /**
@@ -46,23 +37,23 @@ class NK_AWB_TinyMCE {
     public function admin_enqueue_scripts( $page ) {
         if ( 'post.php' === $page || 'post-new.php' === $page ) {
             wp_enqueue_media();
-            wp_enqueue_style( 'awb-tinymce', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-button.min.css', '', '1.6.1' );
+            wp_enqueue_style( 'awb-tinymce', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-button.min.css', '', '1.6.5' );
             wp_enqueue_style( 'wp-color-picker' );
             wp_enqueue_script( 'wp-color-picker' );
-            wp_enqueue_script( 'wp-color-picker-alpha', nk_awb()->plugin_url . 'assets/vendor/wp-color-picker-alpha/wp-color-picker-alpha.min.js', array( 'wp-color-picker' ), '2.0.0' );
-            wp_enqueue_script( 'conditionize', nk_awb()->plugin_url . 'assets/vendor/conditionize/conditionize.min.js', array( 'jquery' ), '1.0.1' );
+            wp_enqueue_script( 'wp-color-picker-alpha', nk_awb()->plugin_url . 'assets/vendor/wp-color-picker-alpha/wp-color-picker-alpha.min.js', array( 'wp-color-picker' ), '2.0.0', true );
+            wp_enqueue_script( 'conditionize', nk_awb()->plugin_url . 'assets/vendor/conditionize/conditionize.min.js', array( 'jquery' ), '1.0.1', true );
 
-            wp_enqueue_style( 'awb-tinymce-attach-video', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-video.min.css', '', '1.6.1' );
-            wp_enqueue_script( 'awb-tinymce-attach-video', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-video.min.js', '', '1.6.1' );
+            wp_enqueue_style( 'awb-tinymce-attach-video', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-video.min.css', '', '1.6.5' );
+            wp_enqueue_script( 'awb-tinymce-attach-video', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-video.min.js', '', '1.6.5', true );
 
-            wp_enqueue_style( 'awb-tinymce-attach-image', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-image.min.css', '', '1.6.1' );
-            wp_enqueue_script( 'awb-tinymce-attach-image', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-image.min.js', '', '1.6.1' );
+            wp_enqueue_style( 'awb-tinymce-attach-image', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-image.min.css', '', '1.6.5' );
+            wp_enqueue_script( 'awb-tinymce-attach-image', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-image.min.js', '', '1.6.5', true );
 
             // add tiny mce data.
             $data_tiny_mce = array(
                 'imageSizes' => self::get_image_sizes(),
             );
-            wp_enqueue_script( 'awb-tinymce-localize', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-localize.min.js', '', '1.6.1' );
+            wp_enqueue_script( 'awb-tinymce-localize', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-localize.min.js', '', '1.6.5', true );
             wp_localize_script( 'awb-tinymce-localize', 'AWBTinyMCEOptions', $data_tiny_mce );
         }
     }
@@ -75,7 +66,10 @@ class NK_AWB_TinyMCE {
      * @return array
      */
     public function mce_external_plugins( $plugin_array ) {
-        $plugin_array['awb'] = nk_awb()->plugin_url . 'assets/admin/tinymce/mce-button.min.js';
+        if ( current_user_can( 'edit_posts' ) ) {
+            $plugin_array['awb'] = nk_awb()->plugin_url . 'assets/admin/tinymce/mce-button.min.js';
+        }
+
         return $plugin_array;
     }
 
@@ -87,7 +81,10 @@ class NK_AWB_TinyMCE {
      * @return array
      */
     public function mce_buttons( $buttons ) {
-        array_push( $buttons, 'awb' );
+        if ( current_user_can( 'edit_posts' ) ) {
+            array_push( $buttons, 'awb' );
+        }
+
         return $buttons;
     }
 

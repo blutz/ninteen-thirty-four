@@ -1,7 +1,7 @@
 {
 	"name": "ghostkit/button-single",
-    "parent": [ "ghostkit/button" ],
-	"category": "ghostkit",
+    "parent": [ "ghostkit/button", "ghostkit/form" ],
+	"category": "layout",
     "supports": {
         "html": false,
         "className": false,
@@ -10,6 +10,9 @@
         "reusable": false
     },
     "attributes": {
+        "tagName": {
+            "type": "string"
+        },
         "url": {
             "type": "string",
             "source": "attribute",
@@ -51,30 +54,24 @@
             "default": "md"
         },
         "color": {
-            "type": "string",
-            "default": "#0366d6"
+            "type": "string"
         },
         "textColor": {
-            "type": "string",
-            "default": "#ffffff"
+            "type": "string"
         },
 
         "borderRadius": {
-            "type": "number",
-            "default": 2
+            "type": "number"
         },
         "borderWeight": {
-            "type": "number",
-            "default": 0
+            "type": "number"
         },
         "borderColor": {
-            "type": "string",
-            "default": "#00669b"
+            "type": "string"
         },
 
         "focusOutlineWeight": {
-            "type": "number",
-            "default": 0
+            "type": "number"
         },
 
         "hoverColor": {

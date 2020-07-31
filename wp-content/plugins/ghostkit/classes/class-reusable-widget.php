@@ -17,7 +17,7 @@ class GhostKit_Reusable_Widget extends WP_Widget {
             'ghostkit_reusable_widget',
             esc_html__( 'Reusable Block', 'ghostkit' ),
             array(
-                'classname' => 'ghostkit-reusable-widget',
+                'classname'   => 'ghostkit-reusable-widget',
                 'description' => esc_html__( 'Display Gutenberg Reusable Blocks.', 'ghostkit' ),
             )
         );
@@ -42,23 +42,18 @@ class GhostKit_Reusable_Widget extends WP_Widget {
                 echo $args[ 'before_title' ] . $title . $args[ 'after_title' ];
             }
 
-            // Get all blocks.
-            $blocks = parse_blocks( $post->post_content );
+            // fix for bbPress.
+            // filter 'the_content' may not work in bbPress
+            // https://github.com/nk-o/ghostkit/issues/72.
+            // https://bbpress.org/forums/topic/the_content-filter-is-removed-by-not-restored-on-custom-wp_query/
+            if ( function_exists( 'is_bbpress' ) && is_bbpress() ) {
+                bbp_restore_all_filters( 'the_content' );
+            }
 
-            if ( is_array( $blocks ) && ! empty( $blocks ) ) {
-                // prepare custom styles.
-                $blocks_css = ghostkit()->parse_blocks_css( $blocks );
-                if ( ! empty( $blocks_css ) ) {
-                    ghostkit()->add_custom_css( 'ghostkit-blocks-widget-' . $args['widget_id'] . '-custom-css', ghostkit()->replace_vars( $blocks_css ) );
-                }
+            echo apply_filters( 'the_content', $post->post_content );
 
-                // render blocks.
-                // we need to render blocks manually just because on custom post types
-                // filter 'the_content' may not work if gutenberg support is disabled
-                // https://github.com/nk-o/ghostkit/issues/72
-                foreach( $blocks as $block ) {
-                    echo do_shortcode( render_block( $block ) );
-                }
+            if ( function_exists( 'is_bbpress' ) && is_bbpress() ) {
+                bbp_remove_all_filters( 'the_content' );
             }
 
             echo $args['after_widget'];
@@ -71,13 +66,16 @@ class GhostKit_Reusable_Widget extends WP_Widget {
      * @param array $instance The widget options.
      */
     public function form( $instance ) {
-        $title = ! empty( $instance['title'] ) ? $instance['title'] : '';
+        $title          = ! empty( $instance['title'] ) ? $instance['title'] : '';
         $selected_block = ! empty( $instance['block'] ) ? $instance['block'] : '';
-        $blocks = get_posts(
+        $blocks         = get_posts(
             array(
-                'post_type' => 'wp_block',
+                'post_type'   => 'wp_block',
+                'numberposts' => -1,
             )
         );
+
+        wp_enqueue_script( 'ghostkit-admin-reusable-widget', ghostkit()->plugin_url . 'assets/admin/js/reusable-widget.min.js', array( 'jquery' ), '2.13.2', false );
         ?>
 
         <p>
@@ -90,8 +88,8 @@ class GhostKit_Reusable_Widget extends WP_Widget {
             ?>
             <p>
                 <label for="<?php echo esc_attr( $this->get_field_id( 'block' ) ); ?>"><?php echo esc_attr__( 'Select Block:', 'ghostkit' ); ?></label>
-                <select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'block' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'block' ) ); ?>">
-                    <option value="" disabled <?php selected( ! $selected_block ); ?>><?php echo esc_html__( '--- Select block ---', 'ghostkit' ); ?></option>
+                <select class="widefat gkt-reusable-block-select" id="<?php echo esc_attr( $this->get_field_id( 'block' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'block' ) ); ?>">
+                    <option value="" disabled <?php selected( '', $selected_block ); ?>><?php echo esc_html__( '--- Select block ---', 'ghostkit' ); ?></option>
                     <?php
                     foreach ( $blocks as $block ) {
                         ?>
@@ -109,6 +107,15 @@ class GhostKit_Reusable_Widget extends WP_Widget {
             <p><?php echo esc_attr__( 'No reusable blocks found.', 'ghostkit' ); ?></p>
             <?php
         }
+        ?>
+        <p class="gkt-reusable-block-edit-button" style="display: none" data-admin-url="<?php echo esc_url( get_admin_url() ); ?>">
+            <label for="<?php echo esc_attr( $this->get_field_id( 'edit_button' ) ); ?>"><?php esc_attr_e( 'Edit:', 'ghostkit' ); ?></label>
+            <br>
+            <a class="button" id="<?php echo esc_attr( $this->get_field_id( 'edit_button' ) ); ?>" href="" target="_blank">
+                <?php esc_attr_e( 'Edit Reusable Block', 'ghostkit' ); ?>
+            </a>
+        </p>
+        <?php
     }
 
     /**

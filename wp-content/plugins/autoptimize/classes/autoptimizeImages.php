@@ -112,6 +112,10 @@ class autoptimizeImages
         if ( ! $this->should_run() ) {
             if ( $this->should_lazyload() ) {
                 add_filter(
+                    'wp_lazy_loading_enabled',
+                    '__return_false'
+                );
+                add_filter(
                     'autoptimize_html_after_minify',
                     array( $this, 'filter_lazyload_images' ),
                     10,
@@ -159,6 +163,10 @@ class autoptimizeImages
         }
 
         if ( $this->should_lazyload() ) {
+            add_filter(
+                'wp_lazy_loading_enabled',
+                '__return_false'
+            );
             add_action(
                 'wp_footer',
                 array( $this, 'add_lazyload_js_footer' ),
@@ -481,6 +489,19 @@ class autoptimizeImages
         }
     }
 
+    public function replace_icon_callback( $matches )
+    {
+        if ( array_key_exists( '2', $matches ) ) {
+            $sizes  = explode( 'x', $matches[2] );
+            $width  = $sizes[0];
+            $height = $sizes[1];
+        } else {
+            $width  = 180;
+            $height = 180;
+        }
+        return $this->replace_img_callback( $matches, $width, $height );
+    }
+
     public function filter_optimize_images( $in )
     {
         /*
@@ -545,7 +566,7 @@ class autoptimizeImages
                 }
 
                 // do lazyload stuff.
-                if ( $this->should_lazyload( $in ) ) {
+                if ( $this->should_lazyload( $in ) && ! empty( $url ) ) {
                     // first do lpiq placeholder logic.
                     if ( strpos( $url, $this->get_imgopt_host() ) === 0 ) {
                         // if all img src have been replaced during srcset, we have to extract the
@@ -554,6 +575,8 @@ class autoptimizeImages
                     } else {
                         $_url = $url;
                     }
+
+                    $_url = $this->normalize_img_url( $_url );
 
                     $placeholder = '';
                     if ( $this->can_optimize_image( $_url ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true ) ) {
@@ -595,6 +618,15 @@ class autoptimizeImages
             $out = preg_replace_callback(
                 '/style=(?:"|\')[^<>]*?background-image:\s?url\((?:"|\')?([^"\')]*)(?:"|\')?\)/',
                 array( $this, 'replace_img_callback' ),
+                $out
+            );
+        }
+
+        // act on icon links.
+        if ( ( strpos( $out, '<link rel="icon"' ) !== false || ( strpos( $out, "<link rel='icon'" ) !== false ) ) && apply_filters( 'autoptimize_filter_imgopt_linkicon', true ) ) {
+            $out = preg_replace_callback(
+                '/<link\srel=(?:"|\')(?:apple-touch-)?icon(?:"|\').*\shref=(?:"|\')(.*)(?:"|\')(?:\ssizes=(?:"|\')(\d*x\d*)(?:"|\'))?\s\/>/Um',
+                array( $this, 'replace_icon_callback' ),
                 $out
             );
         }
@@ -736,11 +768,11 @@ class autoptimizeImages
                 $_get_size = $this->get_size_from_tag( $tag );
                 $width     = $_get_size['width'];
                 $height    = $_get_size['height'];
-                if ( false === $width ) {
-                    $widht = 210; // default width for SVG placeholder.
+                if ( false === $width || empty( $width ) ) {
+                    $width = 210; // default width for SVG placeholder.
                 }
-                if ( false === $height ) {
-                    $heigth = $width / 3 * 2; // if no height, base it on width using the 3/2 aspect ratio.
+                if ( false === $height || empty( $height ) ) {
+                    $height = $width / 3 * 2; // if no height, base it on width using the 3/2 aspect ratio.
                 }
 
                 // insert the actual lazyload stuff.
@@ -778,19 +810,25 @@ class autoptimizeImages
         $lazysizes_js = plugins_url( 'external/js/lazysizes.min.js?ao_version=' . AUTOPTIMIZE_PLUGIN_VERSION, __FILE__ );
         $cdn_url      = $this->get_cdn_url();
         if ( ! empty( $cdn_url ) ) {
+            $cdn_url      = rtrim( $cdn_url, '/' );
             $lazysizes_js = str_replace( AUTOPTIMIZE_WP_SITE_URL, $cdn_url, $lazysizes_js );
         }
 
+        $type_js = '';
+        if ( apply_filters( 'autoptimize_filter_cssjs_addtype', false ) ) {
+            $type_js = ' type="text/javascript"';
+        }
+
         // Adds lazyload CSS & JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
-        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<style>.lazyload,.lazyloading{opacity:0;}.lazyloaded{opacity:1;transition:opacity 300ms;}</style><noscript><style>.lazyload{display:none;}</style></noscript>' );
-        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script' . $noptimize_flag . '>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
-        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $noptimize_flag . ' src=\'' . $lazysizes_js . '\'></script>' );
+        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<noscript><style>.lazyload{display:none;}</style></noscript>' );
+        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script' . $type_js . $noptimize_flag . '>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
+        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $type_js . $noptimize_flag . ' src=\'' . $lazysizes_js . '\'></script>' );
 
         // And add webp detection and loading JS.
         if ( $this->should_webp() ) {
             $_webp_detect = "function c_webp(A){var n=new Image;n.onload=function(){var e=0<n.width&&0<n.height;A(e)},n.onerror=function(){A(!1)},n.src='data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA=='}function s_webp(e){window.supportsWebP=e}c_webp(s_webp);";
-            $_webp_load   = "document.addEventListener('lazybeforeunveil',function({target:c}){supportsWebP&&['data-src','data-srcset'].forEach(function(a){attr=c.getAttribute(a),null!==attr&&c.setAttribute(a,attr.replace(/\/client\//,'/client/to_webp,'))})});";
-            echo apply_filters( 'autoptimize_filter_imgopt_webp_js', '<script' . $noptimize_flag . '>' . $_webp_detect . $_webp_load . '</script>' );
+            $_webp_load   = "document.addEventListener('lazybeforeunveil',function({target:b}){window.supportsWebP&&['data-src','data-srcset'].forEach(function(c){attr=b.getAttribute(c),null!==attr&&-1==attr.indexOf('/client/to_webp')&&b.setAttribute(c,attr.replace(/\/client\//,'/client/to_webp,'))})});";
+            echo apply_filters( 'autoptimize_filter_imgopt_webp_js', '<script' . $type_js . $noptimize_flag . '>' . $_webp_detect . $_webp_load . '</script>' );
         }
     }
 
@@ -815,7 +853,7 @@ class autoptimizeImages
             $options = $this->options;
 
             // set default exclusions.
-            $exclude_lazyload_array = array( 'skip-lazy', 'data-no-lazy', 'notlazy', 'data-src', 'data-srcset', 'data:image/', 'data-lazyload', 'rev-slidebg' );
+            $exclude_lazyload_array = array( 'skip-lazy', 'data-no-lazy', 'notlazy', 'data-src', 'data-srcset', 'data:image/', 'data-lazyload', 'rev-slidebg', 'loading="eager"' );
 
             // add from setting.
             if ( array_key_exists( 'autoptimize_imgopt_text_field_5', $options ) ) {
@@ -917,7 +955,7 @@ class autoptimizeImages
             // replace background-image URL with SVG placeholder.
             $out = str_replace( $matches[2], $placeholder, $matches[0] );
             // add data-bg attribute with real background-image URL for lazyload to pick up.
-            $out = str_replace( $matches[1], $matches[1] . ' data-bg="' . trim( str_replace( "\r\n", '', $matches[2] ) ) . '"', $out );
+            $out = str_replace( $matches[1], $matches[1] . ' data-bg="' . trim( str_replace( array( "\r\n", '&quot;' ), '', $matches[2] ) ) . '"', $out );
             // add lazyload class to tag.
             $out = $this->inject_classes_in_tag( $out, "$lazyload_class " );
             return $out;
@@ -926,9 +964,11 @@ class autoptimizeImages
     }
 
     public function maybe_fix_missing_quotes( $tag_in ) {
-        // W3TC's Minify_HTML class removes quotes around attribute value, this re-adds them for the class attribute only so we can safely add the lazyload class.
+        // W3TC's Minify_HTML class removes quotes around attribute value, this re-adds them for the class and width/height attributes so we can lazyload properly.
         if ( file_exists( WP_PLUGIN_DIR . '/w3-total-cache/w3-total-cache.php' ) && class_exists( 'Minify_HTML' ) && apply_filters( 'autoptimize_filter_imgopt_fixquotes', true ) ) {
-            return preg_replace( '/class\s?=([^("|\')]*)(\s|>)/U', 'class=\'$1\'$2', $tag_in );
+            $tag_out = preg_replace( '/class\s?=([^("|\')]*)(\s|>)/U', 'class=\'$1\'$2', $tag_in );
+            $tag_out = preg_replace( '/\s(width|height)=(?:"|\')?([^\s"\'>]*)(?:"|\')?/', ' $1=\'$2\'', $tag_out );
+            return $tag_out;
         } else {
             return $tag_in;
         }
@@ -1154,7 +1194,7 @@ class autoptimizeImages
                     // translators: "associate your domain" will appear in a "a href".
                     $_imgopt_notice = $_imgopt_notice . ' ' . sprintf( __( 'If you already have enough credits then you may need to %1$sassociate your domain%2$s to your Shortpixel account.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $_imgopt_assoc . '" target="_blank">', '</a>' );
                 } elseif ( -3 == $_stat['Status'] ) {
-                    // translators: "add more credits" will appear in a "a href".
+                    // translators: "check the documentation here" will appear in a "a href".
                     $_imgopt_notice = sprintf( __( 'It seems ShortPixel image optimization is not able to fetch images from your site, %1$scheck the documentation here%2$s for more information', 'autoptimize' ), '<a href="' . $_imgopt_unreach . '" target="_blank">', '</a>' );
                 } else {
                     $_imgopt_upsell = 'https://shortpixel.com/g/af/GWRGFLW109483';

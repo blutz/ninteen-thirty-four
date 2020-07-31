@@ -2,10 +2,10 @@
 
 * Contributors: nko
 * Tags: gutenberg, blocks, templates, block, builder
-* Requires at least: 4.9.0
-* Tested up to: 5.3
-* Requires PHP: 5.4
-* Stable tag: 2.7.1
+* Requires at least: 5.4
+* Tested up to: 5.4
+* Requires PHP: 5.5.9
+* Stable tag: 2.13.2
 * License: GPLv2 or later
 * License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 
@@ -20,6 +20,7 @@ We are using this plugin in our premium themes, so all the blocks are extensible
 ### Links ###
 
 * [Demo Site](https://ghostkit.io/)
+* [Documentation](https://ghostkit.io/docs/getting-started/)
 * [GitHub](https://github.com/nk-o/ghostkit)
 
 ### Templates ###
@@ -30,7 +31,9 @@ Ghost Kit has pre-made templates, so you can get started with it and build your 
 
 Change typography options globally on a whole site or on specific pages only. Options available:
 
-* Font Family (supported Google Fonts)
+* Font Family
+  * Google Fonts
+  * Adobe Fonts (Typekit) in PRO version
 * Font Weight
 * Font Size
 * Line Height
@@ -43,8 +46,17 @@ By default you can change typography for the following elements:
 * Headings
   * From H1 to H6
 
-### Formats ###
+### Color Palette ###
 
+Add custom colors to Gutenberg color palette.
+
+### Content Formatting ###
+
+See demo page with content formatting <https://ghostkit.io/content-formatting/>
+
+* Dotted Lists
+* Styled Lists
+* Custom Icon Lists
 * Uppercase
 * Highlight
 * Badge
@@ -54,6 +66,7 @@ By default you can change typography for the following elements:
 * [**Grid**](https://ghostkit.io/blocks/grid/). Responsive grid block to build layouts of all shapes and sizes thanks to a twelve column system. Visual columns size and order change
 * [**Progress**](https://ghostkit.io/blocks/progress/). Show the progress of your work, skills or earnings
 * [**Button**](https://ghostkit.io/blocks/button/). Change important links to buttons to get more click rate
+* [**Shape Divider**](https://ghostkit.io/blocks/shape-divider/). Add SVG shapes between your sections
 * [**Divider**](https://ghostkit.io/blocks/divider/). Divide your long texts and blocks
 * [**Alert**](https://ghostkit.io/blocks/alert/). Provide contextual feedback messages for user actions
 * [**Icon Box**](https://ghostkit.io/blocks/icon-box/). Icons are one of the best visual replacement for text descriptions
@@ -67,16 +80,20 @@ By default you can change typography for the following elements:
 * [**Testimonial**](https://ghostkit.io/blocks/testimonial/). Show how your users love your products and what saying
 * [**Twitter**](https://ghostkit.io/blocks/twitter/). Show Twitter feed and user data
 * [**Instagram**](https://ghostkit.io/blocks/instagram/). Show Instagram feed and user data
+* [**GIF**](https://ghostkit.io/blocks/gif/). Search for and insert an animated image from Giphy
+* [**Contact Form**](https://ghostkit.io/blocks/contact-form/). Add contact form to your page with reCaptcha
 * [**Google Maps**](https://ghostkit.io/blocks/google-maps/). Show maps with custom styles, markers and settings
 * [**GitHub Gist**](https://ghostkit.io/blocks/github-gist/). Embed code parts form GitHub Gist to your site or documentation
 * [**Changelog**](https://ghostkit.io/blocks/changelog/). Show the changes log of your product
 * [**Table of Contents**](https://ghostkit.io/blocks/table-of-contents/). Automatically generate a table of contents by parsing page headers in content
+* **Markdown**. Lightweight markup language with plain-text-formatting syntax
 * **Widgetized Area**. Select registered sidebars and put it in any place
 
 ### Extensions ##
 
-* [**Spacings**](https://ghostkit.io/extensions/spacings/). Easily add spacings in Ghost Kit and Core blocks
+* [**Spacings**](https://ghostkit.io/extensions/spacings/). Easily add spacings to Ghost Kit and Core blocks
 * [**Display**](https://ghostkit.io/extensions/display/). Show and hide blocks Ghost Kit and Core blocks on different screen sizes
+* [**Frame**](https://ghostkit.io/extensions/frame/). Add borders, shadows and corner radius to Ghost Kit and Core blocks on different screen sizes
 * [**Animate on Scroll**](https://ghostkit.io/extensions/animate-on-scroll/). Show with animation Ghost Kit and Core blocks on page scrolling
 * [**Custom CSS & JavaScript**](https://ghostkit.io/extensions/custom-css-js/). This extension is available on all pages and let you add custom CSS and JavaScript for the current page and globally site wide
 * [**Customizer**](https://ghostkit.io/extensions/customizer/). This extension is available on all pages and let you change customizer options on the current page
@@ -86,7 +103,9 @@ By default you can change typography for the following elements:
 Ghost Kit PRO Addon extends the capabilities of Ghost Kit and improve your design experience. List of the main features:
 
 * More icon packs
+* 30 additional shapes for Shape Divider block
 * Visual Grid editor
+* Adobe Fonts (Typekit)
 * Google Maps custom markers
 * Gradient buttons, backgrounds, icons
 * And more
@@ -95,11 +114,12 @@ Try out a live demo of [Ghost Kit PRO](https://demo.ghostkit.io/)
 
 = Real Usage Examples =
 
-* [Skylith - Multipurpose Gutenberg Theme](https://demo.nkdev.info/#skylith)
+* [SquadForce Theme](https://wp.nkdev.info/squadforce/)
+* [Skylith Theme](https://wp.nkdev.info/skylith/)
 
 ## Installation ##
 
-Make sure you use WordPress 5 As alternative you need to install the [Gutenberg plugin](https://wordpress.org/plugins/gutenberg/) to use Ghost Kit.
+Make sure you use WordPress 5. As alternative you need to install the [Gutenberg plugin](https://wordpress.org/plugins/gutenberg/) to use Ghost Kit.
 
 ### Automatic installation ###
 
@@ -113,131 +133,29 @@ The manual installation method involves downloading our Ghost Kit plugin and upl
 
 ## Frequently Asked Questions ##
 
+### Documentation ####
+
+<https://ghostkit.io/docs/getting-started/>
+
 ### How to disable enqueued plugins (JS, CSS) on frontend ####
 
-There are some plugins, enqueued with Ghost Kit on your page. If you don't like the plugin and/or want to change it to your alternate plugin, you can disable it using filters. Example:
-
-    add_filter( 'gkt_enqueue_plugin_font_awesome', '__return_false' );
-
-Available filters:
-
-* **gkt_enqueue_plugin_font_awesome**
-* **gkt_enqueue_plugin_object_fit_images**
-* **gkt_enqueue_plugin_jarallax**
-* **gkt_enqueue_plugin_swiper**
-* **gkt_enqueue_plugin_gist_simple**
-* **gkt_enqueue_plugin_scrollreveal**
+<https://ghostkit.io/docs/php-filters/gkt_enqueue_/>
 
 ### How to add templates in theme ####
 
-You can add templates in your theme, so users will be able to insert it on pages with a single click. This is a simple example of theme templates structure:
-
-- wp-content/themes/YOUR_THEME/ghostkit/templates/
-    - /first-template/
-        - /content.php
-        - /thumbnail.png
-    - /second-template/
-        - /content.php
-        - /thumbnail.png
-    - ...
-
-`content.php` file content example:
-
-    <?php
-    /**
-     * Name: Template Name
-     * Category: Category Name
-     */
-
-    ?>
-
-    <!-- wp:paragraph -->
-    <p>content</p>
-    <!-- /wp:paragraph -->
-
-`thumbnail.png` is not required, but strongly recommended, because users will see what template will look like after insertion.
+<https://ghostkit.io/docs/templates/#add-custom-templates-in-theme>
 
 ### How to extend typography settings ####
 
-By default Typography options used for Body, Headings, and Buttons. You can add custom options by extending typography using PHP filter:
+<https://ghostkit.io/docs/php-filters/gkt_custom_typography/>
 
-    add_filter( 'gkt_custom_typography', 'my_gkt_custom_typography' );
-    function my_gkt_custom_typography( $custom_typography ) {
+### How to extend shapes in Shape Divider block ####
 
-        // Add typography options for `.my-selector`.
-        $custom_typography['my-selector'] = array(
-            'label' => esc_html__( 'My Selector', 'ghostkit' ),
-            'defaults' => array(
-                'font-family-category' => 'default',
-                'font-family' => '',
-                'font-size' => '',
-                'font-weight' => '',
-                'line-height' => '',
-                'letter-spacing' => '',
-            ),
-            'output' => array(
-                array(
-                    'selectors' => '.my-selector',
-                ),
-                array(
-                    'selectors' => '.editor-styles-wrapper .my-selector',
-                    'editor' => true,
-                ),
-            ),
-        );
-
-        // Add typography options for `.my-selector-2` with Font Size and Font Weight control only.
-        $custom_typography['my-selector-2'] = array(
-            'label' => esc_html__( 'My Selector 2', 'ghostkit' ),
-            'defaults' => array(
-                'font-size' => '10px',
-                'font-weight' => '600',
-            ),
-            'output' => array(
-                array(
-                    'selectors' => '.my-selector-2',
-                ),
-                array(
-                    'selectors' => '.editor-styles-wrapper .my-selector-2',
-                    'editor' => true,
-                ),
-            ),
-        );
-
-        return $icons;
-    }
+<https://ghostkit.io/docs/php-filters/gkt_shapes_list/>
 
 ### How to extend icons in icon picker list ####
 
-By default icon picker contains FontAwesome icons. You can add any icons you want. First of all you need to enqueue these icons in editor and frontend pages to see it, then extend icon picker using PHP filter:
-
-    // add icons list.
-    add_filter( 'gkt_icons_list', 'my_gkt_icons' );
-    function my_gkt_icons( $icons ) {
-        $icons['my-icons-pack'] = array(
-            'name' => 'My Icons',
-            'icons' => array(
-                array(
-                    'class' => 'fab fa-500px',
-                    'keys' => '500px',
-                ),
-                array(
-                    'class' => 'fab fa-500px',
-                    'keys' => '500px',
-                ),
-                ...
-            ),
-        );
-
-        return $icons;
-    }
-
-    // add icons assets
-    // will be automatically added in Editor and Frontend
-    add_action( 'gkt_icons_enqueue_assets__my-icons-pack', 'my_gkt_icons_enqueue_assets' );
-    function my_gkt_icons_enqueue_assets( $icons ) {
-        wp_register_script( 'my-icons-pack', plugins_url( '/assets/my-icons-pack/script.min.js', __FILE__ ), array(), '1.0.0' );
-    }
+<https://ghostkit.io/docs/php-filters/gkt_icons_list/>
 
 ### How to extend existing blocks ####
 
@@ -249,43 +167,7 @@ You can extend Gutenberg blocks save attributes using core hooks. Read more here
 
 ### jQuery frontend events ####
 
-On frontend there are a lot of jQuery events. Usage example:
-
-    jQuery( document ).on( 'afterInitBlocks.ghostkit', function( evt, classObject ) {
-        console.log( evt, classObject );
-    } );
-
-Available events:
-
-* **beforeInit.ghostkit**
-* **afterInit.ghostkit**
-* **beforeInitBlocks.ghostkit**
-* **afterInitBlocks.ghostkit**
-* **beforePrepareCounters.ghostkit**
-* **afterPrepareCounters.ghostkit**
-* **beforeRunCounters.ghostkit**
-* **afterRunCounters.ghostkit**
-* **beforePrepareTabs.ghostkit**
-* **afterPrepareTabs.ghostkit**
-* **beforePrepareAccordions.ghostkit**
-* **afterPrepareAccordions.ghostkit**
-* **beforePrepareCarousels.ghostkit**
-* **afterPrepareCarousels.ghostkit**
-* **beforePrepareVideo.ghostkit**
-* **afterPrepareVideo.ghostkit**
-* **beforePrepareGist.ghostkit**
-* **afterPrepareGist.ghostkit**
-* **beforePrepareChangelog.ghostkit**
-* **afterPrepareChangelog.ghostkit**
-* **beforePrepareGoogleMaps.ghostkit**
-* **beforePrepareGoogleMapsStart.ghostkit**
-* **beforePrepareGoogleMapsEnd.ghostkit**
-* **afterPrepareGoogleMaps.ghostkit**
-* **beforePrepareSR.ghostkit**
-* **beforePrepareSRStart.ghostkit**
-* **beforeInitSR.ghostkit**
-* **beforePrepareSREnd.ghostkit**
-* **afterPrepareSR.ghostkit**
+<https://ghostkit.io/docs/jquery-events/>
 
 ## Screenshots ##
 
@@ -312,6 +194,175 @@ Available events:
 21. Blocks Extensions
 
 ## Changelog ##
+
+= 2.13.2 =
+
+* fixed blocks assets rendering inside custom content locations
+* fixed reusable widget usage (use 'the_content' filter)
+* changed reusable widget render in bbPress pages
+
+= 2.13.1 =
+
+* added modal to blocks custom CSS extension
+* added button on edit page in reusable block widget ui
+* added script to close fullscreen video by clicking on wrapper (not only on X button)
+* fixed fullscreen video offset depending on admin bar
+* fixed fullscreen video conflict with Safari
+* fixed pricing table align styles
+
+= 2.13.0 =
+
+* added GIF block
+* added Markdown block
+* added list columns settings to default `core/list` block
+* updated Google Fonts list
+* changed TOC block smooth scroll script native browser `window.scrollTo`
+* fixed color picker component correct re-rendering picker and palette
+
+= 2.12.5 =
+
+* fixed conflict with `additional_font_weights` attribute, used in custom themes
+
+= 2.12.4 =
+
+* fixed fonts loading undefined weights
+
+= 2.12.3 =
+
+* fixed translation files
+
+= 2.12.2 =
+
+* added Ghost Kit blocks collection (all blocks moved to separate default categories)
+* changed spinner icon to CSS variables and relative color usage
+* changed accordion collapse button color to inherit
+* fixed js error when open typography options and when font doesn't exist
+
+= 2.12.1 =
+
+* added Align option to Form Submit Button
+* updated google fonts list
+* fixed Button border CSS conflict with Ghost Kit PRO Gradients
+* fixed displaying some Typography options (rare bug)
+* fixed fonts loading based on available registered fonts, but not on the saved in DB (rare bug)
+
+= 2.12.0 =
+
+* added Icons style for `core/lists` block
+* improved offsets for styled lists
+* fixed missing formatting buttons inside some blocks (accordion heading, button, tabs, etc...)
+* fixed Templates modal images lazy loading when switch categories
+* fixed CSS calc() conflict with 0 values
+* fixed PHP Notice: Undefined index: SERVER_NAME using WP-CLI
+
+= 2.11.0 =
+
+* ! to changes takes effect, re-save your pages
+* added button outline CSS variable
+* improved DatePicker component in Countdown block
+* simplified CSS selectors in blocks (easier to extend styles)
+* changed styles loading priority (new 4th point added):
+  1. Enqueue plugins assets
+  2. Enqueue Ghost Kit assets
+  3. Enqueue theme assets
+  4. Enqueue Ghost Kit custom CSS
+* changed Grid Column Sticky option to use the class with CSS variable
+* fixed empty custom styles
+* fixed blocks custom styles for number attributes (wrong styles when a variable is undefined or == 0)
+* fixed PHP notice - Trying to access array offset on value of type bool
+* fixed Tabs and Accordion items hash parse with Japanese/Chinese/... characters
+* removed all defaults from blocks - easily change defaults using CSS variables now - <https://ghostkit.io/docs/css-variables/>
+* removed hard-coded box-shadow from buttons, use CSS variable instead
+
+= 2.10.2 =
+
+* changed name of CSS variables with -x and -y in name:
+  * `...margin-x` to `...margin-v`
+  * `...margin-y` to `...margin-h`
+  * `...padding-x` to `...padding-v`
+  * `...padding-y` to `...padding-h`
+
+= 2.10.1 =
+
+* ! breaking change ! - all styles now uses CSS Variables. No more IE browser supported
+* added WordPress 5.4 compatibility
+* added better possibilities for extending/changing blocks styles (thanks to CSS Variables) <https://ghostkit.io/docs/css-variables/>
+* added custom gap option for Grid, Buttons, Instagram and Pricing Table blocks
+* added Grid vertical Gap by default
+* improved styles for nested styled lists
+* changed a lot of styles of blocks
+* removed wp-i18 dependency from the main script, used for Countdown script only
+* fixed Styled Lists text wrap
+* fixed TOC block inside columns
+* fixed Progress bar count tooltip size when progress bar has a small width
+* fixed Twitter block profile description pre-wrap
+* fixed Contact Form mail template long words break
+* fixed loading fonts dependencies when fonts are not selected
+* fixed color palette PHP error, when palette is empty by default
+
+= 2.9.3 =
+
+* fixed assets enqueue sequence (plugins -> Ghost Kit -> theme)
+
+= 2.9.2 =
+
+* added higher assets enqueue priority (fixes styles bug with AWB plugin)
+
+= 2.9.1 =
+
+* added Twitter block Text Mode option (to display full tweet text)
+* added icon picker Search input autofocus
+* added Reset button in Icon Picker component
+* added null option to Select Field when default value is not selected
+* added option to remove photo from Testimonial block
+* improved Twitter block text formatting (line breaks)
+* improved conditional options display in the editor for Alert and Icon Box blocks
+* change unique Form Fields slug slash to underscore
+* prevent Form Fields input focus in editor
+* fixed vertical Tabs Pills active tab styles
+* fixed Buttons block align option in editor
+* fixed php error when use rest to get image by id, that is not exists
+
+= 2.9.0 =
+
+Note: there may be breaking changes. Try to re-save pages if you see issues on the frontend.
+
+* loading blocks assets conditionally only when block added on the page (better pages performance)
+* added Form block <https://ghostkit.io/blocks/contact-form/>
+* added URL options to testimonial block
+* added styled inner lists in table of contents block
+* added "Add Template" button in editor Toolbar
+* changed icons in blocks to pure SVG and removed FontAwesome scripts (better pages performance)
+* changed wp-editor dependency to wp-block-editor (possible fix conflict with 3rd-party plugins like Yoast SEO)
+* fixed left and right margin in grid, button, pricing table blocks in Twenty* themes
+* fixed accordion and tabs item hash missing dash
+* fixed js error if used missing font (for ex. when disabling PRO plugin)
+* fixed Table of Contents editor preview
+
+= 2.8.2 =
+
+* fixed Adobe Fonts CSS output in PRO plugin
+
+= 2.8.1 =
+
+* fixed JS files translation possibility (read /languages/readme.md for more info)
+
+= 2.8.0 =
+
+* added Adobe Fonts in PRO version
+* added Shape Divider block <https://ghostkit.io/blocks/shape-divider/>
+* added Frame extension (border, shadow, radius) <https://ghostkit.io/extensions/frame/>
+* added Color Palette plugin to extend default Gutenberg color palette <https://ghostkit.io/extensions/color-palette/>
+* added possibility to activate Tabs and Accordions on hash change
+* added visual styles in editor for hidden blocks that used Display extension
+* improved Table of Contents block reload after headings change (no jumping in the editor anymore)
+* fixed Reusable Widget number of blocks to select
+* fixed Instagram block image alt attribute
+* fixed font family reset button also resets font category
+* fixed non-working links in TOC block when used special characters
+* fixed Grid Columns, Buttons gap styles in editor
+* fixed Display extension not adding classname
+* fixed alignfull grid background margins
 
 = 2.7.1 =
 

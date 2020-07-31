@@ -25,7 +25,7 @@ class GhostKit_Rest extends WP_REST_Controller {
      *
      * @var string
      */
-    protected $version   = '1';
+    protected $version = '1';
 
     /**
      * GhostKit_Rest constructor.
@@ -42,7 +42,9 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Get layouts list.
         register_rest_route(
-            $namespace, '/get_customizer/', array(
+            $namespace,
+            '/get_customizer/',
+            array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_customizer' ),
                 'permission_callback' => array( $this, 'get_customizer_permission' ),
@@ -51,7 +53,9 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Get attachment image <img> tag.
         register_rest_route(
-            $namespace, '/get_attachment_image/(?P<id>[\d]+)', array(
+            $namespace,
+            '/get_attachment_image/(?P<id>[\d]+)',
+            array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_attachment_image' ),
                 'permission_callback' => array( $this, 'get_attachment_image_permission' ),
@@ -60,7 +64,9 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Get Instagram profile.
         register_rest_route(
-            $namespace, '/get_instagram_profile/', array(
+            $namespace,
+            '/get_instagram_profile/',
+            array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_instagram_profile' ),
                 'permission_callback' => array( $this, 'get_instagram_profile_permission' ),
@@ -69,7 +75,9 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Get Instagram feed.
         register_rest_route(
-            $namespace, '/get_instagram_feed/', array(
+            $namespace,
+            '/get_instagram_feed/',
+            array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_instagram_feed' ),
                 'permission_callback' => array( $this, 'get_instagram_feed_permission' ),
@@ -78,7 +86,9 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Get Twitter profile.
         register_rest_route(
-            $namespace, '/get_twitter_profile/', array(
+            $namespace,
+            '/get_twitter_profile/',
+            array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_twitter_profile' ),
                 'permission_callback' => array( $this, 'get_twitter_profile_permission' ),
@@ -87,7 +97,9 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Get Twitter feed.
         register_rest_route(
-            $namespace, '/get_twitter_feed/', array(
+            $namespace,
+            '/get_twitter_feed/',
+            array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_twitter_feed' ),
                 'permission_callback' => array( $this, 'get_twitter_feed_permission' ),
@@ -96,7 +108,9 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Get TOC.
         register_rest_route(
-            $namespace, '/get_table_of_contents/', array(
+            $namespace,
+            '/get_table_of_contents/',
+            array(
                 'methods'  => WP_REST_Server::READABLE,
                 'callback' => array( $this, 'get_table_of_contents' ),
             )
@@ -104,7 +118,9 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Get Templates.
         register_rest_route(
-            $namespace, '/get_templates/', array(
+            $namespace,
+            '/get_templates/',
+            array(
                 'methods'  => WP_REST_Server::READABLE,
                 'callback' => array( $this, 'get_templates' ),
             )
@@ -112,7 +128,9 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Get template data.
         register_rest_route(
-            $namespace, '/get_template_data/', array(
+            $namespace,
+            '/get_template_data/',
+            array(
                 'methods'  => WP_REST_Server::READABLE,
                 'callback' => array( $this, 'get_template_data' ),
             )
@@ -120,7 +138,9 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Get Custom Code.
         register_rest_route(
-            $namespace, '/get_custom_code/', array(
+            $namespace,
+            '/get_custom_code/',
+            array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_custom_code' ),
                 'permission_callback' => array( $this, 'get_custom_code_permission' ),
@@ -129,16 +149,31 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Update Custom Code.
         register_rest_route(
-            $namespace, '/update_custom_code/', array(
+            $namespace,
+            '/update_custom_code/',
+            array(
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => array( $this, 'update_custom_code' ),
                 'permission_callback' => array( $this, 'update_custom_code_permission' ),
             )
         );
 
+        // Update Color Palette.
+        register_rest_route(
+            $namespace,
+            '/update_color_palette/',
+            array(
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => array( $this, 'update_color_palette' ),
+                'permission_callback' => array( $this, 'update_color_palette_permission' ),
+            )
+        );
+
         // Get Typography.
         register_rest_route(
-            $namespace, '/get_custom_typography/', array(
+            $namespace,
+            '/get_custom_typography/',
+            array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_custom_typography' ),
                 'permission_callback' => array( $this, 'get_custom_typography_permission' ),
@@ -147,7 +182,9 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Update Typography.
         register_rest_route(
-            $namespace, '/update_custom_typography/', array(
+            $namespace,
+            '/update_custom_typography/',
+            array(
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => array( $this, 'update_custom_typography' ),
                 'permission_callback' => array( $this, 'update_custom_typography_permission' ),
@@ -156,16 +193,31 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Update Google Maps API key.
         register_rest_route(
-            $namespace, '/update_google_maps_api_key/', array(
+            $namespace,
+            '/update_google_maps_api_key/',
+            array(
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => array( $this, 'update_google_maps_api_key' ),
                 'permission_callback' => array( $this, 'update_google_maps_api_key_permission' ),
             )
         );
 
+        // Update Google reCaptcha keys.
+        register_rest_route(
+            $namespace,
+            '/update_google_recaptcha_keys/',
+            array(
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => array( $this, 'update_google_recaptcha_keys' ),
+                'permission_callback' => array( $this, 'update_google_recaptcha_keys_permission' ),
+            )
+        );
+
         // Update Disabled Blocks.
         register_rest_route(
-            $namespace, '/update_disabled_blocks/', array(
+            $namespace,
+            '/update_disabled_blocks/',
+            array(
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => array( $this, 'update_disabled_blocks' ),
                 'permission_callback' => array( $this, 'update_disabled_blocks_permission' ),
@@ -174,7 +226,9 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Update Settings.
         register_rest_route(
-            $namespace, '/update_settings/', array(
+            $namespace,
+            '/update_settings/',
+            array(
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => array( $this, 'update_settings' ),
                 'permission_callback' => array( $this, 'update_settings_permission' ),
@@ -250,11 +304,11 @@ class GhostKit_Rest extends WP_REST_Controller {
      * @return bool
      */
     public function get_twitter_feed_permission( WP_REST_Request $request ) {
-        $consumer_key = $request->get_param( 'consumer_key' );
-        $consumer_secret = $request->get_param( 'consumer_secret' );
-        $access_token = $request->get_param( 'access_token' );
+        $consumer_key        = $request->get_param( 'consumer_key' );
+        $consumer_secret     = $request->get_param( 'consumer_secret' );
+        $access_token        = $request->get_param( 'access_token' );
         $access_token_secret = $request->get_param( 'access_token_secret' );
-        $screen_name = $request->get_param( 'screen_name' );
+        $screen_name         = $request->get_param( 'screen_name' );
 
         if ( ! $consumer_key ) {
             return $this->error( 'no_consumer_key_found', __( 'Provide Twitter Consumer Key.', 'ghostkit' ) );
@@ -283,11 +337,11 @@ class GhostKit_Rest extends WP_REST_Controller {
      * @return bool
      */
     public function get_twitter_profile_permission( WP_REST_Request $request ) {
-        $consumer_key = $request->get_param( 'consumer_key' );
-        $consumer_secret = $request->get_param( 'consumer_secret' );
-        $access_token = $request->get_param( 'access_token' );
+        $consumer_key        = $request->get_param( 'consumer_key' );
+        $consumer_secret     = $request->get_param( 'consumer_secret' );
+        $access_token        = $request->get_param( 'access_token' );
         $access_token_secret = $request->get_param( 'access_token_secret' );
-        $screen_name = $request->get_param( 'screen_name' );
+        $screen_name         = $request->get_param( 'screen_name' );
 
         if ( ! $consumer_key ) {
             return $this->error( 'no_consumer_key_found', __( 'Provide Twitter Consumer Key.', 'ghostkit' ) );
@@ -333,6 +387,18 @@ class GhostKit_Rest extends WP_REST_Controller {
     }
 
     /**
+     * Get edit color palette permissions.
+     *
+     * @return bool
+     */
+    public function update_color_palette_permission() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return $this->error( 'user_dont_have_permission', __( 'User don\'t have permissions to change options.', 'ghostkit' ) );
+        }
+        return true;
+    }
+
+    /**
      * Get read typography permissions.
      *
      * @return bool
@@ -357,11 +423,23 @@ class GhostKit_Rest extends WP_REST_Controller {
     }
 
     /**
-     * Get read google maps api key permissions.
+     * Get read Google Maps API key permissions.
      *
      * @return bool
      */
     public function update_google_maps_api_key_permission() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return $this->error( 'user_dont_have_permission', __( 'User don\'t have permissions to change options.', 'ghostkit' ) );
+        }
+        return true;
+    }
+
+    /**
+     * Get read Google reCaptcha API keys permissions.
+     *
+     * @return bool
+     */
+    public function update_google_recaptcha_keys_permission() {
         if ( ! current_user_can( 'manage_options' ) ) {
             return $this->error( 'user_dont_have_permission', __( 'User don\'t have permissions to change options.', 'ghostkit' ) );
         }
@@ -415,10 +493,10 @@ class GhostKit_Rest extends WP_REST_Controller {
      * @return mixed
      */
     public function get_attachment_image( WP_REST_Request $request ) {
-        $id = $request->get_param( 'id' );
-        $size = $request->get_param( 'size' );
-        $icon = $request->get_param( 'icon' );
-        $attr = $request->get_param( 'attr' );
+        $id      = $request->get_param( 'id' );
+        $size    = $request->get_param( 'size' );
+        $icon    = $request->get_param( 'icon' );
+        $attr    = $request->get_param( 'attr' );
         $div_tag = $request->get_param( 'div_tag' );
 
         $attr = isset( $attr ) && $attr && is_array( $attr ) ? $attr : array();
@@ -432,18 +510,21 @@ class GhostKit_Rest extends WP_REST_Controller {
 
             $attr['style'] .= 'background-image: url("' . esc_url( $image_url ) . '");';
 
-            $attr = array_map( 'esc_attr', $attr );
+            $attr  = array_map( 'esc_attr', $attr );
             $image = '<div';
+
             foreach ( $attr as $name => $value ) {
                 $image .= " $name=" . '"' . $value . '"';
             }
+
             $image .= '></div>';
         } else {
             $image_src = wp_get_attachment_image_src( $id, $size, $icon );
 
             if ( $image_src ) {
                 list( $src, $width, $height ) = $image_src;
-                $alt = trim( strip_tags( get_post_meta( $id, '_wp_attachment_image_alt', true ) ) );
+
+                $alt = trim( wp_strip_all_tags( get_post_meta( $id, '_wp_attachment_image_alt', true ) ) );
 
                 if ( $alt ) {
                     $attr['alt'] = $alt;
@@ -455,7 +536,7 @@ class GhostKit_Rest extends WP_REST_Controller {
                     $attr['class'] = 'wp-image-' . $id . ' ' . $attr['class'];
                 }
 
-                $attr['width'] = $width;
+                $attr['width']  = $width;
                 $attr['height'] = $height;
 
                 $attrs_str = '';
@@ -470,7 +551,7 @@ class GhostKit_Rest extends WP_REST_Controller {
             }
         }
 
-        if ( $image ) {
+        if ( isset( $image ) && $image ) {
             return $this->success( $image );
         } else {
             return $this->error( 'no_image_found', __( 'Image not found.', 'ghostkit' ) );
@@ -485,13 +566,13 @@ class GhostKit_Rest extends WP_REST_Controller {
      * @return mixed
      */
     public function get_instagram_feed( WP_REST_Request $request ) {
-        $cache_name = 'ghostkit_instagram_feed_cache';
-        $cache_expiration = $request->get_param( 'cache_expiration' ) ? : DAY_IN_SECONDS;
-        $count = $request->get_param( 'count' ) ? : 6;
-        $access_token = $request->get_param( 'access_token' );
+        $cache_name       = 'ghostkit_instagram_feed_cache';
+        $cache_expiration = $request->get_param( 'cache_expiration' ) ? $request->get_param( 'cache_expiration' ) : DAY_IN_SECONDS;
+        $count            = $request->get_param( 'count' ) ? $request->get_param( 'count' ) : 6;
+        $access_token     = $request->get_param( 'access_token' );
 
         $hash = md5(
-            json_encode(
+            wp_json_encode(
                 array(
                     $access_token,
                     $count,
@@ -537,12 +618,12 @@ class GhostKit_Rest extends WP_REST_Controller {
      * @return mixed
      */
     public function get_instagram_profile( WP_REST_Request $request ) {
-        $cache_name = 'ghostkit_instagram_profile_cache';
-        $cache_expiration = $request->get_param( 'cache_expiration' ) ? : DAY_IN_SECONDS;
-        $access_token = $request->get_param( 'access_token' );
+        $cache_name       = 'ghostkit_instagram_profile_cache';
+        $cache_expiration = $request->get_param( 'cache_expiration' ) ? $request->get_param( 'cache_expiration' ) : DAY_IN_SECONDS;
+        $access_token     = $request->get_param( 'access_token' );
 
         $hash = md5(
-            json_encode(
+            wp_json_encode(
                 array(
                     $access_token,
                     $cache_expiration,
@@ -587,19 +668,19 @@ class GhostKit_Rest extends WP_REST_Controller {
      * @return mixed
      */
     public function get_twitter_profile( WP_REST_Request $request ) {
-        $cache_name = 'ghostkit_twitter_profile_cache';
-        $cache_expiration = $request->get_param( 'cache_expiration' ) ? : DAY_IN_SECONDS;
+        $cache_name       = 'ghostkit_twitter_profile_cache';
+        $cache_expiration = $request->get_param( 'cache_expiration' ) ? $request->get_param( 'cache_expiration' ) : DAY_IN_SECONDS;
 
-        $consumer_key = $request->get_param( 'consumer_key' );
-        $consumer_secret = $request->get_param( 'consumer_secret' );
-        $access_token = $request->get_param( 'access_token' );
+        $consumer_key        = $request->get_param( 'consumer_key' );
+        $consumer_secret     = $request->get_param( 'consumer_secret' );
+        $access_token        = $request->get_param( 'access_token' );
         $access_token_secret = $request->get_param( 'access_token_secret' );
-        $screen_name = $request->get_param( 'screen_name' );
+        $screen_name         = $request->get_param( 'screen_name' );
 
         $api_data_ready = $consumer_key && $consumer_secret && $access_token && $access_token_secret;
 
         $hash = md5(
-            json_encode(
+            wp_json_encode(
                 array(
                     $consumer_key,
                     $consumer_secret,
@@ -620,13 +701,13 @@ class GhostKit_Rest extends WP_REST_Controller {
             // request_api_twitter.
             $profile = $this->request_api_twitter(
                 array(
-                    'url' => 'https://api.twitter.com/1.1/users/show.json',
-                    'consumer_key' => $consumer_key,
-                    'consumer_secret' => $consumer_secret,
-                    'access_token' => $access_token,
+                    'url'                 => 'https://api.twitter.com/1.1/users/show.json',
+                    'consumer_key'        => $consumer_key,
+                    'consumer_secret'     => $consumer_secret,
+                    'access_token'        => $access_token,
                     'access_token_secret' => $access_token_secret,
-                    'include_entities' => 'true',
-                    'screen_name' => $screen_name,
+                    'include_entities'    => 'true',
+                    'screen_name'         => $screen_name,
                 )
             );
 
@@ -642,11 +723,11 @@ class GhostKit_Rest extends WP_REST_Controller {
                 }
 
                 // prepare short counts.
-                $result['followers_count_short'] = $this->convert_number_short( $result['followers_count'] );
-                $result['friends_count_short'] = $this->convert_number_short( $result['friends_count'] );
-                $result['listed_count_short'] = $this->convert_number_short( $result['listed_count'] );
+                $result['followers_count_short']  = $this->convert_number_short( $result['followers_count'] );
+                $result['friends_count_short']    = $this->convert_number_short( $result['friends_count'] );
+                $result['listed_count_short']     = $this->convert_number_short( $result['listed_count'] );
                 $result['favourites_count_short'] = $this->convert_number_short( $result['favourites_count'] );
-                $result['statuses_count_short'] = $this->convert_number_short( $result['statuses_count'] );
+                $result['statuses_count_short']   = $this->convert_number_short( $result['statuses_count'] );
 
                 // prepare url link.
                 if ( $result['url'] && isset( $result['entities']['url'] ) ) {
@@ -677,28 +758,30 @@ class GhostKit_Rest extends WP_REST_Controller {
      * @return mixed
      */
     public function get_twitter_feed( WP_REST_Request $request ) {
-        $cache_name = 'ghostkit_twitter_feed_cache';
-        $cache_expiration = $request->get_param( 'cache_expiration' ) ? : DAY_IN_SECONDS;
+        $cache_name       = 'ghostkit_twitter_feed_cache';
+        $cache_expiration = $request->get_param( 'cache_expiration' ) ? $request->get_param( 'cache_expiration' ) : DAY_IN_SECONDS;
 
-        $count = (int) $request->get_param( 'count' ) ? : 6;
-        $consumer_key = $request->get_param( 'consumer_key' );
-        $consumer_secret = $request->get_param( 'consumer_secret' );
-        $access_token = $request->get_param( 'access_token' );
+        $count               = (int) ( $request->get_param( 'count' ) ? $request->get_param( 'count' ) : 6 );
+        $consumer_key        = $request->get_param( 'consumer_key' );
+        $consumer_secret     = $request->get_param( 'consumer_secret' );
+        $access_token        = $request->get_param( 'access_token' );
         $access_token_secret = $request->get_param( 'access_token_secret' );
-        $screen_name = $request->get_param( 'screen_name' );
-        $exclude_replies = 'true' === $request->get_param( 'exclude_replies' );
-        $include_rts = 'true' === $request->get_param( 'include_rts' );
+        $screen_name         = $request->get_param( 'screen_name' );
+        $exclude_replies     = 'true' === $request->get_param( 'exclude_replies' );
+        $include_rts         = 'true' === $request->get_param( 'include_rts' );
+        $tweet_mode_extended = 'true' === $request->get_param( 'tweet_mode_extended' );
 
         $api_data_ready = $consumer_key && $consumer_secret && $access_token && $access_token_secret;
 
         $hash = md5(
-            json_encode(
+            wp_json_encode(
                 array(
                     $consumer_key,
                     $consumer_secret,
                     $access_token,
                     $access_token_secret,
                     $cache_expiration,
+                    $tweet_mode_extended,
                 )
             )
         );
@@ -715,15 +798,16 @@ class GhostKit_Rest extends WP_REST_Controller {
             if ( false === $feed ) {
                 $feed = $this->request_api_twitter(
                     array(
-                        'url' => 'https://api.twitter.com/1.1/statuses/user_timeline.json',
-                        'consumer_key' => $consumer_key,
-                        'consumer_secret' => $consumer_secret,
-                        'access_token' => $access_token,
+                        'url'                 => 'https://api.twitter.com/1.1/statuses/user_timeline.json',
+                        'consumer_key'        => $consumer_key,
+                        'consumer_secret'     => $consumer_secret,
+                        'access_token'        => $access_token,
                         'access_token_secret' => $access_token_secret,
-                        'screen_name' => $screen_name,
-                        'exclude_replies' => 'false',
-                        'include_rts' => 'true',
-                        'count' => 200,
+                        'screen_name'         => $screen_name,
+                        'tweet_mode_extended' => $tweet_mode_extended,
+                        'exclude_replies'     => 'false',
+                        'include_rts'         => 'true',
+                        'count'               => 200,
                     )
                 );
 
@@ -734,7 +818,7 @@ class GhostKit_Rest extends WP_REST_Controller {
                 }
             }
 
-            $tweets_count = $feed ? count( $feed ) : 0;
+            $tweets_count     = $feed ? count( $feed ) : 0;
             $limit_to_display = min( $count, $tweets_count );
 
             if ( $limit_to_display > 0 ) {
@@ -751,10 +835,32 @@ class GhostKit_Rest extends WP_REST_Controller {
                         continue;
                     }
 
+                    // full text.
+                    if ( $tweet_mode_extended || ! isset( $new_item['text'] ) ) {
+                        $text = isset( $new_item['full_text'] ) ? $new_item['full_text'] : null;
+
+                        if ( null === $text ) {
+                            $text = isset( $new_item['text'] ) ? $new_item['text'] : '';
+                        }
+
+                        $new_item['text'] = $text;
+                    }
+
                     // prepare tweet content.
                     $new_item = $this->prepare_tweet_content( $new_item );
 
                     if ( isset( $new_item['retweeted_status'] ) ) {
+                        // full text.
+                        if ( $tweet_mode_extended || ! isset( $new_item['retweeted_status']['text'] ) ) {
+                            $text = isset( $new_item['retweeted_status']['full_text'] ) ? $new_item['retweeted_status']['full_text'] : null;
+
+                            if ( null === $text ) {
+                                $text = isset( $new_item['retweeted_status']['text'] ) ? $new_item['retweeted_status']['text'] : '';
+                            }
+
+                            $new_item['retweeted_status']['text'] = $text;
+                        }
+
                         $new_item['retweeted_status'] = $this->prepare_tweet_content( $new_item['retweeted_status'] );
                     }
 
@@ -784,66 +890,78 @@ class GhostKit_Rest extends WP_REST_Controller {
     public function request_api_twitter( $data ) {
         $data = array_merge(
             array(
-                'url' => 'https://api.twitter.com/1.1/statuses/user_timeline.json',
-                'consumer_key' => '',
-                'consumer_secret' => '',
-                'access_token' => '',
+                'url'                 => 'https://api.twitter.com/1.1/statuses/user_timeline.json',
+                'consumer_key'        => '',
+                'consumer_secret'     => '',
+                'access_token'        => '',
                 'access_token_secret' => '',
-                'screen_name' => '',
-                'exclude_replies' => '',
-                'include_rts' => '',
-                'count' => '',
-                'include_entities' => '',
-            ), $data
+                'screen_name'         => '',
+                'exclude_replies'     => '',
+                'include_rts'         => '',
+                'count'               => '',
+                'include_entities'    => '',
+                'tweet_mode_extended' => '',
+            ),
+            $data
         );
 
         $oauth = array(
-            'oauth_consumer_key' => $data['consumer_key'],
-            'oauth_nonce' => time(),
+            'oauth_consumer_key'     => $data['consumer_key'],
+            'oauth_nonce'            => time(),
             'oauth_signature_method' => 'HMAC-SHA1',
-            'oauth_token' => $data['access_token'],
-            'oauth_timestamp' => time(),
-            'oauth_version' => '1.0',
+            'oauth_token'            => $data['access_token'],
+            'oauth_timestamp'        => time(),
+            'oauth_version'          => '1.0',
         );
 
         $base_info_url = $data['url'];
 
         if ( $data['screen_name'] ) {
-            $data['url'] .= strpos( $data['url'], '?' ) !== false ? '&' : '?';
-            $data['url'] .= 'screen_name=' . $data['screen_name'];
+            $data['url']         .= strpos( $data['url'], '?' ) !== false ? '&' : '?';
+            $data['url']         .= 'screen_name=' . $data['screen_name'];
             $oauth['screen_name'] = $data['screen_name'];
         }
         if ( $data['exclude_replies'] ) {
-            $data['url'] .= strpos( $data['url'], '?' ) !== false ? '&' : '?';
-            $data['url'] .= 'exclude_replies=' . $data['exclude_replies'];
+            $data['url']             .= strpos( $data['url'], '?' ) !== false ? '&' : '?';
+            $data['url']             .= 'exclude_replies=' . $data['exclude_replies'];
             $oauth['exclude_replies'] = $data['exclude_replies'];
         }
         if ( $data['include_rts'] ) {
-            $data['url'] .= strpos( $data['url'], '?' ) !== false ? '&' : '?';
-            $data['url'] .= 'include_rts=' . $data['include_rts'];
+            $data['url']         .= strpos( $data['url'], '?' ) !== false ? '&' : '?';
+            $data['url']         .= 'include_rts=' . $data['include_rts'];
             $oauth['include_rts'] = $data['include_rts'];
         }
         if ( $data['count'] ) {
-            $data['url'] .= strpos( $data['url'], '?' ) !== false ? '&' : '?';
-            $data['url'] .= 'count=' . $data['count'];
+            $data['url']   .= strpos( $data['url'], '?' ) !== false ? '&' : '?';
+            $data['url']   .= 'count=' . $data['count'];
             $oauth['count'] = $data['count'];
         }
         if ( $data['include_entities'] ) {
-            $data['url'] .= strpos( $data['url'], '?' ) !== false ? '&' : '?';
-            $data['url'] .= 'include_entities=' . $data['include_entities'];
+            $data['url']              .= strpos( $data['url'], '?' ) !== false ? '&' : '?';
+            $data['url']              .= 'include_entities=' . $data['include_entities'];
             $oauth['include_entities'] = $data['include_entities'];
         }
 
-        $base_info = $this->build_base_string( $base_info_url, 'GET', $oauth );
+        // Tweet Mode.
+        if ( $data['tweet_mode_extended'] ) {
+            $data['url']        .= strpos( $data['url'], '?' ) !== false ? '&' : '?';
+            $data['url']        .= 'tweet_mode=extended';
+            $oauth['tweet_mode'] = 'extended';
+        }
+
+        $base_info     = $this->build_base_string( $base_info_url, 'GET', $oauth );
         $composite_key = rawurlencode( $data['consumer_secret'] ) . '&' . rawurlencode( $data['access_token_secret'] );
-        $oauth_signature = base64_encode( hash_hmac( 'sha1', $base_info, $composite_key, true ) );
+
+        // phpcs:ignore
+        $oauth_signature          = base64_encode( hash_hmac( 'sha1', $base_info, $composite_key, true ) );
         $oauth['oauth_signature'] = $oauth_signature;
 
         // Make Requests.
-        $header = array( $this->build_authorization_header( $oauth ), 'Expect:' );
+        $header      = array( $this->build_authorization_header( $oauth ), 'Expect:' );
         $options_buf = wp_remote_get(
-            $data['url'], array(
-                'headers' => implode( "\n", $header ),
+            $data['url'],
+            array(
+                'headers'   => implode( "\n", $header ),
                 'sslverify' => false,
             )
         );
@@ -881,12 +999,15 @@ class GhostKit_Rest extends WP_REST_Controller {
      * @return string
      */
     private function build_authorization_header( $oauth ) {
-        $r = 'Authorization: OAuth ';
+        $r      = 'Authorization: OAuth ';
         $values = array();
+
         foreach ( $oauth as $key => $value ) {
             $values[] = "$key=\"" . rawurlencode( $value ) . '"';
         }
+
         $r .= implode( ', ', $values );
+
         return $r;
     }
 
@@ -907,12 +1028,12 @@ class GhostKit_Rest extends WP_REST_Controller {
         }
 
         // prepare short counts.
-        $tweet['retweet_count_short'] = $this->convert_number_short( $tweet['retweet_count'] );
+        $tweet['retweet_count_short']  = $this->convert_number_short( $tweet['retweet_count'] );
         $tweet['favorite_count_short'] = $this->convert_number_short( $tweet['favorite_count'] );
 
         // user friendly date.
-        $date = strtotime( $tweet['created_at'] );
-        $now = time();
+        $date      = strtotime( $tweet['created_at'] );
+        $now       = time();
         $diff_date = $now - $date;
 
         if ( $diff_date / 60 < 1 ) {
@@ -927,12 +1048,12 @@ class GhostKit_Rest extends WP_REST_Controller {
             // hours.
             // translators: %d - hours.
             $date = sprintf( esc_html__( '%dh', 'ghostkit' ), intval( $diff_date / 3600 ) );
-        } elseif ( date( 'Y' ) === date( 'Y', $date ) ) {
+        } elseif ( gmdate( 'Y' ) === gmdate( 'Y', $date ) ) {
             // current year.
-            $date = date( esc_html__( 'M j', 'ghostkit' ), $date );
+            $date = gmdate( esc_html__( 'M j', 'ghostkit' ), $date );
         } else {
             // past years.
-            $date = date( esc_html__( 'Y M j', 'ghostkit' ), $date );
+            $date = gmdate( esc_html__( 'Y M j', 'ghostkit' ), $date );
         }
 
         $tweet['date_formatted'] = $date;
@@ -961,7 +1082,7 @@ class GhostKit_Rest extends WP_REST_Controller {
         $replacements = array();
         if ( isset( $entities['hashtags'] ) ) {
             foreach ( $entities['hashtags'] as $hashtag ) {
-                list ($start, $end) = $hashtag['indices'];
+                list ($start, $end)     = $hashtag['indices'];
                 $replacements[ $start ] = array(
                     $start,
                     $end,
@@ -982,7 +1103,7 @@ class GhostKit_Rest extends WP_REST_Controller {
         }
         if ( isset( $entities['user_mentions'] ) ) {
             foreach ( $entities['user_mentions'] as $mention ) {
-                list ($start, $end) = $mention['indices'];
+                list ($start, $end)     = $mention['indices'];
                 $replacements[ $start ] = array(
                     $start,
                     $end,
@@ -1015,6 +1136,7 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         foreach ( $replacements as $replace_data ) {
             list ($start, $end, $replace_text) = $replace_data;
+
             $text = mb_substr( $text, 0, $start, 'UTF-8' ) . $replace_text . mb_substr( $text, $end, null, 'UTF-8' );
         }
 
@@ -1030,14 +1152,14 @@ class GhostKit_Rest extends WP_REST_Controller {
      */
     public function convert_number_short( $num ) {
         if ( $num > 1000 ) {
-            $x = round( $num );
+            $x               = round( $num );
             $x_number_format = number_format( $x );
-            $x_array = explode( ',', $x_number_format );
-            $x_parts = array( 'K', 'M', 'B', 'T' );
-            $x_count_parts = count( $x_array ) - 1;
-            $x_display = $x;
-            $x_display = $x_array[0] . ( (int) 0 !== $x_array[1][0] ? '.' . $x_array[1][0] : '' );
-            $x_display .= $x_parts[ $x_count_parts - 1 ];
+            $x_array         = explode( ',', $x_number_format );
+            $x_parts         = array( 'K', 'M', 'B', 'T' );
+            $x_count_parts   = count( $x_array ) - 1;
+            $x_display       = $x;
+            $x_display       = $x_array[0] . ( (int) 0 !== $x_array[1][0] ? '.' . $x_array[1][0] : '' );
+            $x_display      .= $x_parts[ $x_count_parts - 1 ];
 
             return $x_display;
         }
@@ -1056,17 +1178,17 @@ class GhostKit_Rest extends WP_REST_Controller {
     public function get_twitter_profile_images( $url ) {
         if ( strpos( $url, '.jpg' ) !== false ) {
             return array(
-                'normal' => $url,
-                'bigger' => str_replace( '_normal.jpg', '_bigger.jpg', $url ),
-                'mini' => str_replace( '_normal.jpg', '_mini.jpg', $url ),
+                'normal'   => $url,
+                'bigger'   => str_replace( '_normal.jpg', '_bigger.jpg', $url ),
+                'mini'     => str_replace( '_normal.jpg', '_mini.jpg', $url ),
                 'original' => str_replace( '_normal.jpg', '.jpg', $url ),
             );
         }
 
         return array(
-            'normal' => $url,
-            'bigger' => str_replace( '_normal.png', '_bigger.png', $url ),
-            'mini' => str_replace( '_normal.png', '_mini.png', $url ),
+            'normal'   => $url,
+            'bigger'   => str_replace( '_normal.png', '_bigger.png', $url ),
+            'mini'     => str_replace( '_normal.png', '_mini.png', $url ),
             'original' => str_replace( '_normal.png', '.png', $url ),
         );
     }
@@ -1079,9 +1201,9 @@ class GhostKit_Rest extends WP_REST_Controller {
      * @return mixed
      */
     public function get_table_of_contents( WP_REST_Request $request ) {
-        $headings = $request->get_param( 'headings' );
+        $headings        = $request->get_param( 'headings' );
         $allowed_headers = $request->get_param( 'allowedHeaders' );
-        $list_style = $request->get_param( 'listStyle' ) ? : 'ol';
+        $list_style      = $request->get_param( 'listStyle' ) ? $request->get_param( 'listStyle' ) : 'ol';
 
         $html = '';
 
@@ -1089,14 +1211,17 @@ class GhostKit_Rest extends WP_REST_Controller {
             return $this->success( $html );
         }
 
-        $current_depth = 6;
-        $numbered_items = array();
+        // covert string values to int.
+        $allowed_headers = array_map( 'intval', $allowed_headers );
+
+        $current_depth      = 6;
+        $numbered_items     = array();
         $numbered_items_min = null;
-        $count = count( $headings );
+        $count              = count( $headings );
 
         // find the minimum heading to establish our baseline.
         for ( $i = 0; $i < $count; $i++ ) {
-            if ( $current_depth > $headings[ $i ]['level'] ) {
+            if ( $current_depth > (int) $headings[ $i ]['level'] ) {
                 $current_depth = (int) $headings[ $i ]['level'];
             }
         }
@@ -1109,11 +1234,11 @@ class GhostKit_Rest extends WP_REST_Controller {
             }
 
             // start lists.
-            if ( $current_depth != (int) $headings[ $i ]['level'] ) {
+            if ( $current_depth !== (int) $headings[ $i ]['level'] ) {
                 for ( $current_depth; $current_depth < (int) $headings[ $i ]['level']; $current_depth++ ) {
                     $numbered_items[ $current_depth + 1 ] = 0;
 
-                    if ( ! in_array( $current_depth, $allowed_headers ) ) {
+                    if ( ! in_array( $current_depth, $allowed_headers, true ) ) {
                         continue;
                     }
 
@@ -1130,7 +1255,7 @@ class GhostKit_Rest extends WP_REST_Controller {
                     for ( $current_depth; $current_depth > (int) $headings[ $i + 1 ]['level']; $current_depth-- ) {
                         $numbered_items[ $current_depth ] = 0;
 
-                        if ( ! in_array( $current_depth, $allowed_headers ) ) {
+                        if ( ! in_array( $current_depth, $allowed_headers, true ) ) {
                             continue;
                         }
 
@@ -1138,13 +1263,13 @@ class GhostKit_Rest extends WP_REST_Controller {
                         $html .= '</ul>';
                     }
                 }
-                if ( (int) @$headings[ $i + 1 ]['level'] === $current_depth ) {
+                if ( isset( $headings[ $i + 1 ]['level'] ) && (int) $headings[ $i + 1 ]['level'] === $current_depth ) {
                     $html .= '</li>';
                 }
             } else {
                 // this is the last item, make sure we close off all tags.
                 for ( $current_depth; $current_depth >= $numbered_items_min; $current_depth-- ) {
-                    if ( ! in_array( $current_depth, $allowed_headers ) ) {
+                    if ( ! in_array( $current_depth, $allowed_headers, true ) ) {
                         continue;
                     }
 
@@ -1158,7 +1283,7 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         // Wrapper.
         if ( $html ) {
-            $list = 'ol';
+            $list            = 'ol';
             $list_class_name = '';
 
             switch ( $list_style ) {
@@ -1166,7 +1291,7 @@ class GhostKit_Rest extends WP_REST_Controller {
                     $list = 'ul';
                     break;
                 case 'ul-styled':
-                    $list = 'ul';
+                    $list            = 'ul';
                     $list_class_name = 'is-style-styled';
                     break;
                 case 'ol-styled':
@@ -1186,7 +1311,7 @@ class GhostKit_Rest extends WP_REST_Controller {
      * @return mixed
      */
     public function get_templates() {
-        $url = 'https://library.ghostkit.io/wp-json/ghostkit-library/v1/get_library/';
+        $url       = 'https://library.ghostkit.io/wp-json/ghostkit-library/v1/get_library/';
         $templates = get_transient( 'ghostkit_remote_templates', false );
 
         /*
@@ -1196,10 +1321,11 @@ class GhostKit_Rest extends WP_REST_Controller {
             $requested_templates = wp_remote_get(
                 add_query_arg(
                     array(
-                        'ghostkit_version'     => '2.7.1',
+                        'ghostkit_version'     => '2.13.2',
                         'ghostkit_pro'         => function_exists( 'ghostkit_pro' ),
                         'ghostkit_pro_version' => function_exists( 'ghostkit_pro' ) ? ghostkit_pro()->plugin_version : null,
-                    ), $url
+                    ),
+                    $url
                 )
             );
 
@@ -1239,13 +1365,12 @@ class GhostKit_Rest extends WP_REST_Controller {
         // https://core.trac.wordpress.org/ticket/18408.
         global $post;
         $backup_global_post = $post;
-        $local_templates = array();
+        $local_templates    = array();
 
         $local_templates_query = new WP_Query(
             array(
                 'post_type'      => 'ghostkit_template',
-            // phpcs:ignore
-            'posts_per_page' => -1,
+                'posts_per_page' => -1,
                 'showposts'      => -1,
                 'paged'          => -1,
             )
@@ -1255,7 +1380,7 @@ class GhostKit_Rest extends WP_REST_Controller {
             $local_templates_query->the_post();
             $db_template = get_post();
 
-            $categories = array();
+            $categories     = array();
             $category_terms = get_the_terms( $db_template->ID, 'ghostkit_template_category' );
 
             if ( $category_terms ) {
@@ -1267,7 +1392,7 @@ class GhostKit_Rest extends WP_REST_Controller {
                 }
             }
 
-            $image_id = get_post_thumbnail_id( $db_template->ID );
+            $image_id   = get_post_thumbnail_id( $db_template->ID );
             $image_data = wp_get_attachment_image_src( $image_id, 'large' );
 
             $local_templates[] = array(
@@ -1293,12 +1418,13 @@ class GhostKit_Rest extends WP_REST_Controller {
         /*
          * Get theme templates.
          */
-        $theme_templates = array();
+        $theme_templates      = array();
         $theme_templates_data = array();
+
         foreach ( glob( get_template_directory() . '/ghostkit/templates/*/content.php' ) as $template ) {
             $template_path = dirname( $template );
-            $template_url = get_template_directory_uri() . str_replace( get_template_directory(), '', $template_path );
-            $slug = basename( $template_path );
+            $template_url  = get_template_directory_uri() . str_replace( get_template_directory(), '', $template_path );
+            $slug          = basename( $template_path );
 
             $theme_templates_data[ $slug ] = array(
                 'slug' => $slug,
@@ -1311,8 +1437,8 @@ class GhostKit_Rest extends WP_REST_Controller {
         if ( get_stylesheet_directory() !== get_template_directory() ) {
             foreach ( glob( get_stylesheet_directory() . '/ghostkit/templates/*/content.php' ) as $template ) {
                 $template_path = dirname( $template );
-                $template_url = get_stylesheet_directory_uri() . str_replace( get_stylesheet_directory(), '', $template_path );
-                $slug = basename( $template_path );
+                $template_url  = get_stylesheet_directory_uri() . str_replace( get_stylesheet_directory(), '', $template_path );
+                $slug          = basename( $template_path );
 
                 $theme_templates_data[ $slug ] = array(
                     'slug' => $slug,
@@ -1327,21 +1453,24 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         foreach ( $theme_templates_data as $template_data ) {
             $file_data = get_file_data(
-                $template_data['path'] . '/content.php', array(
+                $template_data['path'] . '/content.php',
+                array(
                     'name'     => 'Name',
                     'category' => 'Category',
                     'source'   => 'Source',
                 )
             );
 
-            $thumbnail = false;
-            $thumbnail_width = false;
+            $thumbnail        = false;
+            $thumbnail_width  = false;
             $thumbnail_height = false;
 
             if ( file_exists( $template_data['path'] . '/thumbnail.png' ) ) {
                 $thumbnail = $template_data['url'] . '/thumbnail.png';
+
                 list($thumbnail_width, $thumbnail_height) = getimagesize( $thumbnail );
             }
+
             if ( file_exists( $template_data['path'] . '/thumbnail.jpg' ) ) {
                 $thumbnail = $template_data['url'] . '/thumbnail.jpg';
             }
@@ -1385,9 +1514,9 @@ class GhostKit_Rest extends WP_REST_Controller {
      * @return mixed
      */
     public function get_template_data( WP_REST_Request $request ) {
-        $url = 'https://library.ghostkit.io/wp-json/ghostkit-library/v1/get_library_item/';
-        $id = $request->get_param( 'id' );
-        $type = $request->get_param( 'type' );
+        $url           = 'https://library.ghostkit.io/wp-json/ghostkit-library/v1/get_library_item/';
+        $id            = $request->get_param( 'id' );
+        $type          = $request->get_param( 'type' );
         $template_data = false;
 
         switch ( $type ) {
@@ -1399,10 +1528,11 @@ class GhostKit_Rest extends WP_REST_Controller {
                         add_query_arg(
                             array(
                                 'id'                   => $id,
-                                'ghostkit_version'     => '2.7.1',
+                                'ghostkit_version'     => '2.13.2',
                                 'ghostkit_pro'         => function_exists( 'ghostkit_pro' ),
                                 'ghostkit_pro_version' => function_exists( 'ghostkit_pro' ) ? ghostkit_pro()->plugin_version : null,
-                            ), $url
+                            ),
+                            $url
                         )
                     );
 
@@ -1443,7 +1573,8 @@ class GhostKit_Rest extends WP_REST_Controller {
 
                     if ( $template_content ) {
                         $template_data = get_file_data(
-                            $template_content_file, array(
+                            $template_content_file,
+                            array(
                                 'name' => 'Name',
                             )
                         );
@@ -1499,6 +1630,23 @@ class GhostKit_Rest extends WP_REST_Controller {
     }
 
     /**
+     * Update color palette.
+     *
+     * @param WP_REST_Request $request  request object.
+     *
+     * @return mixed
+     */
+    public function update_color_palette( WP_REST_Request $request ) {
+        $colors = $request->get_param( 'data' );
+
+        if ( is_array( $colors ) ) {
+            update_option( 'ghostkit_color_palette', $colors );
+        }
+
+        return $this->success( true );
+    }
+
+    /**
      * Get custom typography.
      *
      * @return mixed
@@ -1531,11 +1679,11 @@ class GhostKit_Rest extends WP_REST_Controller {
                 $updated_option = $new_typography;
             } else {
                 $current_typography['ghostkit_typography'] = json_decode( $current_typography['ghostkit_typography'], true );
-                $new_typography['ghostkit_typography'] = json_decode( $new_typography['ghostkit_typography'], true );
+                $new_typography['ghostkit_typography']     = json_decode( $new_typography['ghostkit_typography'], true );
 
                 $updated_option = array_merge( $current_typography, $new_typography );
 
-                $updated_option['ghostkit_typography'] = json_encode( $updated_option['ghostkit_typography'] );
+                $updated_option['ghostkit_typography'] = wp_json_encode( $updated_option['ghostkit_typography'] );
             }
 
             update_option( 'ghostkit_typography', $updated_option );
@@ -1558,6 +1706,20 @@ class GhostKit_Rest extends WP_REST_Controller {
     }
 
     /**
+     * Update Google reCaptcha API keys.
+     *
+     * @param WP_REST_Request $request  request object.
+     *
+     * @return mixed
+     */
+    public function update_google_recaptcha_keys( WP_REST_Request $request ) {
+        update_option( 'ghostkit_google_recaptcha_api_site_key', $request->get_param( 'site_key' ) );
+        update_option( 'ghostkit_google_recaptcha_api_secret_key', $request->get_param( 'secret_key' ) );
+
+        return $this->success( true );
+    }
+
+    /**
      * Update Disabled Blocks.
      *
      * @param WP_REST_Request $request  request object.
@@ -1569,7 +1731,7 @@ class GhostKit_Rest extends WP_REST_Controller {
 
         if ( is_array( $new_disabled_blocks ) ) {
             $disabled_blocks = array_merge( get_option( 'ghostkit_disabled_blocks', array() ), $new_disabled_blocks );
-            $result = array();
+            $result          = array();
 
             foreach ( $disabled_blocks as $k => $block_disabled ) {
                 if ( $block_disabled ) {
@@ -1610,9 +1772,10 @@ class GhostKit_Rest extends WP_REST_Controller {
     public function success( $response ) {
         return new WP_REST_Response(
             array(
-                'success' => true,
+                'success'  => true,
                 'response' => $response,
-            ), 200
+            ),
+            200
         );
     }
 
@@ -1626,11 +1789,12 @@ class GhostKit_Rest extends WP_REST_Controller {
     public function error( $code, $response ) {
         return new WP_REST_Response(
             array(
-                'error' => true,
-                'success' => false,
+                'error'      => true,
+                'success'    => false,
                 'error_code' => $code,
-                'response' => $response,
-            ), 401
+                'response'   => $response,
+            ),
+            401
         );
     }
 }

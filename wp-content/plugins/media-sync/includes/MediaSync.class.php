@@ -14,6 +14,14 @@ if ( !class_exists( 'MediaSync' ) ) :
 
     class MediaSync
     {
+
+        /**
+         * Since PHP on Windows Server recognizes both backslash ("\") or forward slash ("/"),
+         * and WordPress always uses forward slashes (in it's built in functions),
+         * we'll also always use forward slashes to solve various issues when using Windows Server.
+         */
+        const MEDIA_SYNC_DS = '/';
+
         /**
          * Render main plugin content
          *
@@ -33,8 +41,9 @@ if ( !class_exists( 'MediaSync' ) ) :
 
             $here = esc_url(get_admin_url(null, 'upload.php?page=media-sync-page'));
 
-            $upload_dir = wp_upload_dir();
-            $uploads_dir = str_replace(get_home_path(), DIRECTORY_SEPARATOR, $upload_dir['basedir']);
+            $upload_dir_path = self::media_sync_get_uploads_basedir();
+            $relative_path = self::media_sync_get_relative_path($upload_dir_path);
+            $no_upload_dir_message = __('Scan directory not found. Please check settings.', 'media-sync');
             ?>
 
             <div class="wrap main-media-sync-page" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
@@ -60,15 +69,19 @@ if ( !class_exists( 'MediaSync' ) ) :
                             <?php if (!$scan_files) : ?>
                                 <div class="card">
                                     <h2 class="title"><?= __('Sync - uploads directory', 'media-sync') ?></h2>
-                                    
-                                    <a class="button button-primary" href="<?= add_query_arg('scan_files', 1, $here) ?>">
-                                        <?= __('Scan Files', 'media-sync') ?>
-                                    </a>
 
-                                    <p class="media-sync-scan-files-message">
-                                        <?= sprintf(__('Use this to see content of upload dir: %s and import files to Media Library.', 'media-sync'),
-                                            '<code title="'.$upload_dir['basedir'].'">'.$uploads_dir.'</code>') ?>
-                                    </p>
+                                    <?php if($upload_dir_path) : ?>
+                                        <a class="button button-primary" href="<?= add_query_arg('scan_files', 1, $here) ?>">
+                                            <?= __('Scan Files', 'media-sync') ?>
+                                        </a>
+
+                                        <p class="media-sync-scan-files-message">
+                                            <?= sprintf(__('Use this to see content of upload dir: %s and import files to Media Library.', 'media-sync'),
+                                                '<code title="'.$upload_dir_path.'">'.$relative_path.'</code>') ?>
+                                        </p>
+                                    <?php else: ?>
+                                        <p><i><?= $no_upload_dir_message ?></i></p>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="card">
                                     <h2 class="title"><?= __('Sync - Media Library', 'media-sync') ?></h2>
@@ -84,23 +97,29 @@ if ( !class_exists( 'MediaSync' ) ) :
 
                             <?php if ($scan_files) : ?>
                                 <div class="media-sync-button-holder">
+                                    <a class="button button-primary" href="<?= add_query_arg('scan_files', 1, $here) ?>">
+                                        <?= __('Re-scan', 'media-sync') ?>
+                                    </a>
+                                </div>
+
+                                <div class="media-sync-button-holder">
                                     <button class="button button-primary js-import-selected"><?= __('Import Selected', 'media-sync') ?></button>
                                     <span class="spinner import-spinner"></span>
+                                </div>
 
-                                    <div class="import-options">
-                                        <div class="import-option-date-type">
-                                            <label><?= __('Date/time to set for newly imported files', 'media-sync') ?>:</label>
-                                            <?= self::media_sync_render_post_date_option( 'file_post_date' ) ?>
+                                <div class="import-options">
+                                    <?php if ( !!get_option( 'ms_sg_use_dry_run', 1 ) ) : ?>
+                                        <div class="media-sync-dry-run-holder">
+                                            <input type="checkbox" id="dry-run" name="dry_run" checked="checked" />
+                                            <label for="dry-run"><?= __('Dry Run (test without making database changes)', 'media-sync') ?></label>
                                         </div>
-                                        
-                                        <?php if ( !!get_option( 'ms_sg_use_dry_run', 1 ) ) : ?>
-                                            <div class="media-sync-dry-run-holder">
-                                                <input type="checkbox" id="dry-run" name="dry_run" checked="checked" />
-                                                <label for="dry-run"><?= __('Dry Run (test without making database changes)', 'media-sync') ?></label>
-                                            </div>
-                                        <?php else: ?>
-                                            <input type="hidden" name="dry_run" value="" />
-                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        <input type="hidden" name="dry_run" value="" />
+                                    <?php endif; ?>
+
+                                    <div class="import-option-date-type">
+                                        <label><?= __('Date/time to set for newly imported files', 'media-sync') ?>:</label>
+                                        <?php self::media_sync_render_post_date_option( 'file_post_date' ) ?>
                                     </div>
                                 </div>
                             <?php endif; ?>
@@ -145,11 +164,14 @@ if ( !class_exists( 'MediaSync' ) ) :
                                 </div>
                             </div>
 
-                            <?php $tree = self::media_sync_get_list_of_uploads(); ?>
+                            <?php
+                            $tree = $upload_dir_path ? self::media_sync_get_list_of_uploads() : array();
+                            $current_dir = get_option( 'ms_sg_scan_sub_dir' ) ? $relative_path : null;
+                            ?>
                             <?php if (!empty($tree)) : ?>
                                 <div class="media-sync-table-holder">
                                     <table class="wp-list-table widefat fixed media">
-                                        <?php self::media_sync_render_thead_tfoot_row('thead') ?>
+                                        <?php self::media_sync_render_thead_tfoot_row('thead', $current_dir) ?>
                                         <tbody id="the-list">
                                         <?php foreach ($tree as $item) : ?>
                                             <?php self::media_sync_render_row($item) ?>
@@ -163,6 +185,8 @@ if ( !class_exists( 'MediaSync' ) ) :
                                 <p class="media-sync-no-results">
                                     <?php if ($missing_from_ml) : ?>
                                         <?= __('Everything seems fine here, there are no files that are not already in your Media Library.', 'media-sync') ?>
+                                    <?php elseif(!$upload_dir_path) : ?>
+                                        <?= $no_upload_dir_message ?>
                                     <?php else : ?>
                                         <?= __('No Results', 'media-sync') ?>
                                     <?php endif; ?>
@@ -181,7 +205,7 @@ if ( !class_exists( 'MediaSync' ) ) :
          * Prepare plugin settings
          *
          * @since 1.1.0
-         * @return void
+         * @return void|boolean
          */
         static public function media_sync_options_setup()
         {
@@ -190,8 +214,10 @@ if ( !class_exists( 'MediaSync' ) ) :
             }
 
             // From this plugin
+            add_option( 'ms_sg_scan_sub_dir', '' );
             add_option( 'ms_sg_use_dry_run', 1 );
             add_option( 'ms_sg_file_post_date', 'default' );
+            register_setting( 'media-sync-settings-group', 'ms_sg_scan_sub_dir' );
             register_setting( 'media-sync-settings-group', 'ms_sg_use_dry_run' );
             register_setting( 'media-sync-settings-group', 'ms_sg_file_post_date' );
 
@@ -204,7 +230,7 @@ if ( !class_exists( 'MediaSync' ) ) :
          * Render plugin settings
          *
          * @since 1.1.0
-         * @return void
+         * @return void|boolean
          */
         static public function media_sync_options_page()
         {
@@ -229,6 +255,22 @@ if ( !class_exists( 'MediaSync' ) ) :
                             ?>
                             <tr>
                                 <th scope="row">
+                                    <label for="ms-sg-scan-sub-dir"><?= __('Scan directory', 'media-sync') ?></label>
+                                </th>
+                                <td>
+                                    <fieldset>
+                                        <?php
+                                        $upload_dir_path = self::media_sync_get_uploads_basedir(false);
+                                        // Since this path is always using forward slashes, we're also adding forward slash ("/")
+                                        $relative_path = self::media_sync_get_relative_path($upload_dir_path) . self::MEDIA_SYNC_DS;
+                                        ?>
+                                        <span><?= $relative_path ?></span>
+                                        <input type="text" value="<?= get_option( 'ms_sg_scan_sub_dir' ) ?>" name="ms_sg_scan_sub_dir" id="ms-sg-scan-sub-dir" />
+                                    </fieldset>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
                                     <label><?= __('Dry Run', 'media-sync') ?></label>
                                 </th>
                                 <td>
@@ -246,7 +288,7 @@ if ( !class_exists( 'MediaSync' ) ) :
                                     <label><?= __('Preselected / default value for file date', 'media-sync') ?></label>
                                 </th>
                                 <td>
-                                    <?= self::media_sync_render_post_date_option( 'ms_sg_file_post_date' ) ?>
+                                    <?php self::media_sync_render_post_date_option( 'ms_sg_file_post_date' ) ?>
                                 </td>
                             </tr>
                             <?php
@@ -259,7 +301,7 @@ if ( !class_exists( 'MediaSync' ) ) :
                     <?php submit_button(); ?>
                 </form>
             </div>
-            <?php 
+            <?php
         }
 
 
@@ -267,7 +309,7 @@ if ( !class_exists( 'MediaSync' ) ) :
          * Render option for selecting post date
          *
          * @since 1.1.0
-         * @param $name string Field name
+         * @param string $name Field name
          * @return void
          */
         static public function media_sync_render_post_date_option($name)
@@ -284,14 +326,14 @@ if ( !class_exists( 'MediaSync' ) ) :
                         <input type="radio" name="<?= $name ?>" value="default" <? checked( 'default', $selected ) ?>> 
                         <span><?= __('Default', 'media-sync') ?></span>
                     </label>
-                    <p class="description"><?= __('Defaults to what WordPress uses - current time.', 'media-sync') ?></p></label>
+                    <p class="description"><?= __('Defaults to what WordPress uses - current time.', 'media-sync') ?></p>
                 </div>
                 <div class="import-option-date-type-item">
                     <label>
                         <input type="radio" name="<?= $name ?>" value="file_time" <? checked( 'file_time', $selected ) ?>> 
                         <span><?= __('File time', 'media-sync') ?></span>
                     </label>
-                    <p class="description"><?= __('File modification timestamp - when it was last modified.', 'media-sync') ?></p></label>
+                    <p class="description"><?= __('File modification timestamp - when it was last modified.', 'media-sync') ?></p>
                 </div>
                 <div class="import-option-date-type-item">
                     <label>
@@ -309,10 +351,11 @@ if ( !class_exists( 'MediaSync' ) ) :
          * Render table header and footer
          *
          * @since 0.1.0
-         * @param $tag string (thead|tfoot)
+         * @param string $tag [thead|tfoot]
+         * @param string $dir
          * @return void
          */
-        static public function media_sync_render_thead_tfoot_row($tag)
+        static public function media_sync_render_thead_tfoot_row($tag, $dir = null)
         {
             $cb_id = 'cb-select-all-' . ($tag == 'thead' ? '1' : '2');
             ?>
@@ -323,7 +366,7 @@ if ( !class_exists( 'MediaSync' ) ) :
                         <input id="<?= $cb_id ?>" type="checkbox">
                     </td>
                     <th scope="col" class="manage-column column-title column-primary"<?= $tag == 'thead' ? ' id="title"':''?>>
-                        <span><?= __('File', 'media-sync') ?></span>
+                        <span><?= __('File', 'media-sync') ?> <?= $dir ? (__('at', 'media-sync') . ' ' . $dir) : '' ?></span>
                     </th>
                 </tr>
             </<?= $tag ?>>
@@ -335,7 +378,7 @@ if ( !class_exists( 'MediaSync' ) ) :
          * Render table row for each file or directory
          *
          * @since 0.1.0
-         * @param $item array
+         * @param array $item
          * @return void
          */
         static public function media_sync_render_row($item)
@@ -393,7 +436,7 @@ if ( !class_exists( 'MediaSync' ) ) :
                         <span class="js-toggle-row media-sync-toggle-row dashicons"></span>
                     <?php endif; ?>
 
-                    <?= $is_link ? '<a href="' . $url . '"' . $url_attr . '>' : '' ?>
+                    <?= $is_link ? '<a href="' . $item['url'] . '"' . $url_attr . '>' : '' ?>
                     <?php if ($item['is_dir'] === true) : ?>
                         <span class="dashicons dashicons-category"></span>
                     <?php endif; ?>
@@ -446,7 +489,7 @@ if ( !class_exists( 'MediaSync' ) ) :
             if(isset($_POST['media_items']) && !empty($_POST['media_items'])) {
 
                 // Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
-                require_once( ABSPATH . 'wp-admin/includes/image.php' );
+                require_once( ABSPATH . 'wp-admin' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'image.php' );
 
 
                 $files_in_db = self::media_sync_get_files_in_db();
@@ -459,8 +502,9 @@ if ( !class_exists( 'MediaSync' ) ) :
 
                     if(isset($media_item['file']) && !empty($media_item['file'])) {
 
+                        // This comes from JS and it's taken from checkbox value, which is $item['absolute_path'] from media_sync_get_list_of_files()
                         $absolute_path = $media_item['file'];
-                        $relative_path = str_replace(get_home_path(), DIRECTORY_SEPARATOR, $absolute_path);
+                        $relative_path = self::media_sync_get_relative_path($absolute_path);
 
                         // It's quicker to get all files already in db and check that array, than to do this query for each file
                         // $query = "SELECT COUNT(*) FROM {$wpdb->posts} WHERE guid LIKE '%{$relative_path}'";
@@ -471,29 +515,31 @@ if ( !class_exists( 'MediaSync' ) ) :
                         // Check if file is already in database
                         if(!$is_in_db) {
 
+                            // Prepare data to be saved to `wp_posts` and `wp_postmeta`
+
+                            // Check the type of file. We'll use this as the 'post_mime_type'.
+                            $filetype = wp_check_filetype( basename( $absolute_path ), null );
+
+                            // Prepare an array of post data for the attachment.
+                            $attachment = array(
+                                'guid'           => get_site_url() . $relative_path,
+                                'post_mime_type' => $filetype['type'],
+                                'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $relative_path ) ),
+                                'post_content'   => '',
+                                'post_status'    => 'inherit'
+                            );
+
+                            // Try to get post date based on settings - "Default" option will not set anything, so WP can use defaults
+                            $post_date = self::media_sync_post_date($absolute_path, $post_date_type);
+
+                            if(!empty($post_date)) {
+                                $attachment['post_date'] = $post_date;
+                                $attachment['post_date_gmt'] = $post_date;
+                            }
+
                             if(!$dry_run) {
 
                                 // Import file to database (`wp_posts` and `wp_postmeta`)
-
-                                // Check the type of file. We'll use this as the 'post_mime_type'.
-                                $filetype = wp_check_filetype( basename( $absolute_path ), null );
-
-                                // Prepare an array of post data for the attachment.
-                                $attachment = array(
-                                    'guid'           => get_site_url() . $relative_path,
-                                    'post_mime_type' => $filetype['type'],
-                                    'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $relative_path ) ),
-                                    'post_content'   => '',
-                                    'post_status'    => 'inherit'
-                                );
-
-                                // Try to get post date based on settings - "Default" option will not set anything, so WP can use defaults
-                                $post_date = self::media_sync_post_date($absolute_path, $post_date_type);
-
-                                if(!empty($post_date)) {
-                                    $attachment['post_date'] = $post_date;
-                                    $attachment['post_date_gmt'] = $post_date;
-                                }
 
                                 // Insert the attachment.
                                 $attach_id = wp_insert_attachment( $attachment, $absolute_path );
@@ -527,9 +573,9 @@ if ( !class_exists( 'MediaSync' ) ) :
          * Returns post date for file being imported based on selected option
          * 
          * @since 1.1.0
-         * @param $file_path string Absolute path to file being imported
-         * @param $type string Selected option telling which date to find [default|file_time|smart_file_time]
-         * @return $post_date string
+         * @param string $file_path Absolute path to file being imported
+         * @param string $type Selected option telling which date to find [default|file_time|smart_file_time]
+         * @return string
          */
         static public function media_sync_post_date($file_path, $type)
         {
@@ -557,9 +603,10 @@ if ( !class_exists( 'MediaSync' ) ) :
                             $post_date = $file_time;
 
                             // Compare the file date with the folder date structure
-                            // Try to extract year and month from file path
-                            preg_match('/(\d{4})\/(\d{2})/', $file_path, $matches);
-                            if ( $matches != false ) {
+                            // Try to extract year and month from file path (e.g. "2020/02" or "2020\02")
+                            // But this path is now always using forward slash (even on Windows Server), so we can again use just '/(\d{4})\/(\d{2})/'
+                            preg_match('/(\d{4})[\/|\\\\](\d{2})/', $file_path, $matches);
+                            if ( !empty($matches) ) {
                                 $year_and_month = $matches[1] . '-' . $matches[2];
                                 $folder_time = $year_and_month . '-' . '01' . ' 00:00:00';
 
@@ -594,22 +641,93 @@ if ( !class_exists( 'MediaSync' ) ) :
 
 
         /**
-         * Scan "uploads" directory and return recursive list of files and directories
+         * Get path of directory used by this plugin as main import directory (uploads dir).
          *
-         * @since 0.1.0
-         * @return $tree array
+         * Since PHP on Windows Server recognizes both backslash ("\") or forward slash ("/"),
+         * and WordPress always uses forward slashes (in it's built in functions), we'll also always use forward slashes.
+         *
+         * So "C:\www\WP/wp-content/uploads" becomes "C:/www/WP/wp-content/uploads"
+         *
+         * Returning for example:
+         * * /var/www/WP/wp-content/uploads
+         * * C:/www/WP/wp-content/uploads
+         *
+         * @since 1.1.3
+         * @param boolean $append_sub_dir Should we append sub dir from settings
+         * @return string
          */
-        static private function media_sync_get_list_of_uploads()
+        static private function media_sync_get_uploads_basedir($append_sub_dir = true)
         {
             $upload_dir = wp_upload_dir();
 
-            if(!($upload_dir && $upload_dir['basedir'])) {
+            if(!($upload_dir && isset($upload_dir['basedir']) && !empty($upload_dir['basedir']))) {
+                return null;
+            }
+
+            // Convert backslashes ("\") to forward slashes ("/")
+            $basedir = wp_normalize_path($upload_dir['basedir']);
+
+            // Append sub dir from settings
+            $sub_dir = get_option( 'ms_sg_scan_sub_dir' );
+            if($append_sub_dir === true && $sub_dir && !empty($sub_dir)) {
+
+                // Add one forward slash between base dir and sub dir
+                $base_with_sub = $basedir . self::MEDIA_SYNC_DS . trim($sub_dir);
+
+                // Return only if exists
+                if( file_exists($base_with_sub) ) {
+                    return $base_with_sub;
+                } else {
+                    return null;
+                }
+            }
+
+            return $basedir;
+        }
+
+
+        /**
+         * Get path absolute to WP root. Always using forward slashes ("/").
+         *
+         * e.g. /var/www/WP/wp-content/uploads -> /wp-content/uploads
+         * e.g. C:/www/WP/wp-content/uploads -> /wp-content/uploads
+         *
+         * @since 1.1.3
+         * @param string $absolute_path Absolute file path. Will be convert to forward slashes ("/").
+         * @return string
+         */
+        static private function media_sync_get_relative_path($absolute_path)
+        {
+            // Since get_home_path() and WP in general always use forward slashes, we need to convert it as well
+            $absolute_path = wp_normalize_path($absolute_path);
+
+            // Always using forward slash ("/")
+            return str_replace(get_home_path(), self::MEDIA_SYNC_DS, $absolute_path);
+        }
+
+
+        /**
+         * Scan "uploads" directory and return recursive list of files and directories
+         *
+         * @since 0.1.0
+         * @return array
+         */
+        static private function media_sync_get_list_of_uploads()
+        {
+            $upload_dir_path = self::media_sync_get_uploads_basedir();
+            if(!$upload_dir_path) {
                 return array();
+            }
+
+            // Limit scanning to specific sub folder or encoded path (e.g. &sub_dir=2020%2F01)
+            if(isset($_GET['sub_dir']) && !empty($_GET['sub_dir'])) {
+                // Since this path is always using forward slashes, we're also using forward slash ("/")
+                $upload_dir_path = $upload_dir_path . self::MEDIA_SYNC_DS . urldecode($_GET['sub_dir']);
             }
 
             $associated_filter = isset($_GET['associated-filter']) && !empty($_GET['associated-filter']) ? explode(':', urldecode($_GET['associated-filter'])) : null;
 
-            return self::media_sync_get_list_of_files($upload_dir['basedir'], $upload_dir['basedir'], self::media_sync_get_files_in_db(), $associated_filter);
+            return self::media_sync_get_list_of_files($upload_dir_path, $upload_dir_path, self::media_sync_get_files_in_db(), $associated_filter);
         }
 
 
@@ -617,29 +735,62 @@ if ( !class_exists( 'MediaSync' ) ) :
          * Scan directory (passed as first value) and return recursive list of files and directories
          *
          * @since 0.1.0
-         * @param $current_dir_path string  Changing recursively for each directory that gets iterated
-         * @param $uploads_dir_path string  Main "uploads" directory
-         * @param $files_in_db array        List of files that are already in database
-         * @param $associated_filter string Filter by "association", for now it can only be "file missing from media library" (solved by "Import Selected")
-         * @return $tree array
+         * @param string $current_dir_path Changing recursively for each directory that gets iterated
+         * @param string $uploads_dir_path Main "uploads" directory
+         * @param array $files_in_db List of files that are already in database
+         * @param string $associated_filter Filter by "association", for now it can only be "file missing from media library" (solved by "Import Selected")
+         * @return array
          */
         static private function media_sync_get_list_of_files($current_dir_path, $uploads_dir_path, $files_in_db, $associated_filter)
         {
+            if( !file_exists($current_dir_path) ) {
+                return array();
+            }
+
             $obj_rdi = new RecursiveDirectoryIterator($current_dir_path);
             $tree = array();
             $i = 0;
 
-            foreach ($obj_rdi as $full_path => $file) {
-                // Only file name
-                $file_name = $file->getFilename();
-                // If it contains image size at the end (i.e. -100x100.jpg)
-                $is_thumb = preg_match('/[_-]\d+x\d+(?=\.[a-z]{3,4}$)/im', $file_name) == true;
-
-                if ($obj_rdi->isDot() || $file_name == ".DS_Store" || $file_name == ".htaccess" || $file_name == "index.php" || $is_thumb) {
+            foreach ($obj_rdi as $full_file_or_dir_path => $file) {
+                // Skip "." and ".."
+                if ($obj_rdi->isDot()) {
                     continue;
                 }
 
-                $children = $file->isDir() ? self::media_sync_get_list_of_files($file->getPathname(), $uploads_dir_path, $files_in_db, $associated_filter) : array();
+                // Convert backslashes ("\") to forward slashes ("/")
+                $full_path = wp_normalize_path($full_file_or_dir_path);
+
+                // Only file name
+                $file_name = $file->getFilename();
+
+                // It's probably faster to do it with one regex (below)
+                // If it contains image size at the end (i.e. -100x100.jpg)
+                // $is_thumb = preg_match('/[_-]\d+x\d+(?=\.[a-z]{3,4}$)/im', $file_name) == true;
+                // $is_scaled = preg_match('/-scaled(?=\.[a-z]{3,4}$)/im', $file_name) == true;
+
+                // If it contains image size at the end (i.e. -100x100.jpg) or ends with "-scaled" (also WP generated)
+                $is_thumb_or_scaled = preg_match('/(-scaled|[_-]\d+x\d+)(?=\.[a-z]{3,4}$)/im', $file_name) == true;
+
+                // Default file/folder skipping rules
+                $is_ignored = $file_name == ".DS_Store" || $file_name == ".htaccess" || $file_name == "index.php" || $is_thumb_or_scaled;
+
+                // Receive external rules for skipping files/folders
+                $is_ignored_external = apply_filters('media_sync_filter_is_scan_object_ignored', $is_ignored, $file );
+
+                // Take custom rule for skipping files/folders from external hook/filter function
+                if( is_bool($is_ignored_external) ) {
+                    $is_ignored = $is_ignored_external;
+                }
+
+
+                if ($is_ignored) {
+                    continue;
+                }
+
+                // Convert backslashes ("\") to forward slashes ("/")
+                $new_dir_to_scan = wp_normalize_path($file->getPathname());
+
+                $children = $file->isDir() ? self::media_sync_get_list_of_files($new_dir_to_scan, $uploads_dir_path, $files_in_db, $associated_filter) : array();
 
                 if ($file->isDir() && empty($children)) {
                     continue;
@@ -647,9 +798,18 @@ if ( !class_exists( 'MediaSync' ) ) :
 
                 $uid_backup = uniqid('', true);
 
-                $parents_path = ltrim(str_replace($uploads_dir_path, '', $current_dir_path), DIRECTORY_SEPARATOR);
-                $parents = !empty($parents_path) ? explode(DIRECTORY_SEPARATOR, $parents_path) : array();
-                $parent_alias = !empty($parents_path) ? sanitize_title(str_replace(DIRECTORY_SEPARATOR, '_', $parents_path), $uid_backup) : '';
+                // Get current parents, to get for example: "/2012/03"
+                $parents_path = str_replace($uploads_dir_path, '', $current_dir_path);
+
+                // Trim first slash, to get for example: "2012/03"
+                $parents_path = ltrim($parents_path, self::MEDIA_SYNC_DS);
+
+                // Since this path is always using forward slashes, that's what we'll use here
+                $parents = !empty($parents_path) ? explode(self::MEDIA_SYNC_DS, $parents_path) : array();
+
+                // Replace forward slash with "_" and do other cleanup since this will be used as HTML attribute
+                $parent_alias = !empty($parents_path) ? sanitize_title(str_replace(self::MEDIA_SYNC_DS, '_', $parents_path), $uid_backup) : '';
+
                 $alias = sanitize_title($file_name, $uid_backup);
 
 
@@ -665,11 +825,10 @@ if ( !class_exists( 'MediaSync' ) ) :
                 );
 
                 if ($file->isDir()) {
-                    $item['relative_path'] = '';
                     $item['url'] = 'javascript:;';
                 } else {
 
-                    $relative_path = str_replace(get_home_path(), DIRECTORY_SEPARATOR, $full_path);
+                    $relative_path = self::media_sync_get_relative_path($full_path);
                     $file_in_db = isset($files_in_db[$relative_path]) && !empty($files_in_db[$relative_path]) ?
                         $files_in_db[$relative_path] : false;
                     $file_id = $file_in_db && !empty($file_in_db['id']) ? $file_in_db['id'] : false;
@@ -679,8 +838,8 @@ if ( !class_exists( 'MediaSync' ) ) :
                         continue;
                     }
 
-                    $item['relative_path'] = $relative_path;
-                    $item['url'] = get_site_url() . $relative_path;
+                    // Encode just file name
+                    $item['url'] = get_site_url() . str_replace('%2F', '/', rawurlencode($relative_path));
                     $item['file_id'] = $file_id;
                     $item['file_status'] = $file_status;
                 }
@@ -704,8 +863,8 @@ if ( !class_exists( 'MediaSync' ) ) :
          * Caching does not seem to work, disabled for now
          *
          * @since 0.1.0
-         * @param $cache bool Could be used to skip cache and get new values (only for first import batch for example)
-         * @return $files_in_db array
+         * @param boolean $cache Could be used to skip cache and get new values (only for first import batch for example)
+         * @return array
          */
         static private function media_sync_get_files_in_db($cache = false)
         {
@@ -721,7 +880,20 @@ if ( !class_exists( 'MediaSync' ) ) :
 
                 $files = array();
                 foreach ($media_query->posts as $post) {
-                    $files[str_replace(get_site_url(), "", wp_get_attachment_url($post->ID))] = array(
+
+                    // First try to find original image URL, to get proper URL without "-scaled" part for bigger images
+                    // https://make.wordpress.org/core/2019/10/09/introducing-handling-of-big-images-in-wordpress-5-3/
+                    $file_url = wp_get_original_image_url($post->ID);
+
+                    // If not image, get attachment URL
+                    if(!$file_url) {
+                        $file_url = wp_get_attachment_url($post->ID);
+                    }
+
+                    // Should already have forward slashes since it's URL
+                    $relative_path = str_replace(get_site_url(), '', $file_url);
+
+                    $files[$relative_path] = array(
                         'id' => $post->ID,
                         'name' => $post->post_title,
                         'status' => $post->post_status
@@ -740,7 +912,7 @@ if ( !class_exists( 'MediaSync' ) ) :
          * Check if logged in user has access
          *
          * @since 1.1.0
-         * @return {boolean}
+         * @return boolean
          */
         static public function media_sync_user_has_general_access() 
         {

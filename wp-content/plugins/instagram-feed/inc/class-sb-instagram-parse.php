@@ -114,10 +114,15 @@ class SB_Instagram_Parse
 				} else {
 					$permalink = SB_Instagram_Parse::fix_permalink( SB_Instagram_Parse::get_permalink( $post ) );
 
-					return $permalink . 'media?size=l';
+					return $permalink . 'media/?size=l';
 				}
 			} else {
-				return $post['media_url'];
+				if ( isset( $post['media_url'] ) ) {
+					return $post['media_url'];
+				}
+				$permalink = SB_Instagram_Parse::fix_permalink( SB_Instagram_Parse::get_permalink( $post ) );
+
+				return $permalink . 'media/?size=l';
 			}
 		}
 
@@ -157,12 +162,12 @@ class SB_Instagram_Parse
 			$permalink = SB_Instagram_Parse::fix_permalink( SB_Instagram_Parse::get_permalink( $post ) );
 
 			if ( ($post['media_type'] === 'CAROUSEL_ALBUM' || $post['media_type'] === 'VIDEO') && ($media_urls['640'] === '' || $media_urls['640'] === 'video' || $media_urls['640'] === 'pending')) {
-				$media_urls['640'] = $permalink . 'media?size=l';
+				$media_urls['640'] = $permalink . 'media/?size=l';
 			} else {
-				$media_urls['640'] = $post['media_url'];
+				$media_urls['640'] = isset( $post['media_url'] ) ? $post['media_url'] : $permalink . 'media/?size=l';
 			}
-			$media_urls['150'] = $permalink . 'media?size=t';
-			$media_urls['320'] = $permalink . 'media?size=m';
+			$media_urls['150'] = $permalink . 'media/?size=t';
+			$media_urls['320'] = $permalink . 'media/?size=m';
 
 			// use resized images if exists
 			if ( isset( $resized_images[ $post_id ]['id'] )
@@ -170,10 +175,10 @@ class SB_Instagram_Parse
 			     && $resized_images[ $post_id ]['id'] !== 'video'
 			     && $resized_images[ $post_id ]['id'] !== 'error' ) {
 				if ( isset( $resized_images[ $post_id ]['sizes']['full'] ) ) {
-					$media_urls['640'] = $resized_images[ $post_id ]['id'];
+					$media_urls['640'] = sbi_get_resized_uploads_url() . $resized_images[ $post_id ]['id'] . 'full.jpg';
 				}
 				if ( isset( $resized_images[ $post_id ]['sizes']['low'] ) ) {
-					$media_urls['320'] = $resized_images[ $post_id ]['id'];
+					$media_urls['320'] = sbi_get_resized_uploads_url() . $resized_images[ $post_id ]['id'] . 'low.jpg';
 				}
 			}
 
@@ -229,9 +234,12 @@ class SB_Instagram_Parse
 	 * @return string
 	 *
 	 * @since 2.0/5.0
+	 * @since 2.2/5.3 added support for a custom avatar in settings
 	 */
 	public static function get_avatar( $header_data, $settings = array( 'favor_local' => false ) ) {
-		if ( $settings['favor_local'] && ! empty( $header_data['local_avatar'] ) ) {
+		if ( ! empty( $settings['customavatar'] ) ) {
+			return $settings['customavatar'];
+		} elseif ( ! empty( $header_data['local_avatar'] ) ) {
 			return $header_data['local_avatar'];
 		} else {
 			if ( isset( $header_data['profile_picture'] ) ) {
@@ -274,9 +282,12 @@ class SB_Instagram_Parse
 	 * @return string
 	 *
 	 * @since 2.0.1/5.0
+	 * @since 2.2/5.3 added support for a custom bio in settings
 	 */
-	public static function get_bio( $header_data ) {
-		if ( isset( $header_data['data']['bio'] ) ) {
+	public static function get_bio( $header_data, $settings = array() ) {
+		if ( ! empty( $settings['custombio'] ) ) {
+			return $settings['custombio'];
+		} elseif ( isset( $header_data['data']['bio'] ) ) {
 			return $header_data['data']['bio'];
 		} elseif ( isset( $header_data['bio'] ) ){
 			return $header_data['bio'];

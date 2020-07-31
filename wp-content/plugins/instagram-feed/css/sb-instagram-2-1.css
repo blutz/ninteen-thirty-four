@@ -288,7 +288,7 @@
     }
 }
 /* Screen reader */
-.sbi-screenreader{text-indent: -9999px !important;display: block !important;width: 0 !important;height: 0 !important;line-height: 0 !important;}
+.sbi-screenreader{text-indent: -9999px !important;display: block !important;width: 0 !important;height: 0 !important;line-height: 0 !important;text-align: left !important; }
 
 /* HEADER */
 #sb_instagram .sb_instagram_header{

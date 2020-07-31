@@ -1,9 +1,9 @@
 <?php
 /**
- * Custom Feeds for Instagram Main Template
+ * Smash Balloon Instagram Feed Main Template
  * Creates the wrapping HTML and adds settings as attributes
  *
- * @version 2.1 Instagram Feed by Smash Balloon
+ * @version 2.2 Instagram Feed by Smash Balloon
  *
  */
 // Don't load directly
@@ -17,14 +17,26 @@ $cols_setting = $settings['cols'];
 $num_setting = $settings['num'];
 $icon_type = $settings['font_method'];
 
-if ( $settings['showheader'] && ! empty( $posts ) && $settings['headeroutside'] ) {
+/**
+ * Add HTML or execute code before the feed displays.
+ * sbi_after_feed works the same way but executes
+ * after the feed
+ *
+ * @param array $posts Instagram posts in feed
+ * @param array $settings settings specific to this feed
+ *
+ * @since 2.2
+ */
+do_action( 'sbi_before_feed', $posts, $settings );
+
+if ( ! empty( $header_data ) && $settings['showheader'] && $settings['headeroutside'] ) {
 	include sbi_get_feed_template_part( 'header', $settings );
 }
 ?>
 
 <div id="sb_instagram" class="sbi sbi_col_<?php echo esc_attr( $cols_setting ); ?> <?php echo esc_attr( $additional_classes ); ?>"<?php echo $feed_styles; ?> data-feedid="<?php echo esc_attr( $feed_id ); ?>" data-res="<?php echo esc_attr( $image_resolution_setting ); ?>" data-cols="<?php echo esc_attr( $cols_setting ); ?>" data-num="<?php echo esc_attr( $num_setting ); ?>" data-shortcode-atts="<?php echo esc_attr( $shortcode_atts ); ?>" <?php echo $other_atts; ?>>
 	<?php
-	if ( $settings['showheader'] && ! empty( $posts ) && !$settings['headeroutside'] ) {
+	if ( ! empty( $header_data ) && $settings['showheader'] && !$settings['headeroutside'] ) {
 		include sbi_get_feed_template_part( 'header', $settings );
 	}
 	?>
@@ -37,7 +49,7 @@ if ( $settings['showheader'] && ! empty( $posts ) && $settings['headeroutside'] 
 		?>
     </div>
 
-	<?php if ( ! empty( $posts ) ) { include sbi_get_feed_template_part( 'footer', $settings ); } ?>
+	<?php include sbi_get_feed_template_part( 'footer', $settings ); ?>
 
 	<?php
 	/**
@@ -51,3 +63,5 @@ if ( $settings['showheader'] && ! empty( $posts ) && $settings['headeroutside'] 
 	 */
 	do_action( 'sbi_before_feed_end', $this, $feed_id ); ?>
 </div>
+
+<?php do_action( 'sbi_after_feed', $posts, $settings );?>
