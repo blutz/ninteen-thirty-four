@@ -889,6 +889,14 @@ a {
   margin-left: auto;
   margin-right: auto; }
 
+.alignfull {
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%); }
+
+.alignwide {
+  margin-left: calc(-25vw + 25%);
+  margin-right: calc(-25vw + 25%); }
+
 /*--------------------------------------------------------------
 # Clearings
 --------------------------------------------------------------*/
@@ -1094,12 +1102,22 @@ a.footer__content__contact__title:hover {
 ## Templatees
 --------------------------------------------------------------*/
 @media (min-width: 768px) {
+  .page-template-full-page-narrow .site-header,
   .page-template-full-page .site-header {
     position: absolute;
     left: 0; } }
 
+.page-template-full-page-narrow .entry-content,
 .page-template-full-page .entry-content {
   margin-top: 0; }
+
+@media (min-width: 768px) {
+  .page-template-full-page-narrow .site {
+    max-width: 700px; } }
+
+@media (min-width: 992px) {
+  .page-template-full-page-narrow .site {
+    max-width: 900px; } }
 
 @media (min-width: 768px) {
   .page-template-default .main-navigation {

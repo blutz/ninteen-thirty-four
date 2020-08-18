@@ -14,3 +14,11 @@
   clear: both;
   @include center-block;
 }
+.alignfull {
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+}
+.alignwide {
+  margin-left: calc(-25vw + 25%);
+  margin-right: calc(-25vw + 25%);
+}

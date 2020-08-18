@@ -16,6 +16,8 @@ if ( ! function_exists( 'ninteen_thirty_four_setup' ) ) :
    * as indicating support for post thumbnails.
    */
   function ninteen_thirty_four_setup() {
+    add_theme_support( 'align-wide' );
+
     /*
      * Make theme available for translation.
      * Translations can be filed in the /languages/ directory.
