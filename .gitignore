@@ -2,6 +2,7 @@
 
 # WordPress files we don't want to track
 /wp-content/themes/twenty*
+/wp-content/cache
 /wp-content/upgrade
 /sitemap.*
 /wp-config.php
