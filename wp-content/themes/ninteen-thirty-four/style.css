@@ -1101,6 +1101,17 @@ a.footer__content__contact__title:hover {
 .page-template-full-page .entry-content {
   margin-top: 0; }
 
+@media (min-width: 768px) {
+  .page-template-default .main-navigation {
+    background: transparent; }
+  .page-template-default .main-navigation li {
+    color: #205E8A; }
+  .page-template-default .main-navigation li a:hover {
+    color: #fff; }
+  .page-template-default .entry-title {
+    text-align: center;
+    margin-top: 0; } }
+
 /*--------------------------------------------------------------
 # Infinite scroll
 --------------------------------------------------------------*/

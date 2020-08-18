@@ -1,0 +1,17 @@
+@include md {
+  .page-template-default {
+    .main-navigation {
+      background: transparent;
+    }
+    .main-navigation li {
+      color: $color__primary-dark;
+    }
+    .main-navigation li a:hover {
+      color: $color__background-body;
+    }
+    .entry-title {
+      text-align: center;
+      margin-top: 0;
+    }
+  }
+}
