@@ -7,11 +7,16 @@ services:
     ports:
       - 80
     volumes:
-      - .:/var/www/html/
+      - .:/var/www/html/:cached
+    environment:
+      SERVER_ENV: development
   db:
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: unicamp_org
+    ports:
+      - 3306:3306
     volumes:
       - db_data:/var/lib/mysql
       - ./docker/db-config:/docker-entrypoint-initdb.d

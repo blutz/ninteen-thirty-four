@@ -276,7 +276,7 @@ class PluginSilentUpgrader extends \Plugin_Upgrader {
 	 * @param bool   $check_signatures Whether to validate file signatures. Default false.
 	 * @return string|WP_Error The full path to the downloaded package file, or a WP_Error object.
 	 */
-	public function download_package( $package, $check_signatures = false ) {
+	public function download_package( $package, $check_signatures = false, $hook_extra = array() ) {
 
 		/**
 		 * Filters whether to return the package.

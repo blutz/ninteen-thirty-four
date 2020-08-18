@@ -737,10 +737,12 @@ function sbi_get_resized_uploads_url() {
 	$home_url = home_url();
 
 	if ( strpos( $home_url, 'https:' ) !== false ) {
-	    str_replace( 'http:', 'https:', $base_url );
-    }
+		str_replace( 'http:', 'https:', $base_url );
+	}
 
-	return trailingslashit( $base_url ) . trailingslashit( SBI_UPLOADS_NAME );
+	$resize_url = apply_filters( 'sbi_resize_url', trailingslashit( $base_url ) . trailingslashit( SBI_UPLOADS_NAME ) );
+
+	return $resize_url;
 }
 
 /**
@@ -815,9 +817,7 @@ function sbi_get_current_timestamp() {
 }
 
 function sbi_is_after_deprecation_deadline() {
-	$current_time = sbi_get_current_timestamp();
-
-	return $current_time > strtotime( 'June 29, 2020' );
+	return true;
 }
 
 function sbi_json_encode( $thing ) {
@@ -875,6 +875,12 @@ function sb_instagram_cron_clear_cache() {
  * clear or errors occur or changes will not be seen
  */
 function sb_instagram_clear_page_caches() {
+
+    $clear_page_caches = apply_filters( 'sbi_clear_page_caches', true );
+    if ( ! $clear_page_caches ) {
+        return;
+    }
+
 	if ( isset( $GLOBALS['wp_fastest_cache'] ) && method_exists( $GLOBALS['wp_fastest_cache'], 'deleteCache' ) ){
 		/* Clear WP fastest cache*/
 		$GLOBALS['wp_fastest_cache']->deleteCache();

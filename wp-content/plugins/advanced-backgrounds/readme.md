@@ -3,13 +3,13 @@
 * Contributors: nko
 * Tags: parallax, video, youtube, background, gutenberg
 * Requires at least: 5.4
-* Tested up to: 5.4
+* Tested up to: 5.5
 * Requires PHP: 5.5.9
-* Stable tag: 1.6.5
+* Stable tag: 1.6.7
 * License: GPLv2 or later
 * License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 
-Image backgrounds, YouTube / Vimeo / Local hosted video backgrounds with parallax support.
+Image backgrounds, YouTube / Vimeo / Self hosted video backgrounds with parallax support.
 
 ## Description
 
@@ -26,7 +26,7 @@ AWB let you to use parallax backgrounds with images, videos, youtube and vimeo. 
   * Color
   * Image
   * Pattern images
-  * Local Hosted Video
+  * Self Hosted Video
   * Youtube / Vimeo Video
 * __Parallax__ options powered by high performance JavaScript plugin [Jarallax](https://github.com/nk-o/jarallax)
   * Custom speed option
@@ -82,6 +82,14 @@ The manual installation method involves downloading our AWB plugin and uploading
 5. Extended WPBakery Page Builder ROW options
 
 ## Changelog
+
+= 1.6.7 =
+
+* fixed color picker error in WordPress 5.5 and WPBakery Page Builder
+
+= 1.6.6 =
+
+* added support for WordPress 5.5
 
 = 1.6.5 =
 
@@ -295,8 +303,8 @@ The manual installation method involves downloading our AWB plugin and uploading
 * fixed Vimeo videos autoplay
 * fixed video iframe - reset some styles like max-width
 * fixed parallax for speed > 1 (wrong calculation)
-* fixed local hosted video mute and loop
-* fixed showing Local hosted videos if image is not set
+* fixed self hosted video mute and loop
+* fixed showing Self hosted videos if image is not set
 * fixed video set aspect ratio (in some situations added black lines)
 
 = 1.0.0 =
