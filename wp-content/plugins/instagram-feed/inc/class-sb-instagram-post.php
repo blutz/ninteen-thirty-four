@@ -210,6 +210,8 @@ class SB_Instagram_Post
 			// the process is considered a success if one image is successfully resized
 			$one_successful_image_resize = false;
 
+			$ratio = 1;
+
 			foreach ( $image_sizes_to_make as $res_setting => $image_size ) {
 				if ( $account_type === 'business' ) {
 					$file_name = SB_Instagram_Parse::get_media_url( $this->instagram_api_data, 'lightbox' );
@@ -218,10 +220,6 @@ class SB_Instagram_Post
 				}
 				if ( ! empty( $file_name ) ) {
 
-					$sizes                   = array(
-						'height' => 1,
-						'width'  => 1
-					);
 
 
 					$suffix = $res_setting;
@@ -232,7 +230,9 @@ class SB_Instagram_Post
 
 					// not uncommon for the image editor to not work using it this way
 					if ( ! is_wp_error( $image_editor ) ) {
-						$sizes = $image_editor->get_size();
+						$old_sizes = $image_editor->get_size();
+
+						$ratio = $old_sizes['width'] / $old_sizes['height'];
 
 						$image_editor->resize( $image_size, null );
 
@@ -265,11 +265,10 @@ class SB_Instagram_Post
 
 				}
 
-
 			}
 
 			if ( $one_successful_image_resize ) {
-				$aspect_ratio = round( $sizes['width'] / $sizes['height'], 2 );
+				$aspect_ratio = round( $ratio, 2 );
 
 				$this->update_sbi_instagram_posts( array(
 					'media_id'     => $new_file_name,

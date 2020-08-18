@@ -2,8 +2,8 @@
 Contributors: smashballoon, craig-at-smash-balloon
 Tags: Instagram, Instagram feed, Instagram photos, Instagram widget, Instagram gallery
 Requires at least: 3.4
-Tested up to: 5.4
-Stable tag: 2.4.5
+Tested up to: 5.5
+Stable tag: 2.4.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -325,6 +325,12 @@ We understand that sometimes you need help, have issues or just have questions. 
 * Plus more customization options added all the time!
 
 == Changelog ==
+= 2.4.6 =
+* New: Added a PHP hook "sbi_clear_page_caches" which allows you to dynamically disable the Instagram Feed code that clears caches created by common page caching plugins.
+* New: Added a PHP hook "sbi_resize_url" which allows you to change the default URL of locally stored images. This can be helpful for sites using CDNs.
+* Tweak: Added a workaround for the wp_json_encode function used in older versions of WordPress.
+* Fix: Compatibility updates for the upcoming WordPress version 5.5 release.
+
 = 2.4.5 =
 * Fix: Accounts can be connected without the use of JavaScript.
 * Fix: Default URL for connecting an account changed to prevent "Invalid Scope" connection issue.
