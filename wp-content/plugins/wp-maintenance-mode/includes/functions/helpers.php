@@ -11,6 +11,8 @@ function wpmm_plugin_info($plugin_slug) {
 	add_filter('extra_plugin_headers', 'wpmm_add_extra_plugin_headers', 99, 1);
 
 	$plugin_data = get_plugin_data(WPMM_PATH . $plugin_slug . '.php');
+        
+        remove_filter('extra_plugin_headers', 'wpmm_add_extra_plugin_headers', 99, 1);
 
 	return $plugin_data;
 }
@@ -64,56 +66,123 @@ function wpmm_multiselect($values, $current) {
 }
 
 /**
+ * Return the UTM'ized url
+ * 
+ * @since 2.3.0
+ * @param string $url
+ * @param array $utms
+ * @return string
+ */
+function wpmm_get_utmized_url($url, $utms = array()) {
+        $utms = wp_parse_args($utms, array(
+                'source' => null,
+                'medium' => 'wpmaintenance',
+                'campaign' => null,
+                'term' => null,
+                'content' => null,
+        ));
+
+        foreach ($utms as $key => $value) {
+                if (empty($value)) {
+                    unset($utms[$key]);
+                    continue;
+                }
+
+                $utms[$key] = sprintf('utm_%s=%s', $key, $value);
+        }
+
+        if (empty($utms)) {
+                return $url;
+        }
+
+        return sprintf('%s/?%s', untrailingslashit($url), implode('&', $utms));
+}
+
+/**
+ * Return banner url
+ * 
+ * @param string $filename
+ * @return string
+ */
+function wpmm_get_banner_url($filename) {
+	return sprintf('%s/assets/images/recommended/%s', untrailingslashit(WPMM_URL), $filename);
+}
+
+/**
  * Return list of banners
  *
  * @since 2.0.4
  * @return array
  */
 function wpmm_get_banners() {
-	$banners_path = WPMM_URL . 'assets/images/resources/';
-
 	return array(
-		'product' => array(
-			array(
-				'title' => 'StrictThemes – WordPress Themes',
-				'link' => 'https://themeforest.net/user/strictthemes/portfolio?utf8=%E2%9C%93&order_by=sales&ref=StrictThemes',
-				'image' => $banners_path . 'strictthemes.png',
-				'utm' => false
-			),
-			array(
-				'title' => 'Free Stock Images',
-				'link' => 'https://freephotos.cc/',
-				'image' => $banners_path . 'freephotoscc.jpg',
-				'utm' => true
-			),
-			array(
-				'title' => 'Postcards',
-				'link' => 'https://designmodo.com/postcards/',
-				'image' => $banners_path . 'postcards.jpg',
-				'utm' => true
-			),
-			array(
-				'title' => 'Blocksy',
-				'link' => 'https://creativethemes.com/blocksy/',
-				'image' => $banners_path . 'blocksy.jpg',
-				'utm' => true
-			)
+		array(
+			'title' => 'Blocksy',
+			'link' => 'https://creativethemes.com/blocksy/',
+			'image' => 'blocksy.jpg',
+			'utm' => true
 		),
-		'resource' => array(
-			array(
-				'title' => 'Linecons',
-				'link' => 'https://designmodo.com/linecons-free/',
-				'image' => $banners_path . 'linecons.jpg',
-				'utm' => true
-			),
-			array(
-				'title' => 'Flat UI Free',
-				'link' => 'https://designmodo.com/flat-free/',
-				'image' => $banners_path . 'flatui.jpg',
-				'utm' => true
-			)
+		array(
+			'title' => 'StrictThemes – WordPress Themes',
+			'link' => 'https://themeforest.net/user/strictthemes/portfolio?utf8=%E2%9C%93&order_by=sales&ref=StrictThemes',
+			'image' => 'strictthemes.png',
+			'utm' => false
+		),
+		array(
+			'title' => 'Postcards',
+			'link' => 'https://designmodo.com/postcards/',
+			'image' => 'postcards.jpg',
+			'utm' => true
+		),
+		array(
+			'title' => 'Static Pages',
+			'link' => 'https://designmodo.com/static-pages/',
+			'image' => 'static-pages.png',
+			'utm' => true
 		)
 	);
+}
+
+/**
+ * Get list of available backgrounds
+ * 
+ * @since 2.3.0
+ * @return array
+ */
+function wpmm_get_backgrounds() {
+        $backgrounds = array();
+
+        foreach(glob(WPMM_PATH . 'assets/images/backgrounds/*_thumb.jpg') as $file) {
+            $backgrounds[] = array(
+                'big' => str_replace('_thumb', '', basename($file)),
+                'small' => basename($file)
+            );
+        }
+
+        return $backgrounds;
+}
+
+/**
+ * Get list of user roles
+ * 
+ * @since 2.3.0
+ * @global object $wp_roles
+ * @return array
+ */
+function wpmm_get_user_roles() {
+        global $wp_roles;
+
+        $roles = array();
+
+        foreach($wp_roles->roles as $role => $details) {
+            if ($role === 'administrator') {
+                continue;
+            }
+            
+            $roles[$role] = $details['name'];
+        }
+
+        return $roles;
 }
 
 /**
@@ -122,13 +191,14 @@ function wpmm_get_banners() {
  * Valid examples:
  * UA-..........
  * UA-..........-....
+ * G-..........
  *
  * @since 2.0.7
  * @param string $string
  * @return string
  */
 function wpmm_sanitize_ga_code($string) {
-	preg_match('/UA-\d{4,10}(-\d{1,4})?/', $string, $matches);
+	preg_match('/(UA-\d{4,10}(-\d{1,4})?|G-\w+)/', $string, $matches);
 
 	return isset($matches[0]) ? $matches[0] : '';
 }
@@ -154,6 +224,21 @@ function wpmm_gdpr_textarea_allowed_html() {
 	);
 
 	return apply_filters('wpmm_gdpr_textarea_allowed_html', $allowed_html);
+}
+
+/**
+ * Return capability
+ * 
+ * @since 2.3.0
+ * @param string $action
+ * @return string
+ */
+function wpmm_get_capability($action) {
+        if(has_filter('wpmm_all_actions_capability')) {
+            return apply_filters('wpmm_all_actions_capability', 'manage_options');
+        }
+    
+        return apply_filters(sprintf('wpmm_%s_capability', $action), 'manage_options');
 }
 
 if (!function_exists('wp_scripts')) {

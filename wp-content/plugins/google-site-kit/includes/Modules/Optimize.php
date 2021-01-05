@@ -18,6 +18,8 @@ use Google\Site_Kit\Core\Modules\Module_With_Settings;
 use Google\Site_Kit\Core\Modules\Module_With_Settings_Trait;
 use Google\Site_Kit\Core\Modules\Module_With_Assets;
 use Google\Site_Kit\Core\Modules\Module_With_Assets_Trait;
+use Google\Site_Kit\Core\Modules\Module_With_Owner;
+use Google\Site_Kit\Core\Modules\Module_With_Owner_Trait;
 use Google\Site_Kit\Core\REST_API\Exception\Invalid_Datapoint_Exception;
 use Google\Site_Kit\Core\Authentication\Clients\Google_Site_Kit_Client;
 use Google\Site_Kit\Core\REST_API\Data_Request;
@@ -34,8 +36,8 @@ use WP_Error;
  * @ignore
  */
 final class Optimize extends Module
-	implements Module_With_Settings, Module_With_Debug_Fields, Module_With_Assets {
-	use Module_With_Settings_Trait, Module_With_Assets_Trait;
+	implements Module_With_Settings, Module_With_Debug_Fields, Module_With_Assets, Module_With_Owner {
+	use Module_With_Settings_Trait, Module_With_Assets_Trait, Module_With_Owner_Trait;
 
 	/**
 	 * Registers functionality through WordPress hooks.
@@ -260,21 +262,7 @@ final class Optimize extends Module
 				};
 		}
 
-		throw new Invalid_Datapoint_Exception();
-	}
-
-	/**
-	 * Parses a response for the given datapoint.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param Data_Request $data Data request object.
-	 * @param mixed        $response Request response.
-	 *
-	 * @return mixed Parsed response data on success, or WP_Error on failure.
-	 */
-	protected function parse_data_response( Data_Request $data, $response ) {
-		return $response;
+		return parent::create_data_request( $data );
 	}
 
 	/**
@@ -293,8 +281,6 @@ final class Optimize extends Module
 			'order'       => 5,
 			'homepage'    => __( 'https://optimize.google.com/optimize/home/', 'google-site-kit' ),
 			'learn_more'  => __( 'https://marketingplatform.google.com/about/optimize/', 'google-site-kit' ),
-			'group'       => __( 'Marketing Platform', 'google-site-kit' ),
-			'tags'        => array( 'marketing' ),
 			'depends_on'  => array( 'analytics' ),
 		);
 	}

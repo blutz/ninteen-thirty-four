@@ -1,10 +1,10 @@
 === Media Sync ===
-Contributors: erolsk8
+Contributors: erolsk8, simonkane
 Donate link: https://www.paypal.me/erolsk8
 Tags: media, uploads, import, ftp, server
 Requires at least: 3.0.1
-Tested up to: 5.4
-Requires PHP: 5.4
+Tested up to: 5.5.1
+Requires PHP: 5.5
 Stable tag: trunk
 License: GPLv2+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -13,13 +13,27 @@ Simple plugin to scan "uploads" directory and bring those files into Media Libra
 
 == Description ==
 
-You can scan all files that are in "uploads" directory and see which ones are actually in Media Library and which ones are just sitting there. Then you can select those that you want to import to database and therefore make them available in Media Library.
+You can scan all files that are in `uploads` directory and see which ones are actually in Media Library and which ones are just sitting there. Then you can select files you want to import to the database and therefore make them available in Media Library.
 
-You can also use FTP to upload your files to "uploads" directory and use this plugin to bring those files into Media Library. There are other plugins that can be used for that, but with this one you can easily select all and import all at once.
+You can also use FTP to upload your files to `uploads` directory and bring those files into Media Library. 
 
 
-= Why I created this plugin =
-I once copied WordPress site to a different server and Media Library ended up being empty, even tho all files were in "uploads" directory and database was copied. So I had to use some other plugin which required me to manually enter each directory and import files in batches per each directory. But I needed something to just import everything at once, so I created this plugin.
+= Disclaimers =
+
+Please read before adding a support topic. Reviews are not intended for support or suggestions.
+
+1.  "For developers"
+    This plugin makes database changes (`wp_posts` and `wp_postmeta` tables), and it was primarily developed to help other developers that are aware of the consequences.
+
+2.  "1 file first"
+    Please be careful and try to import only one file first, to see if it works.
+
+3.  "All at once"
+    This plugin is focused on scanning, selecting, and importing all files at once. So it might not be great for huge amounts of files, since it can use up a lot of memory. Future versions will hopefully solve that problem. For now, you can try to go to Settings -> Media Sync and set it to scan only a specific directory.
+
+4.  "Your setup is unique"
+    Please keep in mind that each WordPress installation is unique, so it's quite possible this plugin will not work in your case. If that happens, please turn on debugging in settings of this plugin, try to figure out why you have that problem, and then describe what you found in the Support section. The more details we have - it's more likely the problem will be solved.
+
 
 = Ignored files =
 - index.php,
@@ -43,16 +57,44 @@ This is now configurable with a custom hook function and it can totally overwrit
 4. Import completed
 
 == Frequently Asked Questions ==
-Q: Stuck at importing / spins endlessly
-A: Please try to increase `max_execution_time` in `php.ini` on server (as described [here](https://thimpress.com/knowledge-base/how-to-increase-maximum-execution-time-for-wordpress-site/)). Or if you have too many files, try going to Settings -> Media Sync and change "Scan directory" to some inner folder.
 
-Q: Files not showing up in Media Library
-A: Please make sure "Dry Run" option is NOT checked. This is a safety mechanism to make sure you know what you're doing, so be careful, try it first with just one file.
+= Stuck at importing / spins endlessly =
 
-Q: Doesn't work
-A: Please first try to turn on debugging by adding this: `define('WP_DEBUG', true);` to your `wp-config.php` and check [Network tab in Chrome DevTools](https://www.section.io/blog/chrome-developer-tools-tutorial-network/) to see what is going on in the background. Then report actual errors since it's hard to help without knowing the error which is causing the problem.
+Please try to increase `max_execution_time` (and/or `memory_limit`) in `php.ini` on server (as described [here](https://thimpress.com/knowledge-base/how-to-increase-maximum-execution-time-for-wordpress-site/)). Or if you have too many files, try going to Settings -> Media Sync and change "Scan directory" to some inner folder.
+
+= Files not showing up in Media Library =
+
+Please make sure "Dry Run" option is NOT checked. This is a safety mechanism to make sure you know what you're doing, so be careful, try it first with just one file.
+
+= Doesn't work =
+
+Please first try to turn on debugging by adding this: `define('WP_DEBUG', true);` to your `wp-config.php` and check [Network tab in Chrome DevTools](https://www.section.io/blog/chrome-developer-tools-tutorial-network/) to see what is going on in the background. Then report actual errors since it's hard to help without knowing the error which is causing the problem.
+
 
 == Changelog ==
+
+= 1.2.5 =
+* New filter hook (`media_sync_filter_before_update_metadata`) which can be used to customize how metadata is updated or to run additional actions after file import.
+
+= 1.2.4 =
+* Handle files with quotes (apostrophes) or other special characters in the file name.
+* Continue importing other selected files if there was an error with some of the files.
+* Show errors in UI instead of alert.
+
+= 1.2.3 =
+* Better error handling and fallback when finding mime type
+
+= 1.2.2 =
+* Fix meta data errors caused by invalid mime types
+
+= 1.2.1 =
+* Much better error handling while importing
+
+= 1.2.0 =
+* Optimized directory scanning to use less memory
+* New option to turn on debugging for this plugin
+* Changed parameters passed to `media_sync_filter_is_scan_object_ignored` hook function
+* Now requires PHP 5.5
 
 = 1.1.8 =
 * Fix handling big ("-scaled.jpg") images [introduced in WordPress 5.3](https://make.wordpress.org/core/2019/10/09/introducing-handling-of-big-images-in-wordpress-5-3/). These files will now be skipped and won't be imported multiple times.

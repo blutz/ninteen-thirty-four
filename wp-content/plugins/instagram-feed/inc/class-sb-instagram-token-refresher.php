@@ -69,7 +69,6 @@ class SB_Instagram_Token_Refresher
 	public static function minimum_time_interval_since_last_attempt_has_passed( $connected_account ) {
 		$last_attempt = isset( $connected_account['last_refresh_attempt'] ) ? (int)$connected_account['last_refresh_attempt'] : 0;
 		$current_time = sbi_get_current_timestamp();
-
 		if ( $current_time > $last_attempt + SBI_MINIMUM_INTERVAL ) {
 			return true;
 		}
@@ -150,6 +149,24 @@ class SB_Instagram_Token_Refresher
 		$options['connected_accounts'] = $connected_accounts;
 
 		update_option( 'sb_instagram_settings', $options );
+	}
+
+	/**
+	 * Helps determine if an access token is from a private
+	 * account which can't be refreshed
+	 *
+	 * @return bool
+	 *
+	 * @since 2.4.7/5.7.1
+	 */
+	public function get_last_error_code() {
+		if ( isset( $this->report['error_log'] ) ) {
+			if ( ! is_wp_error( $this->report['error_log'] ) ) {
+				$error = $this->report['error_log']->get_data();
+				return $error['error']['code'];
+			}
+		}
+		return false;
 	}
 
 	/**

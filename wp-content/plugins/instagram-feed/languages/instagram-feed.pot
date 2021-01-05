@@ -107,9 +107,9 @@ msgstr ""
 #: inc/admin/actions.php:1073
 #, php-format
 msgid ""
-"<b style=\"font-weight: 700;\">Exclusive offer!</b>  We don't run promotions "
+"<b style=\"font-weight: 900;\">Exclusive offer!</b>  We don't run promotions "
 "very often, but for a limited time we're offering <b style=\"font-weight: "
-"700;\">20% off</b> our Pro version to all users of our free Instagram Feed "
+"900;\">60% off</b> our Pro version to all users of our free Instagram Feed "
 "plugin."
 msgstr ""
 
@@ -124,9 +124,9 @@ msgstr ""
 #: inc/admin/actions.php:1091
 #, php-format
 msgid ""
-"<b style=\"font-weight: 700;\">Black Friday/Cyber Monday Deal!</b> Thank you "
+"<b style=\"font-weight: 900;\">Black Friday/Cyber Monday Deal!</b> Thank you "
 "for using our free Instagram Feed plugin. For a limited time, we're offering "
-"<b style=\"font-weight: 700;\">20% off</b> the Pro version for all of our "
+"<b style=\"font-weight: 900;\">60% off</b> the Pro version for all of our "
 "users."
 msgstr ""
 

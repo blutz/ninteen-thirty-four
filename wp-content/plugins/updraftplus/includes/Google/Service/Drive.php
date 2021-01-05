@@ -28,7 +28,7 @@
  *
  * @author Google, Inc.
  */
-class Google_Service_Drive extends Google_Service
+class UDP_Google_Service_Drive extends Google_Service
 {
   /** View and manage the files in your Google Drive. */
   const DRIVE =
@@ -73,9 +73,9 @@ class Google_Service_Drive extends Google_Service
   /**
    * Constructs the internal representation of the Drive service.
    *
-   * @param Google_Client $client
+   * @param UDP_Google_Client $client
    */
-  public function __construct(Google_Client $client)
+  public function __construct(UDP_Google_Client $client)
   {
     parent::__construct($client);
     $this->servicePath = 'drive/v2/';

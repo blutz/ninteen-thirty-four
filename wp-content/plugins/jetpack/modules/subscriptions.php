@@ -12,6 +12,8 @@
  * Additional Search Queries: subscriptions, subscription, email, follow, followers, subscribers, signup
  */
 
+use Automattic\Jetpack\Connection\XMLRPC_Async_Call;
+
 add_action( 'jetpack_modules_loaded', 'jetpack_subscriptions_load' );
 
 function jetpack_subscriptions_load() {
@@ -430,7 +432,7 @@ class Jetpack_Subscriptions {
 	 * @since 8.1
 	 */
 	public function social_notifications_subscribe_field() {
-		$checked = intval( 'on' === get_option( 'social_notifications_subscribe', 'on' ) );
+		$checked = (int) ( 'on' === get_option( 'social_notifications_subscribe', 'on' ) );
 		?>
 
 		<label>
@@ -546,7 +548,7 @@ class Jetpack_Subscriptions {
 			}
 
 			if ( $async ) {
-				Jetpack::xmlrpc_async_call( 'jetpack.subscribeToSite', $email, $post_id, serialize( $extra_data ) );
+				XMLRPC_Async_Call::add_call( 'jetpack.subscribeToSite', 0, $email, $post_id, serialize( $extra_data ) ); //phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
 			} else {
 				$xml->addCall( 'jetpack.subscribeToSite', $email, $post_id, serialize( $extra_data ) );
 			}
@@ -832,7 +834,7 @@ class Jetpack_Subscriptions {
 	 * @param bool $subscribe_to_blog Whether the user chose to subscribe to all new posts on the blog.
 	 */
 	function set_cookies( $subscribe_to_post = false, $post_id = null, $subscribe_to_blog = false ) {
-		$post_id = intval( $post_id );
+		$post_id = (int) $post_id;
 
 		/** This filter is already documented in core/wp-includes/comment-functions.php */
 		$cookie_lifetime = apply_filters( 'comment_cookie_lifetime',       30000000 );

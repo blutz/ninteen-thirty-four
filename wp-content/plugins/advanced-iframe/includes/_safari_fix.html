@@ -1,0 +1,15 @@
+<!DOCTYPE html><html><head>
+ <meta charset="UTF-8">
+</head><body>
+<script>
+document.cookie='safari_cookie_fix=fixed; path=/; Secure; SameSite=None';
+if (!document.cookie.match(/^(.*;)?\s*safari_cookie_fix\s*=\s*[^;]+(.*)?$/)) {
+  var lang = navigator.language || navigator.userLanguage; 
+  if (lang.toUpperCase().includes("DE")) {
+    alert('Diese Webseite benötigt Cookies. Bitte ändern Sie ihre Browsereinstellungen so, dass zumindest Cookies von besuchten Webseiten erlaubt sind.');
+  } else {
+    alert('This website requires that cookies are accepted. Please change your browser settings that at least "from visited website" cookies are allowed.');
+  }
+}
+window.location.replace(document.referrer);</script>
+</body></html>

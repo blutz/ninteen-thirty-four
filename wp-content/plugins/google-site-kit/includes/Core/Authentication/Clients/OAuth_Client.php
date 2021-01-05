@@ -14,13 +14,16 @@ use Exception;
 use Google\Site_Kit\Context;
 use Google\Site_Kit\Core\Authentication\Credentials;
 use Google\Site_Kit\Core\Authentication\Google_Proxy;
+use Google\Site_Kit\Core\Authentication\Owner_ID;
 use Google\Site_Kit\Core\Authentication\Profile;
 use Google\Site_Kit\Core\Authentication\Exception\Google_Proxy_Code_Exception;
+use Google\Site_Kit\Core\Permissions\Permissions;
 use Google\Site_Kit\Core\Storage\Encrypted_Options;
 use Google\Site_Kit\Core\Storage\Encrypted_User_Options;
 use Google\Site_Kit\Core\Storage\Options;
 use Google\Site_Kit\Core\Storage\User_Options;
 use Google\Site_Kit\Core\Util\Scopes;
+use Google\Site_Kit_Dependencies\Google\Task\Runner;
 use Google\Site_Kit_Dependencies\Google_Service_PeopleService;
 use WP_HTTP_Proxy;
 
@@ -126,6 +129,14 @@ final class OAuth_Client {
 	private $http_proxy;
 
 	/**
+	 * Owner_ID instance.
+	 *
+	 * @since 1.16.0
+	 * @var Owner_ID
+	 */
+	private $owner_id;
+
+	/**
 	 * Access token for communication with Google APIs, for temporary storage.
 	 *
 	 * @since 1.0.0
@@ -148,6 +159,27 @@ final class OAuth_Client {
 	 * @var object|null
 	 */
 	private $client_credentials = false;
+
+	/**
+	 * Custom retry map to define which api responses should be retried based on our retry config.
+	 *
+	 * Copied from the default $retryMap within Google_Client/Task/Runner with the addition of lighthouseError.
+	 *
+	 * @since 1.22.0
+	 * @var array $retry_map Map of errors with retry counts.
+	 */
+	protected $retry_map = array(
+		'500'                   => Runner::TASK_RETRY_ALWAYS,
+		'503'                   => Runner::TASK_RETRY_ALWAYS,
+		'rateLimitExceeded'     => Runner::TASK_RETRY_ALWAYS,
+		'userRateLimitExceeded' => Runner::TASK_RETRY_ALWAYS,
+		6                       => Runner::TASK_RETRY_ALWAYS,  // CURLE_COULDNT_RESOLVE_HOST.
+		7                       => Runner::TASK_RETRY_ALWAYS,  // CURLE_COULDNT_CONNECT.
+		28                      => Runner::TASK_RETRY_ALWAYS,  // CURLE_OPERATION_TIMEOUTED.
+		35                      => Runner::TASK_RETRY_ALWAYS,  // CURLE_SSL_CONNECT_ERROR.
+		52                      => Runner::TASK_RETRY_ALWAYS,  // CURLE_GOT_NOTHING.
+		'lighthouseError'       => Runner::TASK_RETRY_NEVER,
+	);
 
 	/**
 	 * Constructor.
@@ -180,6 +212,7 @@ final class OAuth_Client {
 		$this->google_proxy           = $google_proxy ?: new Google_Proxy( $this->context );
 		$this->profile                = $profile ?: new Profile( $this->user_options );
 		$this->http_proxy             = $http_proxy ?: new WP_HTTP_Proxy();
+		$this->owner_id               = new Owner_ID( $this->options );
 	}
 
 	/**
@@ -217,6 +250,13 @@ final class OAuth_Client {
 		$application_name = $this->get_application_name();
 		// The application name is included in the Google client's user-agent for requests to Google APIs.
 		$client->setApplicationName( $application_name );
+
+		// Enable exponential retries, try up to three times.
+		$client->setConfig( 'retry', array( 'retries' => 3 ) );
+
+		// Set a custom retryMap for the REST Runner.
+		$client->setConfig( 'retry_map', $this->retry_map );
+
 		// Override the default user-agent for the Guzzle client. This is used for oauth/token requests.
 		// By default this header uses the generic Guzzle client's user-agent and includes
 		// Guzzle, cURL, and PHP versions as it is normally shared.
@@ -226,15 +266,9 @@ final class OAuth_Client {
 
 		// Configure the Google_Client's HTTP client to use to use the same HTTP proxy as WordPress HTTP, if set.
 		if ( $this->http_proxy->is_enabled() ) {
-			if ( $this->http_proxy->use_authentication() ) {
-				// The "Authorization" header is used to authenticate the end request; use the dedicated proxy header.
-				$http_client->setDefaultOption(
-					'headers/Proxy-Authorization',
-					'Basic ' . base64_encode( $this->http_proxy->authentication() )
-				);
-			}
-
-			$http_client->setDefaultOption( 'proxy', $this->http_proxy->host() . ':' . $this->http_proxy->port() );
+			// See http://docs.guzzlephp.org/en/5.3/clients.html#proxy for reference.
+			$auth = $this->http_proxy->use_authentication() ? "{$this->http_proxy->authentication()}@" : '';
+			$http_client->setDefaultOption( 'proxy', "{$auth}{$this->http_proxy->host()}:{$this->http_proxy->port()}" );
 			$ssl_verify = $http_client->getDefaultOption( 'verify' );
 			// Allow SSL verification to be filtered, as is often necessary with HTTP proxies.
 			$http_client->setDefaultOption(
@@ -734,6 +768,13 @@ final class OAuth_Client {
 			do_action( 'googlesitekit_authorize_user', $token_response );
 		}
 
+		// This must happen after googlesitekit_authorize_user as the permissions checks depend on
+		// values set which affect the meta capability mapping.
+		$current_user_id = get_current_user_id();
+		if ( $this->should_update_owner_id( $current_user_id ) ) {
+			$this->owner_id->set( $current_user_id );
+		}
+
 		$redirect_url = $this->user_options->get( self::OPTION_REDIRECT_URL );
 
 		if ( $redirect_url ) {
@@ -860,6 +901,31 @@ final class OAuth_Client {
 	}
 
 	/**
+	 * Determines whether the current owner ID must be changed or not.
+	 *
+	 * @since 1.16.0
+	 *
+	 * @param int $user_id Current user ID.
+	 * @return bool TRUE if owner needs to be changed, otherwise FALSE.
+	 */
+	private function should_update_owner_id( $user_id ) {
+		$current_owner_id = $this->owner_id->get();
+		if ( $current_owner_id === $user_id ) {
+			return false;
+		}
+
+		if ( ! empty( $current_owner_id ) && user_can( $current_owner_id, Permissions::MANAGE_OPTIONS ) ) {
+			return false;
+		}
+
+		if ( ! user_can( $user_id, Permissions::MANAGE_OPTIONS ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Gets the list of features to declare support for when setting up with the proxy.
 	 *
 	 * @since 1.1.0
@@ -889,7 +955,7 @@ final class OAuth_Client {
 	 * @return bool
 	 */
 	private function supports_file_verification() {
-		$home_path = wp_parse_url( home_url(), PHP_URL_PATH );
+		$home_path = wp_parse_url( $this->context->get_canonical_home_url(), PHP_URL_PATH );
 
 		return ( ! $home_path || '/' === $home_path );
 	}
@@ -1013,6 +1079,9 @@ final class OAuth_Client {
 		$this->user_options->delete( self::OPTION_REDIRECT_URL );
 		$this->user_options->delete( self::OPTION_AUTH_SCOPES );
 		$this->user_options->delete( self::OPTION_ADDITIONAL_AUTH_SCOPES );
+
+		$this->access_token  = '';
+		$this->refresh_token = '';
 	}
 
 	/**

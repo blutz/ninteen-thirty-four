@@ -163,7 +163,11 @@ class SB_Instagram_Cron_Updater
 	 */
 	public static function get_feed_cache_option_names() {
 		global $wpdb;
-		$feed_caches = array();
+		$feed_caches = apply_filters( 'sbi_feed_cache_option_names', array() );
+
+		if ( ! empty( $feed_caches ) ) {
+			return $feed_caches;
+		}
 
 		$results = $wpdb->get_results( "
 		SELECT option_name

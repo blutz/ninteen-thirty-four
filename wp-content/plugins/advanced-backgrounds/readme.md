@@ -5,7 +5,7 @@
 * Requires at least: 5.4
 * Tested up to: 5.5
 * Requires PHP: 5.5.9
-* Stable tag: 1.6.7
+* Stable tag: 1.7.0
 * License: GPLv2 or later
 * License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 
@@ -82,6 +82,15 @@ The manual installation method involves downloading our AWB plugin and uploading
 5. Extended WPBakery Page Builder ROW options
 
 ## Changelog
+
+= 1.7.0 =
+
+* added support for 3rd-party plugins, that adds WebP images
+* fixed bug with clip images in Safari v14
+* fixed image position when disabled parallax effect
+* fixed video loop and image reset problem
+* fixed JS deprecated notice
+* additional styles for video elements (prevent click on video blocks)
 
 = 1.6.7 =
 

@@ -1,6 +1,6 @@
 {
 	"name": "ghostkit/grid",
-	"category": "layout",
+	"category": "design",
     "supports": {
         "html": false,
         "className": false,
@@ -10,10 +10,6 @@
     "attributes": {
         "isTemplatesModalOnly": {
             "type": "boolean"
-        },
-        "columns": {
-            "type": "number",
-            "default": 0
         },
         "gap": {
             "type": "string",

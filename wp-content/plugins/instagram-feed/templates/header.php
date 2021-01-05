@@ -3,7 +3,7 @@
  * Smash Balloon Instagram Feed Header Template
  * Adds account information and an avatar to the top of the feed
  *
- * @version 2.2 Instagram Feed by Smash Balloon
+ * @version 2.5 Instagram Feed by Smash Balloon
  *
  */
 

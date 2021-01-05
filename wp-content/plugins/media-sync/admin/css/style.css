@@ -3,6 +3,14 @@
     color: inherit;
 }
 
+.main-media-sync-page .media-sync-global-errors {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.main-media-sync-page .media-sync-global-errors.hidden {
+    display: none;
+}
+
 .main-media-sync-page .notice pre {
     display: inline;
     margin: 0;
@@ -160,6 +168,12 @@
     background: #fb9e9e;
 }
 
+.main-media-sync-page tr.media-sync-list-file div.error {
+    margin: 10px 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 
 .main-media-sync-page tr.media-sync-list-file .media-sync-toggle-row {
     font-size: 26px;
@@ -278,6 +292,14 @@
 }
 
 
+.media-sync-debugging-stats {
+    border: 1px dotted #ccd0d4;
+    padding: 8px 12px;
+    margin: 15px 0;
+}
+.media-sync-debugging-stats .media-sync-debugging-title {
+    margin-bottom: 6px;
+}
 
 
 .media-sync-page-settings .media-sync-options-install-add-on-message {

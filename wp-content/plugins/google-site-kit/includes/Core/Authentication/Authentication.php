@@ -12,15 +12,18 @@ namespace Google\Site_Kit\Core\Authentication;
 
 use Google\Site_Kit\Context;
 use Google\Site_Kit\Core\Authentication\Clients\OAuth_Client;
+use Google\Site_Kit\Core\Authentication\User_Input_State;
 use Google\Site_Kit\Core\Permissions\Permissions;
 use Google\Site_Kit\Core\REST_API\REST_Route;
 use Google\Site_Kit\Core\REST_API\REST_Routes;
 use Google\Site_Kit\Core\Storage\Encrypted_Options;
-use Google\Site_Kit\Core\Storage\Has_Connected_Admins;
 use Google\Site_Kit\Core\Storage\Options;
 use Google\Site_Kit\Core\Storage\User_Options;
 use Google\Site_Kit\Core\Storage\Transients;
 use Google\Site_Kit\Core\Admin\Notice;
+use Google\Site_Kit\Core\Util\Feature_Flags;
+use Google\Site_Kit\Core\Util\Method_Proxy_Trait;
+use Google\Site_Kit\Core\Util\User_Input_Settings;
 use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -34,6 +37,8 @@ use Exception;
  * @ignore
  */
 final class Authentication {
+
+	use Method_Proxy_Trait;
 
 	/**
 	 * Plugin context.
@@ -60,6 +65,24 @@ final class Authentication {
 	 * @var User_Options
 	 */
 	private $user_options = null;
+
+	/**
+	 * User_Input_State object.
+	 *
+	 * @since 1.20.0
+	 *
+	 * @var User_Input_State
+	 */
+	private $user_input_state = null;
+
+	/**
+	 * User_Input_Settings
+	 *
+	 * @since 1.20.0
+	 *
+	 * @var User_Input_Settings
+	 */
+	private $user_input_settings = null;
 
 	/**
 	 * Transients object.
@@ -120,12 +143,12 @@ final class Authentication {
 	protected $profile;
 
 	/**
-	 * First_Admin instance.
+	 * Owner_ID instance.
 	 *
-	 * @since 1.0.0
-	 * @var First_Admin
+	 * @since 1.16.0
+	 * @var Owner_ID
 	 */
-	protected $first_admin;
+	protected $owner_id;
 
 	/**
 	 * Has_Connected_Admins instance.
@@ -134,6 +157,22 @@ final class Authentication {
 	 * @var Has_Connected_Admins
 	 */
 	protected $has_connected_admins;
+
+	/**
+	 * Connected_Proxy_URL instance.
+	 *
+	 * @since 1.17.0
+	 * @var Connected_Proxy_URL
+	 */
+	protected $connected_proxy_url;
+
+	/**
+	 * Disconnected_Reason instance.
+	 *
+	 * @since 1.17.0
+	 * @var Disconnected_Reason
+	 */
+	protected $disconnected_reason;
 
 	/**
 	 * Google_Proxy instance.
@@ -170,14 +209,18 @@ final class Authentication {
 		$this->options              = $options ?: new Options( $this->context );
 		$this->user_options         = $user_options ?: new User_Options( $this->context );
 		$this->transients           = $transients ?: new Transients( $this->context );
+		$this->user_input_state     = new User_Input_State( $this->user_options );
+		$this->user_input_settings  = new User_Input_Settings( $context, $this, $transients );
 		$this->google_proxy         = new Google_Proxy( $this->context );
 		$this->credentials          = new Credentials( new Encrypted_Options( $this->options ) );
 		$this->verification         = new Verification( $this->user_options );
 		$this->verification_meta    = new Verification_Meta( $this->user_options );
 		$this->verification_file    = new Verification_File( $this->user_options );
 		$this->profile              = new Profile( $this->user_options );
-		$this->first_admin          = new First_Admin( $this->options );
+		$this->owner_id             = new Owner_ID( $this->options );
 		$this->has_connected_admins = new Has_Connected_Admins( $this->options, $this->user_options );
+		$this->connected_proxy_url  = new Connected_Proxy_URL( $this->options );
+		$this->disconnected_reason  = new Disconnected_Reason( $this->user_options );
 	}
 
 	/**
@@ -191,13 +234,56 @@ final class Authentication {
 		$this->verification_file()->register();
 		$this->verification_meta()->register();
 		$this->has_connected_admins->register();
+		$this->owner_id->register();
+		$this->connected_proxy_url->register();
+		$this->disconnected_reason->register();
+		$this->user_input_state->register();
 
+		add_filter( 'allowed_redirect_hosts', $this->get_method_proxy( 'allowed_redirect_hosts' ) );
+		add_filter( 'googlesitekit_admin_data', $this->get_method_proxy( 'inline_js_admin_data' ) );
+		add_filter( 'googlesitekit_admin_notices', $this->get_method_proxy( 'authentication_admin_notices' ) );
+		add_filter( 'googlesitekit_inline_base_data', $this->get_method_proxy( 'inline_js_base_data' ) );
+		add_filter( 'googlesitekit_setup_data', $this->get_method_proxy( 'inline_js_setup_data' ) );
+
+		add_action( 'init', $this->get_method_proxy( 'handle_oauth' ) );
+		add_action( 'admin_init', $this->get_method_proxy( 'check_connected_proxy_url' ) );
+		add_action( 'admin_init', $this->get_method_proxy( 'verify_user_input_settings' ) );
 		add_action(
-			'init',
+			'admin_init',
 			function() {
-				$this->handle_oauth();
+				if (
+					'googlesitekit-dashboard' === $this->context->input()->filter( INPUT_GET, 'page', FILTER_SANITIZE_STRING )
+					&& User_Input_State::VALUE_REQUIRED === $this->user_input_state->get()
+				) {
+					wp_safe_redirect( $this->context->admin_url( 'user-input' ) );
+					exit;
+				}
 			}
 		);
+		// Google_Proxy::ACTION_SETUP is called from the proxy as an intermediate step.
+		add_action( 'admin_action_' . Google_Proxy::ACTION_SETUP, $this->get_method_proxy( 'verify_proxy_setup_nonce' ), -1 );
+		// Google_Proxy::ACTION_SETUP is called from Site Kit to redirect to the proxy initially.
+		add_action( 'admin_action_' . Google_Proxy::ACTION_SETUP, $this->get_method_proxy( 'handle_sync_site_fields' ), 5 );
+		add_action(
+			'admin_action_' . Google_Proxy::ACTION_SETUP,
+			function () {
+				$code      = $this->context->input()->filter( INPUT_GET, 'googlesitekit_code', FILTER_SANITIZE_STRING );
+				$site_code = $this->context->input()->filter( INPUT_GET, 'googlesitekit_site_code', FILTER_SANITIZE_STRING );
+
+				$this->handle_site_code( $code, $site_code );
+				$this->require_user_input();
+				$this->redirect_to_proxy( $code );
+			}
+		);
+
+		add_action(
+			'admin_action_' . Google_Proxy::ACTION_PERMISSIONS,
+			function () {
+				$this->handle_proxy_permissions();
+			}
+		);
+
+		add_action( 'googlesitekit_authorize_user', $this->get_method_proxy( 'set_connected_proxy_url' ) );
 
 		add_filter(
 			'googlesitekit_rest_routes',
@@ -218,60 +304,6 @@ final class Authentication {
 		);
 
 		add_filter(
-			'googlesitekit_inline_base_data',
-			function ( $data ) {
-				return $this->inline_js_base_data( $data );
-			}
-		);
-
-		add_filter(
-			'googlesitekit_admin_data',
-			function ( $data ) {
-				return $this->inline_js_admin_data( $data );
-			}
-		);
-
-		add_filter(
-			'googlesitekit_setup_data',
-			function ( $data ) {
-				return $this->inline_js_setup_data( $data );
-			}
-		);
-
-		add_filter(
-			'allowed_redirect_hosts',
-			function ( $hosts ) {
-				return $this->allowed_redirect_hosts( $hosts );
-			}
-		);
-
-		add_filter(
-			'googlesitekit_admin_notices',
-			function ( $notices ) {
-				return $this->authentication_admin_notices( $notices );
-			}
-		);
-
-		add_action(
-			'admin_action_' . Google_Proxy::ACTION_SETUP,
-			function () {
-				$this->verify_proxy_setup_nonce();
-			},
-			-1
-		);
-
-		add_action(
-			'admin_action_' . Google_Proxy::ACTION_SETUP,
-			function () {
-				$code      = $this->context->input()->filter( INPUT_GET, 'googlesitekit_code', FILTER_SANITIZE_STRING );
-				$site_code = $this->context->input()->filter( INPUT_GET, 'googlesitekit_site_code', FILTER_SANITIZE_STRING );
-
-				$this->handle_site_code( $code, $site_code );
-				$this->redirect_to_proxy( $code );
-			}
-		);
-
-		add_filter(
 			'googlesitekit_user_data',
 			function( $user ) {
 				$user['connectURL'] = esc_url_raw( $this->get_connect_url() );
@@ -284,6 +316,14 @@ final class Authentication {
 
 				$user['verified'] = $this->verification->has();
 
+				return $user;
+			}
+		);
+
+		add_filter(
+			'googlesitekit_user_data',
+			function( $user ) {
+				$user['userInputState'] = $this->user_input_state->get();
 				return $user;
 			}
 		);
@@ -303,8 +343,7 @@ final class Authentication {
 			};
 			add_action( 'shutdown', $sync_site_fields );
 		};
-		add_action( 'update_option_home', $option_updated );
-		add_action( 'update_option_siteurl', $option_updated );
+
 		add_action( 'update_option_blogname', $option_updated );
 		add_action( 'update_option_googlesitekit_db_version', $option_updated );
 
@@ -399,6 +438,28 @@ final class Authentication {
 	}
 
 	/**
+	 * Gets the Google Proxy instance.
+	 *
+	 * @since 1.19.0
+	 *
+	 * @return Google_Proxy An instance of Google Proxy.
+	 */
+	public function get_google_proxy() {
+		return $this->google_proxy;
+	}
+
+	/**
+	 * Gets the User Input State instance.
+	 *
+	 * @since 1.21.0
+	 *
+	 * @return User_Input_State An instance of the User_Input_State class.
+	 */
+	public function get_user_input_state() {
+		return $this->user_input_state;
+	}
+
+	/**
 	 * Revokes authentication along with user options settings.
 	 *
 	 * @since 1.0.0
@@ -471,7 +532,6 @@ final class Authentication {
 
 		return ! empty( $access_token );
 	}
-
 	/**
 	 * Checks whether the Site Kit setup is considered complete.
 	 *
@@ -602,26 +662,26 @@ final class Authentication {
 	 * @return array Filtered $data.
 	 */
 	private function inline_js_base_data( $data ) {
-		$first_admin_id  = (int) $this->first_admin->get();
-		$current_user_id = get_current_user_id();
-
-		// If no first admin is stored yet and the current user is one, consider them the first.
-		if ( ! $first_admin_id && current_user_can( Permissions::MANAGE_OPTIONS ) ) {
-			$first_admin_id = $current_user_id;
-		}
-		$data['isFirstAdmin'] = ( $current_user_id === $first_admin_id );
-		$data['splashURL']    = esc_url_raw( $this->context->admin_url( 'splash' ) );
-
+		$data['isOwner']             = $this->owner_id->get() === get_current_user_id();
+		$data['isFirstAdmin']        = $data['isOwner'] || ( ! $this->owner_id->get() && current_user_can( Permissions::MANAGE_OPTIONS ) );
+		$data['splashURL']           = esc_url_raw( $this->context->admin_url( 'splash' ) );
 		$data['proxySetupURL']       = '';
 		$data['proxyPermissionsURL'] = '';
 		$data['usingProxy']          = false;
 		if ( $this->credentials->using_proxy() ) {
 			$auth_client                 = $this->get_oauth_client();
-			$access_code                 = (string) $this->user_options->get( Clients\OAuth_Client::OPTION_PROXY_ACCESS_CODE );
-			$data['proxySetupURL']       = esc_url_raw( $auth_client->get_proxy_setup_url( $access_code ) );
-			$data['proxyPermissionsURL'] = esc_url_raw( $auth_client->get_proxy_permissions_url() );
+			$data['proxySetupURL']       = esc_url_raw( $this->get_proxy_setup_url() );
+			$data['proxyPermissionsURL'] = esc_url_raw( $this->get_proxy_permissions_url() );
 			$data['usingProxy']          = true;
 		}
+
+		$version               = get_bloginfo( 'version' );
+		list( $major, $minor ) = explode( '.', $version );
+		$data['wpVersion']     = array(
+			'version' => $version,
+			'major'   => (int) $major,
+			'minor'   => (int) $minor,
+		);
 
 		return $data;
 	}
@@ -675,15 +735,6 @@ final class Authentication {
 		} else {
 			$data['isVerified'] = false;
 		}
-
-		// Flag the first admin user.
-		$first_admin_id  = (int) $this->first_admin->get();
-		$current_user_id = get_current_user_id();
-		if ( ! $first_admin_id && current_user_can( Permissions::MANAGE_OPTIONS ) ) {
-			$first_admin_id = $current_user_id;
-			$this->first_admin->set( $first_admin_id );
-		}
-		$data['isFirstAdmin'] = ( $current_user_id === $first_admin_id );
 
 		// The actual data for this is passed in from the Search Console module.
 		if ( ! isset( $data['hasSearchConsoleProperty'] ) ) {
@@ -741,6 +792,7 @@ final class Authentication {
 								'resettable'         => $this->options->has( Credentials::OPTION ),
 								'setupCompleted'     => $this->is_setup_completed(),
 								'hasConnectedAdmins' => $this->has_connected_admins->get(),
+								'ownerID'            => $this->owner_id->get(),
 							);
 
 							return new WP_REST_Response( $data );
@@ -764,6 +816,7 @@ final class Authentication {
 								'grantedScopes'         => ! empty( $access_token ) ? $oauth_client->get_granted_scopes() : array(),
 								'unsatisfiedScopes'     => ! empty( $access_token ) ? $oauth_client->get_unsatisfied_scopes() : array(),
 								'needsReauthentication' => $oauth_client->needs_reauthentication(),
+								'disconnectedReason'    => $this->disconnected_reason->get(),
 							);
 
 							return new WP_REST_Response( $data );
@@ -806,8 +859,37 @@ final class Authentication {
 
 		$notices[] = $this->get_reauthentication_needed_notice();
 		$notices[] = $this->get_authentication_oauth_error_notice();
+		$notices[] = $this->get_reconnect_after_url_mismatch_notice();
 
 		return $notices;
+	}
+
+	/**
+	 * Gets reconnect notice.
+	 *
+	 * @since 1.17.0
+	 *
+	 * @return Notice Notice object.
+	 */
+	private function get_reconnect_after_url_mismatch_notice() {
+		return new Notice(
+			'reconnect_after_url_mismatch',
+			array(
+				'content'         => function() {
+					return sprintf(
+						'<p>%s <a href="%s">%s</a></p>',
+						esc_html__( 'Looks like the URL of your site has changed. In order to continue using Site Kit, you’ll need to reconnect, so that your plugin settings are updated with the new URL.', 'google-site-kit' ),
+						esc_url( $this->get_proxy_setup_url() ),
+						esc_html__( 'Reconnect', 'google-site-kit' )
+					);
+				},
+				'type'            => Notice::TYPE_INFO,
+				'active_callback' => function() {
+					return $this->disconnected_reason->get() === Disconnected_Reason::REASON_CONNECTED_URL_MISMATCH
+						&& $this->credentials->has();
+				},
+			)
+		);
 	}
 
 	/**
@@ -994,6 +1076,28 @@ final class Authentication {
 	}
 
 	/**
+	 * Requires user input if it is not already completed.
+	 *
+	 * @since 1.22.0
+	 */
+	private function require_user_input() {
+		if ( ! Feature_Flags::enabled( 'userInput' ) ) {
+			return;
+		}
+
+		if ( User_Input_State::VALUE_COMPLETED !== $this->user_input_state->get() ) {
+			$this->user_input_state->set( User_Input_State::VALUE_REQUIRED );
+			// Set the `mode` query parameter in the proxy setup URL.
+			add_filter(
+				'googlesitekit_proxy_setup_url_params',
+				function ( $params ) {
+					return array_merge( $params, array( 'mode' => 'user_input' ) );
+				}
+			);
+		}
+	}
+
+	/**
 	 * Redirects back to the authentication service with any added parameters.
 	 *
 	 * @since 1.1.2
@@ -1006,4 +1110,152 @@ final class Authentication {
 		);
 		exit;
 	}
+
+	/**
+	 * Sets the current connected proxy URL.
+	 *
+	 * @since 1.17.0
+	 */
+	private function set_connected_proxy_url() {
+		$this->connected_proxy_url->set( $this->context->get_canonical_home_url() );
+	}
+
+	/**
+	 * Checks whether the current site URL has changed or not. If the URL has been changed,
+	 * it disconnects the Site Kit and sets the disconnected reason to "connected_url_mismatch".
+	 *
+	 * @since 1.17.0
+	 */
+	private function check_connected_proxy_url() {
+		if ( $this->connected_proxy_url->matches_url( $this->context->get_canonical_home_url() ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( Permissions::SETUP ) ) {
+			return;
+		}
+
+		if ( ! $this->credentials->has() ) {
+			return;
+		}
+
+		if ( ! $this->credentials->using_proxy() ) {
+			return;
+		}
+
+		if ( ! $this->is_authenticated() ) {
+			return;
+		}
+
+		if ( ! $this->connected_proxy_url->has() ) {
+			$this->set_connected_proxy_url();
+			return;
+		}
+
+		$this->disconnect();
+		$this->disconnected_reason->set( Disconnected_Reason::REASON_CONNECTED_URL_MISMATCH );
+	}
+
+	/**
+	 * Handles user connection action and redirects to the proxy connection page.
+	 *
+	 * @since 1.17.0
+	 */
+	private function handle_sync_site_fields() {
+		// If this query parameter is sent, the request comes from the authentication proxy as part of an ongoing setup flow, so there is no need to sync site fields.
+		$googlesitekit_code = $this->context->input()->filter( INPUT_GET, 'googlesitekit_code' );
+		if ( $googlesitekit_code ) {
+			return;
+		}
+
+		if ( ! current_user_can( Permissions::SETUP ) ) {
+			wp_die( esc_html__( 'You have insufficient permissions to connect Site Kit.', 'google-site-kit' ) );
+		}
+
+		if ( ! $this->credentials->using_proxy() ) {
+			wp_die( esc_html__( 'Site Kit is not configured to use the authentication proxy.', 'google-site-kit' ) );
+		}
+
+		if ( $this->google_proxy->are_site_fields_synced( $this->credentials ) === false ) {
+			$this->google_proxy->sync_site_fields( $this->credentials, 'sync' );
+		}
+	}
+
+	/**
+	 * Gets the publicly visible URL to set up the plugin with the authentication proxy.
+	 *
+	 * @since 1.17.0
+	 *
+	 * @return string An URL for googlesitekit_proxy_connect_user action protected with a nonce.
+	 */
+	private function get_proxy_setup_url() {
+		return add_query_arg(
+			array(
+				'action' => Google_Proxy::ACTION_SETUP,
+				'nonce'  => wp_create_nonce( Google_Proxy::ACTION_SETUP ),
+			),
+			admin_url( 'index.php' )
+		);
+	}
+
+	/**
+	 * Handles proxy permissions.
+	 *
+	 * @since 1.18.0
+	 */
+	private function handle_proxy_permissions() {
+		$nonce = $this->context->input()->filter( INPUT_GET, 'nonce' );
+		if ( ! wp_verify_nonce( $nonce, Google_Proxy::ACTION_PERMISSIONS ) ) {
+			wp_die( esc_html__( 'Invalid nonce.', 'google-site-kit' ) );
+		}
+
+		if ( ! current_user_can( Permissions::AUTHENTICATE ) ) {
+			wp_die( esc_html__( 'You have insufficient permissions to manage Site Kit permissions.', 'google-site-kit' ) );
+		}
+
+		if ( ! $this->credentials->using_proxy() ) {
+			wp_die( esc_html__( 'Site Kit is not configured to use the authentication proxy.', 'google-site-kit' ) );
+		}
+
+		wp_safe_redirect( $this->get_oauth_client()->get_proxy_permissions_url() );
+		exit;
+
+	}
+
+	/**
+	 * Gets the proxy permission URL.
+	 *
+	 * @since 1.18.0
+	 *
+	 * @return string Proxy permission URL.
+	 */
+	private function get_proxy_permissions_url() {
+		return add_query_arg(
+			array(
+				'action' => Google_Proxy::ACTION_PERMISSIONS,
+				'nonce'  => wp_create_nonce( Google_Proxy::ACTION_PERMISSIONS ),
+			),
+			admin_url( 'index.php' )
+		);
+	}
+
+	/**
+	 * Verifies the user input settings
+	 *
+	 * @since 1.20.0
+	 */
+	private function verify_user_input_settings() {
+		if (
+			empty( $this->user_input_state->get() )
+			&& $this->is_authenticated()
+			&& $this->credentials()->has()
+			&& $this->credentials->using_proxy()
+		) {
+			$is_empty = $this->user_input_settings->are_settings_empty();
+			if ( ! is_null( $is_empty ) ) {
+				$this->user_input_state->set( $is_empty ? User_Input_State::VALUE_MISSING : User_Input_State::VALUE_COMPLETED );
+			}
+		}
+	}
+
 }

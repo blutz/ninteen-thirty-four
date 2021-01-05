@@ -18,6 +18,13 @@ use Google\Site_Kit\Core\Storage\Options;
 use Google\Site_Kit\Core\Storage\User_Options;
 use Google\Site_Kit\Core\Authentication\Authentication;
 use Google\Site_Kit\Core\REST_API\Exception\Invalid_Datapoint_Exception;
+use Google\Site_Kit\Modules\AdSense;
+use Google\Site_Kit\Modules\Analytics;
+use Google\Site_Kit\Modules\Optimize;
+use Google\Site_Kit\Modules\PageSpeed_Insights;
+use Google\Site_Kit\Modules\Search_Console;
+use Google\Site_Kit\Modules\Site_Verification;
+use Google\Site_Kit\Modules\Tag_Manager;
 use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -92,6 +99,30 @@ final class Modules {
 	private $dependants = array();
 
 	/**
+	 * Module_Registry instance.
+	 *
+	 * @since 1.21.0
+	 * @var Module_Registry
+	 */
+	private $registry;
+
+	/**
+	 * Core module class names.
+	 *
+	 * @since 1.21.0
+	 * @var string[] Core module class names.
+	 */
+	private $core_modules = array(
+		Site_Verification::class,
+		Search_Console::class,
+		Analytics::class,
+		Optimize::class,
+		Tag_Manager::class,
+		AdSense::class,
+		PageSpeed_Insights::class,
+	);
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -128,7 +159,19 @@ final class Modules {
 					$data[ $module->slug ]['setupComplete'] = $data[ $module->slug ]['active'] && $this->is_module_connected( $module->slug );
 					$data[ $module->slug ]['dependencies']  = $this->get_module_dependencies( $module->slug );
 					$data[ $module->slug ]['dependants']    = $this->get_module_dependants( $module->slug );
+					$data[ $module->slug ]['owner']         = null;
+
+					if ( current_user_can( 'list_users' ) && $module instanceof Module_With_Owner ) {
+						$owner_id = $module->get_owner_id();
+						if ( $owner_id ) {
+							$data[ $module->slug ]['owner'] = array(
+								'id'    => $owner_id,
+								'login' => get_the_author_meta( 'user_login', $owner_id ),
+							);
+						}
+					}
 				}
+
 				return $data;
 			}
 		);
@@ -208,15 +251,7 @@ final class Modules {
 	 */
 	public function get_available_modules() {
 		if ( empty( $this->modules ) ) {
-			$module_classes = array(
-				'Google\Site_Kit\Modules\Site_Verification',
-				'Google\Site_Kit\Modules\Search_Console',
-				'Google\Site_Kit\Modules\Analytics',
-				'Google\Site_Kit\Modules\Optimize',
-				'Google\Site_Kit\Modules\Tag_Manager',
-				'Google\Site_Kit\Modules\AdSense',
-				'Google\Site_Kit\Modules\PageSpeed_Insights',
-			);
+			$module_classes = $this->get_registry()->get_all();
 			foreach ( $module_classes as $module_class ) {
 				$instance = new $module_class( $this->context, $this->options, $this->user_options, $this->authentication );
 
@@ -455,6 +490,38 @@ final class Modules {
 				}
 			}
 		);
+	}
+
+	/**
+	 * Gets the configured module registry instance.
+	 *
+	 * @since 1.21.0
+	 *
+	 * @return Module_Registry
+	 */
+	protected function get_registry() {
+		if ( ! $this->registry instanceof Module_Registry ) {
+			$this->registry = $this->setup_registry();
+		}
+
+		return $this->registry;
+	}
+
+	/**
+	 * Sets up a fresh module registry instance.
+	 *
+	 * @since 1.21.0
+	 *
+	 * @return Module_Registry
+	 */
+	protected function setup_registry() {
+		$registry = new Module_Registry();
+
+		foreach ( $this->core_modules as $core_module ) {
+			$registry->register( $core_module );
+		}
+
+		return $registry;
 	}
 
 	/**
@@ -804,7 +871,7 @@ final class Modules {
 	 * @return array Module REST response data.
 	 */
 	private function prepare_module_data_for_response( Module $module ) {
-		return array(
+		$module_data = array(
 			'slug'         => $module->slug,
 			'name'         => $module->name,
 			'description'  => $module->description,
@@ -815,7 +882,20 @@ final class Modules {
 			'connected'    => $this->is_module_connected( $module->slug ),
 			'dependencies' => $this->get_module_dependencies( $module->slug ),
 			'dependants'   => $this->get_module_dependants( $module->slug ),
+			'owner'        => null,
 		);
+
+		if ( current_user_can( 'list_users' ) && $module instanceof Module_With_Owner ) {
+			$owner_id = $module->get_owner_id();
+			if ( $owner_id ) {
+				$module_data['owner'] = array(
+					'id'    => $owner_id,
+					'login' => get_the_author_meta( 'user_login', $owner_id ),
+				);
+			}
+		}
+
+		return $module_data;
 	}
 
 	/**
@@ -881,6 +961,21 @@ final class Modules {
 						'type' => 'string',
 					),
 					'readonly'    => true,
+				),
+				'owner'        => array(
+					'type'       => 'object',
+					'properties' => array(
+						'id'    => array(
+							'type'        => 'integer',
+							'description' => __( 'Owner ID.', 'google-site-kit' ),
+							'readonly'    => true,
+						),
+						'login' => array(
+							'type'        => 'string',
+							'description' => __( 'Owner login.', 'google-site-kit' ),
+							'readonly'    => true,
+						),
+					),
 				),
 			),
 		);

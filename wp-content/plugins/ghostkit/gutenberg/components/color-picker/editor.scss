@@ -1,0 +1,26 @@
+@import "../../variables";
+
+.ghostkit-component-color-picker-wrapper {
+    .ghostkit-component-color-picker-wrapper + .ghostkit-component-color-picker-wrapper {
+        margin-top: -5px;
+    }
+
+    > .components-base-control__field {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 16px;
+
+        .components-color-palette__item-wrapper {
+            margin: 0;
+        }
+    }
+}
+.ghostkit-component-color-picker {
+    .ghostkit-component-color-picker-palette {
+        margin: 0 17px;
+    }
+    .components-color-palette {
+        margin: 0;
+    }
+}

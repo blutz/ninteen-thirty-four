@@ -14,7 +14,8 @@ jQuery(document).ready(function($) {
 			var selectedItems = form.find('.is-file.is-in-db-no input[type="checkbox"]:checked');
 			var items = selectedItems && selectedItems.length ? selectedItems.map(function (index, checkbox) {
 				return {
-					'file': $(checkbox).val(), 'row_id': $(checkbox).attr('data-row-id')
+					'file': $(checkbox).val(),
+					'row_id': $(checkbox).attr('data-row-id')
 				};
 			}).get() : [];
 			var total = items.length;
@@ -46,6 +47,8 @@ jQuery(document).ready(function($) {
 			files.find('.media-sync-list-file.highlight-success').removeClass('highlight-success');
 			files.find('.media-sync-list-file.highlight-error').removeClass('highlight-error');
 
+			// Clear file errors
+			files.find('.media-sync-file-error').remove();
 
 			// Show progress bar
 			plugin.find('.media-sync-progress-holder').addClass('is-visible');
@@ -67,73 +70,120 @@ jQuery(document).ready(function($) {
 				}
 			}
 
+			function outputError(errorMessage = null, error = null, isItemError = false) {
+				console.error("[Media Sync] [Import] " + errorMessage, (error ? error : ''));
+
+				if(!isItemError) {
+					var errors = "[Media Sync] " + errorMessage + (error ? "\nE:\n" + error : '');
+					// alert(errors);
+					plugin.find('.js-media-sync-error-placeholder').removeClass('hidden').html(errors);
+					setActiveStatus(false);
+				}
+			}
+
 
 			function runAjax() {
 				// Take new batch
 				batch = items.splice(0, batchSize);
 
-				// If there is something left in batch
-				if (batch.length > 0) {
+				// Exit if there is nothing left in batch
+				if (!(batch.length > 0)) {
+					setActiveStatus(false);
+					return true;
+				}
 
-					batchCount++;
+				batchCount++;
 
-					$.ajax({
-						url: ajax_data.ajax_url + '?mediaSyncBatch=' + batchCount,
-						data: {
-							'action': 'media_sync_import_files',
-							'security': ajax_data.security,
-							'dry_run': dryRun,
-							'file_post_date': filePostDate,
-							'media_items': batch
-						},
-						dataType: 'json',
-						method: 'POST'
-					}).done(function (data) {
+				return $.ajax({
+					url: ajax_data.ajax_url + '?mediaSyncBatch=' + batchCount,
+					data: {
+						'action': 'media_sync_import_files',
+						'security': ajax_data.security,
+						'dry_run': dryRun,
+						'file_post_date': filePostDate,
+						'media_items': batch
+					},
+					dataType: 'json',
+					method: 'POST'
+				}).done(function (data) {
+					try {
 
-						if (data && data.length > 0) {
+						if(!data) {
+							outputError('No response received');
+							return false;
+						}
 
-							$.each(data, function (index, item) {
-								if (item.row_id) {
-									var statusClass = 'error';
+						var error = data.hasOwnProperty('error') && data.error ? data.error : null;
+						var errorMessage = data.hasOwnProperty('errorMessage') && data.errorMessage ? data.errorMessage : null;
 
-									if (item.inserted === true) {
-										counter++;
-										statusClass = 'success';
+						if(error || errorMessage) {
+							outputError('[Backend error] ' + errorMessage, error);
+							return false;
+						}
 
-										console.log("[Media Sync][" + counter + "] " + (dryRun ? "DRY RUN: " : "Successfully imported: ") + item.row_id);
-									} else {
+						if(!(data.hasOwnProperty('results') && data.results && data.results.length > 0)) {
+							setActiveStatus(false);
+							return false;
+						}
+
+						$.each(data.results, function (index, item) {
+							var itemError = item.hasOwnProperty('error') && item.error ? item.error : null;
+							var itemErrorMessage = item.hasOwnProperty('errorMessage') && item.errorMessage ? item.errorMessage : null;
+
+							if(itemError || itemErrorMessage) {
+								outputError('[Item error] ' + itemErrorMessage, itemError, true);
+							}
+
+							if (item.hasOwnProperty('row_id') && item.row_id) {
+								var statusClass = 'error';
+
+								if (item.inserted === true) {
+									counter++;
+									statusClass = 'success';
+
+									console.log("[Media Sync] [" + counter + "] " + (dryRun ? "DRY RUN: " : "Successfully imported: ") + item.row_id);
+								} else {
+									// If we didn't already output the error
+									if(!itemError && !itemErrorMessage) {
 										console.error("[Media Sync] Error importing: " + item.row_id);
 									}
+								}
 
-									try {
-										// Highlight imported or failed row
-										files.find('[id="' + item.row_id + '"]').addClass('highlight-' + statusClass);
-									} catch (highlightError) {
-										console.log('[Media Sync] Could not highlight imported row.', highlightError);
+								try {
+									var fileRow = files.find('[id="' + item.row_id + '"]');
+
+									if(itemError || itemErrorMessage) {
+										var errors = (itemErrorMessage ? itemErrorMessage : '') + (itemError ? '\nE:\n' + itemError : '');
+										fileRow.find('.column-primary').append('<div class="error media-sync-file-error">' + errors + '</div>');
 									}
+
+									// Highlight imported or failed row
+									fileRow.addClass('highlight-' + statusClass);
+								} catch (highlightError) {
+									console.log('[Media Sync] Could not highlight imported row.', highlightError);
 								}
-							});
+							}
+						});
 
-							var animatedCounter = counter;
+						var animatedCounter = counter;
 
-							// Not really correct progress indicator, it's just animated
-							jQuery({Counter: animatedCounter}).animate({Counter: counter}, {
-								duration: 1000,
-								easing: 'linear',
-								step: function () {
-									// Update "imported" count
-									files.find('.js-media-sync-imported-count').html(Math.ceil(this.Counter));
-								},
-								complete: function () {
-									// Update "imported" count again (sometimes it doesn't set correct value above)
-									files.find('.js-media-sync-imported-count').html(counter);
-								}
-							});
+						// Not really correct progress indicator, it's just animated
+						jQuery({Counter: animatedCounter}).animate({Counter: counter}, {
+							duration: 1000,
+							easing: 'linear',
+							step: function () {
+								// Update "imported" count
+								files.find('.js-media-sync-imported-count').html(Math.ceil(this.Counter));
+							},
+							complete: function () {
+								// Update "imported" count again (sometimes it doesn't set correct value above)
+								files.find('.js-media-sync-imported-count').html(counter);
+							}
+						});
 
 
-							// Update progress bar
-							plugin.find('.media-sync-progress').css('width', ((counter / total) * 100) + '%');
-						}
+						// Update progress bar
+						plugin.find('.media-sync-progress').css('width', ((counter / total) * 100) + '%');
 
 						// If all items are imported successfully (last item)
 						if (counter === total) {
@@ -149,12 +199,14 @@ jQuery(document).ready(function($) {
 						// but async/await or Promise would be much better
 						runAjax();
 
-					}).fail(function (jqXHR, textStatus, errorThrown) {
-						console.error("[Media Sync][Import]: " + textStatus, errorThrown);
-						alert("[Media Sync] " + textStatus + "\nE:\n" + errorThrown);
-						setActiveStatus(false);
-					});
-				}
+					} catch(e) {
+						outputError('Error processing results', e);
+						return false;
+					}
+				}).fail(function (jqXHR, textStatus, errorThrown) {
+					outputError('[AJAX error] ' + textStatus, errorThrown);
+					return false;
+				});
 			}
 
 			setActiveStatus(true);

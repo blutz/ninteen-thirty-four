@@ -43,13 +43,8 @@
                                     <th scope="row"><label for="options[general][backend_role][]"><?php _e('Backend Role', $this->plugin_slug); ?></label></th>
                                     <td>
                                         <select name="options[general][backend_role][]" multiple="multiple" class="chosen-select" data-placeholder="<?php _e('Select role(s)', $this->plugin_slug); ?>">
-                                            <?php
-                                            foreach ($wp_roles->roles as $role => $details) {
-                                                if ($role == 'administrator') {
-                                                    continue;
-                                                }
-                                                ?>
-                                                <option value="<?php echo esc_attr($role); ?>" <?php echo wpmm_multiselect((array) $this->plugin_settings['general']['backend_role'], $role); ?>><?php echo $details['name']; ?></option>
+                                            <?php foreach (wpmm_get_user_roles() as $role => $role_name) { ?>
+                                                <option value="<?php echo esc_attr($role); ?>" <?php echo wpmm_multiselect((array) $this->plugin_settings['general']['backend_role'], $role); ?>><?php echo esc_html($role_name); ?></option>
                                             <?php } ?>
                                         </select>
                                         <p class="description"><?php _e('Which user role is allowed to access the backend of this blog? Administrators will always have access.', $this->plugin_slug); ?></p>
@@ -59,13 +54,8 @@
                                     <th scope="row"><label for="options[general][frontend_role][]"><?php _e('Frontend Role', $this->plugin_slug); ?></label></th>
                                     <td>
                                         <select name="options[general][frontend_role][]" multiple="multiple" class="chosen-select" data-placeholder="<?php _e('Select role(s)', $this->plugin_slug); ?>">
-                                            <?php
-                                            foreach ($wp_roles->roles as $role => $details) {
-                                                if ($role == 'administrator') {
-                                                    continue;
-                                                }
-                                                ?>
-                                                <option value="<?php echo esc_attr($role); ?>" <?php echo wpmm_multiselect((array) $this->plugin_settings['general']['frontend_role'], $role); ?>><?php echo $details['name']; ?></option>
+                                            <?php foreach (wpmm_get_user_roles() as $role => $role_name) { ?>
+                                                <option value="<?php echo esc_attr($role); ?>" <?php echo wpmm_multiselect((array) $this->plugin_settings['general']['frontend_role'], $role); ?>><?php echo esc_html($role_name); ?></option>
                                             <?php } ?>
                                         </select>
                                         <p class="description"><?php _e('Which user role is allowed to access the frontend of this blog? Administrators will always have access.', $this->plugin_slug); ?></p>
@@ -142,7 +132,7 @@
                                 </tr>
                                 <tr valign="top">
                                     <th scope="row"><label for="options[design][heading]"><?php _e('Heading', $this->plugin_slug); ?></label></th>
-                                    <td>
+                                    <td class="has-inline-color-picker">
                                         <input type="text" value="<?php echo esc_attr(stripslashes($this->plugin_settings['design']['heading'])); ?>" name="options[design][heading]" />
                                         <input type="text" value="<?php echo esc_attr(stripslashes($this->plugin_settings['design']['heading_color'])); ?>" name="options[design][heading_color]" data-default-color="<?php echo esc_attr(stripslashes($this->plugin_settings['design']['heading_color'])); ?>" class="color_picker_trigger"/>
                                     </td>
@@ -155,7 +145,7 @@
                                             'textarea_name' => 'options[design][text]',
                                             'textarea_rows' => 8,
                                             'editor_class' => 'large-text',
-                                            'media_buttons' => false,
+                                            'media_buttons' => true,
                                             'wpautop' => false,
                                             'default_editor' => 'tinymce',
                                             'teeny' => true
@@ -201,25 +191,19 @@
                                     <th scope="row">
                                         <label for="options[design][bg_predefined]"><?php _e('Choose background', $this->plugin_slug); ?></label>
                             <p class="description">
-                                * <?php echo sprintf(__('source <a href="%s" target="_blank">Free Photos</a>', $this->plugin_slug), 'http://designmodo.com/free-photos/' . WPMM_AUTHOR_UTM); ?>
+                                * <?php echo sprintf(__('source <a href="%s" target="_blank">Free Photos</a>', $this->plugin_slug), esc_url(wpmm_get_utmized_url('http://designmodo.com/free-photos/', array('source' => 'settings')))); ?>
                             </p>
                             </th>
                             <td>
                                 <ul class="bg_list">
-                                    <?php
-                                    foreach (glob(WPMM_PATH . 'assets/images/backgrounds/*_thumb.jpg') as $filename) {
-                                        $file_thumb = basename($filename);
-                                        $file = str_replace('_thumb', '', $file_thumb);
-                                        ?>
-                                        <li class="<?php echo $this->plugin_settings['design']['bg_predefined'] == $file ? 'active' : ''; ?>">
+                                    <?php foreach (wpmm_get_backgrounds() as $filename) { ?>
+                                        <li class="<?php echo $this->plugin_settings['design']['bg_predefined'] == $filename['big'] ? 'active' : ''; ?>">
                                             <label>
-                                                <input type="radio" value="<?php echo esc_attr($file); ?>" name="options[design][bg_predefined]" <?php checked($this->plugin_settings['design']['bg_predefined'], $file); ?>>
-                                                <img src="<?php echo WPMM_URL . 'assets/images/backgrounds/' . $file_thumb; ?>" width="200" height="150" />
+                                                <input type="radio" value="<?php echo esc_attr($filename['big']); ?>" name="options[design][bg_predefined]" <?php checked($this->plugin_settings['design']['bg_predefined'], $filename['big']); ?>>
+                                                <img src="<?php echo esc_url(WPMM_URL . 'assets/images/backgrounds/' . $filename['small']); ?>" width="200" height="150" />
                                             </label>
                                         </li>
-                                        <?php
-                                    }
-                                    ?>
+                                    <?php } ?>
                                 </ul>
                             </td>
                             </tr>
@@ -285,7 +269,7 @@
                                 </tr>
                                 <tr valign="top">
                                     <th scope="row"><label for="options[modules][subscribe_text]"><?php _e('Text', $this->plugin_slug); ?></label></th>
-                                    <td>
+                                    <td class="has-inline-color-picker">
                                         <input type="text" value="<?php echo esc_attr(stripslashes($this->plugin_settings['modules']['subscribe_text'])); ?>" name="options[modules][subscribe_text]" />
                                         <input type="text" value="<?php echo esc_attr(stripslashes($this->plugin_settings['modules']['subscribe_text_color'])); ?>" name="options[modules][subscribe_text_color]" data-default-color="<?php echo esc_attr(stripslashes($this->plugin_settings['modules']['subscribe_text_color'])); ?>" class="color_picker_trigger"/>
                                     </td>
@@ -295,13 +279,14 @@
                                     <td id="subscribers_wrap">
                                         <?php
                                         $subscribers_no = wpmm_count_where('wpmm_subscribers', 'id_subscriber');
-										echo sprintf(_nx('You have %d subscriber', 'You have %s subscribers', $subscribers_no, 'settings page', $this->plugin_slug), $subscribers_no);
+					echo sprintf(_nx('You have %d subscriber', 'You have %s subscribers', $subscribers_no, 'settings page', $this->plugin_slug), $subscribers_no);
 
-                                        if ($subscribers_no > 0) {
+                                        if (current_user_can(wpmm_get_capability('subscribers')) && $subscribers_no > 0) {
                                             ?>
-                                            <br />
-                                            <a class="button button-primary" id="subscribers-export" href="javascript:void(0);"><?php _e('Export as CSV', $this->plugin_slug); ?></a>
-                                            <a class="button button-secondary" id="subscribers-empty-list" href="javascript:void(0);"><?php _e('Empty subscribers list', $this->plugin_slug); ?></a>
+                                            <div class="buttons">
+                                                <a class="button button-primary" id="subscribers-export" href="javascript:void(0);"><?php _e('Export as CSV', $this->plugin_slug); ?></a>
+                                                <a class="button button-secondary" id="subscribers-empty-list" href="javascript:void(0);"><?php _e('Empty subscribers list', $this->plugin_slug); ?></a>
+                                            </div>
                                         <?php } ?>
                                     </td>
                                 </tr>
@@ -434,14 +419,14 @@
                                             <option value="1" <?php selected($this->plugin_settings['modules']['ga_anonymize_ip'], 1); ?>><?php _e('Yes', $this->plugin_slug); ?></option>
                                             <option value="0" <?php selected($this->plugin_settings['modules']['ga_anonymize_ip'], 0); ?>><?php _e('No', $this->plugin_slug); ?></option>
                                         </select>
-										<p class="description"><?php _e(sprintf('Read about IP anonymization on <a href="%s" rel="noreferrer" target="_blank">Google Analytics</a> docs.', 'https://support.google.com/analytics/answer/2763052'), $this->plugin_slug); ?></p>
+					<p class="description"><?php _e(sprintf('Read about IP anonymization on <a href="%s" rel="noreferrer" target="_blank">Google Analytics</a> docs. It is always enabled on Google Analytics 4.', 'https://support.google.com/analytics/answer/2763052'), $this->plugin_slug); ?></p>
                                     </td>
                                 </tr>
                                 <tr valign="top">
                                     <th scope="row"><label for="options[modules][ga_code]"><?php _e('Tracking code', $this->plugin_slug); ?></label></th>
                                     <td>
                                         <input type="text" value="<?php echo esc_attr(stripslashes($this->plugin_settings['modules']['ga_code'])); ?>" name="options[modules][ga_code]" />
-                                        <p class="description"><?php _e('Allowed formats: UA-XXXXXXXX, UA-XXXXXXXX-XXXX. Eg: UA-12345678-1 is valid', $this->plugin_slug); ?></p>
+                                        <p class="description"><?php _e('Allowed formats: UA-XXXXXXXX, UA-XXXXXXXX-XXXX, G-XXXXXXXX. Eg: UA-12345678-1 is valid', $this->plugin_slug); ?></p>
                                     </td>
                                 </tr>
                             </tbody>

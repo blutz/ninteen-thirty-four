@@ -111,8 +111,9 @@ class GhostKit_Rest extends WP_REST_Controller {
             $namespace,
             '/get_table_of_contents/',
             array(
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => array( $this, 'get_table_of_contents' ),
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_table_of_contents' ),
+                'permission_callback' => '__return_true',
             )
         );
 
@@ -121,8 +122,9 @@ class GhostKit_Rest extends WP_REST_Controller {
             $namespace,
             '/get_templates/',
             array(
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => array( $this, 'get_templates' ),
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_templates' ),
+                'permission_callback' => '__return_true',
             )
         );
 
@@ -131,8 +133,9 @@ class GhostKit_Rest extends WP_REST_Controller {
             $namespace,
             '/get_template_data/',
             array(
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => array( $this, 'get_template_data' ),
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_template_data' ),
+                'permission_callback' => '__return_true',
             )
         );
 
@@ -1321,7 +1324,7 @@ class GhostKit_Rest extends WP_REST_Controller {
             $requested_templates = wp_remote_get(
                 add_query_arg(
                     array(
-                        'ghostkit_version'     => '2.13.2',
+                        'ghostkit_version'     => '2.16.0',
                         'ghostkit_pro'         => function_exists( 'ghostkit_pro' ),
                         'ghostkit_pro_version' => function_exists( 'ghostkit_pro' ) ? ghostkit_pro()->plugin_version : null,
                     ),
@@ -1528,7 +1531,7 @@ class GhostKit_Rest extends WP_REST_Controller {
                         add_query_arg(
                             array(
                                 'id'                   => $id,
-                                'ghostkit_version'     => '2.13.2',
+                                'ghostkit_version'     => '2.16.0',
                                 'ghostkit_pro'         => function_exists( 'ghostkit_pro' ),
                                 'ghostkit_pro_version' => function_exists( 'ghostkit_pro' ) ? ghostkit_pro()->plugin_version : null,
                             ),

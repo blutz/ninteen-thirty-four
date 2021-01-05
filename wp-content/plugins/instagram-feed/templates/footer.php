@@ -3,7 +3,7 @@
  * Smash Balloon Instagram Feed Footer Template
  * Adds pagination and html for errors and resized images
  *
- * @version 2.2 Instagram Feed by Smash Balloon
+ * @version 2.5 Instagram Feed by Smash Balloon
  *
  */
 
@@ -26,7 +26,7 @@ $load_button_text = __( $settings['buttontext'], 'instagram-feed' );
 	<?php if ( $use_pagination ) : ?>
         <a class="sbi_load_btn" href="javascript:void(0);" <?php echo $load_btn_style; ?>>
             <span class="sbi_btn_text"><?php echo esc_html( $load_button_text ); ?></span>
-            <span class="sbi_loader sbi_hidden" style="background-color: rgb(255, 255, 255);"></span>
+            <span class="sbi_loader sbi_hidden" style="background-color: rgb(255, 255, 255);" aria-hidden="true"></span>
         </a>
 	<?php endif; ?>
 

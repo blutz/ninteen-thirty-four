@@ -45,7 +45,10 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 			)
 		);
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_css' ) );
+		if ( is_active_widget( false, false, self::ID_BASE ) || is_active_widget( false, false, 'monster' ) || is_customize_preview() ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_css' ) );
+		}
+
 		add_action( 'wp_ajax_wpcom_instagram_widget_update_widget_token_id', array( $this, 'ajax_update_widget_token_id' ) );
 
 		$this->valid_options = array(
@@ -74,10 +77,6 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 	 * Enqueues the widget's frontend CSS but only if the widget is currently in use.
 	 */
 	public function enqueue_css() {
-		if ( ! is_active_widget( false, false, self::ID_BASE ) || is_active_widget( false, false, 'monster' ) || is_customize_preview() ) {
-			return;
-		}
-
 		wp_enqueue_style( self::ID_BASE, plugins_url( 'instagram/instagram.css', __FILE__ ), array(), JETPACK__VERSION );
 	}
 
@@ -118,8 +117,8 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 			wp_send_json_error( array( 'message' => 'not_authorized' ), 403 );
 		}
 
-		$token_id  = (int) $_POST['keyring_id'];
-		$widget_id = (int) $_POST['instagram_widget_id'];
+		$token_id  = ! empty( $_POST['keyring_id'] ) ? (int) $_POST['keyring_id'] : null;
+		$widget_id = ! empty( $_POST['instagram_widget_id'] ) ? (int) $_POST['instagram_widget_id'] : null;
 
 		// For Simple sites check if the token is valid.
 		// (For Atomic sites, this check is done via the api: wpcom/v2/instagram/<token_id>).
@@ -370,7 +369,7 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 	 * @return bool if this request trying to remove the widgets stored id.
 	 */
 	public function removing_widgets_stored_id( $status ) {
-		return $status['valid'] && isset( $_GET['instagram_widget_id'] ) && (int) $_GET['instagram_widget_id'] === (int) $this->number && ! empty( $_GET['instagram_widget'] ) && 'remove_token' === $_GET['instagram_widget'];
+		return $status['valid'] && isset( $_GET['instagram_widget_id'] ) && (int) $_GET['instagram_widget_id'] === (int) $this->number && ! empty( $_GET['instagram_widget'] ) && 'remove_token' === $_GET['instagram_widget']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	/**
@@ -391,7 +390,7 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 
 		// If removing the widget's stored token ID.
 		if ( $this->removing_widgets_stored_id( $status ) ) {
-			if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'instagram-widget-remove-token-' . $this->number . '-' . $instance['token_id'] ) ) {
+			if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_GET['nonce'] ), 'instagram-widget-remove-token-' . $this->number . '-' . $instance['token_id'] ) ) {
 				wp_die( esc_html__( 'Missing or invalid security nonce.', 'jetpack' ) );
 			}
 
@@ -600,7 +599,7 @@ class Jetpack_Instagram_Widget extends WP_Widget {
 
 add_action(
 	'widgets_init',
-	function() {
+	function () {
 		if ( Jetpack::is_active() ) {
 			register_widget( 'Jetpack_Instagram_Widget' );
 		}

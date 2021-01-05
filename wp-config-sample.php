@@ -18,24 +18,18 @@
  * @package WordPress
  */
 
-define('FORCE_SSL_ADMIN', false);
-define('FORCE_SSL_LOGIN', false);
-
-define('WP_HOME','http://localhost:8252');
-define('WP_SITEURL','http://localhost:8252');
-
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'unicamp_org' );
+define( 'DB_NAME', 'database_name_here' );
 
 /** MySQL database username */
-define( 'DB_USER', 'root' );
+define( 'DB_USER', 'username_here' );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', 'wordpress' );
+define( 'DB_PASSWORD', 'password_here' );
 
 /** MySQL hostname */
-define( 'DB_HOST', 'db' );
+define( 'DB_HOST', 'localhost' );
 
 /** Database Charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );

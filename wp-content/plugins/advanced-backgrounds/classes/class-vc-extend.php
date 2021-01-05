@@ -52,10 +52,10 @@ class NK_AWB_VC_Extend {
     public function admin_enqueue_scripts( $page ) {
         if ( 'post.php' === $page || 'post-new.php' === $page ) {
             wp_enqueue_media();
-            wp_enqueue_style( 'nk-awb-vc-attach-file', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-attach-video.min.css', '', '1.6.7' );
-            wp_enqueue_style( 'nk-awb-vc-heading', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-heading.min.css', '', '1.6.7' );
-            wp_enqueue_style( 'nk-awb-vc-icon', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-icon.min.css', '', '1.6.7' );
-            wp_enqueue_script( 'nk-awb-vc-frontend', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-frontend.min.js', array( 'jquery' ), '1.6.7', true );
+            wp_enqueue_style( 'nk-awb-vc-attach-file', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-attach-video.min.css', '', '1.7.0' );
+            wp_enqueue_style( 'nk-awb-vc-heading', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-heading.min.css', '', '1.7.0' );
+            wp_enqueue_style( 'nk-awb-vc-icon', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-icon.min.css', '', '1.7.0' );
+            wp_enqueue_script( 'nk-awb-vc-frontend', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-frontend.min.js', array( 'jquery' ), '1.7.0', true );
         }
     }
 

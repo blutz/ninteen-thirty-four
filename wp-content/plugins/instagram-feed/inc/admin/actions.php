@@ -145,41 +145,6 @@ function sbi_delete_local_avatar( $username ) {
 	}
 }
 
-function sbi_create_local_avatar( $username, $file_name ) {
-	$image_editor = wp_get_image_editor( $file_name );
-
-	if ( ! is_wp_error( $image_editor ) ) {
-		$upload = wp_upload_dir();
-
-		$full_file_name = trailingslashit( $upload['basedir'] ) . trailingslashit( SBI_UPLOADS_NAME ) . $username  . '.jpg';
-
-		$saved_image = $image_editor->save( $full_file_name );
-
-		if ( ! $saved_image ) {
-			global $sb_instagram_posts_manager;
-
-			$sb_instagram_posts_manager->add_error( 'image_editor_save', array(
-				__( 'Error saving edited image.', 'instagram-feed' ),
-				$full_file_name
-			) );
-		} else {
-		    return true;
-        }
-	} else {
-		global $sb_instagram_posts_manager;
-
-		$message = __( 'Error editing image.', 'instagram-feed' );
-		if ( isset( $image_editor ) && isset( $image_editor->errors ) ) {
-			foreach ( $image_editor->errors as $key => $item ) {
-				$message .= ' ' . $key . '- ' . $item[0] . ' |';
-			}
-		}
-
-		$sb_instagram_posts_manager->add_error( 'image_editor', array( $file_name, $message ) );
-	}
-	return false;
-}
-
 function sbi_connect_business_accounts() {
 	$nonce = $_POST['sbi_nonce'];
 
@@ -224,7 +189,7 @@ function sbi_connect_business_accounts() {
 		}
 		global $sb_instagram_posts_manager;
 
-		$sb_instagram_posts_manager->remove_error( 'at_' . $username );
+		$sb_instagram_posts_manager->remove_all_errors();
 		delete_transient( SBI_USE_BACKUP_PREFIX . 'sbi_'  . $user_id );
 	}
 
@@ -377,8 +342,7 @@ function sbi_do_account_delete( $account_id ) {
 	update_option( 'sb_instagram_settings', $options );
 	global $sb_instagram_posts_manager;
 
-	$sb_instagram_posts_manager->remove_error( 'at_' . $username );
-	$sb_instagram_posts_manager->remove_error( 'api' );
+	$sb_instagram_posts_manager->remove_all_errors();
 }
 
 function sbi_connect_new_account( $access_token, $account_id ) {
@@ -441,15 +405,28 @@ function sbi_connect_new_account( $access_token, $account_id ) {
 						return sbi_json_encode( $updated_options['connected_accounts'][ $new_data['id'] ] );
 
 					} else {
-						if ( $basic_account_access_token_connect->is_wp_error() ) {
-							$error = $basic_account_access_token_connect->get_wp_error();
-						} else {
-							$error = $basic_account_access_token_connect->get_data();
-						}
-						return sbi_formatted_error( $error );
+
+						$token_data = $basic_account_access_token_connect->get_data();
+						$expires_timestamp = time() + 60 * DAY_IN_SECONDS;
+						$account_type = isset( $new_data['account_type'] ) ? $new_data['account_type'] : 'personal';
+
+						$new_connected_account = array(
+							'access_token' => $access_token,
+							'account_type' => $account_type,
+							'user_id' => $new_data['id'],
+							'username' => $new_data['username'],
+							'expires_timestamp' => $expires_timestamp,
+							'type' => 'basic',
+                            'private' => true
+						);
+
+						$updated_options = sbi_connect_basic_account( $new_connected_account );
+
+						return sbi_json_encode( $updated_options['connected_accounts'][ $new_data['id'] ] );
 					}
 
 				} else {
+
 					if ( $basic_account_attempt->is_wp_error() ) {
 						$error = $basic_account_attempt->get_wp_error();
 					} else {
@@ -531,7 +508,7 @@ function sbi_connect_new_account( $access_token, $account_id ) {
 
 			global $sb_instagram_posts_manager;
 
-			$sb_instagram_posts_manager->remove_error( 'at_' . $json['username'] );
+			$sb_instagram_posts_manager->remove_all_errors();
 			delete_transient( SBI_USE_BACKUP_PREFIX . 'sbi_'  . $json['id'] );
 
 		}
@@ -583,7 +560,7 @@ function sbi_connect_new_account( $access_token, $account_id ) {
 			delete_transient( SBI_USE_BACKUP_PREFIX . 'sbi_'  . $user_id );
 			global $sb_instagram_posts_manager;
 
-			$sb_instagram_posts_manager->remove_error( 'at_' . $username );
+			$sb_instagram_posts_manager->remove_all_errors();
 			$options['connected_accounts'] = $connected_accounts;
 
 			update_option( 'sb_instagram_settings', $options );
@@ -733,13 +710,20 @@ function sbi_connect_basic_account( $new_account_details ) {
 	}
 
 	delete_transient( SBI_USE_BACKUP_PREFIX . 'sbi_'  . $new_account_details['user_id'] );
-	global $sb_instagram_posts_manager;
+	$refresher = new SB_Instagram_Token_Refresher( $accounts_to_save[ $new_account_details['user_id'] ] );
+	$refresher->attempt_token_refresh();
 
-	$sb_instagram_posts_manager->remove_error( 'at_' . $new_account_details['username'] );
+	if ( $refresher->get_last_error_code() === 10 ) {
+		$accounts_to_save[ $new_account_details['user_id'] ]['private'] = true;
+	}
+
 	$options['connected_accounts'] = $accounts_to_save;
 	$options['sb_instagram_user_id'] = $ids_to_save;
 
 	update_option( 'sb_instagram_settings', $options );
+	global $sb_instagram_posts_manager;
+
+	$sb_instagram_posts_manager->remove_all_errors();
 	return $options;
 }
 
@@ -832,9 +816,12 @@ function sbi_after_connection() {
 }
 add_action( 'wp_ajax_sbi_after_connection', 'sbi_after_connection' );
 
-function sbi_account_type_display( $type ) {
+function sbi_account_type_display( $type, $private = false ) {
 	if ( $type === 'basic' ) {
-		return 'personal (new API)';
+		$type = 'personal';
+		if ( $private ) {
+			$type .= ' (private)';
+		}
 	}
 	return $type;
 }
@@ -907,11 +894,12 @@ add_action( 'wp_ajax_sbi_reset_log', 'sbi_reset_log' );
 add_action('admin_notices', 'sbi_admin_error_notices');
 function sbi_admin_error_notices() {
 
-
-	if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'sb-instagram-feed' )) ) {
+	$is_reconnecting = ! empty( $_POST['sbi_account_json'] );
+	if ( ! $is_reconnecting && isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'sb-instagram-feed' )) ) {
 		global $sb_instagram_posts_manager;
 
 		$errors = $sb_instagram_posts_manager->get_errors();
+
 		if ( ! empty( $errors ) && ( isset( $errors['database_create_posts'] ) || isset( $errors['database_create_posts_feeds'] ) || isset( $errors['upload_dir'] ) || isset( $errors['ajax'] )  ) ) : ?>
             <div class="notice notice-warning is-dismissible sbi-admin-notice">
 
@@ -1051,7 +1039,7 @@ function sbi_get_current_time() {
 	$current_time = time();
 
 	// where to do tests
-	// $current_time = strtotime( 'November 25, 2022' ) + 1;
+	// $current_time = strtotime( 'November 25, 2020' ) + 1;
 
 	return $current_time;
 }
@@ -1059,197 +1047,9 @@ function sbi_get_current_time() {
 // generates the html for the admin notices
 function sbi_notices_html() {
 
-	//Only show to admins
-	$current_screen = get_current_screen();
-	$is_plugins_page = isset( $current_screen->id ) && $current_screen->id === 'plugins';
-	$page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
-	//Only show to admins
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return;
-	}
-
-	$sbi_statuses_option = get_option( 'sbi_statuses', array() );
-	$current_time = sbi_get_current_time();
-	$sbi_bfcm_discount_code = 'happysmashgiving' . date('Y', $current_time );
-
-	// rating notice logic
-	$sbi_rating_notice_option = get_option( 'sbi_rating_notice', false );
-	$sbi_rating_notice_waiting = get_transient( 'instagram_feed_rating_notice_waiting' );
-	$should_show_rating_notice = ($sbi_rating_notice_waiting !== 'waiting' && $sbi_rating_notice_option !== 'dismissed');
-
-	// black friday cyber monday logic
-	$thanksgiving_this_year = sbi_get_future_date( 11, date('Y', $current_time ), 4, 4, 1 );
-	$one_week_before_black_friday_this_year = $thanksgiving_this_year - 7*24*60*60;
-	$one_day_after_cyber_monday_this_year = $thanksgiving_this_year + 5*24*60*60;
-	$has_been_two_days_since_rating_dismissal = isset( $sbi_statuses_option['rating_notice_dismissed'] ) ? ((int)$sbi_statuses_option['rating_notice_dismissed'] + 2*24*60*60) < $current_time : true;
-
-	$could_show_bfcm_discount = ($current_time > $one_week_before_black_friday_this_year && $current_time < $one_day_after_cyber_monday_this_year);
-	$should_show_bfcm_discount = false;
-	if ( $could_show_bfcm_discount && $has_been_two_days_since_rating_dismissal ) {
-		global $current_user;
-		$user_id = $current_user->ID;
-
-		$ignore_bfcm_sale_notice_meta = get_user_meta( $user_id, 'sbi_ignore_bfcm_sale_notice' );
-		$ignore_bfcm_sale_notice_meta = isset( $ignore_bfcm_sale_notice_meta[0] ) ? $ignore_bfcm_sale_notice_meta[0] : '';
-
-		/* Check that the user hasn't already clicked to ignore the message */
-		$should_show_bfcm_discount = ($ignore_bfcm_sale_notice_meta !== 'always' && $ignore_bfcm_sale_notice_meta !== date( 'Y', $current_time ));
-	}
-
-	// new user discount logic
-	$in_new_user_month_range = true;
-	$should_show_new_user_discount = false;
-	$has_been_one_month_since_rating_dismissal = isset( $sbi_statuses_option['rating_notice_dismissed'] ) ? ((int)$sbi_statuses_option['rating_notice_dismissed'] + 30*24*60*60) < $current_time + 1: true;
-
-	if ( isset( $sbi_statuses_option['first_install'] ) && $sbi_statuses_option['first_install'] === 'from_update' ) {
-		global $current_user;
-		$user_id = $current_user->ID;
-		$ignore_new_user_sale_notice_meta = get_user_meta( $user_id, 'sbi_ignore_new_user_sale_notice' );
-		$ignore_new_user_sale_notice_meta = isset( $ignore_new_user_sale_notice_meta[0] ) ? $ignore_new_user_sale_notice_meta[0] : '';
-		if ( $ignore_new_user_sale_notice_meta !== 'always' ) {
-			$should_show_new_user_discount = true;
-		}
-	} elseif ( $in_new_user_month_range && $has_been_one_month_since_rating_dismissal ) {
-		global $current_user;
-		$user_id = $current_user->ID;
-		$ignore_new_user_sale_notice_meta = get_user_meta( $user_id, 'sbi_ignore_new_user_sale_notice' );
-		$ignore_new_user_sale_notice_meta = isset( $ignore_new_user_sale_notice_meta[0] ) ? $ignore_new_user_sale_notice_meta[0] : '';
-
-		if ( $ignore_new_user_sale_notice_meta !== 'always'
-		     && isset( $sbi_statuses_option['first_install'] )
-		     && $current_time > (int)$sbi_statuses_option['first_install'] + 60*60*24*30 ) {
-			$should_show_new_user_discount = true;
-		}
-	}
-
-	if ( $should_show_rating_notice ) {
-		$other_notice_html = '';
-		$dismiss_url = add_query_arg( 'sbi_ignore_rating_notice_nag', '1' );
-		$later_url = add_query_arg( 'sbi_ignore_rating_notice_nag', 'later' );
-		if ( $should_show_bfcm_discount ) {
-			$other_notice_html = '<p class="sbi_other_notice">' . sprintf( __( 'PS. We currently have a %sBlack Friday deal%s for 60%% off the Pro version!', 'instagram-feed' ), '<a href="https://smashballoon.com/instagram-feed/?utm_campaign=instagram-free&utm_source=notices&utm_medium=rating&discount='.$sbi_bfcm_discount_code.'" target="_blank"><b style="font-weight: 700;">', '</b></a>' ) . '</a></p>';
-
-			$dismiss_url = add_query_arg( array(
-					'sbi_ignore_rating_notice_nag' => '1',
-					'sbi_ignore_bfcm_sale_notice' => date( 'Y', $current_time )
-				)
-			);
-			$later_url = add_query_arg( array(
-					'sbi_ignore_rating_notice_nag' => 'later',
-					'sbi_ignore_bfcm_sale_notice' => date( 'Y', $current_time )
-				)
-			);
-		}
-
-		echo "
-            <div class='sbi_notice sbi_review_notice'>
-                <img src='". SBI_PLUGIN_URL . 'img/sbi-icon.png' ."' alt='" . __( 'Instagram Feed', 'instagram-feed' ) . "'>
-                <div class='sbi-notice-text'>
-                    <p style='padding-top: 4px;'>" . sprintf( __( "It's great to see that you've been using the %sInstagram Feed%s plugin for a while now. Hopefully you're happy with it!&nbsp; If so, would you consider leaving a positive review? It really helps to support the plugin and helps others to discover it too!", 'instagram-feed' ), '<strong style=\'font-weight: 700;\'>', '</strong>' ) . "</p>
-                    <p class='links'";
-                    if( $should_show_bfcm_discount ) echo " style='margin-top: 0 !important;'";
-                    echo ">
-                        <a class='sbi_notice_dismiss' href='https://wordpress.org/support/plugin/instagram-feed/reviews/' target='_blank'>" . __( 'Sure, I\'d love to!', 'instagram-feed' ) . "</a>
-                        &middot;
-                        <a class='sbi_notice_dismiss' href='" .esc_url( $dismiss_url ). "'>" . __( 'No thanks', 'instagram-feed' ) . "</a>
-                        &middot;
-                        <a class='sbi_notice_dismiss' href='" .esc_url( $dismiss_url ). "'>" . __( 'I\'ve already given a review', 'instagram-feed' ) . "</a>
-                        &middot;
-                        <a class='sbi_notice_dismiss' href='" .esc_url( $later_url ). "'>" . __( 'Ask Me Later', 'instagram-feed' ) . "</a>
-                    </p>"
-		    . $other_notice_html .
-		    "</div>
-                <a class='sbi_notice_close' href='" .esc_url( $dismiss_url ). "'><i class='fa fa-close'></i></a>
-            </div>";
-
-	} elseif ( $should_show_new_user_discount ) {
-		global $current_user;
-		$user_id = $current_user->ID;
-		$ignore_new_user_sale_notice_meta = get_user_meta( $user_id, 'sbi_ignore_new_user_sale_notice' );
-		if ( $ignore_new_user_sale_notice_meta !== 'always' ) {
-
-			echo "
-        <div class='sbi_notice sbi_review_notice sbi_new_user_sale_notice'>
-            <img src='" . SBI_PLUGIN_URL . 'img/sbi-icon-offer.png' . "' alt='Instagram Feed'>
-            <div class='sbi-notice-text'>
-                <p><b style'font-weight: 700;'>" . sprintf( __( 'Exclusive offer!%s We don\'t run promotions very often, but for a limited time we\'re offering %s60%% off%s our Pro version to all users of our free Instagram Feed plugin.', 'instagram-feed' ), '</b> ', '<b style="font-weight: 700;">', '</b>' ) . "</p>
-                <p class='sbi-links'>
-                    <a class='sbi_notice_dismiss sbi_offer_btn' href='https://smashballoon.com/instagram-feed/?utm_campaign=instagram-free&utm_source=notices&utm_medium=newuser&discount=instagramthankyou' target='_blank'><b>" . __( 'Get this offer', 'instagram-feed' ) . "</b></a>
-                    <a class='sbi_notice_dismiss' style='margin-left: 5px;' href='" . esc_url( add_query_arg( 'sbi_ignore_new_user_sale_notice', 'always' ) ) . "'>" . __( 'I\'m not interested', 'instagram-feed' ) . "</a>
-
-                </p>
-            </div>
-            <a class='sbi_new_user_sale_notice_close' href='" . esc_url( add_query_arg( 'sbi_ignore_new_user_sale_notice', 'always' ) ) . "'><i class='fa fa-close'></i></a>
-        </div>
-        ";
-		}
-
-	} elseif ( $should_show_bfcm_discount ) {
-
-		echo "
-        <div class='sbi_notice sbi_review_notice sbi_bfcm_sale_notice'>
-            <img src='". SBI_PLUGIN_URL . 'img/sbi-icon-offer.png' ."' alt='Instagram Feed'>
-            <div class='sbi-notice-text'>
-                <p>" . sprintf( __( '%sBlack Friday/Cyber Monday Deal!%s Thank you for using our free Instagram Feed plugin. For a limited time, we\'re offering %s60%% off%s the Pro version for all of our users.', 'instagram-feed' ), '<b style="font-weight: 700;">', '</b>', '<b style="font-weight: 700;">', '</b>' ) . "</p>
-                <p class='sbi-links'>
-                    <a class='sbi_notice_dismiss sbi_offer_btn' href='https://smashballoon.com/instagram-feed/?utm_campaign=instagram-free&utm_source=notices&utm_medium=bfcm&discount=".$sbi_bfcm_discount_code."' target='_blank'>" . __( 'Get this offer!', 'instagram-feed' ) . "</a>
-                    <a class='sbi_notice_dismiss' style='margin-left: 5px;' href='" .esc_url( add_query_arg( 'sbi_ignore_bfcm_sale_notice', date( 'Y', $current_time ) ) ). "'>" . __( 'I\'m not interested', 'instagram-feed' ) . "</a>
-                </p>
-            </div>
-            <a class='sbi_bfcm_sale_notice_close' href='" .esc_url( add_query_arg( 'sbi_ignore_bfcm_sale_notice', date( 'Y', $current_time ) ) ). "'><i class='fa fa-close'></i></a>
-        </div>
-        ";
-
-	}
-
 }
-add_action( 'admin_notices', 'sbi_notices_html', 8 ); // priority 12 for Twitter, priority 10 for Facebook
+//add_action( 'admin_notices', 'sbi_notices_html', 8 ); // priority 12 for Twitter, priority 10 for Facebook
 
-function sbi_process_nags() {
-
-	global $current_user;
-	$user_id = $current_user->ID;
-	$sbi_statuses_option = get_option( 'sbi_statuses', array() );
-
-	if ( isset( $_GET['sbi_ignore_rating_notice_nag'] ) ) {
-		if ( (int)$_GET['sbi_ignore_rating_notice_nag'] === 1 ) {
-			update_option( 'sbi_rating_notice', 'dismissed', false );
-			$sbi_statuses_option['rating_notice_dismissed'] = sbi_get_current_time();
-			update_option( 'sbi_statuses', $sbi_statuses_option, false );
-
-		} elseif ( $_GET['sbi_ignore_rating_notice_nag'] === 'later' ) {
-			set_transient( 'instagram_feed_rating_notice_waiting', 'waiting', 2 * WEEK_IN_SECONDS );
-			update_option( 'sbi_rating_notice', 'pending', false );
-		}
-	}
-
-	if ( isset( $_GET['sbi_ignore_new_user_sale_notice'] ) ) {
-		$response = sanitize_text_field( $_GET['sbi_ignore_new_user_sale_notice'] );
-		if ( $response === 'always' ) {
-			update_user_meta( $user_id, 'sbi_ignore_new_user_sale_notice', 'always' );
-
-			$current_month_number = (int)date('n', sbi_get_current_time() );
-			$not_early_in_the_year = ($current_month_number > 5);
-
-			if ( $not_early_in_the_year ) {
-				update_user_meta( $user_id, 'sbi_ignore_bfcm_sale_notice', date( 'Y', sbi_get_current_time() ) );
-			}
-
-		}
-	}
-
-	if ( isset( $_GET['sbi_ignore_bfcm_sale_notice'] ) ) {
-		$response = sanitize_text_field( $_GET['sbi_ignore_bfcm_sale_notice'] );
-		if ( $response === 'always' ) {
-			update_user_meta( $user_id, 'sbi_ignore_bfcm_sale_notice', 'always' );
-		} elseif ( $response === date( 'Y', sbi_get_current_time() ) ) {
-			update_user_meta( $user_id, 'sbi_ignore_bfcm_sale_notice', date( 'Y', sbi_get_current_time() ) );
-		}
-		update_user_meta( $user_id, 'sbi_ignore_new_user_sale_notice', 'always' );
-	}
-
-}
-add_action( 'admin_init', 'sbi_process_nags' );
 
 function sbi_get_future_date( $month, $year, $week, $day, $direction ) {
 	if ( $direction > 0 ) {
@@ -1273,7 +1073,7 @@ function sbi_get_future_date( $month, $year, $week, $day, $direction ) {
 function sbi_admin_hide_unrelated_notices() {
 
 	// Bail if we're not on a sbi screen or page.
-	if ( ! isset( $_GET['page'] ) || strpos( $_GET['page'], 'sb-instagram-feed') === false ) {
+	if ( ! isset( $_GET['page'] ) || ( strpos( $_GET['page'], 'sb-instagram-feed') === false && strpos( $_GET['page'], 'sbi-') === false ) ) {
 		return;
 	}
 
@@ -1377,3 +1177,25 @@ function sbi_usage_opt_in_or_out() {
 	die();
 }
 add_action( 'wp_ajax_sbi_usage_opt_in_or_out', 'sbi_usage_opt_in_or_out' );
+
+function sbi_oembed_disable() {
+	$nonce = isset( $_POST['sbi_nonce'] ) ? sanitize_text_field( $_POST['sbi_nonce'] ) : '';
+
+	if ( ! wp_verify_nonce( $nonce, 'sbi_nonce' ) ) {
+		die ( 'You did not do this the right way!' );
+	}
+
+	$oembed_settings = get_option( 'sbi_oembed_token', array() );
+	$oembed_settings['access_token'] = '';
+	$oembed_settings['disabled'] = true;
+	echo '<strong>';
+	if ( update_option( 'sbi_oembed_token', $oembed_settings ) ) {
+		_e( 'Instagram oEmbeds will no longer be handled by Instagram Feed.', 'instagram-feed' );
+	} else {
+		_e( 'An error occurred when trying to delete your oEmbed token.', 'instagram-feed' );
+	}
+	echo '</strong>';
+
+	die();
+}
+add_action( 'wp_ajax_sbi_oembed_disable', 'sbi_oembed_disable' );

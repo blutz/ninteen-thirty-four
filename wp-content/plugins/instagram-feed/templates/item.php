@@ -3,7 +3,7 @@
  * Smash Balloon Instagram Feed Item Template
  * Adds an image, link, and other data for each post in the feed
  *
- * @version 2.2 Instagram Feed by Smash Balloon
+ * @version 2.5 Instagram Feed by Smash Balloon
  *
  */
 

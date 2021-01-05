@@ -51,6 +51,8 @@ class GhostKit_Settings {
             array(),
             filemtime( ghostkit()->plugin_path . 'assets/admin/css/admin.min.css' )
         );
+        wp_style_add_data( 'ghostkit-admin', 'rtl', 'replace' );
+        wp_style_add_data( 'ghostkit-admin', 'suffix', '.min' );
 
         wp_enqueue_style(
             'ghostkit-settings',
@@ -58,6 +60,8 @@ class GhostKit_Settings {
             array(),
             filemtime( ghostkit()->plugin_path . 'settings/style.min.css' )
         );
+        wp_style_add_data( 'ghostkit-settings', 'rtl', 'replace' );
+        wp_style_add_data( 'ghostkit-settings', 'suffix', '.min' );
 
         if ( 'toplevel_page_ghostkit' !== $screen->id ) {
             return;
@@ -131,7 +135,8 @@ class GhostKit_Settings {
             'manage_options',
             'ghostkit',
             array( $this, 'display_admin_page' ),
-            'dashicons-admin-ghostkit',
+            // phpcs:ignore
+            'data:image/svg+xml;base64,' . base64_encode( file_get_contents( ghostkit()->plugin_path . 'assets/images/admin-icon.svg' ) ),
             56.9
         );
 
@@ -166,6 +171,13 @@ class GhostKit_Settings {
         add_submenu_page(
             'ghostkit',
             '',
+            esc_html__( 'Breakpoints', 'ghostkit' ),
+            'manage_options',
+            'admin.php?page=ghostkit&sub_page=breakpoints'
+        );
+        add_submenu_page(
+            'ghostkit',
+            '',
             esc_html__( 'CSS & JavaScript', 'ghostkit' ),
             'manage_options',
             'admin.php?page=ghostkit&sub_page=css_js'
@@ -177,6 +189,16 @@ class GhostKit_Settings {
             'manage_options',
             'ghostkit_go_pro',
             array( $this, 'go_pro_redirect' )
+        );
+
+        add_menu_page(
+            esc_html__( 'Reusable Blocks', 'ghostkit' ),
+            esc_html__( 'Reusable Blocks', 'ghostkit' ),
+            'read',
+            'edit.php?post_type=wp_block',
+            '',
+            'dashicons-grid-view',
+            57
         );
     }
 

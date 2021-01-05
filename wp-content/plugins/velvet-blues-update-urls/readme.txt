@@ -1,10 +1,10 @@
 === Velvet Blues Update URLs ===
 Contributors: VelvetBlues.com
 Donate link: http://www.velvetblues.com/go/updateurlsdonate/
-Tags: permalinks, urls, links, update links, move wordpress, location, update urls, update permalinks, move, link, url, permalink, excerpt, content links, excerpt links, custom field links, meta, post meta
+Tags: permalinks, urls, links, update links, move wordpress, location, update urls, update permalinks, move, link, url, permalink, excerpt, content links, excerpt links, custom field links, meta, post meta, website migration, migration, site move
 Requires at least: 4.5
-Tested up to: 5.1
-Stable tag: 3.2.9
+Tested up to: 5.5.1
+Stable tag: 3.2.10
 License: GPLv2 or later
 
 Updates all urls and content links in your website.
@@ -63,6 +63,10 @@ Make sure that the plugin is activated and that you are an administrator level u
 1. The Admin screen for the plugin. screenshot-1.png
 
 == Change Log ==
+
+= 3.2.10 =
+* Confirmed compatibility with WordPress 5.2.x, 5.3.x, 5.4.x and 5.5.x releases.
+* Version Update.
 
 = 3.2.9 =
 * Confirmed compatibility with WordPress 5.1.x releases.

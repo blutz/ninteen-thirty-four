@@ -3,7 +3,7 @@
  * Smash Balloon Instagram Feed Main Template
  * Creates the wrapping HTML and adds settings as attributes
  *
- * @version 2.2 Instagram Feed by Smash Balloon
+ * @version 2.5 Instagram Feed by Smash Balloon
  *
  */
 // Don't load directly
@@ -15,7 +15,7 @@ $sb_images_style = SB_Instagram_Display_Elements::get_sbi_images_style( $setting
 $image_resolution_setting = $settings['imageres'];
 $cols_setting = $settings['cols'];
 $num_setting = $settings['num'];
-$icon_type = $settings['font_method'];
+$icon_type = 'svg';
 
 /**
  * Add HTML or execute code before the feed displays.

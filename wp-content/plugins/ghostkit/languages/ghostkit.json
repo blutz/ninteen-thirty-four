@@ -362,7 +362,13 @@
          "Fonts": [
             ""
          ],
+         "Breakpoints": [
+            ""
+         ],
          "CSS & JavaScript": [
+            ""
+         ],
+         "Reusable Blocks": [
             ""
          ],
          "Collapse": [
@@ -438,9 +444,6 @@
             ""
          ],
          "Color": [
-            ""
-         ],
-         "Wow, this is an important message, that you cannot miss!": [
             ""
          ],
          "Alert": [
@@ -744,9 +747,6 @@
          "Write number…": [
             ""
          ],
-         "Wow, this is an important counts, that you should know!": [
-            ""
-         ],
          "Number Box": [
             ""
          ],
@@ -949,6 +949,21 @@
             ""
          ],
          "Write your message here...": [
+            ""
+         ],
+         "Google reCAPTCHA": [
+            ""
+         ],
+         "Site Key": [
+            ""
+         ],
+         "Secret Key": [
+            ""
+         ],
+         "Protect your form from spam using Google reCAPTCHA v3.": [
+            ""
+         ],
+         "Generate Keys": [
             ""
          ],
          "Enter search terms, e.g. cat...": [
@@ -1257,9 +1272,6 @@
          "Icon Position Right": [
             ""
          ],
-         "Wow, this is an important icons, that you should see!": [
-            ""
-         ],
          "Icon Box": [
             ""
          ],
@@ -1270,6 +1282,36 @@
             ""
          ],
          "icon-box": [
+            ""
+         ],
+         "Start Position": [
+            ""
+         ],
+         "Before Image Settings": [
+            ""
+         ],
+         "Image Size": [
+            ""
+         ],
+         "After Image Settings": [
+            ""
+         ],
+         "Image Compare": [
+            ""
+         ],
+         "Select images to compare": [
+            ""
+         ],
+         "Image Before": [
+            ""
+         ],
+         "Image After": [
+            ""
+         ],
+         "Compare two images with a slider.": [
+            ""
+         ],
+         "compare": [
             ""
          ],
          "Photos Number": [
@@ -1608,9 +1650,6 @@
          "Stars": [
             ""
          ],
-         "Wow, this is an important testimonial, so many delights here!": [
-            ""
-         ],
          "Write name…": [
             ""
          ],
@@ -1722,6 +1761,12 @@
          "vimeo": [
             ""
          ],
+         "Plain": [
+            ""
+         ],
+         "Icon Only": [
+            ""
+         ],
          "Widgetized Area": [
             ""
          ],
@@ -1765,6 +1810,9 @@
             ""
          ],
          "Icon Output": [
+            ""
+         ],
+         "Customize Icon": [
             ""
          ],
          "Reset": [
@@ -1855,6 +1903,9 @@
             ""
          ],
          "Adobe Fonts": [
+            ""
+         ],
+         "PRO": [
             ""
          ],
          "Adobe Fonts available for PRO users only. Read more about Ghost Kit PRO plugin here - ": [
@@ -2122,6 +2173,9 @@
             ""
          ],
          "Enable All Blocks": [
+            ""
+         ],
+         "Breakpoints available for PRO users only. Read more about Ghost Kit PRO plugin here - ": [
             ""
          ],
          "Post Type General Name\u0004Templates": [

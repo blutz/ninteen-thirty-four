@@ -1,6 +1,6 @@
 {
 	"name": "ghostkit/carousel",
-	"category": "layout",
+	"category": "design",
     "supports": {
         "html": false,
         "className": false,
@@ -8,10 +8,6 @@
         "align": [ "wide", "full" ]
     },
     "attributes": {
-        "slides": {
-            "type": "number",
-            "default": 3
-        },
         "effect": {
             "type": "string",
             "default": "slide"

@@ -150,6 +150,7 @@ class SB_Instagram_Post
 			"'" . date( 'Y-m-d H:i:s' ) . "'",
 			"'" . esc_sql( $parsed_data['id'] ) . "'",
 			"'" . esc_sql( $timestamp ) . "'",
+			"'" . esc_sql( $timestamp ) . "'",
 			"'" . esc_sql( sbi_json_encode( $this->instagram_api_data ) ) . "'",
 			"'pending'",
 			"'pending'",
@@ -166,7 +167,7 @@ class SB_Instagram_Post
 		}
 
 		$error = $wpdb->query( "INSERT INTO $table_name
-      	(created_on,instagram_id,$timestamp_column,json_data,media_id,sizes,images_done,last_requested) VALUES ($entry_string);" );
+      	(created_on,instagram_id,time_stamp,top_time_stamp,json_data,media_id,sizes,images_done,last_requested) VALUES ($entry_string);" );
 
 		if ( $error !== false ) {
 			$this->db_id = $wpdb->insert_id;
@@ -210,16 +211,21 @@ class SB_Instagram_Post
 			// the process is considered a success if one image is successfully resized
 			$one_successful_image_resize = false;
 
-			$ratio = 1;
-
 			foreach ( $image_sizes_to_make as $res_setting => $image_size ) {
 				if ( $account_type === 'business' ) {
 					$file_name = SB_Instagram_Parse::get_media_url( $this->instagram_api_data, 'lightbox' );
 				} else {
 					$file_name = isset( $image_source_set[ $image_size ] ) ? $image_source_set[ $image_size ] : SB_Instagram_Parse::get_media_url( $this->instagram_api_data, 'lightbox' );
 				}
+				if ( strpos( $file_name, 'placeholder' ) !== false ) {
+					$file_name = '';
+				}
 				if ( ! empty( $file_name ) ) {
 
+					$sizes                   = array(
+						'height' => 1,
+						'width'  => 1
+					);
 
 
 					$suffix = $res_setting;
@@ -230,9 +236,7 @@ class SB_Instagram_Post
 
 					// not uncommon for the image editor to not work using it this way
 					if ( ! is_wp_error( $image_editor ) ) {
-						$old_sizes = $image_editor->get_size();
-
-						$ratio = $old_sizes['width'] / $old_sizes['height'];
+						$sizes = $image_editor->get_size();
 
 						$image_editor->resize( $image_size, null );
 
@@ -265,10 +269,11 @@ class SB_Instagram_Post
 
 				}
 
+
 			}
 
 			if ( $one_successful_image_resize ) {
-				$aspect_ratio = round( $ratio, 2 );
+				$aspect_ratio = round( $sizes['width'] / $sizes['height'], 2 );
 
 				$this->update_sbi_instagram_posts( array(
 					'media_id'     => $new_file_name,
@@ -528,7 +533,7 @@ class SB_Instagram_Post
 		$table_name = $wpdb->prefix . SBI_INSTAGRAM_FEEDS_POSTS;
 		// the number is removed from the transient name for backwards compatibilty.
 		$feed_id_array = explode( '#', $feed_id );
-		$feed_id = $feed_id_array[0];
+		$feed_id = str_replace( '+', '', $feed_id_array[0] );
 
 		$feed_id_match = $wpdb->get_col( $wpdb->prepare( "SELECT feed_id FROM $table_name WHERE feed_id = %s AND instagram_id = %s", $feed_id, $this->instagram_post_id ) );
 

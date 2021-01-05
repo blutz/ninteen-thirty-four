@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Ghost Kit
  * Description:  Blocks collection and extensions for Gutenberg
- * Version:      2.13.2
+ * Version:      2.16.0
  * Author:       nK
  * Author URI:   https://nkdev.info
  * License:      GPLv2 or later
@@ -136,6 +136,12 @@ class GhostKit {
         // templates.
         require_once $this->plugin_path . 'classes/class-templates.php';
 
+        // scss compiler.
+        require_once $this->plugin_path . 'classes/class-scss-compiler.php';
+
+        // breakpoints.
+        require_once $this->plugin_path . 'classes/class-breakpoints.php';
+
         // custom block styles class.
         require_once $this->plugin_path . 'gutenberg/extend/styles/get-styles.php';
 
@@ -221,8 +227,8 @@ class GhostKit {
      */
     public function enqueue_css_vars_polyfill() {
         $polyfill_name    = 'ie11-custom-properties';
-        $polyfill_version = '3.0.6';
-        $polyfill_url     = ghostkit()->plugin_url . 'assets/vendor/ie11-custom-properties/ie11-custom-properties.js?ver=' . $polyfill_version;
+        $polyfill_version = '4.1.0';
+        $polyfill_url     = ghostkit()->plugin_url . 'assets/vendor/ie11-custom-properties/ie11CustomProperties.js?ver=' . $polyfill_version;
 
         // Already added in 3rd-party code.
         if ( wp_script_is( $polyfill_name ) || wp_script_is( $polyfill_name, 'registered' ) ) {
@@ -270,6 +276,9 @@ class GhostKit {
             $css_deps,
             filemtime( plugin_dir_path( __FILE__ ) . 'gutenberg/editor.min.css' )
         );
+        wp_style_add_data( 'ghostkit-editor', 'rtl', 'replace' );
+        wp_style_add_data( 'ghostkit-editor', 'suffix', '.min' );
+
         wp_enqueue_script(
             'ghostkit-editor',
             plugins_url( 'gutenberg/index.min.js', __FILE__ ),
@@ -317,12 +326,13 @@ class GhostKit {
      * @return String string with replaced vars.
      */
     public function replace_vars( $str ) {
-        // TODO: Move this to plugin options (part 2).
+        $breakpoints = GhostKit_Breakpoints::get_breakpoints();
+        // TODO: Due to different formats in scss and assets there is an offset.
         $vars = array(
-            'media_sm' => '(max-width: 576px)',
-            'media_md' => '(max-width: 768px)',
-            'media_lg' => '(max-width: 992px)',
-            'media_xl' => '(max-width: 1200px)',
+            'media_sm' => '(max-width: ' . $breakpoints['xs'] . 'px)',
+            'media_md' => '(max-width: ' . $breakpoints['sm'] . 'px)',
+            'media_lg' => '(max-width: ' . $breakpoints['md'] . 'px)',
+            'media_xl' => '(max-width: ' . $breakpoints['lg'] . 'px)',
         );
 
         foreach ( $vars as $k => $var ) {

@@ -1,10 +1,3 @@
-<?php
-// If this file is called directly, abort.
-if ( ! isset( $_GET["v"] ) ) {
-	echo ( 'This file was called improperly. Do not call directly.' );
-	die;
-}
-?>
 <!DOCTYPE html>
 <!--
 Copyright 2012 Mozilla Foundation
@@ -36,17 +29,17 @@ See https://github.com/adobe-type-tools/cmap-resources
 	<title>PDF.js viewer</title>
 
 
-	<link rel="stylesheet" href="viewer.css?v=<?php echo $_GET["v"]; ?>">
+	<link rel="stylesheet" href="viewer.css">
 
 
 	<!-- This snippet is used in production (included from viewer.html) -->
 	<link rel="resource" type="application/l10n" href="locale/locale.properties">
-	<script src="l10n.js?v=<?php echo $_GET["v"]; ?>"></script>
+	<script src="l10n.js"></script>
 
-	<script src="../build/pdf.js?v=<?php echo $_GET["v"]; ?>"></script>
+	<script src="../build/pdf.js"></script>
 
 
-	<script src="viewer.js?v=<?php echo $_GET["v"]; ?>"></script>
+	<script src="viewer.js"></script>
 
 </head>
 
@@ -116,7 +109,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 					<span data-l10n-id="presentation_mode_label">Presentation Mode</span>
 				</button>
 
-				<button id="secondaryOpenFile" class="secondaryToolbarButton openFile visibleLargeView" title="Open File" tabindex="52" data-l10n-id="open_file">
+				<button id="secondaryOpenFile" class="secondaryToolbarButton openFile visibleLargeView" <?php if ($_GET["oButton"]!=="true") { echo 'style="display:none;"'; } ?> title="Open File" tabindex="52" data-l10n-id="open_file">
 					<span data-l10n-id="open_file_label">Open</span>
 				</button>
 
@@ -199,7 +192,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 							<span data-l10n-id="toggle_sidebar_label">Toggle Sidebar</span>
 						</button>
 						<div class="toolbarButtonSpacer"></div>
-						<button id="viewFind" class="toolbarButton" title="Find in Document" tabindex="12" data-l10n-id="findbar">
+						<button id="viewFind" class="toolbarButton" <?php if (isset($_GET["sButton"]) && $_GET["sButton"]!=="true") { echo 'style="display:none;"'; }?> title="Find in Document" tabindex="12" data-l10n-id="findbar">
 							<span data-l10n-id="findbar_label">Find</span>
 						</button>
 						<div class="splitToolbarButton hiddenSmallView">
@@ -219,7 +212,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 							<span data-l10n-id="presentation_mode_label">Presentation Mode</span>
 						</button>
 
-						<button id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file">
+						<button id="openFile" class="toolbarButton openFile hiddenLargeView" <?php if ($_GET["oButton"]!=="true") { echo 'style="display:none;"'; } ?> title="Open File" tabindex="32" data-l10n-id="open_file">
 							<span data-l10n-id="open_file_label">Open</span>
 						</button>
 

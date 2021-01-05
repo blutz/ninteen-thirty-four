@@ -97,6 +97,15 @@ final class Assets {
 		add_action( 'admin_enqueue_scripts', $register_callback );
 		add_action( 'wp_enqueue_scripts', $register_callback );
 
+		add_filter(
+			'script_loader_tag',
+			function( $tag, $handle ) {
+				return $this->add_async_defer_attribute( $tag, $handle );
+			},
+			10,
+			2
+		);
+
 		// All other asset-related general logic should only be active when the
 		// current user can actually use Site Kit (which only is so if they can
 		// authenticate).
@@ -126,15 +135,6 @@ final class Assets {
 		};
 		add_action( 'wp_print_styles', $styles_print_callback );
 		add_action( 'admin_print_styles', $styles_print_callback );
-
-		add_filter(
-			'script_loader_tag',
-			function( $tag, $handle ) {
-				return $this->add_async_defer_attribute( $tag, $handle );
-			},
-			10,
-			2
-		);
 	}
 
 	/**
@@ -231,48 +231,6 @@ final class Assets {
 	}
 
 	/**
-	 * Renders an SVG sprite.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $name Name of SVG icon.
-	 * @param array  $args {
-	 *     Additional arguments.
-	 *
-	 *     @type string $role   Role attribute to use. Default 'img'.
-	 *     @type string $label  Icon label, for accessibility. Default empty string.
-	 *     @type string $height Height attribute to use. Default '25'.
-	 *     @type string $width  Width attribute to use. Default '25'.
-	 * }
-	 * @return string SVG markup.
-	 */
-	public function svg_sprite( $name = '', $args = array() ) {
-		$args = wp_parse_args(
-			$args,
-			array(
-				'label'  => '',
-				'role'   => 'img',
-				'height' => '25',
-				'width'  => '25',
-			)
-		);
-
-		$href  = $this->context->url( 'dist/assets/svg/svg.svg' ) . '#' . $name;
-		$label = 'aria-label="' . ( empty( $args['label'] ) ? esc_attr( $name ) : esc_attr( $args['label'] ) ) . '"';
-		$label = 'presentation' === $args['role'] ? '' : $label;
-
-		return sprintf(
-			'<svg role="%s" class="%s" %s height="%s" width="%s"><use xlink:href="%s"/></svg>',
-			esc_attr( $args['role'] ),
-			esc_attr( 'svg googlesitekit-svg-' . $name ),
-			$label,
-			esc_attr( $args['height'] ),
-			esc_attr( $args['width'] ),
-			esc_url( $href )
-		);
-	}
-
-	/**
 	 * Registers all plugin assets.
 	 *
 	 * @since 1.0.0
@@ -281,7 +239,7 @@ final class Assets {
 		$assets = $this->get_assets();
 
 		foreach ( $assets as $asset ) {
-			$asset->register();
+			$asset->register( $this->context );
 		}
 	}
 
@@ -345,6 +303,8 @@ final class Assets {
 		$base_url = $this->context->url( 'dist/assets/' );
 
 		$dependencies = array(
+			'googlesitekit-runtime',
+			'googlesitekit-i18n',
 			'googlesitekit-vendor',
 			'googlesitekit-commons',
 			'googlesitekit-base',
@@ -357,12 +317,6 @@ final class Assets {
 
 		// Register plugin scripts.
 		$assets = array(
-			new Script(
-				'googlesitekit-vendor',
-				array(
-					'src' => $base_url . 'js/googlesitekit-vendor.js',
-				)
-			),
 			new Script_Data(
 				'googlesitekit-commons',
 				array(
@@ -429,6 +383,27 @@ final class Assets {
 					},
 				)
 			),
+			new Script(
+				'googlesitekit-runtime',
+				array(
+					'src' => $base_url . 'js/runtime.js',
+				)
+			),
+			new Script(
+				'googlesitekit-i18n',
+				array(
+					'src' => $base_url . 'js/googlesitekit-i18n.js',
+				)
+			),
+			new Script(
+				'googlesitekit-vendor',
+				array(
+					'src'          => $base_url . 'js/googlesitekit-vendor.js',
+					'dependencies' => array(
+						'googlesitekit-i18n',
+					),
+				)
+			),
 			// Admin assets.
 			new Script(
 				'googlesitekit-activation',
@@ -440,8 +415,11 @@ final class Assets {
 			new Script(
 				'googlesitekit-base',
 				array(
-					'src'          => $base_url . 'js/googlesitekit-admin.js',
-					'dependencies' => array( 'googlesitekit-apifetch-data', 'googlesitekit-base-data' ),
+					'src'          => $base_url . 'js/googlesitekit-base.js',
+					'dependencies' => array(
+						'googlesitekit-base-data',
+						'googlesitekit-i18n',
+					),
 					'execution'    => 'defer',
 				)
 			),
@@ -518,12 +496,20 @@ final class Assets {
 					'src'          => $base_url . 'js/googlesitekit-widgets.js',
 					'dependencies' => array(
 						'googlesitekit-data',
+						'googlesitekit-i18n',
 					),
+				)
+			),
+			new Script(
+				'googlesitekit-user-input',
+				array(
+					'src'          => $base_url . 'js/googlesitekit-user-input.js',
+					'dependencies' => $dependencies,
 				)
 			),
 			// End JSR Assets.
 			new Script(
-				'googlesitekit-ads-detect',
+				'googlesitekit-pagead2.ads',
 				array(
 					'src' => $base_url . 'js/pagead2.ads.js',
 				)
@@ -550,7 +536,7 @@ final class Assets {
 				)
 			),
 			new Script(
-				'googlesitekit-module-page',
+				'googlesitekit-module',
 				array(
 					'src'          => $base_url . 'js/googlesitekit-module.js',
 					'dependencies' => $dependencies,
@@ -586,19 +572,11 @@ final class Assets {
 			),
 			// Admin bar assets.
 			new Script(
-				'googlesitekit-adminbar-loader',
+				'googlesitekit-adminbar',
 				array(
-					'src'          => $base_url . 'js/googlesitekit-adminbar-loader.js',
+					'src'          => $base_url . 'js/googlesitekit-adminbar.js',
 					'dependencies' => $dependencies,
 					'execution'    => 'defer',
-					'before_print' => function( $handle ) use ( $base_url ) {
-						$inline_data = array( 'publicPath' => $base_url . 'js/' );
-						wp_add_inline_script(
-							$handle,
-							'window.googlesitekitAdminbar = ' . wp_json_encode( $inline_data ),
-							'after'
-						);
-					},
 				)
 			),
 			new Stylesheet(
@@ -643,7 +621,7 @@ final class Assets {
 		$current_user = wp_get_current_user();
 
 		$inline_data = array(
-			'homeURL'          => trailingslashit( home_url() ),
+			'homeURL'          => trailingslashit( $this->context->get_canonical_home_url() ),
 			'referenceSiteURL' => esc_url_raw( trailingslashit( $site_url ) ),
 			'userIDHash'       => md5( $site_url . $current_user->ID ),
 			'adminURL'         => esc_url_raw( trailingslashit( admin_url() ) ),
@@ -724,19 +702,11 @@ final class Assets {
 	 * @return array The inline data to be output.
 	 */
 	private function get_inline_data() {
-		$locale       = $this->get_jed_locale_data( 'google-site-kit' );
 		$cache        = new Cache();
 		$current_user = wp_get_current_user();
 		$site_url     = $this->context->get_reference_site_url();
 		$input        = $this->context->input();
 		$page         = $input->filter( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
-		$permalink    = $input->filter( INPUT_GET, 'permaLink', FILTER_SANITIZE_STRING );
-		$permalink    = $permalink ?: $this->context->get_reference_canonical();
-		$page_title   = $input->filter( INPUT_GET, 'pageTitle', FILTER_SANITIZE_STRING );
-
-		if ( ! $page_title ) {
-			$page_title = is_home() ? get_bloginfo( 'blogname' ) : get_the_title();
-		}
 
 		$admin_data = array(
 			'siteURL'          => esc_url_raw( $site_url ),
@@ -755,8 +725,10 @@ final class Assets {
 			'reAuth'           => $input->filter( INPUT_GET, 'reAuth', FILTER_VALIDATE_BOOLEAN ),
 			'ampEnabled'       => (bool) $this->context->get_amp_mode(),
 			'ampMode'          => $this->context->get_amp_mode(),
-			'homeURL'          => home_url(),
+			'homeURL'          => $this->context->get_canonical_home_url(),
 		);
+
+		$current_entity = $this->context->get_reference_entity();
 
 		return array(
 
@@ -767,7 +739,7 @@ final class Assets {
 			 *
 			 * @param array $data Admin data.
 			 */
-			'admin'              => apply_filters( 'googlesitekit_admin_data', $admin_data ),
+			'admin'         => apply_filters( 'googlesitekit_admin_data', $admin_data ),
 
 			/**
 			 * Filters the modules data to pass to JS.
@@ -776,9 +748,9 @@ final class Assets {
 			 *
 			 * @param array $data Data about each module.
 			 */
-			'modules'            => apply_filters( 'googlesitekit_modules_data', array() ),
-			'locale'             => $locale,
-			'permissions'        => array(
+			'modules'       => apply_filters( 'googlesitekit_modules_data', array() ),
+			'locale'        => get_user_locale(),
+			'permissions'   => array(
 				'canAuthenticate'      => current_user_can( Permissions::AUTHENTICATE ),
 				'canSetup'             => current_user_can( Permissions::SETUP ),
 				'canViewPostsInsights' => current_user_can( Permissions::VIEW_POSTS_INSIGHTS ),
@@ -797,7 +769,7 @@ final class Assets {
 			 *
 			 * @param array $data Authentication Data.
 			 */
-			'setup'              => apply_filters( 'googlesitekit_setup_data', array() ),
+			'setup'         => apply_filters( 'googlesitekit_setup_data', array() ),
 
 			/**
 			 * Filters the notification message to print to plugin dashboard.
@@ -806,44 +778,12 @@ final class Assets {
 			 *
 			 * @param array $data Notification Data.
 			 */
-			'notifications'      => apply_filters( 'googlesitekit_notification_data', array() ),
-			'permaLink'          => $permalink ? esc_url_raw( $permalink ) : false,
-			'pageTitle'          => $page_title,
-			'postID'             => get_the_ID(),
-			'postType'           => get_post_type(),
-			'dashboardPermalink' => $this->context->admin_url( 'dashboard' ),
-			'publicPath'         => $this->context->url( 'dist/assets/js/' ),
-			'editmodule'         => $input->filter( INPUT_GET, 'editmodule', FILTER_SANITIZE_STRING ),
+			'notifications' => apply_filters( 'googlesitekit_notification_data', array() ),
+			'permaLink'     => $current_entity ? esc_url_raw( $current_entity->get_url() ) : false,
+			'pageTitle'     => $current_entity ? $current_entity->get_title() : '',
+			'publicPath'    => $this->context->url( 'dist/assets/js/' ),
+			'editmodule'    => $input->filter( INPUT_GET, 'editmodule', FILTER_SANITIZE_STRING ),
 		);
-	}
-
-	/**
-	 * Gets Jed-formatted localization data. From gutenberg.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $domain Text domain.
-	 * @return array Jed localization data.
-	 */
-	private function get_jed_locale_data( $domain ) {
-		$translations = get_translations_for_domain( $domain );
-
-		$locale = array(
-			'' => array(
-				'domain' => $domain,
-				'lang'   => is_admin() ? get_user_locale() : get_locale(),
-			),
-		);
-
-		if ( ! empty( $translations->headers['Plural-Forms'] ) ) {
-			$locale['']['plural_forms'] = $translations->headers['Plural-Forms'];
-		}
-
-		foreach ( $translations->entries as $msgid => $entry ) {
-			$locale[ $msgid ] = $entry->translations;
-		}
-
-		return $locale;
 	}
 
 	/**

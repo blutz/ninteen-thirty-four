@@ -194,7 +194,7 @@ class GhostKit_Icons_Fallback {
             'ghostkit-icons-fallback',
             ghostkit()->plugin_url . 'assets/js/icons-fallback.min.js',
             array( 'jquery' ),
-            '2.13.2',
+            '2.16.0',
             true
         );
         wp_localize_script( 'ghostkit-icons-fallback', 'ghostkitIconsFallback', $fallback );

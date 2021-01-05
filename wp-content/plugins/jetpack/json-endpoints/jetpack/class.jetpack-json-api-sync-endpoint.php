@@ -10,6 +10,13 @@ use Automattic\Jetpack\Sync\Settings;
 
 // POST /sites/%s/sync
 class Jetpack_JSON_API_Sync_Endpoint extends Jetpack_JSON_API_Endpoint {
+
+	/**
+	 * This endpoint allows authentication both via a blog and a user token.
+	 * If a user token is used, that user should have `manage_options` capability.
+	 *
+	 * @var array|string
+	 */
 	protected $needed_capabilities = 'manage_options';
 
 	protected function validate_call( $_blog_id, $capability, $check_manage_active = true ) {

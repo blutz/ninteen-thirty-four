@@ -8,6 +8,7 @@ use Automattic\Jetpack\Connection\Utils as Connection_Utils;
 use Automattic\Jetpack\Status;
 use Automattic\Jetpack\Sync\Actions;
 use Automattic\Jetpack\Sync\Listener;
+use Automattic\Jetpack\Sync\Modules;
 use Automattic\Jetpack\Sync\Queue;
 use Automattic\Jetpack\Sync\Settings;
 
@@ -997,6 +998,11 @@ class Jetpack_CLI extends WP_CLI_Command {
 						} else {
 							WP_CLI::log( __( 'Sent more data to WordPress.com', 'jetpack' ) );
 						}
+
+						// Immediate Full Sync does not wait for WP.com to process data so we need to enforce a wait.
+						if ( false !== strpos( get_class( Modules::get_module( 'full-sync' ) ), 'Full_Sync_Immediately' ) ) {
+							sleep( 15 );
+						}
 					}
 					$i++;
 				} while ( $result && ! is_wp_error( $result ) );
@@ -1113,7 +1119,8 @@ class Jetpack_CLI extends WP_CLI_Command {
 		$site_identifier = Jetpack_Options::get_option( 'id' );
 
 		if ( ! $site_identifier ) {
-			$site_identifier = Jetpack::build_raw_urls( get_home_url() );
+			$status          = new Status();
+			$site_identifier = $status->get_site_suffix();
 		}
 
 		$request = array(
@@ -1125,7 +1132,7 @@ class Jetpack_CLI extends WP_CLI_Command {
 			'method'  => 'POST',
 		);
 
-		$url = sprintf( 'https://%s/rest/v1.3/jpphp/%s/partner-cancel', $this->get_api_host(), $site_identifier );
+		$url = sprintf( '%s/rest/v1.3/jpphp/%s/partner-cancel', $this->get_api_host(), $site_identifier );
 		if ( ! empty( $named_args ) && ! empty( $named_args['partner_tracking_id'] ) ) {
 			$url = esc_url_raw( add_query_arg( 'partner_tracking_id', $named_args['partner_tracking_id'], $url ) );
 		}
@@ -1784,7 +1791,7 @@ class Jetpack_CLI extends WP_CLI_Command {
 
 	private function get_api_host() {
 		$env_api_host = getenv( 'JETPACK_START_API_HOST', true );
-		return $env_api_host ? $env_api_host : JETPACK__WPCOM_JSON_API_HOST;
+		return $env_api_host ? 'https://' . $env_api_host : JETPACK__WPCOM_JSON_API_BASE;
 	}
 
 	private function partner_provision_error( $error ) {

@@ -272,9 +272,12 @@ class SB_Instagram_API_Connect
 				$options['connected_accounts'] = $connected_accounts;
 
 				update_option( 'sb_instagram_settings', $options );
-
 				global $sb_instagram_posts_manager;
-				$sb_instagram_posts_manager->add_error( 'error_18', array( 'Too many hashtags', $response['error']['error_user_msg'] ) );
+				$error = '<p><b>' . __( 'Error: Hashtag limit of 30 unique hashtags per week has been reached.', 'instagram-feed' ) . '</b>';
+				$error .= '<p>' . __( 'If you need to display more than 30 hashtag feeds on your site, consider connecting an additional business account from a separate Instagram and Facebook account.', 'instagram-feed' );
+
+				$sb_instagram_posts_manager->add_frontend_error( 'hashtag_limit_reached', $error );
+				$sb_instagram_posts_manager->add_error( 'error_18', array( 'Too many hashtags', $error ) );
 
 			} elseif ( (int)$response['error']['code'] === 10 ) {
 				$user_name = $error_connected_account['username'];
@@ -352,7 +355,7 @@ class SB_Instagram_API_Connect
 
 		if ( $account_type === 'basic' ) {
 			if ( $endpoint_slug === 'access_token' ) {
-				$url = 'https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&&access_token=' . sbi_maybe_clean( $connected_account['access_token'] );
+				$url = 'https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=' . sbi_maybe_clean( $connected_account['access_token'] );
 			} elseif ( $endpoint_slug === 'header' ) {
 				$url = 'https://graph.instagram.com/me?fields=id,username,media_count&access_token=' . sbi_maybe_clean( $connected_account['access_token'] );
 			} else {

@@ -1,4 +1,11 @@
 jQuery(document).ready(function($) {
+
+    //Close the modal if clicking anywhere outside it
+    jQuery('body').on('click', '.sb_cross_install_modal', function(e){
+        if (e.target !== this) return;
+        jQuery('.sb_cross_install_modal').remove();
+    });
+
     jQuery('#sbi_no_js_warning').remove();
     /* NEW API CODE */
     $('.sbi_admin_btn, .sbi_reconnect').click(function(event) {
@@ -36,7 +43,11 @@ jQuery(document).ready(function($) {
             '</div>');
 
         $('.sbi_modal_close').on('click', function(){
-            $('#sbi_config_info').remove();
+            if (jQuery('.sbi-need-to-connect').length) {
+                $('#sbi_config_info').hide();
+            } else {
+                $('#sbi_config_info').remove();
+            }
         });
 
         $('input[name=sbi_login_type]').change(function() {
@@ -113,7 +124,11 @@ jQuery(document).ready(function($) {
     });
 
     $('.sbi_modal_close').on('click', function(){
-        $('#sbi_config_info').remove();
+        if (jQuery('.sbi-need-to-connect').length) {
+            $('#sbi_config_info').hide();
+        } else {
+            $('#sbi_config_info').remove();
+        }
     });
     /* NEW API CODE */
     //Autofill the token and id
@@ -268,7 +283,7 @@ jQuery(document).ready(function($) {
                     $('#sbi_connected_account_'+savedToken.user_id + ' .sbi_ca_username').prepend('<img class="sbi_ca_avatar" src="'+savedToken.profile_picture+'">');
                 }
             }
-            $('#sbi_connected_account_'+savedToken.user_id + ' .sbi_ca_username').find('span').text(sbiAccountType(savedToken.type));
+            $('#sbi_connected_account_'+savedToken.user_id + ' .sbi_ca_username').find('span').text(sbiAccountType(savedToken.type,false));
 
             $('#sbi_connected_account_'+savedToken.user_id).find('.sbi_ca_accesstoken .sbi_ca_token').text(savedToken.access_token);
             $('#sbi_connected_account_'+savedToken.user_id).find('.sbi_tooltip code').text('[instagram-feed accesstoken="'+savedToken.access_token+'"]');
@@ -281,6 +296,7 @@ jQuery(document).ready(function($) {
             } else {
                 var accountType = 'personal';
             }
+            var isPrivate = (typeof savedToken.private !== 'undefined');
 
             var avatarHTML = '';
             if (savedToken.profile_picture !== '') {
@@ -299,7 +315,7 @@ jQuery(document).ready(function($) {
 
                     '<div class="sbi_ca_username">'+
                     avatarHTML+
-                    '<strong>'+savedToken.username+'<span>'+sbiAccountType(accountType)+'</span></strong>'+
+                    '<strong>'+savedToken.username+'<span>'+sbiAccountType(accountType,isPrivate)+'</span></strong>'+
                     '</div>'+
 
                     '<div class="sbi_ca_actions">'+
@@ -358,9 +374,13 @@ jQuery(document).ready(function($) {
         });
     }
 
-    function sbiAccountType(accountType) {
+    function sbiAccountType(accountType,isPrivate) {
         if (accountType === 'basic') {
-            return 'personal (new API)';
+            var returnText = 'personal';
+            if (isPrivate) {
+                returnText += ' (private)'
+            }
+            return returnText;
         }
         return accountType;
     }
@@ -769,6 +789,22 @@ jQuery(document).ready(function($) {
         sbiSubmitOptIn(true);
     }); // clear_comment_cache click
 
+    jQuery('#sbi-oembed-disable').click(function(e) {
+        e.preventDefault();
+        jQuery(this).addClass( 'loading' ).html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+        jQuery.ajax({
+            url : sbiA.ajax_url,
+            type: 'post',
+            data: {
+                action : 'sbi_oembed_disable',
+                sbi_nonce : sbiA.sbi_nonce,
+            },
+            success: function (data) {
+                jQuery('#sbi-oembed-disable').closest('p').html(data);
+            }
+        });
+    });
+
     $('.sb-no-usage-opt-out').click(function(event) {
         event.preventDefault();
 
@@ -798,7 +834,9 @@ jQuery(document).ready(function($) {
         if( jQuery(this).hasClass('sbi_type_tooltip_link') ){
             jQuery(this).closest('.sbi_row').children('.sbi_tooltip').slideToggle();
         } else {
-            jQuery(this).siblings('.sbi_tooltip').slideToggle();
+            $el = jQuery(this);
+            if( jQuery(this).hasClass('sbi_tooltip_outside') ) $el = jQuery(this).parent();
+            $el.siblings('.sbi_tooltip').slideToggle();
         }
     });
 
@@ -885,18 +923,18 @@ jQuery(document).ready(function($) {
 	}
 
 	//Scroll to hash for quick links
-  jQuery('#sbi_admin a').click(function() {
-    if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
-      var target = jQuery(this.hash);
-      target = target.length ? target : this.hash.slice(1);
-      if (target.length) {
-        jQuery('html,body').animate({
-          scrollTop: target.offset().top
-        }, 500);
-        return false;
-      }
-    }
-  });
+    jQuery('#sbi_admin a').click(function() {
+        if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+          var target = jQuery(this.hash);
+          target = target.length ? target : this.hash.slice(1);
+          if (target.length) {
+            jQuery('html,body').animate({
+              scrollTop: target.offset().top
+            }, 500);
+            return false;
+          }
+        }
+    });
 
 	//Support tab show video
 	jQuery('#sbi-play-support-video').on('click', function(e){
@@ -1033,7 +1071,7 @@ jQuery(document).ready(function($) {
         });
     });
     /* removing padding */
-    if (jQuery('#sbi-admin-about').length) {
+    if (jQuery('#sbi-admin-about').length && ! jQuery('.sbi_more_plugins').length) {
         jQuery('#wpcontent').css('padding', 0);
     }
 
@@ -1062,7 +1100,64 @@ jQuery(document).ready(function($) {
             }
         }); // ajax call
     })
+
+    //Click event for other plugins in menu
+    $('.sbi_get_cff, .sbi_get_sbi, .sbi_get_ctf, .sbi_get_yt').parent().on('click', function(e){
+        e.preventDefault();
+
+        jQuery('.sb_cross_install_modal').remove();
+
+        $('#wpbody-content').prepend('<div class="sb_cross_install_modal"><div class="sb_cross_install_inner" id="sbi-admin-about"><div id="sbi-admin-addons"><div class="addons-container"><i class="fa fa-spinner fa-spin sbi-loader" aria-hidden="true"></i></div></div></div></div>');
+
+        var $self = $(this).find('span'),
+            sb_get_plugin = 'custom_twitter_feeds';
+
+        if( $self.hasClass('sbi_get_cff') ){
+            sb_get_plugin = 'custom_facebook_feed';
+        } else if( $self.hasClass('sbi_get_sbi') ){
+            sb_get_plugin = 'instagram_feed';
+        } else if( $self.hasClass('sbi_get_yt') ){
+            sb_get_plugin = 'feeds_for_youtube';
+        }
+
+        $get_plugins_url = sbiA.ajax_url.replace('admin-ajax.php', '');
+
+        //Get the quick install box from the about page
+        $('.sb_cross_install_modal .addons-container').load($get_plugins_url+'admin.php?page=sb-instagram-feed&tab=more #install_'+sb_get_plugin);
+    });
+
+    jQuery('.sbi-need-to-connect').click(function(e) {
+        e.preventDefault();
+
+        jQuery('#sbi_config_info').show();
+    });
+
+    jQuery('.sbi_show_gdpr_list').on('click', function(){
+        jQuery(this).closest('div').find('.sbi_gdpr_list').slideToggle();
+    });
+
+//Selecting a post style
+    jQuery('#sbi_gdpr_setting').on('change', function(){
+        sbiCheckGdprSetting( jQuery(this).val() );
+    });
+    function sbiCheckGdprSetting(option) {
+        console.log('heretere')
+        if( option == 'yes' ){
+            jQuery('.sbi_gdpr_yes').show();
+            jQuery('.sbi_gdpr_no, .sbi_gdpr_auto').hide();
+        }
+        if( option == 'no' ){
+            jQuery('.sbi_gdpr_no').show();
+            jQuery('.sbi_gdpr_yes, .sbi_gdpr_auto').hide();
+        }
+        if( option == 'auto' ){
+            jQuery('.sbi_gdpr_auto').show();
+            jQuery('.sbi_gdpr_yes, .sbi_gdpr_no').hide();
+        }
+    }
+    sbiCheckGdprSetting();
 });
+
 
 
 /* global smash_admin, jconfirm, wpCookies, Choices, List */
@@ -1134,7 +1229,9 @@ jQuery(document).ready(function($) {
                 }
 
                 // Display all addon boxes as the same height.
-                $( '.addon-item .details' ).matchHeight( { byrow: false, property: 'height' } );
+                if( $( '#sbi-admin-about.sbi-admin-wrap').length ){
+                    $( '#sbi-admin-about .addon-item .details' ).matchHeight( { byrow: false, property: 'height' } );
+                }
 
                 // Addons searching.
                 if ( $('#sbi-admin-addons-list').length ) {

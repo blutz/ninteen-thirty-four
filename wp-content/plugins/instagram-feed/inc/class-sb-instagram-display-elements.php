@@ -74,14 +74,20 @@ class SB_Instagram_Display_Elements
 			$optimum_res = 'full';
 			$settings['imageres'] = 'full';
 		} else {
-			if ( $settings['imageres'] !== 'thumb' && ! empty( $resized_images ) ) {
+			if ( ! empty( $resized_images ) ) {
 				$resolution = $settings['imageres'];
 				$post_id = SB_Instagram_Parse::get_post_id( $post );
 				if ( isset( $resized_images[ $post_id ] )
 				     && $resized_images[ $post_id ]['id'] !== 'error'
 				     && $resized_images[ $post_id ]['id'] !== 'pending'
 				     && $resized_images[ $post_id ]['id'] !== 'video' ) {
-					if ( $resolution === 'medium' ) {
+					if ( $resolution === 'thumb' ) {
+						if ( isset( $resized_images[ $post_id ]['sizes']['low'] ) ) {
+							$suffix = 'low';
+						} elseif ( isset( $resized_images[ $post_id ]['sizes']['full'] ) ) {
+							$suffix = 'full';
+						}
+					} elseif ( $resolution === 'medium' ) {
 						if ( isset( $resized_images[ $post_id ]['sizes']['low'] ) ) {
 							$suffix = 'low';
 						} elseif ( isset( $resized_images[ $post_id ]['sizes']['full'] ) ) {
@@ -127,32 +133,58 @@ class SB_Instagram_Display_Elements
 			     && $resized_images[ $post_id ]['id'] !== 'error' ) {
 				$media_url = sbi_get_resized_uploads_url() . $resized_images[ $post_id ]['id'] . 'full.jpg';
 			} else {
-				$permalink = SB_Instagram_Parse::get_permalink( $post );
-				if ( substr_count( $permalink, '/' ) > 5 ) {
-					$permalink_array = explode( '/', $permalink );
-					$perm_id = $permalink_array[ count( $permalink_array ) - 2 ];
-					$permalink = 'https://www.instagram.com/p/' . $perm_id . '/';
+				if ( SB_Instagram_GDPR_Integrations::doing_gdpr( $settings ) ) {
+					return trailingslashit( SBI_PLUGIN_URL ) . 'img/thumb-placeholder.png';
 				}
-
-				if ( ($post['media_type'] === 'CAROUSEL_ALBUM' || $post['media_type'] === 'VIDEO') && ($optimum_res === 'lightbox' || $optimum_res === 'full')) {
-					$media_url = $permalink . 'media/?size=l';
-				} else {
-					switch ($optimum_res) {
-						case 'thumb' :
-							$media_url = $permalink . 'media/?size=t';
-							break;
-						case 'medium' :
-							$media_url = $permalink . 'media/?size=m';
-							break;
-						default :
-							if ( isset( $post['media_url'] ) ) {
-								$media_url = $post['media_url'];
-							} else {
-								$permalink = SB_Instagram_Parse::fix_permalink( SB_Instagram_Parse::get_permalink( $post ) );
-
-								$media_url = $permalink . 'media/?size=l';
+				$media_type = $post['media_type'];
+				if ( $media_type === 'CAROUSEL_ALBUM'
+				     || $media_type === 'VIDEO'
+				     || $media_type === 'OEMBED' ) {
+					if ( isset( $post['thumbnail_url'] ) ) {
+						return $post['thumbnail_url'];
+					} elseif ( $media_type === 'CAROUSEL_ALBUM' && isset( $post['media_url'] ) ) {
+						return $post['media_url'];
+					} elseif ( isset( $post['children'] ) ) {
+						$i = 0;
+						$full_size = '';
+						foreach ( $post['children']['data'] as $carousel_item ) {
+							if ( $carousel_item['media_type'] === 'IMAGE' && empty( $full_size ) ) {
+								if ( isset( $carousel_item['media_url'] ) ) {
+									$full_size = $carousel_item['media_url'];
+								}
+							} elseif ( $carousel_item['media_type'] === 'VIDEO' && empty( $full_size ) ) {
+								if ( isset( $carousel_item['thumbnail_url'] ) ) {
+									$full_size = $carousel_item['thumbnail_url'];
+								}
 							}
+
+							$i++;
+						}
+						return $full_size;
+					} else {
+						if ( ! class_exists( 'SB_Instagram_Single' ) ) {
+							return trailingslashit( SBI_PLUGIN_URL ) . 'img/thumb-placeholder.png';
+						}
+						//attempt to get
+						$permalink = SB_Instagram_Parse::fix_permalink( SB_Instagram_Parse::get_permalink( $post ) );
+						$single = new SB_Instagram_Single( $permalink );
+						$single->init();
+						$post = $single->get_post();
+
+						if ( isset( $post['thumbnail_url'] ) ) {
+							return $post['thumbnail_url'];
+						} elseif ( isset( $post['media_url'] ) && strpos( $post['media_url'], '.mp4' ) === false ) {
+							return $post['media_url'];
+						}
+
+						return trailingslashit( SBI_PLUGIN_URL ) . 'img/thumb-placeholder.png';
 					}
+				} else {
+					if ( isset( $post['media_url'] ) ) {
+						return $post['media_url'];
+					}
+
+					return trailingslashit( SBI_PLUGIN_URL ) . 'img/thumb-placeholder.png';
 				}
 			}
 

@@ -459,7 +459,7 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 						'siteDescription' => $this->decode_special_characters( get_option( 'blogdescription' ) ),
 						'siteType' => get_option( 'jpo_site_type' ),
 						'homepageFormat' => get_option( 'jpo_homepage_format' ),
-						'addContactForm' => intval( get_option( 'jpo_contact_page' ) ),
+						'addContactForm' => (int) get_option( 'jpo_contact_page' ),
 						'businessAddress' => $business_address,
 						'installWooCommerce' => is_plugin_active( 'woocommerce/woocommerce.php' ),
 						'stats' => Jetpack::is_active() && Jetpack::is_module_active( 'stats' ),
@@ -715,7 +715,12 @@ class Jetpack_Core_API_Data extends Jetpack_Core_API_XMLRPC_Consumer_Endpoint {
 					break;
 
 				case 'jetpack_protect_global_whitelist':
+					if ( ! function_exists( 'jetpack_protect_save_whitelist' ) ) {
+						require_once JETPACK__PLUGIN_DIR . 'modules/protect/shared-functions.php';
+					}
+
 					$updated = jetpack_protect_save_whitelist( explode( PHP_EOL, str_replace( array( ' ', ',' ), array( '', "\n" ), $value ) ) );
+
 					if ( is_wp_error( $updated ) ) {
 						$error = $updated->get_error_message();
 					}

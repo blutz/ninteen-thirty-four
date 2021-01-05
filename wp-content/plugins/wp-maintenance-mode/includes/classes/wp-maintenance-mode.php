@@ -4,7 +4,7 @@ if (!class_exists('WP_Maintenance_Mode')) {
 
 	class WP_Maintenance_Mode {
 
-		const VERSION = '2.2.4';
+		const VERSION = '2.3.0';
 
 		protected $plugin_slug = 'wp-maintenance-mode';
 		protected $plugin_settings;
@@ -149,7 +149,7 @@ if (!class_exists('WP_Maintenance_Mode')) {
 						'02' => __("I have just a few questions.", $this->plugin_slug),
 						'03' => __("What is your name?", $this->plugin_slug),
 						'04' => __("Nice to meet you here, {visitor_name}!"),
-						'05' => __("How you can see, our website will be lauched very soon.", $this->plugin_slug),
+						'05' => __("How you can see, our website will be launched very soon.", $this->plugin_slug),
 						'06' => __("I know, you are very excited to see it, but we need a few days to finish it.", $this->plugin_slug),
 						'07' => __("Would you like to be first to see it?", $this->plugin_slug),
 						'08_1' => __("Cool! Please leave your email here and I will send you a message when it's ready.", $this->plugin_slug),
@@ -539,7 +539,7 @@ if (!class_exists('WP_Maintenance_Mode')) {
 				$protocol = !empty($_SERVER['SERVER_PROTOCOL']) && in_array($_SERVER['SERVER_PROTOCOL'], array('HTTP/1.1', 'HTTP/1.0')) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
 				$charset = get_bloginfo('charset') ? get_bloginfo('charset') : 'UTF-8';
 				$status_code = (int) apply_filters('wp_maintenance_mode_status_code', 503); // this hook will be removed in the next versions
-				$status_code = (int) apply_filters('wpmm_status_code', 503);
+				$status_code = (int) apply_filters('wpmm_status_code', $status_code);
 				$backtime_seconds = $this->calculate_backtime();
 				$backtime = (int) apply_filters('wpmm_backtime', $backtime_seconds);
 
@@ -552,7 +552,7 @@ if (!class_exists('WP_Maintenance_Mode')) {
 				$robots = apply_filters('wpmm_meta_robots', $robots);
 
 				$author = apply_filters('wm_meta_author', get_bloginfo('name')); // this hook will be removed in the next versions
-				$author = apply_filters('wpmm_meta_author', get_bloginfo('name'));
+				$author = apply_filters('wpmm_meta_author', $author);
 
 				$description = get_bloginfo('name') . ' - ' . get_bloginfo('description');
 				$description = apply_filters('wm_meta_description', $description); // this hook will be removed in the next versions
@@ -574,7 +574,7 @@ if (!class_exists('WP_Maintenance_Mode')) {
 				$heading = apply_filters('wm_heading', $heading); // this hook will be removed in the next versions
 				$heading = apply_filters('wpmm_heading', $heading);
 
-				$text = !empty($this->plugin_settings['design']['text']) ? $this->plugin_settings['design']['text'] : '';
+				$text = !empty($this->plugin_settings['design']['text']) ? stripslashes($this->plugin_settings['design']['text']) : '';
 				$text = apply_filters('wpmm_text', do_shortcode($text));
 
 				// COUNTDOWN
@@ -583,10 +583,10 @@ if (!class_exists('WP_Maintenance_Mode')) {
 
 				// JS FILES
 				$wp_scripts = wp_scripts();
-
+                                
 				$scripts = array(
-					'jquery' => !empty($wp_scripts->registered['jquery-core']) ? site_url($wp_scripts->registered['jquery-core']->src) : '//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery' . WPMM_ASSETS_SUFFIX . '.js',
-					'frontend' => WPMM_JS_URL . 'scripts' . WPMM_ASSETS_SUFFIX . '.js'
+					'jquery' => !empty($wp_scripts->registered['jquery-core']) ? site_url($wp_scripts->registered['jquery-core']->src) : '//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery' . WPMM_ASSETS_SUFFIX . '.js',
+					'frontend' => WPMM_JS_URL . 'scripts' . WPMM_ASSETS_SUFFIX . '.js?ver=' . WP_Maintenance_Mode::VERSION
 				);
 				if (!empty($this->plugin_settings['modules']['countdown_status']) && $this->plugin_settings['modules']['countdown_status'] == 1) {
 					$scripts['countdown-dependency'] = WPMM_JS_URL . 'jquery.plugin' . WPMM_ASSETS_SUFFIX . '.js';
@@ -596,17 +596,21 @@ if (!class_exists('WP_Maintenance_Mode')) {
 					$scripts['validate'] = WPMM_JS_URL . 'jquery.validate' . WPMM_ASSETS_SUFFIX . '.js';
 				}
 				if (!empty($this->plugin_settings['bot']['status']) && $this->plugin_settings['bot']['status'] == 1) {
-					$scripts['bot'] = WPMM_JS_URL . 'bot' . WPMM_ASSETS_SUFFIX . '.js';
+                                        if(WPMM_ASSETS_SUFFIX === '') {
+                                            $scripts['bot-async'] = WPMM_JS_URL . 'bot.async.js';
+                                        }
+                                    
+					$scripts['bot'] = WPMM_JS_URL . 'bot' . WPMM_ASSETS_SUFFIX . '.js?ver=' . WP_Maintenance_Mode::VERSION;
 					add_action('wpmm_before_scripts', array($this, 'add_bot_extras'));
 				}
 				$scripts = apply_filters('wpmm_scripts', $scripts);
 
 				// CSS FILES
 				$styles = array(
-					'frontend' => WPMM_CSS_URL . 'style' . WPMM_ASSETS_SUFFIX . '.css'
+					'frontend' => WPMM_CSS_URL . 'style' . WPMM_ASSETS_SUFFIX . '.css?ver=' . WP_Maintenance_Mode::VERSION
 				);
 				if (!empty($this->plugin_settings['bot']['status']) && $this->plugin_settings['bot']['status'] == 1) {
-					$styles['bot'] = WPMM_CSS_URL . 'style.bot' . WPMM_ASSETS_SUFFIX . '.css';
+					$styles['bot'] = WPMM_CSS_URL . 'style.bot' . WPMM_ASSETS_SUFFIX . '.css?ver=' . WP_Maintenance_Mode::VERSION;
 					$body_classes .= ' bot';
 				}
 				$styles = apply_filters('wpmm_styles', $styles);

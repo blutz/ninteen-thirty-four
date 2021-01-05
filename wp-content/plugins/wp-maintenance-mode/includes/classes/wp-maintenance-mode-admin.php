@@ -117,7 +117,7 @@ if (!class_exists('WP_Maintenance_Mode_Admin')) {
 
             try {
                 // check capabilities
-                if (!current_user_can('manage_options')) {
+                if (!current_user_can(wpmm_get_capability('subscribers'))) {
                     throw new Exception(__('You do not have access to this resource.', $this->plugin_slug));
                 }
 
@@ -155,7 +155,7 @@ if (!class_exists('WP_Maintenance_Mode_Admin')) {
 
             try {
                 // check capabilities
-                if (!current_user_can('manage_options')) {
+                if (!current_user_can(wpmm_get_capability('subscribers'))) {
                     throw new Exception(__('You do not have access to this resource.', $this->plugin_slug));
                 }
 
@@ -178,7 +178,7 @@ if (!class_exists('WP_Maintenance_Mode_Admin')) {
         public function reset_settings() {
             try {
                 // check capabilities
-                if (!current_user_can('manage_options')) {
+                if (!current_user_can(wpmm_get_capability('settings'))) {
                     throw new Exception(__('You do not have access to this resource.', $this->plugin_slug));
                 }
 
@@ -220,7 +220,7 @@ if (!class_exists('WP_Maintenance_Mode_Admin')) {
          */
         public function add_plugin_menu() {
             $this->plugin_screen_hook_suffix = add_options_page(
-                    __('WP Maintenance Mode', $this->plugin_slug), __('WP Maintenance Mode', $this->plugin_slug), 'manage_options', $this->plugin_slug, array($this, 'display_plugin_settings')
+                    __('WP Maintenance Mode', $this->plugin_slug), __('WP Maintenance Mode', $this->plugin_slug), wpmm_get_capability('settings'), $this->plugin_slug, array($this, 'display_plugin_settings')
             );
         }
 
@@ -228,11 +228,8 @@ if (!class_exists('WP_Maintenance_Mode_Admin')) {
          * Settings page
          *
          * @since 2.0.0
-         * @global object $wp_roles
          */
         public function display_plugin_settings() {
-            global $wp_roles;
-
             // save settings
             $this->save_plugin_settings();
 
@@ -249,6 +246,10 @@ if (!class_exists('WP_Maintenance_Mode_Admin')) {
             if (!empty($_POST) && !empty($_POST['tab'])) {
                 if (!wp_verify_nonce($_POST['_wpnonce'], 'tab-' . $_POST['tab'])) {
                     die(__('Security check.', $this->plugin_slug));
+                }
+                
+                if(!current_user_can(wpmm_get_capability('settings'))) {
+                    die(__('You do not have access to this resource.', $this->plugin_slug));
                 }
 
                 // DO SOME SANITIZATIONS
@@ -431,6 +432,7 @@ if (!class_exists('WP_Maintenance_Mode_Admin')) {
 						$_POST['options']['gdpr']['policy_page_target'] = (int) $_POST['options']['gdpr']['policy_page_target'];
                         $_POST['options']['gdpr']['contact_form_tail'] = wp_kses($_POST['options']['gdpr']['contact_form_tail'], wpmm_gdpr_textarea_allowed_html());
                         $_POST['options']['gdpr']['subscribe_form_tail'] = wp_kses($_POST['options']['gdpr']['subscribe_form_tail'], wpmm_gdpr_textarea_allowed_html());
+                    break;
                 }
 
                 $this->plugin_settings[$tab] = $_POST['options'][$tab];
@@ -440,7 +442,7 @@ if (!class_exists('WP_Maintenance_Mode_Admin')) {
 
         /**
          * Add new safe inline style css (use by wp_kses_attr in wp_kses_post)
-         * - bug discovered by cokemorgan: https://github.com/Designmodocom/WP-Maintenance-Mode/issues/56
+         * - bug discovered by cokemorgan: https://github.com/andrianvaleanu/WP-Maintenance-Mode/issues/56
          *
          * @since 2.0.3
          * @param array $properties
@@ -561,10 +563,10 @@ if (!class_exists('WP_Maintenance_Mode_Admin')) {
                 // delete wpmm_notice
                 delete_option('wpmm_notice');
 
-                // notice promo for codepad
+                // notice for blocksy
                 ob_start();
-                include_once(WPMM_VIEWS_PATH . 'promo-strictthemes.php');
-                $notices['promo-strictthemes'] = array(
+                include_once(WPMM_VIEWS_PATH . 'promo-blocksy.php');
+                $notices['promo-blocksy'] = array(
                     'class' => 'wpmm_notices updated notice is-dismissible',
                     'msg' => ob_get_clean()
                 );
