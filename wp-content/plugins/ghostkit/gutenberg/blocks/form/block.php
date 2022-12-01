@@ -124,7 +124,7 @@ class GhostKit_Form_Block {
             'mailAllow'           => true,
             'mailTo'              => $admin_email,
             'mailSubject'         => $blogname . ' "{field_subject}"',
-            'mailFrom'            => $blogname . ' ' . $from_email,
+            'mailFrom'            => '"' . $blogname . '" <' . $from_email . '>',
             'mailReplyTo'         => '{field_email}',
             'mailMessage'         => '{all_fields}',
             'confirmationType'    => 'message',
@@ -228,7 +228,8 @@ class GhostKit_Form_Block {
                 // phpcs:ignore
                 echo do_blocks( $inner_blocks );
 
-                wp_nonce_field( 'ghostkit_form', $form_id );
+                // Add `__` prefix to prevent conflict with form id attribute duplicate.
+                wp_nonce_field( 'ghostkit_form', '__' . $form_id );
                 ?>
                 <input type="hidden" name="ghostkit_form_id" value="<?php echo esc_attr( $form_id ); ?>">
                 <?php
@@ -287,8 +288,8 @@ class GhostKit_Form_Block {
         $new_content = '';
 
         // Form send.
-        if ( isset( $this->form_post_data[ $form_id ] ) ) {
-            $nonce = sanitize_text_field( wp_unslash( $this->form_post_data[ $form_id ] ) );
+        if ( isset( $this->form_post_data[ '__' . $form_id ] ) ) {
+            $nonce = sanitize_text_field( wp_unslash( $this->form_post_data[ '__' . $form_id ] ) );
 
             if ( wp_verify_nonce( $nonce, 'ghostkit_form' ) ) {
                 // validate Google reCaptcha.
@@ -467,18 +468,18 @@ class GhostKit_Form_Block {
 
                 if ( is_array( $val['value'] ) ) {
                     foreach ( $val['value'] as $val ) {
-                        $sanitized_val .= '<li>' . sanitize_text_field( wp_unslash( $val ) ) . '</li>';
+                        $sanitized_val .= '<li>' . sanitize_textarea_field( wp_unslash( $val ) ) . '</li>';
                     }
                     $sanitized_val = '<ul>' . $sanitized_val . '</ul>';
                 } else {
-                    $sanitized_val = sanitize_text_field( wp_unslash( $val['value'] ) );
+                    $sanitized_val = sanitize_textarea_field( wp_unslash( $val['value'] ) );
 
                     // Name field support.
                     if ( isset( $val['middle'] ) ) {
-                        $sanitized_val .= ' ' . sanitize_text_field( wp_unslash( $val['middle'] ) );
+                        $sanitized_val .= ' ' . sanitize_textarea_field( wp_unslash( $val['middle'] ) );
                     }
                     if ( isset( $val['last'] ) ) {
-                        $sanitized_val .= ' ' . sanitize_text_field( wp_unslash( $val['last'] ) );
+                        $sanitized_val .= ' ' . sanitize_textarea_field( wp_unslash( $val['last'] ) );
                     }
                 }
 
@@ -487,7 +488,7 @@ class GhostKit_Form_Block {
                 $all_fields .= '
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="field-row"><tbody>
                         <tr><td class="field-row-label">' . ( $sanitized_label ? ( '<strong>' . $sanitized_label . '</strong>' ) : '' ) . '</td></tr>
-                        <tr><td class="field-row-value">' . $sanitized_val . '</td></tr>
+                        <tr><td class="field-row-value">' . wpautop( $sanitized_val ) . '</td></tr>
                     </tbody></table>
                 ';
             }
@@ -514,10 +515,12 @@ class GhostKit_Form_Block {
         }
 
         // Prepare headers.
-        $headers = "Content-Type: text/html; charset=utf-8\n";
-        $headers = "From: {$attributes['mailFrom']}\n";
-        $headers = "Return-Path: {$attributes['mailTo']}\n";
-        $headers = "Reply-To: {$attributes['mailReplyTo']}\n";
+        $headers = array(
+            'Content-Type: text/html; charset=utf-8',
+            "From: {$attributes['mailFrom']}",
+            "Return-Path: {$attributes['mailTo']}",
+            "Reply-To: {$attributes['mailReplyTo']}",
+        );
 
         // Prepare message.
         $message = $this->get_mail_html( $attributes );

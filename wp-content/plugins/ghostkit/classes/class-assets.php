@@ -29,19 +29,28 @@ class GhostKit_Assets {
      *
      * @var boolean
      */
-    private $already_added_custom_assets = false;
+    private static $already_added_custom_assets = false;
+
+    /**
+     * List with assets to skip from Autoptimize when CSS generated.
+     *
+     * @var array
+     */
+    protected static $skip_from_autoptimize = array(
+        'ghostkit-blocks-content-custom-css',
+        'ghostkit-blocks-widget-custom-css',
+    );
 
     /**
      * Visual_Portfolio_Extend constructor.
      */
     public function __construct() {
         add_action( 'init', array( $this, 'register_scripts' ) );
-
         add_action( 'plugins_loaded', array( $this, 'enqueue_scripts_action' ), 11 );
-
         add_action( 'ghostkit_parse_blocks', array( $this, 'maybe_enqueue_blocks_assets' ), 11, 2 );
-
         add_action( 'wp_enqueue_scripts', array( $this, 'add_custom_assets' ), 100 );
+
+        add_action( 'autoptimize_filter_css_exclude', 'GhostKit_Assets::autoptimize_filter_css_exclude' );
     }
 
     /**
@@ -175,24 +184,18 @@ class GhostKit_Assets {
 
         do_action( 'gkt_before_assets_register' );
 
-        // Object Fit Images.
-        if ( apply_filters( 'gkt_enqueue_plugin_object_fit_images', true ) ) {
-            wp_register_script( 'object-fit-images', ghostkit()->plugin_url . 'assets/vendor/object-fit-images/dist/ofi.min.js', array(), '3.2.4', true );
-
-            $js_deps[] = 'object-fit-images';
-        }
-
         // ScrollReveal.
         if ( apply_filters( 'gkt_enqueue_plugin_scrollreveal', true ) ) {
-            wp_register_script( 'scrollreveal', ghostkit()->plugin_url . 'assets/vendor/scrollreveal/dist/scrollreveal.min.js', array(), '4.0.7', true );
+            // We need to use previous version, as in 4.0.9 `cleanup` is not working at all.
+            wp_register_script( 'scrollreveal', ghostkit()->plugin_url . 'assets/vendor/scrollreveal-4-0-7/scrollreveal.min.js', array(), '4.0.7', true );
 
             $js_deps[] = 'scrollreveal';
         }
 
         // Jarallax.
         if ( apply_filters( 'gkt_enqueue_plugin_jarallax', true ) ) {
-            wp_register_script( 'jarallax', ghostkit()->plugin_url . 'assets/vendor/jarallax/dist/jarallax.min.js', array( 'jquery' ), '1.12.4', true );
-            wp_register_script( 'jarallax-video', ghostkit()->plugin_url . 'assets/vendor/jarallax/dist/jarallax-video.min.js', array( 'jarallax' ), '1.12.4', true );
+            wp_register_script( 'jarallax', ghostkit()->plugin_url . 'assets/vendor/jarallax/dist/jarallax.min.js', array( 'jquery' ), '2.0.1', true );
+            wp_register_script( 'jarallax-video', ghostkit()->plugin_url . 'assets/vendor/jarallax/dist/jarallax-video.min.js', array( 'jarallax' ), '2.0.1', true );
         }
 
         // Swiper.
@@ -203,9 +206,14 @@ class GhostKit_Assets {
                 wp_register_style( 'swiper', ghostkit()->plugin_url . 'assets/vendor/swiper-5-4-5/swiper.min.css', array(), '5.4.5' );
                 wp_register_script( 'swiper', ghostkit()->plugin_url . 'assets/vendor/swiper-5-4-5/swiper.min.js', array(), '5.4.5', true );
             } else {
-                wp_register_style( 'swiper', ghostkit()->plugin_url . 'assets/vendor/swiper/swiper-bundle.min.css', array(), '6.3.4' );
-                wp_register_script( 'swiper', ghostkit()->plugin_url . 'assets/vendor/swiper/swiper-bundle.min.js', array(), '6.3.4', true );
+                wp_register_style( 'swiper', ghostkit()->plugin_url . 'assets/vendor/swiper/swiper-bundle.min.css', array(), '8.4.0' );
+                wp_register_script( 'swiper', ghostkit()->plugin_url . 'assets/vendor/swiper/swiper-bundle.min.js', array(), '8.4.0', true );
             }
+        }
+
+        // Luxon.
+        if ( apply_filters( 'gkt_enqueue_plugin_luxon', true ) ) {
+            wp_register_script( 'luxon', ghostkit()->plugin_url . 'assets/vendor/luxon/build/global/luxon.min.js', array(), '3.0.1', true );
         }
 
         // GistEmbed.
@@ -282,7 +290,7 @@ class GhostKit_Assets {
             'ghostkit-helper',
             ghostkit()->plugin_url . 'assets/js/helper.min.js',
             array( 'jquery' ),
-            '2.16.0',
+            '2.24.1',
             true
         );
         $default_variant = array(
@@ -310,6 +318,12 @@ class GhostKit_Assets {
 
         $breakpoints = GhostKit_Breakpoints::get_breakpoints();
 
+        $timezone = wp_timezone_string();
+
+        if ( substr( $timezone, 0, 1 ) === '+' || substr( $timezone, 0, 1 ) === '-' ) {
+            $timezone = 'UTC' . $timezone;
+        }
+
         wp_localize_script(
             'ghostkit-helper',
             'ghostkitVariables',
@@ -325,6 +339,7 @@ class GhostKit_Assets {
                     'lg' => $breakpoints['md'],
                     'xl' => $breakpoints['lg'],
                 ),
+                'timezone'                    => $timezone,
                 'googleMapsAPIKey'            => get_option( 'ghostkit_google_maps_api_key' ),
                 'googleMapsAPIUrl'            => 'https://maps.googleapis' . $gmaps_suffix . '/maps/api/js?v=3.exp&language=' . esc_attr( $gmaps_locale ),
                 'googleMapsLibrary'           => apply_filters( 'gkt_enqueue_plugin_gmaps', true ) ? array(
@@ -373,7 +388,7 @@ class GhostKit_Assets {
             'ghostkit',
             ghostkit()->plugin_url . 'gutenberg/style.min.css',
             $css_deps,
-            '2.16.0'
+            '2.24.1'
         );
         wp_style_add_data( 'ghostkit', 'rtl', 'replace' );
         wp_style_add_data( 'ghostkit', 'suffix', '.min' );
@@ -382,7 +397,7 @@ class GhostKit_Assets {
             'ghostkit',
             ghostkit()->plugin_url . 'assets/js/main.min.js',
             $js_deps,
-            '2.16.0',
+            '2.24.1',
             true
         );
 
@@ -418,7 +433,7 @@ class GhostKit_Assets {
                     }
                     break;
                 case 'countdown':
-                    $block_js_deps[] = 'moment';
+                    $block_js_deps[] = 'luxon';
                     break;
                 case 'form':
                     if ( wp_script_is( 'parsley' ) || wp_script_is( 'parsley', 'registered' ) ) {
@@ -437,7 +452,7 @@ class GhostKit_Assets {
                 'ghostkit-block-' . $block_name,
                 $block_script_url,
                 array_unique( $block_js_deps ),
-                '2.16.0',
+                '2.24.1',
                 true
             );
         }
@@ -462,7 +477,7 @@ class GhostKit_Assets {
                 'ghostkit-block-' . $block_name,
                 $block_style_url,
                 array_unique( $block_css_deps ),
-                '2.16.0'
+                '2.24.1'
             );
             wp_style_add_data( 'ghostkit-block-' . $block_name, 'rtl', 'replace' );
             wp_style_add_data( 'ghostkit-block-' . $block_name, 'suffix', '.min' );
@@ -508,7 +523,7 @@ class GhostKit_Assets {
      * @param array $location - blocks location [content,widget].
      */
     public function maybe_enqueue_blocks_assets( $blocks, $location ) {
-        if ( $this->already_added_custom_assets ) {
+        if ( self::$already_added_custom_assets ) {
             $location = 'widget';
         }
 
@@ -590,7 +605,36 @@ class GhostKit_Assets {
             }
         }
 
-        $this->already_added_custom_assets = true;
+        self::$already_added_custom_assets = true;
+    }
+
+    /**
+     * Skip custom styles from Autoptimize.
+     * We need this since generated CSS with custom breakpoints are excluded
+     * from Autoptimize by default and this cause conflicts.
+     *
+     * @param string $result - allowed list.
+     * @return string
+     */
+    public static function autoptimize_filter_css_exclude( $result ) {
+        // By default in Autoptimize excluded folder `wp-content/uploads/`.
+        // We need to check, if this folder is not excluded, then we
+        // don't need to use our hack.
+        if ( $result && strpos( $result, 'wp-content/uploads/' ) === false ) {
+            return $result;
+        }
+
+        foreach ( self::$skip_from_autoptimize as $name ) {
+            if ( $result ) {
+                $result .= ',';
+            } else {
+                $result = '';
+            }
+
+            $result .= $name;
+        }
+
+        return $result;
     }
 
     /**
@@ -600,12 +644,33 @@ class GhostKit_Assets {
      * @param String $css - code.
      */
     public static function add_custom_css( $name, $css ) {
-        $css = wp_kses( $css, array( '\'', '\"' ) );
-        $css = str_replace( '&gt;', '>', $css );
+        if ( ! wp_style_is( $name, 'enqueued' ) ) {
+            $css = wp_kses( $css, array( '\'', '\"' ) );
+            $css = str_replace( '&gt;', '>', $css );
 
-        wp_register_style( $name, false, array(), '2.16.0' );
-        wp_enqueue_style( $name );
-        wp_add_inline_style( $name, $css );
+            // Enqueue custom CSS.
+            if ( ! self::$already_added_custom_assets ) {
+                wp_register_style( $name, false, array(), '2.24.1' );
+                wp_enqueue_style( $name );
+                wp_add_inline_style( $name, $css );
+
+                // Enqueue JS instead of CSS when rendering in <body> to prevent W3C errors.
+            } elseif ( ! wp_script_is( $name, 'enqueued' ) ) {
+                wp_register_script( $name, false, array(), '2.24.1', true );
+                wp_enqueue_script( $name );
+                wp_add_inline_script(
+                    $name,
+                    '(function(){
+                        var styleTag = document.createElement("style");
+                        styleTag.id = "' . esc_attr( $name ) . '-inline-css";
+                        styleTag.innerHTML = ' . wp_json_encode( $css ) . ';
+                        document.body.appendChild(styleTag);
+                    }());'
+                );
+            }
+        }
+
+        self::$stored_assets[] = $name;
     }
 
     /**
@@ -616,7 +681,7 @@ class GhostKit_Assets {
      * @param Boolean $footer - print in footer.
      */
     public static function add_custom_js( $name, $js, $footer = false ) {
-        wp_register_script( $name, '', array(), '2.16.0', $footer );
+        wp_register_script( $name, '', array(), '2.24.1', $footer );
         wp_enqueue_script( $name );
         wp_add_inline_script( $name, $js );
     }

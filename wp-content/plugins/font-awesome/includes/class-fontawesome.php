@@ -71,12 +71,12 @@ require_once ABSPATH . 'wp-admin/includes/screen.php';
  *
  * Generally, public API members are accessed only from this `FontAwesome` class.
  *
- * For example, the {@see FontAwesome::refresh_releases()} method provides a way
- * to re-query available releases metadata from `api.fontawesome.com`. It delegates
- * to another class internally. But that other class and its methods are not part
- * of this plugin's public API. They may change significantly from one patch
- * release to another, but no breaking changes would be made to
- * {@see FontAwesome::refresh_releases()} without a major version change.
+ * For example, the {@see FontAwesome::releases_refreshed_at()} method provides a way
+ * to find out when releases metadata were last fetched from `api.fontawesome.com`.
+ * It delegates to another class internally. But that other class and its methods
+ * are not part of this plugin's public API. They may change significantly from
+ * one patch release to another, but no breaking changes would be made to
+ * {@see FontAwesome::releases_refreshed_at()} without a major version change.
  *
  * References to "API" in this section refer to this plugin's PHP code or REST
  * routes, not to the Font Awesome GraphQL API at `api.fontawesome.com`.
@@ -126,7 +126,7 @@ class FontAwesome {
 	 *
 	 * @since 4.0.0
 	 */
-	const PLUGIN_VERSION = '4.0.0-rc21';
+	const PLUGIN_VERSION = '4.3.1';
 	/**
 	 * The namespace for this plugin's REST API.
 	 *
@@ -178,7 +178,7 @@ class FontAwesome {
 	 * @ignore
 	 * @internal
 	 */
-	const CONFLICT_DETECTOR_SOURCE = 'https://use.fontawesome.com/releases/v5.15.1/js/conflict-detection.js';
+	const CONFLICT_DETECTOR_SOURCE = 'https://use.fontawesome.com/releases/v6.1.1/js/conflict-detection.js';
 
 	/**
 	 * The custom data attribute added to script, link, and style elements enqueued
@@ -241,12 +241,13 @@ class FontAwesome {
 	 */
 	const DEFAULT_USER_OPTIONS = array(
 		'usePro'         => false,
-		'v4Compat'       => true,
+		'compat'         => true,
 		'technology'     => 'webfont',
 		'pseudoElements' => true,
 		'kitToken'       => null,
 		// whether the token is present, not the token's value.
 		'apiToken'       => false,
+		'dataVersion'    => 4,
 	);
 
 	/**
@@ -271,6 +272,12 @@ class FontAwesome {
 	 * @ignore
 	 */
 	protected $client_preferences = array();
+
+	/**
+	 * @internal
+	 * @ignore
+	 */
+	protected $icon_chooser_screens = array( 'post.php', 'post-new.php' );
 
 	/**
 	 * @internal
@@ -370,8 +377,6 @@ class FontAwesome {
 				array( $this, 'process_shortcode' )
 			);
 
-			add_filter( 'widget_text', 'do_shortcode' );
-
 			$this->validate_options( fa()->options() );
 
 			try {
@@ -386,7 +391,7 @@ class FontAwesome {
 				 */
 			}
 
-			$this->maybe_enqueue_admin_js_bundle();
+			$this->maybe_enqueue_admin_assets();
 
 			// Setup JavaScript internationalization if we're on WordPress 5.0+.
 			if ( function_exists( 'wp_set_script_translations' ) ) {
@@ -396,17 +401,7 @@ class FontAwesome {
 			if ( $this->using_kit() ) {
 				$this->enqueue_kit( $this->options()['kitToken'] );
 			} else {
-				$resource_collection = $this
-					->release_provider()
-					->get_resource_collection(
-						$this->options()['version'],
-						array(
-							'use_pro'  => $this->pro(),
-							'use_svg'  => 'svg' === $this->technology(),
-							'use_shim' => $this->v4_compatibility(),
-						)
-					);
-
+				$resource_collection = $this->cdn_resource_collection_for_current_options();
 				$this->enqueue_cdn( $this->options(), $resource_collection );
 			}
 		} catch ( Exception $e ) {
@@ -414,6 +409,25 @@ class FontAwesome {
 		} catch ( Error $e ) {
 			notify_admin_fatal_error( $e );
 		}
+	}
+
+	/**
+	 * Not part of this plugin's public API.
+	 *
+	 * @ignore
+	 * @internal
+	 * @throws ConfigCorruptionException
+	 * @return array
+	 */
+	public function cdn_resource_collection_for_current_options() {
+		return FontAwesome_Release_Provider::get_resource_collection(
+			$this->options()['version'],
+			array(
+				'use_pro'           => $this->pro(),
+				'use_svg'           => 'svg' === $this->technology(),
+				'use_compatibility' => $this->v4_compatibility(),
+			)
+		);
 	}
 
 	/**
@@ -425,12 +439,15 @@ class FontAwesome {
 	 * @throws ApiRequestException
 	 * @throws ApiResponseException
 	 * @throws ReleaseProviderStorageException
+	 * @throws ReleaseMetadataMissingException
 	 * @throws ConfigCorruptionException if options are invalid
 	 * @internal
 	 * @ignore
 	 */
 	public function try_upgrade() {
 		$options = get_option( self::OPTIONS_KEY );
+
+		$should_upgrade = false;
 
 		// Upgrade from v1 schema: 4.0.0-rc13 or earlier.
 		if ( isset( $options['lockedLoadSpec'] ) || isset( $options['adminClientLoadSpec'] ) ) {
@@ -440,10 +457,44 @@ class FontAwesome {
 
 			$upgraded_options = $this->convert_options_from_v1( $options );
 
-			// Delete the old release metadata transient to ensure we refresh it here.
-			delete_transient( FontAwesome_Release_Provider::RELEASES_TRANSIENT );
+			/**
+			 * If the version is still not set for some reason, set it to a
+			 * default of the latest available version.
+			 */
+			if ( ! isset( $upgraded_options['version'] ) ) {
+				$upgraded_options['version'] = fa()->latest_version_6();
+			}
 
-			$this->refresh_releases();
+			$should_upgrade = true;
+
+			$options = $upgraded_options;
+		}
+
+		if ( ! isset( $options['dataVersion'] ) || $options['dataVersion'] < 4 ) {
+
+			if ( ! isset( $options['compat'] ) && isset( $options['v4Compat'] ) ) {
+				$v4_compat         = boolval( $options['v4Compat'] );
+				$options['compat'] = $v4_compat;
+				unset( $options['v4Compat'] );
+			} else {
+				$options['compat'] = self::DEFAULT_USER_OPTIONS['compat'];
+			}
+
+			if ( isset( $options['v4Compat'] ) ) {
+				unset( $options['v4Compat'] );
+			}
+
+			$options['dataVersion'] = 4;
+
+			$should_upgrade = true;
+		}
+
+		if ( $should_upgrade ) {
+			$this->validate_options( $options );
+
+			$this->maybe_update_last_used_release_schema_for_upgrade();
+
+			$this->maybe_move_release_metadata_for_upgrade();
 
 			/**
 			 * Delete the main option to make sure it's removed entirely, including
@@ -458,18 +509,86 @@ class FontAwesome {
 				throw UpgradeException::main_option_delete();
 			}
 
-			/**
-			 * If the version is still not set for some reason, set it to a
-			 * default of the latest available version.
-			 */
-			if ( ! isset( $upgraded_options['version'] ) ) {
-				$upgraded_options['version'] = fa()->latest_version();
-			}
+			update_option( self::OPTIONS_KEY, $options );
+		}
+	}
 
-			// Final check: validate it.
-			$this->validate_options( $upgraded_options );
+	/**
+	 * Some upgrades have involved changing how we store release metadata.
+	 *
+	 * If the plugin's backing data was in a valid sate before upgrade, then
+	 * it should always be possible to apply any fixups to how the release
+	 * metadata are stored without issuing a request to the API server for
+	 * fresh metadata. Since issuing such a blocking request upon upgrade
+	 * is known to cause load problems and request timeouts, let's never
+	 * do it on upgrade.
+	 *
+	 * Internal use only.
+	 *
+	 * @throws ReleaseMetadataMissingException
+	 * @ignore
+	 * @internal
+	 */
+	private function maybe_move_release_metadata_for_upgrade() {
+		if ( boolval( get_option( FontAwesome_Release_Provider::OPTIONS_KEY ) ) ) {
+			// If this option is set, then we're all caught up.
+			return;
+		}
 
-			update_option( self::OPTIONS_KEY, $upgraded_options );
+		// It used to be stored in one of these.
+		$release_metadata = get_site_transient( 'font-awesome-releases' );
+		if ( ! $release_metadata ) {
+			$release_metadata = get_transient( 'font-awesome-releases' );
+		}
+
+		// Move it into where it belongs now.
+		if ( boolval( $release_metadata ) ) {
+			update_option( FontAwesome_Release_Provider::OPTIONS_KEY, $release_metadata, false );
+		}
+
+		/**
+		 * Delete the old release metadata transient, if it exists.
+		 * It's no longer stored as a transient.
+		 */
+		delete_transient( 'font-awesome-releases' );
+
+		/**
+		 * Delete the old font-awesome-last-used-release site transient, if it exists.
+		 * It's no longer stored as a site (network-wide) transient.
+		 */
+		delete_site_transient( 'font-awesome-last-used-release' );
+
+		/**
+		 * Now we'll reset the release provider.
+		 *
+		 * If we've fallen through to this point, and we haven't found the release
+		 * metadata stored in one of the previous locations, then this will throw an
+		 * exception.
+		 */
+		FontAwesome_Release_Provider::reset();
+	}
+
+	/**
+	 * With 4.1.0, the name of one of the keys in the LAST_USED_RELEASE_TRANSIENT changed.
+	 * We can fix it up.
+	 *
+	 * Internal use only.
+	 *
+	 * @throws ReleaseMetadataMissingException
+	 * @ignore
+	 * @internal
+	 */
+	private function maybe_update_last_used_release_schema_for_upgrade() {
+		$last_used_transient = get_site_transient( FontAwesome_Release_Provider::LAST_USED_RELEASE_TRANSIENT );
+		if ( ! $last_used_transient ) {
+			$last_used_transient = get_transient( FontAwesome_Release_Provider::LAST_USED_RELEASE_TRANSIENT );
+		}
+
+		if ( $last_used_transient && isset( $last_used_transient['use_shim'] ) ) {
+			$compat = $last_used_transient['use_shim'];
+			unset( $last_used_transient['use_shim'] );
+			$last_used_transient['use_compatibility'] = $compat;
+			set_site_transient( FontAwesome_Release_Provider::LAST_USED_RELEASE_TRANSIENT, $last_used_transient, FontAwesome_Release_Provider::LAST_USED_RELEASE_TRANSIENT_EXPIRY );
 		}
 	}
 
@@ -582,11 +701,47 @@ class FontAwesome {
 	}
 
 	/**
-	 * Returns the latest available version of Font Awesome as a string, or null
-	 * if the releases metadata has not yet been successfully retrieved from the
+	 * Returns the latest available full release version of Font Awesome 5 as a string,
+	 * or null if the releases metadata has not yet been successfully retrieved from the
 	 * API server.
 	 *
+	 * As of the release of Font Awesome 6.0.0-beta1, this API is being deprecated,
+	 * because the symbolic version "latest" is being deprecated. It now just means
+	 * "the latest full release of Font Awesome with major version 5." Therefore,
+	 * it may not be very useful any more as Font Awesome 6 is released.
+	 *
+	 * The recommended way to resolve the symbolic versions 'latest',
+	 * '5.x', or '6.x' into their current concrete values is to query the GraphQL
+	 * API like this:
+	 *
+	 * ```
+	 * query { release(version: "5.x") { version } }
+	 * ```
+	 *
+	 * The `version` argument on the `release` field can accept any of these symbolic
+	 * version values.  So that release's `version` field will be the corresponding
+	 * current concrete version value at the time the query is run.
+	 *
+	 * This query could be issued from a front-end script through `FontAwesome_API_Controller`
+	 * like this, assuming `@wordpress/api-fetch` is at `wp.apiFetch`,
+	 * and you've [setup a nonce](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-api-fetch/#built-in-middlewares) correctly,
+	 * and the logged in user has the appropriate permissions.
+	 *
+	 * ```
+	 * wp.apiFetch( {
+	 *      path: '/font-awesome/v1/api',
+	 *      method: 'POST',
+	 *      body: 'query { release(version: "5.x") { version } }'
+	 *  } ).then( res => {
+	 *      console.log( res );
+	 *  } )
+	 * ```
+	 *
+	 * Or you could issue your own `POST` request directly `api.fontawesome.com`.
+	 * [See the Font Awesome GraphQL API reference here](https://fontawesome.com/v5.15/how-to-use/graphql-api/intro/getting-started).
+	 *
 	 * @since 4.0.0
+	 * @deprecated
 	 *
 	 * @return null|string
 	 */
@@ -595,15 +750,49 @@ class FontAwesome {
 	}
 
 	/**
-	 * Queries the Font Awesome API to load releases metadata. Results are
-	 * cached in a site transient.
+	 * Returns the latest available full release version of Font Awesome 5 as a string,
+	 * or null if the releases metadata has not yet been successfully retrieved from the
+	 * API server.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return null|string
+	 */
+	public function latest_version_5() {
+		return $this->release_provider()->latest_version_5();
+	}
+
+	/**
+	 * Returns the latest available full release version of Font Awesome 6 as a string,
+	 * or null if the releases metadata has not yet been successfully retrieved from the
+	 * API server.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @return null|string
+	 */
+	public function latest_version_6() {
+		return $this->release_provider()->latest_version_6();
+	}
+
+	/**
+	 * Queries the Font Awesome API to load releases metadata. Results are stored
+	 * in the wp database.
 	 *
 	 * This is the metadata that supports API
 	 * methods like {@see FontAwesome::latest_version()}
 	 * and all other metadata required to enqueue Font Awesome when configured
 	 * to use the standard CDN (non-kits).
 	 *
+	 * This has been deprecated to discourage themes or plugins from invoking
+	 * it as a blocking network request during front-end page loads. If we find
+	 * that functionality like this is still needed for some use cases, let's
+	 * design an alternative API that encourages best-practice use while
+	 * discouraging anti-patterns.
+	 *
 	 * @since 4.0.0
+	 * @deprecated
+	 * @ignore
 	 * @throws ApiRequestException
 	 * @throws ApiResponseException
 	 * @throws ReleaseProviderStorageException
@@ -616,7 +805,6 @@ class FontAwesome {
 	 * Returns the time when releases metadata was last
 	 * refreshed.
 	 *
-	 * @see FontAwesome::refresh_releases
 	 * @since 4.0.0
 	 * @return integer|null the time in unix epoch seconds or null if never
 	 */
@@ -636,8 +824,14 @@ class FontAwesome {
 	protected function maybe_refresh_releases() {
 		$refreshed_at = $this->releases_refreshed_at();
 
-		if ( is_null( $refreshed_at ) || ( time() - $refreshed_at ) > self::RELEASES_REFRESH_INTERVAL ) {
-			return $this->refresh_releases();
+		/**
+		 * If we've just upgraded from an older plugin version that didn't have this metadata value,
+		 * then we should refresh to get it.
+		 */
+		$latest_version_6 = $this->latest_version_6();
+
+		if ( is_null( $latest_version_6 ) || is_null( $refreshed_at ) || ( time() - $refreshed_at ) > self::RELEASES_REFRESH_INTERVAL ) {
+			return FontAwesome_Release_Provider::load_releases();
 		} else {
 			return 1;
 		}
@@ -731,7 +925,7 @@ class FontAwesome {
 
 	/**
 	 * Initalizes everything about the admin environment except the React app
-	 * bundle, which is handled in maybe_enqueue_js_bundle().
+	 * bundle, which is handled in maybe_enqueue_admin_assets().
 	 *
 	 * Internal use only, not part of this plugin's public API.
 	 *
@@ -869,6 +1063,10 @@ class FontAwesome {
 		$api_token = isset( $options['apiToken'] ) ? $options['apiToken'] : null;
 		$version   = isset( $options['version'] ) ? $options['version'] : null;
 
+		if ( ! isset( $options['usePro'] ) || ! is_bool( $options['usePro'] ) ) {
+			throw new ConfigCorruptionException();
+		}
+
 		if ( $using_kit ) {
 			if ( ! boolval( $api_token ) ) {
 				throw new ConfigCorruptionException();
@@ -882,28 +1080,32 @@ class FontAwesome {
 				throw new ConfigCorruptionException();
 			}
 		} else {
-			// A null version is permitted, until the release metadata has been queried.
-			if ( ! is_null( $this->releases_refreshed_at() ) ) {
-				/**
-				 * Intentionally not constraining the ending of the version number to
-				 * open the possibility of a pre-release version, which means it would have
-				 * something like -rc42 on the end.
-				 * For example, 5.12.0-rc42.
-				 */
-				$version_is_concrete = is_string( $version )
-					&& 1 === preg_match( '/^[0-9]+\.[0-9]+\.[0-9]+/', $version );
+			/**
+			 * If we're not using a kit, then the version cannot be "latest",
+			 * "5.x", or "6.x" at this point. It must have already been resolved
+			 * into a concrete version.
+			 */
+			$version_is_concrete = is_string( $version )
+				&& 1 === preg_match( '/^[0-9]+\.[0-9]+\.[0-9]+/', $version );
 
-				if ( ! $version_is_concrete ) {
-					throw new ConfigCorruptionException();
-				}
+			if ( ! $version_is_concrete ) {
+				throw new ConfigCorruptionException();
+			}
+
+			$version_is_v6 = is_string( $version )
+				&& 1 === preg_match( '/^6\./', $version );
+
+			$is_pro = boolval( $options['usePro'] );
+
+			/**
+			 * Pro Version 6 CDN is not supported.
+			 */
+			if ( $version_is_v6 && $is_pro ) {
+				throw new ConfigCorruptionException();
 			}
 		}
 
-		if ( ! isset( $options['v4Compat'] ) || ! is_bool( $options['v4Compat'] ) ) {
-			throw new ConfigCorruptionException();
-		}
-
-		if ( ! isset( $options['usePro'] ) || ! is_bool( $options['usePro'] ) ) {
+		if ( ! isset( $options['compat'] ) || ! is_bool( $options['compat'] ) ) {
 			throw new ConfigCorruptionException();
 		}
 
@@ -994,6 +1196,8 @@ class FontAwesome {
 
 		if ( isset( $options['usePro'] ) ) {
 			$converted_options['usePro'] = $options['usePro'];
+		} else {
+			$converted_options['usePro'] = self::DEFAULT_USER_OPTIONS['usePro'];
 		}
 
 		if ( isset( $options['version'] ) ) {
@@ -1018,14 +1222,14 @@ class FontAwesome {
 							: false
 					);
 
-			$converted_options['v4Compat'] = $options['lockedLoadSpec']['v4shim'];
+			$converted_options['compat'] = $options['lockedLoadSpec']['v4shim'];
 		} elseif ( isset( $options['adminClientLoadSpec'] ) ) {
 			$converted_options['technology'] = $options['adminClientLoadSpec']['method'];
 
 			$converted_options['pseudoElements'] = 'svg' === $options['adminClientLoadSpec']['method']
 				&& $options['adminClientLoadSpec']['pseudoElements'];
 
-			$converted_options['v4Compat'] = $options['adminClientLoadSpec']['v4shim'];
+			$converted_options['compat'] = $options['adminClientLoadSpec']['v4shim'];
 		}
 
 		return $converted_options;
@@ -1153,7 +1357,8 @@ class FontAwesome {
 				$current_conflicts = FontAwesome_Preference_Conflict_Detector::detect(
 					$options_for_comparison,
 					$client_preferences,
-					$this->latest_version()
+					$this->latest_version_5(),
+					$this->latest_version_6()
 				);
 				if ( count( $current_conflicts ) > 0 ) {
 					$conflicts[ $client_name ] = $current_conflicts;
@@ -1245,7 +1450,10 @@ class FontAwesome {
 	}
 
 	/**
-	 * Reports the version of Font Awesome assets being loaded, which may be "latest".
+	 * Reports the version of Font Awesome assets being loaded, which may have
+	 * a symbolic value like "latest" (deprecated), "5.x", or "6.x" if configured
+	 * for a kit. If not configured for a kit, the version is guaranteed to be
+	 * a concrete, semver parseable value, like 5.15.3.
 	 *
 	 * Your theme or plugin can call this method in order to determine
 	 * whether all of the icons used in your templates will be available,
@@ -1262,43 +1470,34 @@ class FontAwesome {
 	 * version happens internal to the kit's own loading logic, which is
 	 * outside the scope of this plugin.
 	 *
-	 * If your code needs to resolve what that concrete version will _probably_
-	 * be at runtime, you can take some extra steps after invoking this method
-	 * and seeing that it returns "latest".
+	 * Before the release of Font Awesome 6.0.0-beta1, the symbolic version "latest"
+	 * on a kit always meant: "the latest stable release with major version 5."
+	 * Using "latest" for kits has been deprecated, but where it is still present
+	 * on a kit, it will continue to mean just "the latest stable release with
+	 * major version 5."
 	 *
-	 * - `fa()->latest_version()` will only ever return the latest known
-	 *     concrete version of Font Awesome, as recently as the last time the
-	 *     releases metadata was queried from the Font Awesome API server.
+	 * New symbolic major version ranges have been introduced instead "5.x" and "6.x".
+	 * These mean, respectively: "the latest stable release with major version 5",
+	 * and "the latest stable release with major version 6, when available, otherwise
+	 * the latest pre-release with major version 6."
 	 *
-	 * - `fa()->releases_refreshed_at()` will return the time when releases
-	 *     metadata was last refreshed.
+	 * So if this function does not return a semver parseable version, then
+	 * it must be one of these symbolic versions.
 	 *
-	 * - `fa->refresh_releases()` will refresh the releases metadata. This will
-	 *     run a synchronous (blocking) network query to the Font Awesome API
-	 *     server.
+	 * The recommended way to resolve the symbolic versions 'latest',
+	 * '5.x', or '6.x' into their current concrete values is to query the GraphQL
+	 * API like this:
 	 *
-	 * Therefore, if releases have been refreshed recently enough for your
-	 * purposes, you can rely on the version returned by `fa()->latest_version()`.
-	 * Or, you could refresh the releases metadata and then call
-	 * `fa()->latest_version()`.
-	 *
-	 * It is still possible that by the time the page loads in the browser,
-	 * a new release of Font Awesome will have become available since your
-	 * refresh of releases metadata, and will have been loaded as the "latest"
-	 * version for the kit. There's no way to guarantee that the latest version
-	 * you resolve by this method will be the one loaded at runtime. The race
-	 * condition is always possible. However, it is very unlikely, since these
-	 * are sub-second windows of time, and new versions of Font Awesome tend to
-	 * be released only approximately once per month.
+	 * ```
+	 * query { release(version: "5.x") { version } }
+	 * ```
 	 *
 	 * @since 4.0.0
 	 * @see FontAwesome::latest_version()
 	 * @see FontAwesome::releases_refreshed_at()
-	 * @see FontAwesome::refresh_releases()
 	 * @throws ConfigCorruptionException
 	 * @return string|null null if no version has yet been saved in the options
-	 * in the db. Otherwise, a valid version string, which may be either a
-	 * concrete version like "5.12.0" or the string "latest".
+	 * in the db. Otherwise, 5.x, or 6.x, or a semantic version string.
 	 */
 	public function version() {
 		$options = $this->options();
@@ -1308,19 +1507,49 @@ class FontAwesome {
 	}
 
 	/**
+	 * Returns the currently configured kit token, if the plugin is currently
+	 * configured to load a kit.
+	 *
+	 * @since 4.0.0
+	 * @throws ConfigCorruptionException
+	 * @return string|null kit token if present, or null
+	 */
+	public function kit_token() {
+		$options = $this->options();
+		$this->validate_options( $options );
+
+		return isset( $options['kitToken'] ) ? $options['kitToken'] : null;
+	}
+
+	/**
 	 * Indicates whether Font Awesome is being loaded with version 4 compatibility.
 	 *
 	 * Its result is valid only after the `font_awesome_enqueued` has been triggered.
 	 *
 	 * @since 4.0.0
 	 * @throws ConfigCorruptionException
+	 * @deprecated
 	 *
 	 * @return boolean
 	 */
 	public function v4_compatibility() {
+		return $this->compatibility();
+	}
+
+	/**
+	 * Indicates whether Font Awesome is being loaded with older version compatibility.
+	 *
+	 * Its result is valid only after the `font_awesome_enqueued` has been triggered.
+	 *
+	 * @since 4.1.0
+	 * @throws ConfigCorruptionException
+	 *
+	 * @return boolean
+	 */
+	public function compatibility() {
 		$options = $this->options();
 		$this->validate_options( $options );
-		return $options['v4Compat'];
+		return $options['compat'];
 	}
 
 	/**
@@ -1369,35 +1598,19 @@ class FontAwesome {
 	 * @internal
 	 * @ignore
 	 */
-	public function maybe_enqueue_admin_js_bundle() {
+	public function maybe_enqueue_admin_assets() {
 		add_action(
 			'admin_enqueue_scripts',
 			function( $hook ) {
+				$should_enable_icon_chooser = $this->should_icon_chooser_be_enabled( $hook );
+
 				try {
-					if ( $this->detecting_conflicts() || $hook === $this->screen_id ) {
-						// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
-						wp_enqueue_script(
-							self::ADMIN_RESOURCE_HANDLE,
-							$this->get_webpack_asset_url( 'main.js' ),
-							array(),
-							null,
-							true
-						);
+					if ( $this->detecting_conflicts() || $hook === $this->screen_id || $should_enable_icon_chooser ) {
+						$this->enqueue_admin_js_assets( $should_enable_icon_chooser );
 					}
 
 					if ( $hook === $this->screen_id ) {
 						$this->maybe_refresh_releases();
-
-						if ( FONTAWESOME_ENV !== 'development' ) {
-							// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
-							wp_enqueue_style(
-								self::ADMIN_RESOURCE_HANDLE . '-css',
-								$this->get_webpack_asset_url( 'main.css' ),
-								array(),
-								null,
-								'all'
-							);
-						}
 
 						wp_localize_script(
 							self::ADMIN_RESOURCE_HANDLE,
@@ -1409,8 +1622,9 @@ class FontAwesome {
 									'onSettingsPage'       => true,
 									'clientPreferences'    => $this->client_preferences(),
 									'releases'             => array(
-										'available'      => $this->release_provider()->versions(),
-										'latest_version' => $this->latest_version(),
+										'available'        => $this->release_provider()->versions(),
+										'latest_version_5' => $this->latest_version_5(),
+										'latest_version_6' => $this->latest_version_6(),
 									),
 									'pluginVersion'        => FontAwesome::PLUGIN_VERSION,
 									'preferenceConflicts'  => $this->conflicts_by_option(),
@@ -1418,6 +1632,66 @@ class FontAwesome {
 								)
 							)
 						);
+					} elseif ( $should_enable_icon_chooser ) {
+						wp_localize_script(
+							self::ADMIN_RESOURCE_HANDLE,
+							self::ADMIN_RESOURCE_LOCALIZATION_NAME,
+							array_merge(
+								$this->common_data_for_js_bundle(),
+								array(
+									'enableIconChooser' => true,
+								)
+							)
+						);
+
+						/**
+						 * TODO: re-enable the possibility of integrating with TinyMCE
+						 * even on pages where Gutenberg is also present.
+						 * This is an initial fix for GitHub Issue: #133
+						 * https://github.com/FortAwesome/wordpress-fontawesome/issues/133
+						 *
+						 * UPATE: Now that the bundles are building differently
+						 * and external dependencies are working correctly, this
+						 * is close to working (try loading a new post in Gutenberg
+						 * with integration plugin-nu enabled). It requires disabling
+						 * the dynamic import of the components style.css. In the
+						 * case where we're already on Gutenberg page, it is not
+						 * necessary to load it, so it should be easy to check for that.
+						 *
+						 * The remaining issue seems to be just determining into
+						 * which editor the shortcode should be inserted. When
+						 * running plugin-nu, activating the Icon Chooser from either
+						 * Gutenberg or the plugin-nu's TinyMCE editor, the shortcode
+						 * is always inserted into to the TinyMCE editors. Seems
+						 * like that should be easy to resolve when there's time
+						 * and priority to continue investigating.
+						 */
+						if ( ! $this->is_gutenberg_page() ) {
+							// These are needed for the Tiny MCE Classic Editor.
+							add_action(
+								'media_buttons',
+								function() {
+									printf(
+										/* translators: 1: open button tag and icon tag 2: close button tag */
+										esc_html__(
+											'%1$sAdd Font Awesome%2$s',
+											'font-awesome'
+										),
+										'<button type="button" onclick="__FontAwesomeOfficialPlugin__openIconChooserModal()" class="button font-awesome-icon-chooser-media-button"><i class="fab fa-font-awesome-flag"></i> ',
+										'</button>'
+									);
+								},
+								99
+							);
+
+							add_action(
+								'before_wp_tiny_mce',
+								function() {
+									printf( '<div id="font-awesome-icon-chooser-container"></div>' );
+								},
+								99
+							);
+						}
 					} else {
 						wp_localize_script(
 							self::ADMIN_RESOURCE_HANDLE,
@@ -1425,6 +1699,51 @@ class FontAwesome {
 							$this->common_data_for_js_bundle()
 						);
 					}
+
+					/**
+					 * There are some vendor dependencies in WP5 that create globals
+					 * as side effects. We might use those in our JS bundle and
+					 * we need to make sure that we don't accidently change the global
+					 * version that other themes or plugins might be depending upon.
+					 *
+					 * Here's the recommendation we're following here:
+					 * https://make.wordpress.org/core/2018/12/06/javascript-packages-and-interoperability-in-5-0-and-beyond/
+					 */
+					$vendor_globals = array( '_', 'React', 'ReactDOM', 'moment' );
+
+					$originals_global = '__originalsBeforeFontAwesome';
+
+					$originals = array_map(
+						function ( $var ) {
+							return "$var: window.$var";
+						},
+						$vendor_globals
+					);
+
+					$capture_vendor_global_originals_script = sprintf(
+						'window.%1$s = { %2$s }',
+						$originals_global,
+						implode( ',', $originals )
+					);
+
+					wp_add_inline_script(
+						self::ADMIN_RESOURCE_HANDLE,
+						$capture_vendor_global_originals_script,
+						'before'
+					);
+
+					$original_restore_conditions = array_map(
+						function ( $var ) {
+							return "if(window.__originalsBeforeFontAwesome.$var){window.$var = window.__originalsBeforeFontAwesome.$var}";
+						},
+						$vendor_globals
+					);
+
+					wp_add_inline_script(
+						self::ADMIN_RESOURCE_HANDLE,
+						implode( ' ', $original_restore_conditions ),
+						'after'
+					);
 				} catch ( Exception $e ) {
 					notify_admin_fatal_error( $e );
 				} catch ( Error $e ) {
@@ -1439,14 +1758,10 @@ class FontAwesome {
 					$action,
 					function () {
 						try {
-							// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-							wp_enqueue_script(
-								self::ADMIN_RESOURCE_HANDLE,
-								$this->get_webpack_asset_url( 'main.js' ),
-								null,
-								null,
-								false
-							);
+							$current_screen             = get_current_screen();
+							$should_enable_icon_chooser = $this->should_icon_chooser_be_enabled( $current_screen );
+
+							$this->enqueue_admin_js_assets( $should_enable_icon_chooser );
 
 							wp_localize_script(
 								self::ADMIN_RESOURCE_HANDLE,
@@ -1472,6 +1787,92 @@ class FontAwesome {
 	}
 
 	/**
+	 * Enqueues the entrypoint JavaScript index.js, and declares relevant js
+	 * dependencies.
+	 *
+	 * @param bool $with_icon_chooser
+	 * @ignore
+	 * @internal
+	 * @return string $main_js_handle
+	 */
+	private function enqueue_admin_js_assets( $with_icon_chooser ) {
+		global $wp_version;
+
+		$enable_icon_chooser = boolval( $with_icon_chooser );
+
+		$deps = array();
+
+		/**
+		 * If we're on a recent enough version of WordPress 5, then the supporting
+		 * libraries are adequate for us to use as externals.
+		 *
+		 * For earlier versions, we'll need to load our own compatibility bundle,
+		 * and disable Gutenberg integration, since our compatibility bundle
+		 * uses a newer version of React than what would be available in WordPress
+		 * Core in that earlier version.
+		 */
+		if ( $this->compat_js_required() ) {
+			$wp4_compat_resource_handle = self::ADMIN_RESOURCE_HANDLE . '-compat';
+
+			wp_enqueue_script(
+				$wp4_compat_resource_handle,
+				trailingslashit( FONTAWESOME_DIR_URL ) . 'compat-js/build/compat.js',
+				array(),
+				self::PLUGIN_VERSION,
+				true
+			);
+
+			// We need our main bundle to depend on the compat bundle.
+			array_push( $deps, $wp4_compat_resource_handle );
+		} else {
+			$deps = array_merge( $deps, array( 'react', 'react-dom', 'wp-i18n', 'wp-element', 'wp-components', 'wp-api-fetch' ) );
+
+			/**
+			 * We don't need these Gutenberg dependencies unless we're on a Gutenberg
+			 * page. Declaring them unnecessarily (when not on a Gutenberg page)
+			 * has resulted in conflict for at least one other plugin: RankMath.
+			 *
+			 * See: https://wordpress.org/support/topic/plugin-conflicts-with-rankmath
+			 */
+			if ( $enable_icon_chooser && $this->is_gutenberg_page() ) {
+				$deps = array_merge( $deps, array( 'wp-blocks', 'wp-editor', 'wp-rich-text', 'wp-block-editor' ) );
+			}
+		}
+
+		if ( $enable_icon_chooser ) {
+			/**
+			 * TODO: re-enable the case where TinyMCE and Gutenberg are present on the same
+			 * page load. For now, we're eliminating that case because
+			 * some customers experienced Gutenberg failures on pages where both
+			 * editors were active.
+			 *
+			 * If we're not on a Gutenberg (as plugin) or Block Editor (as WP 5 Core editor),
+			 * then we want to enable our TinyMCE integration. We'll initialize it
+			 * on the wp_tiny_mce_init action hook.
+			 *
+			 * According to the docs:
+			 * "Fires after tinymce.js is loaded, but before any TinyMCE editor instances are created."
+			 *
+			 * So we expect this to only fire once, even if multiple instances of the editor
+			 * are added to a single page.
+			 *
+			 * If TinyMCE is not present or not active, then this action hook will
+			 * never be fired and thus our TinyMCE integration will never be setup,
+			 * which is what we want.
+			 */
+			add_action( 'wp_tiny_mce_init', array( $this, 'print_classic_editor_icon_chooser_setup_script' ) );
+		}
+
+		wp_enqueue_script(
+			self::ADMIN_RESOURCE_HANDLE,
+			trailingslashit( $this->get_webpack_asset_url_base() ) . 'index.js',
+			$deps,
+			self::PLUGIN_VERSION,
+			true
+		);
+	}
+
+	/**
 	 * Internal use only, not part of this plugin's public API.
 	 *
 	 * @ignore
@@ -1481,12 +1882,17 @@ class FontAwesome {
 		return array(
 			'apiNonce'                      => wp_create_nonce( 'wp_rest' ),
 			'apiUrl'                        => rest_url( self::REST_API_NAMESPACE ),
+			'restApiNamespace'              => self::REST_API_NAMESPACE,
+			'rootUrl'                       => rest_url(),
 			'detectConflictsUntil'          => $this->detect_conflicts_until(),
 			'unregisteredClients'           => $this->unregistered_clients(),
 			'showConflictDetectionReporter' => $this->detecting_conflicts(),
 			'settingsPageUrl'               => $this->settings_page_url(),
 			'activeAdminTab'                => $this->active_admin_tab(),
 			'options'                       => $this->options(),
+			'webpackPublicPath'             => trailingslashit( FONTAWESOME_DIR_URL ) . 'admin/build/',
+			'usingCompatJs'                 => $this->compat_js_required(),
+			'isGutenbergPage'               => $this->is_gutenberg_page(),
 		);
 	}
 
@@ -1661,13 +2067,21 @@ EOT;
 			$this->apply_detection_ignore_attr();
 		}
 
+		if ( ! isset( $resources['all'] ) ) {
+			throw new ConfigCorruptionException();
+		}
+
+		$all_source    = $resources['all']->source();
+		$all_integrity = $resources['all']->integrity_key();
+
 		if ( 'webfont' === $options['technology'] ) {
+
 			foreach ( array( 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ) as $action ) {
 				add_action(
 					$action,
-					function () use ( $resources ) {
+					function () use ( $all_source ) {
 						// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-						wp_enqueue_style( self::RESOURCE_HANDLE, $resources[0]->source(), null, null );
+						wp_enqueue_style( self::RESOURCE_HANDLE, $all_source, null, null );
 					}
 				);
 			}
@@ -1675,11 +2089,11 @@ EOT;
 			// Filter the <link> tag to add the integrity and crossorigin attributes for completeness.
 			add_filter(
 				'style_loader_tag',
-				function( $html, $handle ) use ( $resources ) {
+				function( $html, $handle ) use ( $all_integrity ) {
 					if ( in_array( $handle, array( self::RESOURCE_HANDLE ), true ) ) {
 								return preg_replace(
 									'/\/>$/',
-									'integrity="' . $resources[0]->integrity_key() .
+									'integrity="' . $all_integrity .
 									'" crossorigin="anonymous" />',
 									$html,
 									1
@@ -1692,13 +2106,20 @@ EOT;
 				2
 			);
 
-			if ( ! array_key_exists( 'v4Compat', $options ) ) {
+			if ( ! array_key_exists( 'compat', $options ) ) {
 				throw new ConfigCorruptionException();
 			}
 
 			$version = $resource_collection->version();
 
-			if ( $options['v4Compat'] ) {
+			if ( $options['compat'] ) {
+				if ( ! isset( $resources['v4-shims'] ) ) {
+					throw new ConfigCorruptionException();
+				}
+
+				$v4_shims_source    = $resources['v4-shims']->source();
+				$v4_shims_integrity = $resources['v4-shims']->integrity_key();
+
 				/**
 				 * Enqueue v4 compatibility as late as possible, though still within the normal script enqueue hooks.
 				 * We need the @font-face override, especially to appear after any unregistered loads of Font Awesome
@@ -1707,50 +2128,22 @@ EOT;
 				foreach ( array( 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ) as $action ) {
 					add_action(
 						$action,
-						function () use ( $resources, $options, $version ) {
+						function () use ( $v4_shims_source, $v4_shims_integrity, $options, $version ) {
 							// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-							wp_enqueue_style( self::RESOURCE_HANDLE_V4SHIM, $resources[1]->source(), null, null );
+							wp_enqueue_style( self::RESOURCE_HANDLE_V4SHIM, $v4_shims_source, null, null );
 
-							$license_subdomain = boolval( $options['usePro'] ) ? 'pro' : 'use';
-
-							$font_face = <<< EOT
-@font-face {
-font-family: "FontAwesome";
-src: url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.eot"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.eot?#iefix") format("embedded-opentype"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.woff2") format("woff2"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.woff") format("woff"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.ttf") format("truetype"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.svg#fontawesome") format("svg");
-}
-
-@font-face {
-font-family: "FontAwesome";
-src: url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.eot"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.eot?#iefix") format("embedded-opentype"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.woff2") format("woff2"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.woff") format("woff"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.ttf") format("truetype"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.svg#fontawesome") format("svg");
-}
-
-@font-face {
-font-family: "FontAwesome";
-src: url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.eot"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.eot?#iefix") format("embedded-opentype"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.woff2") format("woff2"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.woff") format("woff"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.ttf") format("truetype"),
-		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.svg#fontawesome") format("svg");
-unicode-range: U+F004-F005,U+F007,U+F017,U+F022,U+F024,U+F02E,U+F03E,U+F044,U+F057-F059,U+F06E,U+F070,U+F075,U+F07B-F07C,U+F080,U+F086,U+F089,U+F094,U+F09D,U+F0A0,U+F0A4-F0A7,U+F0C5,U+F0C7-F0C8,U+F0E0,U+F0EB,U+F0F3,U+F0F8,U+F0FE,U+F111,U+F118-F11A,U+F11C,U+F133,U+F144,U+F146,U+F14A,U+F14D-F14E,U+F150-F152,U+F15B-F15C,U+F164-F165,U+F185-F186,U+F191-F192,U+F1AD,U+F1C1-F1C9,U+F1CD,U+F1D8,U+F1E3,U+F1EA,U+F1F6,U+F1F9,U+F20A,U+F247-F249,U+F24D,U+F254-F25B,U+F25D,U+F267,U+F271-F274,U+F279,U+F28B,U+F28D,U+F2B5-F2B6,U+F2B9,U+F2BB,U+F2BD,U+F2C1-F2C2,U+F2D0,U+F2D2,U+F2DC,U+F2ED,U+F328,U+F358-F35B,U+F3A5,U+F3D1,U+F410,U+F4AD;
-}
-EOT;
-
-							wp_add_inline_style(
-								self::RESOURCE_HANDLE_V4SHIM,
-								$font_face
-							);
-
+							/**
+							 * Version 6 Beta 3 is when some new compatiblity accommodations were introduced, built into all.css.
+							 * So this @font-face override is only useful for enqueuing V5. The new stuff in V6 supercedes it.
+							 */
+							if ( version_compare( $version, '6.0.0-beta3', '<' ) ) {
+								$license_subdomain = boolval( $options['usePro'] ) ? 'pro' : 'use';
+								$font_face_content = $this->build_legacy_font_face_overrides_for_v4( $license_subdomain, $version );
+								wp_add_inline_style(
+									self::RESOURCE_HANDLE_V4SHIM,
+									$font_face_content
+								);
+							}
 						},
 						PHP_INT_MAX
 					);
@@ -1759,14 +2152,14 @@ EOT;
 				// Filter the <link> tag to add the integrity and crossorigin attributes for completeness.
 				// Not all resources have an integrity_key for all versions of Font Awesome, so we'll skip this for those
 				// that don't.
-				if ( ! is_null( $resources[1]->integrity_key() ) ) {
+				if ( ! is_null( $v4_shims_integrity ) ) {
 					add_filter(
 						'style_loader_tag',
-						function ( $html, $handle ) use ( $resources ) {
-							if ( in_array( $handle, array( self::RESOURCE_HANDLE_V4SHIM ), true ) ) {
+						function ( $html, $handle ) use ( $v4_shims_integrity ) {
+							if ( self::RESOURCE_HANDLE_V4SHIM === $handle ) {
 								return preg_replace(
 									'/\/>$/',
-									'integrity="' . $resources[1]->integrity_key() .
+									'integrity="' . $v4_shims_integrity .
 									'" crossorigin="anonymous" />',
 									$html,
 									1
@@ -1784,9 +2177,9 @@ EOT;
 			foreach ( array( 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ) as $action ) {
 				add_action(
 					$action,
-					function () use ( $resources, $options ) {
+					function () use ( $all_source, $options ) {
 						// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-						wp_enqueue_script( self::RESOURCE_HANDLE, $resources[0]->source(), null, null, false );
+						wp_enqueue_script( self::RESOURCE_HANDLE, $all_source, null, null, false );
 
 						if ( $options['pseudoElements'] ) {
 							wp_add_inline_script( self::RESOURCE_HANDLE, 'FontAwesomeConfig = { searchPseudoElements: true };', 'before' );
@@ -1798,12 +2191,12 @@ EOT;
 			// Filter the <script> tag to add additional attributes for integrity, crossorigin, defer.
 			add_filter(
 				'script_loader_tag',
-				function ( $tag, $handle ) use ( $resources ) {
-					if ( in_array( $handle, array( self::RESOURCE_HANDLE ), true ) ) {
+				function ( $tag, $handle ) use ( $all_integrity ) {
+					if ( self::RESOURCE_HANDLE === $handle ) {
 						$extra_tag_attributes = 'defer crossorigin="anonymous"';
 
-						if ( ! is_null( $resources[0]->integrity_key() ) ) {
-							$extra_tag_attributes .= ' integrity="' . $resources[0]->integrity_key() . '"';
+						if ( ! is_null( $all_integrity ) ) {
+							$extra_tag_attributes .= ' integrity="' . $all_integrity . '"';
 						}
 						$modified_script_tag = preg_replace(
 							// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
@@ -1821,24 +2214,31 @@ EOT;
 				2
 			);
 
-			if ( $options['v4Compat'] ) {
+			if ( $options['compat'] ) {
+				if ( ! isset( $resources['v4-shims'] ) ) {
+					throw new ConfigCorruptionException();
+				}
+
+				$v4_shims_source    = $resources['v4-shims']->source();
+				$v4_shims_integrity = $resources['v4-shims']->integrity_key();
+
 				foreach ( array( 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ) as $action ) {
 					add_action(
 						$action,
-						function () use ( $resources ) {
+						function () use ( $v4_shims_source ) {
 							// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-							wp_enqueue_script( self::RESOURCE_HANDLE_V4SHIM, $resources[1]->source(), null, null, false );
+							wp_enqueue_script( self::RESOURCE_HANDLE_V4SHIM, $v4_shims_source, null, null, false );
 						}
 					);
 				}
 
 				add_filter(
 					'script_loader_tag',
-					function ( $tag, $handle ) use ( $resources ) {
-						if ( in_array( $handle, array( self::RESOURCE_HANDLE_V4SHIM ), true ) ) {
+					function ( $tag, $handle ) use ( $v4_shims_integrity ) {
+						if ( self::RESOURCE_HANDLE_V4SHIM === $handle ) {
 							$extra_tag_attributes = 'defer crossorigin="anonymous"';
-							if ( ! is_null( $resources[1]->integrity_key() ) ) {
-								$extra_tag_attributes .= ' integrity="' . $resources[1]->integrity_key() . '"';
+							if ( ! is_null( $v4_shims_integrity ) ) {
+								$extra_tag_attributes .= ' integrity="' . $v4_shims_integrity . '"';
 							}
 							$modified_script_tag = preg_replace(
 								// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
@@ -2165,8 +2565,8 @@ EOT;
 	 * ```php
 	 *   array(
 	 *     'technology'        => 'svg', // "svg" or "webfont"
-	 *     'v4Compat'          => true, // true or false
-	 *     'pseudoElements' => false, // true or false
+	 *     'compat'            => true, // true or false
+	 *     'pseudoElements'    => false, // true or false
 	 *     'name'              => 'Foo Plugin', // (required)
 	 *     'version'           => [
 	 *                              [ '5.10.0', '>=']
@@ -2286,7 +2686,9 @@ EOT;
 	 *
 	 * <h3>Additional Notes on Specific Preferences</h3>
 	 *
-	 * - `v4Compat`
+	 * - `compat`
+	 *
+	 *   This was previously called 'v4Compat'. If older code uses v4Compat, it will be taken as the value for v4Compat.
 	 *
 	 *   There were major changes between Font Awesome 4 and Font Awesome 5, including some re-named icons.
 	 *   It's best to upgrade name references to the version 5 names,
@@ -2298,8 +2700,23 @@ EOT;
 	 *   Another common pattern out there on the web (not a recommended practice these days, though) is to place
 	 *   icons as pseudo-elements where the unicode is specific in CSS as `content` and `"FontAwesome"` is specified
 	 *   as the `font-family`. The main problem here is that the `font-family` name has changed for Font Awesome 5,
-	 *   and there are multiple `font-family` names. So the v4Compat feature of this plugin also "shims" those
+	 *   and there are multiple `font-family` names. So the compat feature of this plugin also "shims" those
 	 *   hardcoded version 4 `font-family` names so that they will use the corresponding Font Awesome 5 webfont files.
+	 *
+	 *   There have been some changes across major versions at the level of unicode differences. For example,
+	 *   the glyph associated with the v4 icon named "diamond" with unicode f219 appears in FA5 and FA6
+	 *   as the icon named "gem" with unicode f3a5. That glyph looked like the "precious stone" diamond.
+	 *
+	 *   The glyph associated with the icon named "diamond" and unicode f3a5 in FA5 and FA6 is
+	 *   like the diamond as a suit in playing cards.
+	 *
+	 *   Without all of the compatibility assets to fix up such mappings, any old pseudo-elements that
+	 *   used the v4 font-family of "FontAwesome" with a unicode of f219, when rendered using the FA5 or
+	 *   FA6 fonts, will get the "suit" diamond instead of the "precious stone" diamond.
+	 *
+	 *   In general, a key improvement in v6 is much more comprehensive compatibility with pseudo-elements that may
+	 *   have been defined using font-family or unicode values from older versions. This option enables all of
+	 *   the various compatibility accommodations.
 	 *
 	 * - `pseudoElements`
 	 *
@@ -2318,7 +2735,23 @@ EOT;
 			throw new ClientPreferencesSchemaException();
 		}
 
-		$this->client_preferences[ $client_preferences['name'] ] = $client_preferences;
+		$updated_client_preferences = $client_preferences;
+
+		if ( array_key_exists( 'v4Compat', $client_preferences ) ) {
+			$v4_compat = $client_preferences['v4Compat'];
+
+			if ( array_key_exists( 'compat', $client_preferences ) ) {
+				$compat = $client_preferences['compat'];
+
+				if ( $compat !== $v4_compat ) {
+					throw new ClientPreferencesSchemaException();
+				}
+			}
+
+			$updated_client_preferences['compat'] = $v4_compat;
+		}
+
+		$this->client_preferences[ $client_preferences['name'] ] = $updated_client_preferences;
 	}
 
 	/**
@@ -2478,9 +2911,15 @@ EOT;
 		 */
 		$atts = shortcode_atts(
 			array(
-				'name'   => '',
-				'prefix' => self::DEFAULT_PREFIX,
-				'class'  => '',
+				'name'            => '',
+				'prefix'          => self::DEFAULT_PREFIX,
+				'class'           => '',
+				'style'           => null,
+				'aria-hidden'     => null,
+				'aria-label'      => null,
+				'aria-labelledby' => null,
+				'title'           => null,
+				'role'            => null,
 			),
 			$params,
 			self::SHORTCODE_TAG
@@ -2507,8 +2946,18 @@ EOT;
 			$prefix_and_name_classes = $atts['prefix'] . ' fa-' . $atts['name'];
 		}
 
-		$classes = rtrim( implode( ' ', array( $prefix_and_name_classes, $atts['class'] ) ) );
-		return '<i class="' . $classes . '"></i>';
+		$classes    = rtrim( implode( ' ', array( $prefix_and_name_classes, $atts['class'] ) ) );
+		$class_attr = "class=\"$classes\"";
+
+		$tag_attrs = array( $class_attr );
+
+		foreach ( array( 'style', 'aria-hidden', 'role', 'title', 'aria-label', 'aria-labelledby' ) as $attr_name ) {
+			if ( isset( $atts[ $attr_name ] ) ) {
+				array_push( $tag_attrs, $attr_name . '="' . $atts[ $attr_name ] . '"' );
+			}
+		}
+
+		return '<i ' . implode( ' ', $tag_attrs ) . '></i>';
 	}
 
 	/**
@@ -2596,38 +3045,76 @@ EOT;
 	 * @internal
 	 * @ignore
 	 */
-	private function get_webpack_asset_manifest() {
-		if ( FONTAWESOME_ENV === 'development' ) {
-			$response = wp_remote_get( 'http://host.docker.internal:3030/asset-manifest.json' );
+	private function get_webpack_asset_url_base() {
+		return trailingslashit( FONTAWESOME_DIR_URL ) . 'admin/build';
+	}
 
-			if ( is_wp_error( $response ) ) {
-				wp_die(
-					esc_html(
-						__(
-							"You're running in dev mode (FONTAWESOME_ENV === 'development'), but we got an error trying to wp_remote_get the admin UI's asset manifest. That usually means you haven't started up the webpack dev server for admin. Make sure that's running. You can start it under the 'admin/' dir with 'yarn start'.",
-							'font-awesome'
-						)
-					)
-				);
-			}
-
-			if ( 200 !== $response['response']['code'] ) {
-				return null;
-			}
-
-			return json_decode( $response['body'], true );
-		} else {
-			$asset_manifest_file = FONTAWESOME_DIR_PATH . 'admin/build/asset-manifest.json';
-			if ( ! file_exists( $asset_manifest_file ) ) {
-				return null;
-			}
-			// phpcs:ignore WordPress.WP.AlternativeFunctions
-			$contents = file_get_contents( $asset_manifest_file );
-			if ( empty( $contents ) ) {
-				return null;
-			}
-			return json_decode( $contents, true );
+	/**
+	 * Internal use only, not part of this plugin's public API.
+	 *
+	 * @internal
+	 * @ignore
+	 * @return bool
+	 */
+	private function should_icon_chooser_be_enabled( $screen_id ) {
+		if ( ! is_string( $screen_id ) ) {
+			return false;
 		}
+
+		return false !== array_search( $screen_id, $this->icon_chooser_screens, true );
+	}
+
+	/**
+	 * Internal use only, not part of this plugin's public API.
+	 *
+	 * Code borrowed from Freemius SDK by way of Benjamin Intal on Stack Overflow,
+	 * under GPL. Thanks Benjamin! Hey everybody, get the Stackable plugin to do
+	 * cool stuff with Font Awesome in your Blocks!
+	 *
+	 * See: https://github.com/Freemius/wordpress-sdk
+	 * See: https://wordpress.stackexchange.com/questions/309862/check-if-gutenberg-is-currently-in-use
+	 * See: https://wordpress.org/plugins/stackable-ultimate-gutenberg-blocks/
+	 *
+	 * @internal
+	 * @ignore
+	 */
+	private function is_gutenberg_page() {
+		if ( function_exists( 'is_gutenberg_page' ) && is_gutenberg_page() ) {
+			// The Gutenberg plugin is on.
+			return true;
+		}
+		$current_screen = get_current_screen();
+		if ( is_object( $current_screen ) && method_exists( $current_screen, 'is_block_editor' ) && $current_screen->is_block_editor() ) {
+			// Gutenberg page on 5+.
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Internal use only, not part of this plugin's public API.
+	 *
+	 * We can't guarantee the timing of when this global hook will be set.
+	 * So if we find that it's already set, we'll invoke it. Otherwise, we'll
+	 * assign a truthy value to it to indicate that it should be invoked as
+	 * soon as the hook is ready.
+	 *
+	 * @internal
+	 * @ignore
+	 */
+	public function print_classic_editor_icon_chooser_setup_script() {
+		?>
+	<script type="text/javascript">
+		if( window.tinymce ) {
+			if( typeof window.__FontAwesomeOfficialPlugin__setupClassicEditorIconChooser === 'function' ) {
+				window.__FontAwesomeOfficialPlugin__setupClassicEditorIconChooser()
+			} else {
+				window.__FontAwesomeOfficialPlugin__setupClassicEditorIconChooser = true
+			}
+		}
+	</script>
+		<?php
 	}
 
 	/**
@@ -2636,16 +3123,105 @@ EOT;
 	 * @internal
 	 * @ignore
 	 */
-	private function get_webpack_asset_url( $asset = '' ) {
-		$asset_manifest = $this->get_webpack_asset_manifest();
+	private function compat_js_required() {
+		global $wp_version;
 
-		if ( FONTAWESOME_ENV === 'development' ) {
-			$asset_url_base = 'http://localhost:3030';
-		} else {
-			$asset_url_base = FONTAWESOME_DIR_URL . 'admin/build';
+		return ! version_compare( $wp_version, '5.4', '>=' );
+	}
+
+	/**
+	 * Internal use only, not part of this plugin's public API.
+	 *
+	 * This builds font-face rules to override the v4 font-family
+	 * name of "FontAwesome", pointing to current assets. This is only
+	 * needed for CDN setups in FA5. FA 5 kits have their own built-in
+	 * version of this. FA6 (since beta3) has improved compatibility handling
+	 * that does this and more, both in FA6 kits and Free CDN.
+	 *
+	 * @internal
+	 * @ignore
+	 */
+	private function build_legacy_font_face_overrides_for_v4( $license_subdomain, $version ) {
+		return <<< EOT
+@font-face {
+font-family: "FontAwesome";
+font-display: block;
+src: url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.eot"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.eot?#iefix") format("embedded-opentype"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.woff2") format("woff2"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.woff") format("woff"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.ttf") format("truetype"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.svg#fontawesome") format("svg");
+}
+
+@font-face {
+font-family: "FontAwesome";
+font-display: block;
+src: url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.eot"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.eot?#iefix") format("embedded-opentype"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.woff2") format("woff2"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.woff") format("woff"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.ttf") format("truetype"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-solid-900.svg#fontawesome") format("svg");
+}
+
+@font-face {
+font-family: "FontAwesome";
+font-display: block;
+src: url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.eot"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.eot?#iefix") format("embedded-opentype"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.woff2") format("woff2"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.woff") format("woff"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.ttf") format("truetype"),
+		url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-regular-400.svg#fontawesome") format("svg");
+unicode-range: U+F004-F005,U+F007,U+F017,U+F022,U+F024,U+F02E,U+F03E,U+F044,U+F057-F059,U+F06E,U+F070,U+F075,U+F07B-F07C,U+F080,U+F086,U+F089,U+F094,U+F09D,U+F0A0,U+F0A4-F0A7,U+F0C5,U+F0C7-F0C8,U+F0E0,U+F0EB,U+F0F3,U+F0F8,U+F0FE,U+F111,U+F118-F11A,U+F11C,U+F133,U+F144,U+F146,U+F14A,U+F14D-F14E,U+F150-F152,U+F15B-F15C,U+F164-F165,U+F185-F186,U+F191-F192,U+F1AD,U+F1C1-F1C9,U+F1CD,U+F1D8,U+F1E3,U+F1EA,U+F1F6,U+F1F9,U+F20A,U+F247-F249,U+F24D,U+F254-F25B,U+F25D,U+F267,U+F271-F274,U+F279,U+F28B,U+F28D,U+F2B5-F2B6,U+F2B9,U+F2BB,U+F2BD,U+F2C1-F2C2,U+F2D0,U+F2D2,U+F2DC,U+F2ED,U+F328,U+F358-F35B,U+F3A5,U+F3D1,U+F410,U+F4AD;
+}
+EOT;
+	}
+}
+
+/**
+ * Iterates through each blog in the current network, switches to it,
+ * and invokes the given callback function, restoring the current blog
+ * after each callback invocation.
+ *
+ * Internal use only, not part of this plugin's public API.
+ *
+ * @internal
+ * @ignore
+ */
+function for_each_blog( $cb ) {
+	$network_id = get_current_network_id();
+	$site_count = get_sites(
+		array(
+			'network_id' => $network_id,
+			'count'      => true,
+		)
+	);
+	$limit      = 100;
+	$offset     = 0;
+
+	while ( $offset < $site_count ) {
+		$sites = get_sites(
+			array(
+				'network_id' => $network_id,
+				'offset'     => $offset,
+				'number'     => $limit,
+			)
+		);
+
+		foreach ( $sites as $site ) {
+			$blog_id = $site->blog_id;
+			switch_to_blog( $blog_id );
+
+			try {
+				$cb( $blog_id );
+			} finally {
+				restore_current_blog();
+			}
 		}
 
-		return $asset_url_base . $asset_manifest[ $asset ];
+		$offset = $offset + $limit;
 	}
 }
 
@@ -2660,4 +3236,34 @@ EOT;
  */
 function fa() {
 	return FontAwesome::instance();
+}
+
+/**
+ * This hook ensures that when we're in multisite mode, and a new site is activated
+ * after an initial plugin activation, that the plugin is initialized for that newly
+ * created site, but only if this plugin is otherwise network activated.
+ *
+ * If the plugin is only activated on a per-site basis, then creating a new site should
+ * not result in this plugin automatically being activated for it.
+ */
+if ( is_multisite() ) {
+	add_action(
+		'wp_initialize_site',
+		function ( $site ) {
+			if ( ! is_network_admin( FONTAWESOME_PLUGIN_FILE ) ) {
+				return;
+			}
+
+			require_once trailingslashit( FONTAWESOME_DIR_PATH ) . 'includes/class-fontawesome-activator.php';
+			switch_to_blog( $site->blog_id );
+
+			try {
+				FontAwesome_Activator::initialize_current_site( false );
+			} finally {
+				restore_current_blog();
+			}
+		},
+		99,
+		1
+	);
 }

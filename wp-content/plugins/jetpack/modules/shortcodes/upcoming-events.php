@@ -3,7 +3,7 @@
 /**
  * Display a list of upcoming events from a calendar.
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 /**
@@ -26,7 +26,7 @@ class Upcoming_Events_Shortcode {
 	 * @param array $atts Shortcode attributes.
 	 */
 	public static function shortcode( $atts = array() ) {
-		jetpack_require_lib( 'icalendar-reader' );
+		require_once JETPACK__PLUGIN_DIR . '/_inc/lib/icalendar-reader.php';
 		$atts   = shortcode_atts(
 			array(
 				'url'    => '',

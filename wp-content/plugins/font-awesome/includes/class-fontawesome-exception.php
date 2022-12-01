@@ -256,7 +256,7 @@ class AccessTokenStorageException extends FontAwesome_ServerException {
 }
 
 /**
- * Thrown when a an options configuration is attempted that does not pass validation.
+ * Thrown when an options configuration is attempted that does not pass validation.
  *
  * @since 4.0.0
  */
@@ -315,7 +315,44 @@ class ConfigSchemaException extends FontAwesome_ClientException {
 	public static function webfont_v4compat_introduced_later() {
 		return new static(
 			esc_html__(
-				'Whoops! You found a corner case here. Version 4 compatibility for our webfont technology was not introduced until Font Awesome 5.1.0. Try using a newer version, disabling version 4 compatibility, or switch to SVG.',
+				'Whoops! You found a corner case here. Older Version Compatibility for our webfont technology was not introduced until Font Awesome 5.1.0. Try using a newer version, disabling version 4 compatibility, or switch to SVG.',
+				'font-awesome'
+			)
+		);
+	}
+
+	/**
+	 *
+	 * @internal
+	 * @ignore
+	 */
+	public static function v6_pro_cdn_not_supported() {
+		return new static(
+			esc_html__(
+				'Whoops! Font Awesome Pro Version 6 is not available from CDN. Please use a Kit.',
+				'font-awesome'
+			)
+		);
+	}
+}
+
+/**
+ * Thrown when the plugin is activated on a site that does not meet
+ * compatibility requirements.
+ *
+ * @since 4.2.0
+ */
+class ActivationException extends FontAwesome_ClientException {
+	/**
+	 * Internal use only.
+	 *
+	 * @internal
+	 * @ignore
+	 */
+	public static function multisite_requires_at_least_5_1_0() {
+		return new static(
+			esc_html__(
+				'This plugin supports WordPress Multisite only for WordPress versions 5.1.0 or newer.',
 				'font-awesome'
 			)
 		);
@@ -413,7 +450,7 @@ class ReleaseProviderStorageException extends FontAwesome_ServerException {
 	public function __construct( $message = null, $code = 0, $previous = null ) {
 		return parent::__construct(
 			esc_html__(
-				'Something when wrong when we tried to store the list of available Font Awesome versions in your WordPress database.',
+				'Something went wrong when we tried to store the list of available Font Awesome versions in your WordPress database.',
 				'font-awesome'
 			),
 			$code,
@@ -437,7 +474,7 @@ class ReleaseMetadataMissingException extends FontAwesome_ServerException {
 	public function __construct( $message = null, $code = 0, $previous = null ) {
 		return parent::__construct(
 			esc_html__(
-				'Somehow, we\'re missing the list of available Font Awesome versions. Try deactivating and re-activating the Font Awesome plugin.',
+				'Eek! We\'re missing the information we need to load the version of Font Awesome you have selected. Go to your Font Awesome plugin settings page, re-select a version, and save. If that doesn\'t work, try deactivating and then re-activating the plugin. If that doesn\'t work either, you might need to delete and re-install the plug-in.',
 				'font-awesome'
 			),
 			$code,

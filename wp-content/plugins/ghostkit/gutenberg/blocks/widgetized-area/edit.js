@@ -13,12 +13,9 @@ import getIcon from '../../utils/get-icon';
  */
 const { __ } = wp.i18n;
 
-const { Component, Fragment } = wp.element;
+const { Component } = wp.element;
 
-const {
-    Placeholder,
-    SelectControl,
-} = wp.components;
+const { Placeholder, SelectControl } = wp.components;
 
 const { GHOSTKIT } = window;
 
@@ -26,57 +23,47 @@ const { GHOSTKIT } = window;
  * Block Edit Class.
  */
 class BlockEdit extends Component {
-    render() {
-        const {
-            setAttributes,
-            attributes,
-        } = this.props;
+  render() {
+    const { setAttributes, attributes } = this.props;
 
-        let {
-            className,
-        } = this.props;
+    let { className } = this.props;
 
-        const {
-            id,
-        } = attributes;
+    const { id } = attributes;
 
-        className = classnames(
-            'ghostkit-widgetized-area',
-            className
-        );
+    className = classnames('ghostkit-widgetized-area', className);
 
-        return (
-            <Fragment>
-                <Placeholder
-                    icon={ getIcon( 'block-widgetized-area' ) }
-                    label={ __( 'Widgetized Area', 'ghostkit' ) }
-                    className={ className }
-                >
-                    <SelectControl
-                        value={ id }
-                        onChange={ ( value ) => setAttributes( { id: value } ) }
-                        options={ ( () => {
-                            const sidebars = [ {
-                                label: __( '--- Select Sidebar ---', 'ghostkit' ),
-                                value: '',
-                            } ];
+    return (
+      <Placeholder
+        icon={getIcon('block-widgetized-area')}
+        label={__('Widgetized Area', 'ghostkit')}
+        className={className}
+      >
+        <SelectControl
+          value={id}
+          onChange={(value) => setAttributes({ id: value })}
+          options={(() => {
+            const sidebars = [
+              {
+                label: __('--- Select Sidebar ---', 'ghostkit'),
+                value: '',
+              },
+            ];
 
-                            if ( GHOSTKIT.sidebars ) {
-                                Object.keys( GHOSTKIT.sidebars ).forEach( ( k ) => {
-                                    sidebars.push( {
-                                        label: GHOSTKIT.sidebars[ k ].name,
-                                        value: GHOSTKIT.sidebars[ k ].id,
-                                    } );
-                                } );
-                            }
+            if (GHOSTKIT.sidebars) {
+              Object.keys(GHOSTKIT.sidebars).forEach((k) => {
+                sidebars.push({
+                  label: GHOSTKIT.sidebars[k].name,
+                  value: GHOSTKIT.sidebars[k].id,
+                });
+              });
+            }
 
-                            return sidebars;
-                        } )() }
-                    />
-                </Placeholder>
-            </Fragment>
-        );
-    }
+            return sidebars;
+          })()}
+        />
+      </Placeholder>
+    );
+  }
 }
 
 export default BlockEdit;

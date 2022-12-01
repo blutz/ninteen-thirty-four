@@ -23,7 +23,8 @@ a:visited {
 a:hover,
 a:focus,
 a:active {
-	color: $link-highlight;
+	/* Not defined here? */
+	/* color: $link-highlight; */
 }
 
 /* ==========================================================================
@@ -43,7 +44,7 @@ body {
 
 body {
 	margin: 0;
-	background: #f5f5f5;
+	background: #f6f7f7;
 }
 
 .card:after {

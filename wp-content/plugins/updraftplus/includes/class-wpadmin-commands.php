@@ -76,20 +76,6 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 		// return array('response' => $response['response'], 'status' => $response['status'], 'log' => $response['log'] );
 	}
 	
-	/**
-	 * Function to retrieve raw backup history given a timestamp and nonce
-	 *
-	 * @param Array $data - Data parameter; keys: timestamp, nonce
-	 *
-	 * @return String if empty result will be empty string
-	 */
-	public function rawbackup_history($data) {
-
-		$history = UpdraftPlus_Backup_History::get_history();
-
-		return $this->_updraftplus_admin->raw_backup_info($history, $data['timestamp'], $data['nonce'], null);
-	}
-	
 	public function updraftcentral_delete_key($params) {
 		global $updraftcentral_main;
 		if (!is_a($updraftcentral_main, 'UpdraftCentral_Main')) {
@@ -137,7 +123,7 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 			$warn = array();
 			$err = array();
 
-			@set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			if (function_exists('set_time_limit')) @set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			$max_execution_time = (int) @ini_get('max_execution_time');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 			if ($max_execution_time>0 && $max_execution_time<61) {
@@ -230,10 +216,10 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 					$incremental_sets = array_reverse($incremental_sets);
 					$first_timestamp = $incremental_sets[0];
 					
-					foreach ($incremental_sets as $timestamp) {
-						$pretty_date = get_date_from_gmt(gmdate('Y-m-d H:i:s', (int) $timestamp), 'M d, Y G:i');
+					foreach ($incremental_sets as $set_timestamp) {
+						$pretty_date = get_date_from_gmt(gmdate('Y-m-d H:i:s', (int) $set_timestamp), 'M d, Y G:i');
 						$esc_pretty_date = esc_attr($pretty_date);
-						$incremental_select_html .= '<option value="'.$timestamp.'" '.selected($timestamp, $first_timestamp, false).'>'.$esc_pretty_date.'</option>';
+						$incremental_select_html .= '<option value="'.$set_timestamp.'" '.selected($set_timestamp, $first_timestamp, false).'>'.$esc_pretty_date.'</option>';
 					}
 
 					$incremental_select_html .= '</select>';
@@ -394,7 +380,7 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 	
 		ob_start();
 	
-		phpinfo(INFO_ALL ^ (INFO_CREDITS | INFO_LICENSE));
+		if (function_exists('phpinfo')) phpinfo(INFO_ALL ^ (INFO_CREDITS | INFO_LICENSE));
 
 		echo '<h3 id="ud-debuginfo-constants">'.__('Constants', 'updraftplus').'</h3>';
 		$opts = @get_defined_constants();// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
@@ -402,7 +388,7 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 		echo '<table><thead></thead><tbody>';
 		foreach ($opts as $key => $opt) {
 			// Administrators can already read these in other ways, but we err on the side of caution
-			if (false !== stripos($opt, 'api_key')) $opt = '***';
+			if (is_string($opt) && false !== stripos($opt, 'api_key')) $opt = '***';
 			echo '<tr><td>'.htmlspecialchars($key).'</td><td>'.htmlspecialchars(print_r($opt, true)).'</td>';
 		}
 		echo '</tbody></table>';
@@ -568,7 +554,7 @@ class UpdraftPlus_WPAdmin_Commands extends UpdraftPlus_Commands {
 							'id' => UpdraftPlus_Manipulation_Functions::wp_normalize_path($path . DIRECTORY_SEPARATOR . $value),
 							'icon' => 'jstree-folder'
 						);
-					} elseif ('restore' != $page && is_file($path . DIRECTORY_SEPARATOR . $value)) {
+					} elseif (empty($params['directories_only']) && 'restore' != $page && is_file($path . DIRECTORY_SEPARATOR . $value)) {
 						$node_array[] = array(
 							'text' => $value,
 							'children' => false,

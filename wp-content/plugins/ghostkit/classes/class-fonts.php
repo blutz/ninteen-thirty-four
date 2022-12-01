@@ -29,11 +29,31 @@ class GhostKit_Fonts {
     public function enqueue_all_fonts_assets() {
         $fonts = $this->get_font_loader_list();
 
-        wp_register_script( 'webfontloader', ghostkit()->plugin_url . 'assets/vendor/webfontloader/webfontloader.js', array(), '1.6.28', false );
+        if ( ( is_admin() || ! empty( $fonts ) ) && isset( $fonts['google-fonts'] ) && ! empty( $fonts['google-fonts'] ) ) {
+            $families = array();
 
-        if ( is_admin() || ! empty( $fonts ) ) {
-            wp_enqueue_script( 'ghostkit-fonts-loader', ghostkit()->plugin_url . 'assets/js/fonts-loader.min.js', array( 'webfontloader' ), '2.16.0', false );
-            wp_localize_script( 'ghostkit-fonts-loader', 'ghostkitWebfontList', $fonts );
+            foreach ( $fonts['google-fonts'] as $font => $font_data ) {
+                $family = $font;
+
+                if ( isset( $font_data['widths'] ) && ! empty( $font_data['widths'] ) ) {
+                    $weights = array();
+
+                    foreach ( $font_data['widths'] as $weight ) {
+                        $weights[] = $weight;
+                    }
+
+                    $family .= ':' . implode( ',', $weights );
+                }
+
+                $families[] = $family;
+            }
+
+            $query_args = array(
+                'family'  => implode( '|', $families ),
+                'display' => 'swap',
+            );
+
+            wp_enqueue_style( 'ghostkit-fonts-google', add_query_arg( $query_args, 'https://fonts.googleapis.com/css' ), array(), '2.24.1' );
         }
     }
 
@@ -56,7 +76,7 @@ class GhostKit_Fonts {
             $post_id = get_the_ID();
         } elseif ( $is_admin_editor ) {
             global $post;
-            $post_id = $post->ID;
+            $post_id = isset( $post->ID ) ? $post->ID : null;
         }
 
         $is_single               = is_singular() && $post_id;
@@ -172,7 +192,7 @@ class GhostKit_Fonts {
                     if ( $font['label'] === $find_font['name'] ) {
                         $weights  = array();
                         $weight   = ( isset( $font['weight'] ) && ! empty( $font['weight'] ) ) ? $font['weight'] : '';
-                        $widths   = ( isset( $find_font['widths'] ) && ! empty( $find_font['widths'] ) ) ? $find_font['widths'] : '';
+                        $widths   = ( isset( $find_font['widths'] ) && ! empty( $find_font['widths'] ) ) ? $find_font['widths'] : array();
                         $category = ( isset( $find_font['category'] ) && ! empty( $find_font['category'] ) ) ? $find_font['category'] : '';
                         $subsets  = ( isset( $find_font['subsets'] ) && ! empty( $find_font['subsets'] ) ) ? $find_font['subsets'] : '';
 

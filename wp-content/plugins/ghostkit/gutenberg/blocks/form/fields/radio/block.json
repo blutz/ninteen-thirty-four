@@ -1,11 +1,13 @@
 {
-	"name": "ghostkit/form-field-radio",
-	"category": "ghostkit",
-    "supports": {
-        "html": false,
-        "className": false,
-        "anchor": true,
-        "reusable": false
-    },
-    "parent": [ "ghostkit/form" ]
+  "name": "ghostkit/form-field-radio",
+  "parent": ["ghostkit/form"],
+  "category": "design",
+  "title": "Radio",
+  "description": "Form field radio.",
+  "supports": {
+    "html": false,
+    "className": false,
+    "anchor": true,
+    "reusable": false
+  }
 }

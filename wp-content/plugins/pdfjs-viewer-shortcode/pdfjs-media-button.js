@@ -1,18 +1,26 @@
-jQuery(function($) {
-	$('#insert-pdfjs').click(openMediaWindow);
+jQuery( function( $ ) {
+	$('.js-insert-pdfjs').click(PDFjs_openMediaWindow);	
 
-	function openMediaWindow() {
-		//console.log('pdfjs media button clicked');
-		let frame = wp.media({
-			title: 'Insert a PDF',
-			library: {type: 'application/pdf'},
-			multiple: false,
-			button: {text: 'Insert'}
+	if (typeof acf !== 'undefined') {
+		acf.addAction( 'load', function() {
+			$( '.js-insert-pdfjs' ).on( 'click', function() {
+				PDFjs_openMediaWindow();
+			} );
 		});
+	}
 
-		frame.on('select', function(){
+	function PDFjs_openMediaWindow() {
+		const frame = wp.media( {
+			title: 'Insert a PDF',
+			library: { type: 'application/pdf' },
+			multiple: false,
+			button: { text: 'Insert' },
+		} );
+
+		frame.on( 'select', function() {
+			let selectionID = frame.state().get('selection').first().toJSON().id;
 			let selectionURL = frame.state().get('selection').first().toJSON().url;
-			selectionURL = encodeURIComponent(selectionURL);
+			selectionURL = selectionURL.replace(/(<([^>]+)>)/gi, "")
 
 			let fullscreenLink = "fullscreen=false";
 			if (typeof window.pdfjs_options.pdfjs_fullscreen_link !== 'undefined' && window.pdfjs_options.pdfjs_fullscreen_link !== '') {
@@ -39,9 +47,9 @@ jQuery(function($) {
 				viewerHeight = window.pdfjs_options.pdfjs_embed_height + "px";
 			}
 
-			wp.media.editor.insert('[pdfjs-viewer url="' + selectionURL + '" viewer_width=' + viewerWidth + ' viewer_height=' + viewerHeight + ' ' + fullscreenLink + ' ' + downloadLink + ' ' + printLink + ']');
-		});
+			wp.media.editor.insert('[pdfjs-viewer url="' + selectionURL + '" attachment_id="' + selectionID + '" viewer_width=' + viewerWidth + ' viewer_height=' + viewerHeight + ' ' + fullscreenLink + ' ' + downloadLink + ' ' + printLink + ']');
+		} );
 
 		frame.open();
 	}
-});
+} );

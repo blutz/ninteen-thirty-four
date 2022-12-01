@@ -2,9 +2,9 @@
 /**
  * Plugin Name:  Advanced WordPress Backgrounds
  * Description:  Parallax, Video, Images Backgrounds
- * Version:      1.7.0
- * Author:       nK
- * Author URI:   https://nkdev.info
+ * Version:      1.9.4
+ * Author:       Advanced WordPress Backgrounds Team
+ * Author URI:   https://wpbackgrounds.com/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=byline
  * License:      GPLv2 or later
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:  advanced-backgrounds
@@ -92,6 +92,7 @@ class NK_AWB {
     public function init_hooks() {
         add_action( 'init', array( $this, 'register_scripts' ) );
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+        add_action( 'ghostkit_parse_blocks', array( $this, 'parse_ghostkit_blocks' ) );
         add_action( 'wp_enqueue_scripts', array( $this, 'fix_youtube_embed_plus_plugin' ), 101 );
     }
 
@@ -99,10 +100,9 @@ class NK_AWB {
      * Register scripts that will be used in the future when portfolio will be printed.
      */
     public function register_scripts() {
-        wp_register_script( 'jarallax', nk_awb()->plugin_url . 'assets/vendor/jarallax/jarallax.min.js', array( 'jquery' ), '1.12.4', true );
-        wp_register_script( 'jarallax-video', nk_awb()->plugin_url . 'assets/vendor/jarallax/jarallax-video.min.js', array( 'jarallax' ), '1.12.4', true );
-        wp_register_script( 'object-fit-images', nk_awb()->plugin_url . 'assets/vendor/object-fit-images/ofi.min.js', array(), '3.2.4', true );
-        wp_register_script( 'nk-awb', nk_awb()->plugin_url . 'assets/awb/awb.min.js', array( 'jquery', 'jarallax', 'jarallax-video', 'object-fit-images' ), '1.7.0', true );
+        wp_register_script( 'jarallax', nk_awb()->plugin_url . 'assets/vendor/jarallax/jarallax.min.js', array( 'jquery' ), '2.0.4', true );
+        wp_register_script( 'jarallax-video', nk_awb()->plugin_url . 'assets/vendor/jarallax/jarallax-video.min.js', array( 'jarallax' ), '2.0.4', true );
+        wp_register_script( 'nk-awb', nk_awb()->plugin_url . 'assets/awb/awb.min.js', array( 'jquery', 'jarallax', 'jarallax-video' ), '1.9.4', true );
 
         wp_localize_script(
             'nk-awb',
@@ -111,20 +111,34 @@ class NK_AWB {
                 'settings' => array(
                     'disable_parallax'    => array_keys( AWB_Settings::get_option( 'disable_parallax', 'awb_general', array() ) ? AWB_Settings::get_option( 'disable_parallax', 'awb_general', array() ) : array() ),
                     'disable_video'       => array_keys( AWB_Settings::get_option( 'disable_video', 'awb_general', array() ) ? AWB_Settings::get_option( 'disable_video', 'awb_general', array() ) : array() ),
-                    'full_width_fallback' => ! get_theme_support( 'align-wide' ),
+                    'full_width_fallback' => ! ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() || get_theme_support( 'align-wide' ) ),
                 ),
             )
         );
 
-        wp_register_style( 'nk-awb', nk_awb()->plugin_url . 'assets/awb/awb.min.css', '', '1.7.0' );
+        wp_register_style( 'nk-awb', nk_awb()->plugin_url . 'assets/awb/awb.min.css', '', '1.9.4' );
     }
 
     /**
      * Enqueue scripts.
      */
     public function enqueue_scripts() {
-        // add styles to header to fix image jumping.
+        // add styles to header to fix image jumping when use shortcode.
         wp_enqueue_style( 'nk-awb' );
+    }
+
+    /**
+     * Enqueue awb assets when used Ghost Kit grid or Column.
+     *
+     * @param array $blocks - block list.
+     */
+    public function parse_ghostkit_blocks( $blocks ) {
+        foreach ( $blocks as $block ) {
+            if ( 'ghostkit/grid-column' === $block['blockName'] || 'ghostkit/grid' === $block['blockName'] ) {
+                wp_enqueue_script( 'nk-awb' );
+                wp_enqueue_style( 'nk-awb' );
+            }
+        }
     }
 
     /**

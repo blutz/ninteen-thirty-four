@@ -6,17 +6,18 @@
 /*
  * Go Pro menu link
  */
-#adminmenu a[href="admin.php?page=ghostkit_go_pro"],
-.wp-list-table.plugins a[href="admin.php?page=ghostkit_go_pro"] {
-    font-weight: 700;
+#adminmenu a[href*="admin.php?page=ghostkit_go_pro"],
+.wp-list-table.plugins a[href*="admin.php?page=ghostkit_go_pro"] {
+  font-weight: 700;
+  color: $color-success;
+
+  .dashicons {
+    transition: none;
+  }
+
+  &:hover,
+  &:focus {
     color: $color-success;
-
-    .dashicons {
-        transition: none;
-    }
-
-    &:hover,
-    &:focus {
-        color: darken($color-success, 10%);
-    }
+    filter: contrast(1.1) brightness(1.2);
+  }
 }

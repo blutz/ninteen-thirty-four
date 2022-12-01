@@ -2,9 +2,9 @@
 /**
  * Plugin Name:  Ghost Kit
  * Description:  Blocks collection and extensions for Gutenberg
- * Version:      2.16.0
- * Author:       nK
- * Author URI:   https://nkdev.info
+ * Version:      2.24.1
+ * Author:       Ghost Kit Team
+ * Author URI:   https://ghostkit.io/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=byline
  * License:      GPLv2 or later
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:  ghostkit
@@ -139,14 +139,26 @@ class GhostKit {
         // scss compiler.
         require_once $this->plugin_path . 'classes/class-scss-compiler.php';
 
+        // breakpoints background.
+        require_once $this->plugin_path . 'classes/class-breakpoints-background.php';
+
         // breakpoints.
         require_once $this->plugin_path . 'classes/class-breakpoints.php';
+
+        // scroll reveal extension.
+        require_once $this->plugin_path . 'classes/class-scroll-reveal.php';
+
+        // utils encode/decode.
+        require_once $this->plugin_path . 'gutenberg/utils/encode-decode/index.php';
 
         // custom block styles class.
         require_once $this->plugin_path . 'gutenberg/extend/styles/get-styles.php';
 
         // block users custom CSS class.
         require_once $this->plugin_path . 'gutenberg/extend/custom-css/get-custom-css.php';
+
+        // 3rd.
+        require_once $this->plugin_path . 'classes/3rd/class-rank-math.php';
     }
 
     /**
@@ -164,14 +176,13 @@ class GhostKit {
         add_action( 'enqueue_block_editor_assets', array( $this, 'js_translation_editor' ) );
 
         // add Ghost Kit blocks category.
-        add_filter( 'block_categories', array( $this, 'block_categories' ), 9 );
-
-        // CSS Vars Polyfill.
-        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_css_vars_polyfill' ) );
-        add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_css_vars_polyfill' ) );
+        add_filter( 'block_categories_all', array( $this, 'block_categories_all' ), 9 );
 
         // we need to enqueue the main script earlier to let 3rd-party plugins add custom styles support.
         add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ), 9 );
+
+        // add support for excerpts to some blocks.
+        add_filter( 'excerpt_allowed_blocks', array( $this, 'excerpt_allowed_blocks' ) );
     }
 
     /**
@@ -210,7 +221,7 @@ class GhostKit {
      * @param array $categories - available categories.
      * @return array
      */
-    public function block_categories( $categories ) {
+    public function block_categories_all( $categories ) {
         return array_merge(
             array(
                 array(
@@ -223,44 +234,37 @@ class GhostKit {
     }
 
     /**
-     * Enqueue CSS Vars polyfill.
-     */
-    public function enqueue_css_vars_polyfill() {
-        $polyfill_name    = 'ie11-custom-properties';
-        $polyfill_version = '4.1.0';
-        $polyfill_url     = ghostkit()->plugin_url . 'assets/vendor/ie11-custom-properties/ie11CustomProperties.js?ver=' . $polyfill_version;
-
-        // Already added in 3rd-party code.
-        if ( wp_script_is( $polyfill_name ) || wp_script_is( $polyfill_name, 'registered' ) ) {
-            return;
-        }
-
-        wp_register_script( $polyfill_name, '', array(), $polyfill_version, true );
-        wp_enqueue_script( $polyfill_name );
-        wp_add_inline_script(
-            $polyfill_name,
-            '!function( d ) {
-                // For IE11 only.
-                if( window.MSInputMethodContext && document.documentMode ) {
-                    var s = d.createElement( \'script\' );
-                    s.src = \'' . esc_url( $polyfill_url ) . '\';
-                    d.head.appendChild( s );
-                }
-            }(document)'
-        );
-    }
-
-    /**
      * Enqueue editor assets
      */
     public function enqueue_block_editor_assets() {
+        global $current_screen;
+
         $css_deps = array();
-        $js_deps  = array( 'ghostkit-helper', 'wp-block-editor', 'wp-blocks', 'wp-date', 'wp-i18n', 'wp-element', 'wp-edit-post', 'wp-compose', 'underscore', 'wp-hooks', 'wp-components', 'wp-keycodes', 'moment', 'jquery' );
+        $js_deps  = array( 'ghostkit-helper', 'wp-block-editor', 'wp-blocks', 'wp-date', 'wp-i18n', 'wp-element', 'wp-edit-post', 'wp-compose', 'underscore', 'wp-hooks', 'wp-components', 'wp-keycodes', 'jquery' );
+
+        // Fix for Widgets screen.
+        if ( isset( $current_screen->id ) && 'widgets' === $current_screen->id ) {
+            $key = array_search( 'wp-edit-post', $js_deps, true );
+
+            if ( false !== $key ) {
+                unset( $js_deps[ $key ] );
+            }
+        }
 
         // Jarallax.
         if ( apply_filters( 'gkt_enqueue_plugin_jarallax', true ) ) {
             $js_deps[] = 'jarallax';
             $js_deps[] = 'jarallax-video';
+        }
+
+        // ScrollReveal.
+        if ( apply_filters( 'gkt_enqueue_plugin_scrollreveal', true ) ) {
+            $js_deps[] = 'scrollreveal';
+        }
+
+        // Luxon.
+        if ( apply_filters( 'gkt_enqueue_plugin_luxon', true ) ) {
+            $js_deps[] = 'luxon';
         }
 
         // GistEmbed.
@@ -285,6 +289,36 @@ class GhostKit {
             $js_deps,
             filemtime( plugin_dir_path( __FILE__ ) . 'gutenberg/index.min.js' ),
             true
+        );
+    }
+
+    /**
+     * Excerpt allowed wrapper blocks.
+     *
+     * @param array $blocks - allowed blocks.
+     * @return array
+     */
+    public function excerpt_allowed_blocks( $blocks ) {
+        return array_merge(
+            $blocks,
+            array(
+                'ghostkit/accordion',
+                'ghostkit/accordion-item',
+                'ghostkit/alert',
+                'ghostkit/button',
+                'ghostkit/carousel',
+                'ghostkit/carousel-single',
+                'ghostkit/changelog',
+                'ghostkit/counter-box',
+                'ghostkit/grid',
+                'ghostkit/grid-column',
+                'ghostkit/icon-box',
+                'ghostkit/pricing-table',
+                'ghostkit/pricing-table-item',
+                'ghostkit/tabs-v2',
+                'ghostkit/tabs-tab-v2',
+                'ghostkit/testimonial',
+            )
         );
     }
 
@@ -353,7 +387,7 @@ class GhostKit {
         return array_merge(
             $links,
             array(
-                '<a target="_blank" href="admin.php?page=ghostkit_go_pro">' . esc_html__( 'Go Pro', 'ghostkit' ) . '</a>',
+                '<a target="_blank" href="admin.php?page=ghostkit_go_pro&utm_medium=plugins_list">' . esc_html__( 'Go Pro', 'ghostkit' ) . '</a>',
             )
         );
     }

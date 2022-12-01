@@ -3,7 +3,7 @@
  * Class Google\Site_Kit\Modules\Site_Verification
  *
  * @package   Google\Site_Kit
- * @copyright 2019 Google LLC
+ * @copyright 2021 Google LLC
  * @license   https://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0
  * @link      https://sitekit.withgoogle.com
  */
@@ -11,7 +11,6 @@
 namespace Google\Site_Kit\Modules;
 
 use Google\Site_Kit\Core\Authentication\Clients\Google_Site_Kit_Client;
-use Google\Site_Kit\Core\Authentication\Google_Proxy;
 use Google\Site_Kit\Core\Authentication\Verification;
 use Google\Site_Kit\Core\Authentication\Verification_File;
 use Google\Site_Kit\Core\Authentication\Verification_Meta;
@@ -24,12 +23,13 @@ use Google\Site_Kit\Core\REST_API\Data_Request;
 use Google\Site_Kit\Core\Storage\Transients;
 use Google\Site_Kit\Core\Util\Exit_Handler;
 use Google\Site_Kit\Core\Util\Google_URL_Matcher_Trait;
-use Google\Site_Kit_Dependencies\Google_Service_Exception;
-use Google\Site_Kit_Dependencies\Google_Service_SiteVerification;
-use Google\Site_Kit_Dependencies\Google_Service_SiteVerification_SiteVerificationWebResourceGettokenRequest;
-use Google\Site_Kit_Dependencies\Google_Service_SiteVerification_SiteVerificationWebResourceGettokenRequestSite;
-use Google\Site_Kit_Dependencies\Google_Service_SiteVerification_SiteVerificationWebResourceResource;
-use Google\Site_Kit_Dependencies\Google_Service_SiteVerification_SiteVerificationWebResourceResourceSite;
+use Google\Site_Kit\Core\Util\Method_Proxy_Trait;
+use Google\Site_Kit_Dependencies\Google\Service\Exception as Google_Service_Exception;
+use Google\Site_Kit_Dependencies\Google\Service\SiteVerification as Google_Service_SiteVerification;
+use Google\Site_Kit_Dependencies\Google\Service\SiteVerification\SiteVerificationWebResourceGettokenRequest as Google_Service_SiteVerification_SiteVerificationWebResourceGettokenRequest;
+use Google\Site_Kit_Dependencies\Google\Service\SiteVerification\SiteVerificationWebResourceGettokenRequestSite as Google_Service_SiteVerification_SiteVerificationWebResourceGettokenRequestSite;
+use Google\Site_Kit_Dependencies\Google\Service\SiteVerification\SiteVerificationWebResourceResource as Google_Service_SiteVerification_SiteVerificationWebResourceResource;
+use Google\Site_Kit_Dependencies\Google\Service\SiteVerification\SiteVerificationWebResourceResourceSite as Google_Service_SiteVerification_SiteVerificationWebResourceResourceSite;
 use Google\Site_Kit_Dependencies\Psr\Http\Message\RequestInterface;
 use WP_Error;
 use Exception;
@@ -42,7 +42,14 @@ use Exception;
  * @ignore
  */
 final class Site_Verification extends Module implements Module_With_Scopes {
-	use Module_With_Scopes_Trait, Google_URL_Matcher_Trait;
+	use Method_Proxy_Trait;
+	use Module_With_Scopes_Trait;
+	use Google_URL_Matcher_Trait;
+
+	/**
+	 * Module slug name.
+	 */
+	const MODULE_SLUG = 'site-verification';
 
 	/**
 	 * Meta site verification type.
@@ -68,11 +75,10 @@ final class Site_Verification extends Module implements Module_With_Scopes {
 		$this->register_scopes_hook();
 
 		add_action(
-			'admin_action_' . Google_Proxy::ACTION_SETUP,
-			function() {
-				$this->handle_verification_token();
-			},
-			0
+			'googlesitekit_verify_site_ownership',
+			$this->get_method_proxy( 'handle_verification_token' ),
+			10,
+			2
 		);
 
 		$print_site_verification_meta = function() {
@@ -85,6 +91,9 @@ final class Site_Verification extends Module implements Module_With_Scopes {
 		add_action(
 			'googlesitekit_authorize_user',
 			function() {
+				if ( ! $this->authentication->credentials()->using_proxy() ) {
+					return;
+				}
 				$this->user_options->set( Verification::OPTION, 'verified' );
 			}
 		);
@@ -343,15 +352,12 @@ final class Site_Verification extends Module implements Module_With_Scopes {
 	 */
 	protected function setup_info() {
 		return array(
-			'slug'         => 'site-verification',
-			'name'         => _x( 'Site Verification', 'Service name', 'google-site-kit' ),
-			'description'  => __( 'Google Site Verification allows you to manage ownership of your site.', 'google-site-kit' ),
-			'cta'          => __( 'Verify ownership with Google Site Verification.', 'google-site-kit' ),
-			'order'        => 0,
-			'homepage'     => __( 'https://www.google.com/webmasters/verification/home', 'google-site-kit' ),
-			'learn_more'   => __( 'https://developers.google.com/site-verification/', 'google-site-kit' ),
-			'force_active' => true,
-			'internal'     => true,
+			'slug'        => 'site-verification',
+			'name'        => _x( 'Site Verification', 'Service name', 'google-site-kit' ),
+			'description' => __( 'Google Site Verification allows you to manage ownership of your site.', 'google-site-kit' ),
+			'order'       => 0,
+			'homepage'    => __( 'https://www.google.com/webmasters/verification/home', 'google-site-kit' ),
+			'internal'    => true,
 		);
 	}
 
@@ -388,40 +394,20 @@ final class Site_Verification extends Module implements Module_With_Scopes {
 	 *
 	 * @since 1.1.0
 	 * @since 1.1.2 Runs on `admin_action_googlesitekit_proxy_setup` and no longer redirects directly.
+	 * @since 1.48.0 Token and method are now passed as arguments.
+	 * @since 1.49.0 No longer uses the `googlesitekit_proxy_setup_url_params` filter to set the `verify` and `verification_method` query params.
+	 *
+	 * @param string $token  Verification token.
+	 * @param string $method Verification method type.
 	 */
-	private function handle_verification_token() {
-		$verification_token = $this->context->input()->filter( INPUT_GET, 'googlesitekit_verification_token', FILTER_SANITIZE_STRING );
-		$verification_type  = $this->context->input()->filter( INPUT_GET, 'googlesitekit_verification_token_type', FILTER_SANITIZE_STRING );
-		$verification_type  = $verification_type ?: self::VERIFICATION_TYPE_META;
-
-		if ( empty( $verification_token ) ) {
-			return;
-		}
-
-		if ( ! current_user_can( Permissions::SETUP ) ) {
-			wp_die( esc_html__( 'You don\'t have permissions to set up Site Kit.', 'google-site-kit' ), 403 );
-		}
-
-		switch ( $verification_type ) {
+	private function handle_verification_token( $token, $method ) {
+		switch ( $method ) {
 			case self::VERIFICATION_TYPE_FILE:
-				$this->authentication->verification_file()->set( $verification_token );
+				$this->authentication->verification_file()->set( $token );
 				break;
 			case self::VERIFICATION_TYPE_META:
-				$this->authentication->verification_meta()->set( $verification_token );
+				$this->authentication->verification_meta()->set( $token );
 		}
-
-		add_filter(
-			'googlesitekit_proxy_setup_url_params',
-			function ( $params ) use ( $verification_type ) {
-				return array_merge(
-					$params,
-					array(
-						'verify'              => 'true',
-						'verification_method' => $verification_type,
-					)
-				);
-			}
-		);
 	}
 
 	/**
@@ -504,5 +490,17 @@ final class Site_Verification extends Module implements Module_With_Scopes {
 		}
 
 		// If the user does not have the necessary permissions then let the request pass through.
+	}
+
+
+	/**
+	 * Returns TRUE to indicate that this module should be always active.
+	 *
+	 * @since 1.49.0
+	 *
+	 * @return bool Returns `true` indicating that this module should be activated all the time.
+	 */
+	public static function is_force_active() {
+		return true;
 	}
 }

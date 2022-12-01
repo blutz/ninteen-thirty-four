@@ -2,13 +2,13 @@
 Contributors: johnny5
 Donate link: https://redirection.me/donation/
 Tags: redirect, htaccess, 301, 404, seo, permalink, apache, nginx, post, admin
-Requires at least: 5.0
-Tested up to: 5.5.2
-Stable tag: 4.9.2
+Requires at least: 5.6
+Tested up to: 6.1
+Stable tag: 5.3.5
 Requires PHP: 5.6
 License: GPLv3
 
-Manage 301 redirections, keep track of 404 errors, and improve your site, with no knowledge of Apache or Nginx needed.
+Manage 301 redirects, track 404 errors, and improve your site. No knowledge of Apache or Nginx required.
 
 == Description ==
 
@@ -20,7 +20,7 @@ It has been a WordPress plugin for over 10 years and has been recommended countl
 
 Full documentation can be found at [https://redirection.me](https://redirection.me)
 
-Redirection is compatible with PHP from 5.6 and upwards (including 7.4).
+Redirection is compatible with PHP from 5.6 to 8.1.
 
 = Redirect manager =
 
@@ -70,6 +70,10 @@ Errors can be grouped to show where you should focus your attention, and can be 
 = Query parameter handling =
 
 You can match query parameters exactly, ignore them, and even pass them through to your target.
+
+= Migrate Permalinks =
+
+Changed your permalink structure? You can migrate old permalinks simply by entering the old permalink structure. Multiple migrations are supported.
 
 = Apache & Nginx support =
 
@@ -175,9 +179,94 @@ The plugin works in a similar manner to how WordPress handles permalinks and sho
 
 == Changelog ==
 
-An x.1 version increase introduces new or updated features and can be considered to contain 'breaking' changes. A x.x.1 increase is purely a bug fix and introduces no new features, and can be considered as containing no breaking changes.
+A x.1 version increase introduces new or updated features and can be considered to contain 'breaking' changes. A x.x.1 increase is purely a bug fix and introduces no new features, and can be considered as containing no breaking changes.
 
-= 4.9.2 - 30th October 2020 =
+= 5.3.5 - 6th November 2022 =
+* Fix crash on options page for Czech language
+
+= 5.3.4 - 14th September 2022 =
+* Fix query parameter name with a + not matching
+
+= 5.3.3 - 7th September 2022 =
+* Fix default HTTP header not being set when first used
+* Fix incorrect column heading in CSV
+* Fix passing of mixed case parameters
+
+= 5.3.2 - 6th August 2022 =
+* Fix missing props error
+* Fix missing value for .htaccess location display
+
+= 5.3.1 - 29th July 2022 =
+* Fix crash caused by bad translations in locale files
+* Fix query match not working when it contained mixed case
+* Fix missing flag in .htaccess export
+
+= 5.3.0 - 21st July 2022 =
+* Improve installation process
+* Improve permalink migration so it works with more permalinks
+* Prevent ordering columns by HTTP code
+* Better encode URLs in Nginx export
+* Allow escaped characters to work in the redirect checker
+* Reduce CSV import time
+
+= 5.2.3 - 6th February 2022 =
+* Fix error when grouping by URL, adding redirect, and then adding another redirect
+* Add a warning for unescaped ? regex
+
+= 5.2.2 - 22nd January 2022 =
+* Further improve URL checker response to clarify responsibility
+* Fix WordPress and pagetype match preventing the logging of 404s
+* Fix title field being inactive
+* Fix CSV export having duplicate column
+
+= 5.2.1 - 16th January 2022 =
+* Include path with inline URL checker
+
+= 5.2 - 15th January 2022 =
+* Improve URL checker and show more details
+* Retain query parameter case when passing to target URL
+* Remove unnecessary database stage option check
+* PHP 8.1 compatibility
+
+= 5.1.3 - 24th July 2021 =
+* Fix geo IP on log pages showing an API redirected error
+* Fix crash when changing match type in edit dialog
+
+= 5.1.2 - 17th July 2021 =
+* Fix random redirect not working
+* Fix [userid] shortcode returning 1
+
+= 5.1.1 - 11th April 2021 =
+* Revert the permalink migration improvement from 5.1 as it's causing problems on some sites
+
+= 5.1 - 10th April 2021 =
+* Add importer for PrettyLinks
+* Fix crash converting a 'do nothing' to 'redirect to URL'
+* Improve warning messages
+* Improve permalink migration when is_404 is not set
+* Fix 'delete log entries' returning blank data
+* Fix missing .htaccess location
+* Fix hits & date not imported with JSON format
+
+= 5.0.1 - 26th Jan 2021 =
+* Fix incorrect warning when creating a regular expression with captured data
+* Fix JS error when upgrading a database with a broken REST API
+* Increase regular expression redirect limit
+* PHP8 support
+
+= 5.0 - 16th Jan 2021 =
+* Add caching support
+* Add support for migrated permalink structures
+* Add dynamic URL variables
+* Add fully automatic database upgrade option
+* Add a new version release information prompt
+* Improve performance when many redirects have the same path
+* Move bulk all action to a separate button after selecting all
+* Fix error in display with restricted capabilities
+* Avoid problems with 7G Firewall
+* Improve handling of invalid encoded characters
+
+= 4.9.2 - 30th October =
 * Fix warning with PHP 5.6
 * Improve display of long URLs
 
@@ -716,34 +805,14 @@ An x.1 version increase introduces new or updated features and can be considered
 * WP 3.5 compatibility
 * Fix export
 
-= 2.3.0 =
+= 2.3.0 and earlier =
 * Remove 404 module and move 404 logs into a separate option
-* Add Danish translation, thanks to Rasmus Himmelstrup
-
-= 2.2.14 =
 * Clean up log code, using WP_List_Table to power it
-* Update Hungarian translation
-
-= 2.2.13 =
 * Fix some broken links in admin pages
-
-= 2.2.12 =
-* Cleanup some XSS issues
-
-= 2.2.11 =
-* Add Lithuanian
-* Add Belarusian
-* Add Czech
 * Fix order of redirects, thanks to Nicolas Hatier
-
-= 2.2.10 =
 * Fix XSS in admin menu & referrers log
-* Update Russian translation, thanks to Alexey Pazdnikov
-* Add Romanian translation, thanks to Alina
-* Add Greek, thanks to Stefanos Kofopoulos
 * Better database compatibility
 * Remove warning from VaultPress
-* Add Turkish translation, thanks to Fatih Cevik
 * Remove debug from htaccess module
 * Fix encoding of JS strings
 * Use fgetcsv for CSV importer - better handling

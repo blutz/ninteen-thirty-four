@@ -1,27 +1,62 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
+
+/**
+ * Takes a setting and ensures it's a number if it's a number or sanitizing it
+ */
+function pdfjs_sanatize_number( $input ) {
+	if ( is_numeric( $input ) ) {
+		return $input;
+	} else {
+		return sanitize_text_field( $input );
+	}
+}
+
+/**
+ * Takes a setting and ensures it returns as true or false
+ */
+function pdfjs_set_true_false( $input ) {
+	if ( 'true' !== $input ) {
+		return 'false';
+	} else {
+		return 'true';
+	}
+}
+
 /**
  * Generate the PDF embed code.
  */
 function pdfjs_generator( $incoming_from_handler ) {
-
-	$viewer_base_url   = plugins_url() . '/pdfjs-viewer-shortcode/pdfjs/web/viewer.php';
-	$file_name         = $incoming_from_handler['url'];
-	$viewer_height     = $incoming_from_handler['viewer_height'];
-	$viewer_width      = $incoming_from_handler['viewer_width'];
+	$viewer_base_url   = plugin_dir_url( __DIR__ ) . 'pdfjs/web/viewer.php';
+	$viewer_height     = pdfjs_sanatize_number( $incoming_from_handler['viewer_height'] );
+	$viewer_width      = pdfjs_sanatize_number( $incoming_from_handler['viewer_width'] );
 	$fullscreen        = $incoming_from_handler['fullscreen'];
-	$fullscreen_text   = $incoming_from_handler['fullscreen_text'];
-	$fullscreen_target = $incoming_from_handler['fullscreen_target'];
-	$download          = $incoming_from_handler['download'];
-	$print             = $incoming_from_handler['print'];
-	$openfile          = $incoming_from_handler['openfile'];
-	$zoom              = $incoming_from_handler['zoom'];
+	$fullscreen_text   = esc_html( $incoming_from_handler['fullscreen_text'] );
+	$fullscreen_target = pdfjs_set_true_false( $incoming_from_handler['fullscreen_target'] );
+	$download          = pdfjs_set_true_false( $incoming_from_handler['download'] );
+	$print             = pdfjs_set_true_false( $incoming_from_handler['print'] );
+	$openfile          = pdfjs_set_true_false( $incoming_from_handler['openfile'] );
+	$zoom              = pdfjs_sanatize_number( $incoming_from_handler['zoom'] );
 	$pagemode          = get_option( 'pdfjs_viewer_pagemode', 'none' );
 	$searchbutton      = get_option( 'pdfjs_search_button', 'on' );
-	$search_term       = $incoming_from_handler['search_term'];
+	$attachment_id     = pdfjs_sanatize_number( $incoming_from_handler['attachment_id'] );
+	$file_url          = esc_url( $incoming_from_handler['url'] );
+	$pdfjs_custom_page = get_option( 'pdfjs_custom_page', '' );
 
-	// if the PDF URL is missing the file extension, load error PDF.
-	if ( ! strpos( $file_name, '.pdf' ) ) {
-		$file_name = plugins_url() . '/pdfjs-viewer-shortcode/pdf-loading-error.pdf';
+	set_transient( 'pdfjs_button_download_' . $attachment_id, $download );
+	set_transient( 'pdfjs_button_print_' . $attachment_id, $print );
+	set_transient( 'pdfjs_button_openfile_' . $attachment_id, $openfile );
+	set_transient( 'pdfjs_button_zoom_' . $attachment_id, $zoom );
+	set_transient( 'pdfjs_button_pagemode_' . $attachment_id, $pagemode );
+	set_transient( 'pdfjs_button_searchbutton_' . $attachment_id, $searchbutton );
+
+	// checks to see if the $file_url is encoded, if so, decode it.
+	if ( strpos( $file_url, '%2F' ) ) {
+		$file_url = urldecode( $file_url );
+		// for some reason encoded urls contain an extra http:// so lets remove it.
+		$file_url = str_replace( 'http://http', 'http', $file_url );
+		// escape it again just in case.
+		$file_url = esc_url( $file_url );
 	}
 
 	// check to see if the current value is in percent.
@@ -52,20 +87,10 @@ function pdfjs_generator( $incoming_from_handler ) {
 		}
 	}
 
-	if ( 'true' !== $download ) {
-		$download = 'false';
-	}
-
-	if ( 'true' !== $print ) {
-		$print = 'false';
-	}
-
-	if ( 'true' !== $openfile ) {
-		$openfile = 'false';
-	}
-
 	if ( 'on' === $searchbutton ) {
 		$searchbutton = 'true';
+	} else {
+		$searchbutton = 'false';
 	}
 
 	if ( 'true' === $fullscreen_target ) {
@@ -74,43 +99,20 @@ function pdfjs_generator( $incoming_from_handler ) {
 		$fullscreen_target = '';
 	}
 
-	if ( isset( $search_term) && $search_term !== '' ) {
-		$searchTerm = '&search=' . $search_term;
-	} else {
-		$searchTerm = '';
-	}
+	$attachment_info = '?file=' . $file_url . '&attachment_id=' . $attachment_id;
 
-	// Find the domain name and remove it from the URL to make Edge happy.
-
-	// Check to see if a custom site domain is set elsewhere.
-	$site_url = apply_filters( 'pdfjs_set_custom_domain', '' );
-
-	if ( ! $site_url ) {
-		// Get the URL protocol.
-		$is_secure = false;
-		if ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ) {
-			$is_secure = true;
-		} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && 'https' === $_SERVER['HTTP_X_FORWARDED_PROTO'] || ! empty( $_SERVER['HTTP_X_FORWARDED_SSL'] ) && 'on' === $_SERVER['HTTP_X_FORWARDED_SSL'] ) {
-			$is_secure = true;
-		}
-		// Put it with the slashes.
-		$request_protocol = $is_secure ? 'https://' : 'http://';
-		// Replace it in the URL.
-		$site_url  = $request_protocol . $_SERVER['HTTP_HOST'];
-	}
-
-	$file_name = str_replace( $site_url, '', urldecode($file_name) );
-
-	// Any additional changes needed?
-	$file_name = apply_filters( 'pdfjs_set_custom_edits', $file_name );
-
-	$final_url = $viewer_base_url . '?file=' . $file_name . '&dButton=' . $download . '&pButton=' . $print . '&oButton=' . $openfile. '&sButton=' . $searchbutton . '#zoom=' . $zoom . '&pagemode=' . $pagemode . $searchTerm;
+	$nonce     = wp_create_nonce( 'pdfjs_full_screen' );
+	$final_url = $viewer_base_url . $attachment_info . '&dButton=' . $download . '&pButton=' . $print . '&oButton=' . $openfile . '&sButton=' . $searchbutton . '#zoom=' . $zoom . '&pagemode=' . $pagemode . '&_wpnonce=' . $nonce;
 
 	$fullscreen_link = '';
 	if ( 'true' === $fullscreen ) {
-		$fullscreen_link = '<div class="pdfjs-fullscreen"><a href="' . $final_url . '" ' . $fullscreen_target . '>' . sanitize_text_field( urldecode( $fullscreen_text ) ) . '</a></div>';
+		if ( $pdfjs_custom_page ) {
+			$fullscreen_link = '<div class="pdfjs-fullscreen"><a href="?pdfjs_id=' . $attachment_id . '&_wpnonce=' . $nonce . '#zoom=' . $zoom . '" ' . $fullscreen_target . '>' . sanitize_text_field( $fullscreen_text ) . '</a></div>';
+		} else {
+			$fullscreen_link = '<div class="pdfjs-fullscreen"><a href="' . esc_url( $final_url ) . '" ' . $fullscreen_target . '>' . sanitize_text_field( $fullscreen_text ) . '</a></div>';
+		}
 	}
-	$iframe_code = '<div><iframe width="' . $viewer_width . '" height="' . $viewer_height . '" src="' . $final_url . '" title="Embedded PDF" class="pdfjs-iframe"></iframe></div>';
+	$iframe_code = '<div><iframe width="' . $viewer_width . '" height="' . $viewer_height . '" src="' . esc_url( $final_url ) . '" title="Embedded PDF" class="pdfjs-iframe"></iframe></div>';
 
 	return $fullscreen_link . $iframe_code;
 }

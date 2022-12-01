@@ -1,5 +1,7 @@
 <?php
-// ==== Shortcode ====
+/** ==== Shortcode ==== */
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
 
 // tell WordPress to register the pdfjs-viewer shortcode.
 add_shortcode( 'pdfjs-viewer', 'pdfjs_handler' );
@@ -17,23 +19,21 @@ function pdfjs_handler( $incoming_from_post ) {
 	// set defaults.
 	$incoming_from_post = shortcode_atts(
 		array(
-			'url'             => plugins_url() . '/pdfjs-viewer-shortcode/pdf-loading-error.pdf',
-			'viewer_height'   => '800px',
-			'viewer_width'    => '100%',
-			'fullscreen'      => 'true',
-			'fullscreen_text' => 'View Fullscreen',
+			'url'               => plugin_dir_url( __DIR__ ) . '/pdf-loading-error.pdf',
+			'viewer_height'     => '800px',
+			'viewer_width'      => '100%',
+			'fullscreen'        => 'true',
+			'fullscreen_text'   => 'View Fullscreen',
 			'fullscreen_target' => 'false',
-			'download'        => 'true',
-			'print'           => 'true',
-			'openfile'        => 'false',
-			'zoom'            => 'auto',
-			'search_term'     => '',
+			'download'          => 'true',
+			'print'             => 'true',
+			'openfile'          => 'false',
+			'zoom'              => 'auto',
+			'attachment_id'     => '',
 		),
 		$incoming_from_post
 	);
 
-	$pdfjs_output = pdfjs_generator( $incoming_from_post );
-
 	// send back text to replace shortcode in post.
-	return $pdfjs_output;
+	return pdfjs_generator( $incoming_from_post );
 }

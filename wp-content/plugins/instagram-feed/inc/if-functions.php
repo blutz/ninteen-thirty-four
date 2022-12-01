@@ -23,27 +23,39 @@ add_filter( 'widget_text', 'do_shortcode' );
  * 'echo do_shortcode( "[instagram-feed]" );'
  */
 add_shortcode('instagram-feed', 'display_instagram');
-function display_instagram( $atts = array() ) {
+function display_instagram( $atts = array(), $preview_settings = false ) {
+	do_action( 'sbi_before_display_instagram' );
 
 	$database_settings = sbi_get_database_settings();
 
-	if ( $database_settings['sb_instagram_ajax_theme'] !== 'on' && $database_settings['sb_instagram_ajax_theme'] !== 'true' ) {
-		wp_enqueue_script( 'sb_instagram_scripts' );
+	if ( $database_settings['sb_instagram_ajax_theme'] !== 'on'
+		 && $database_settings['sb_instagram_ajax_theme'] !== 'true'
+		 && $database_settings['sb_instagram_ajax_theme'] !== '1'
+		 && $database_settings['sb_instagram_ajax_theme'] !== true ) {
+		wp_enqueue_script( 'sbi_scripts' );
 	}
 
-	if ( $database_settings['enqueue_css_in_shortcode'] === 'on' || $database_settings['enqueue_css_in_shortcode'] === 'true' ) {
-		wp_enqueue_style( 'sb_instagram_styles' );
+	if ( $database_settings['enqueue_css_in_shortcode'] === 'on' || $database_settings['enqueue_css_in_shortcode'] === 'true' || $database_settings['enqueue_css_in_shortcode'] === true ) {
+		wp_enqueue_style( 'sbi_styles' );
 	}
-	$instagram_feed_settings = new SB_Instagram_Settings( $atts, $database_settings );
 
-	if ( empty( $database_settings['connected_accounts'] ) && empty( $atts['accesstoken'] ) ) {
+	$instagram_feed_settings = new SB_Instagram_Settings( $atts, $database_settings, $preview_settings );
+
+	$early_settings = $instagram_feed_settings->get_settings();;
+	if ( empty( $early_settings ) && ! sbi_doing_customizer( $atts ) ) {
 		$style = current_user_can( 'manage_instagram_feed_options' ) ? ' style="display: block;"' : '';
+		$id = isset( $atts['feed'] ) ? (int)$atts['feed'] : false;
+		if ( $id ) {
+			$message = sprintf( __( 'Error: No feed with the ID %s found.', 'instagram-feed' ), $id  );
+		} else {
+			$message = __( 'Error: No feed found.', 'instagram-feed' );
+		}
 		ob_start(); ?>
-        <div id="sbi_mod_error" <?php echo $style; ?>>
-            <span><?php _e('This error message is only visible to WordPress admins', 'instagram-feed' ); ?></span><br />
-            <p><b><?php _e( 'Error: No connected account.', 'instagram-feed' ); ?></b>
-            <p><?php _e( 'Please go to the Instagram Feed settings page to connect an account.', 'instagram-feed' ); ?></p>
-        </div>
+		<div id="sbi_mod_error" <?php echo $style; ?>>
+			<span><?php esc_html_e('This error message is only visible to WordPress admins', 'instagram-feed' ); ?></span><br />
+			<p><strong><?php echo esc_html( $message ); ?></strong>
+			<p><?php esc_html_e( 'Please go to the Instagram Feed settings page to create a feed.', 'instagram-feed' ); ?></p>
+		</div>
 		<?php
 		$html = ob_get_contents();
 		ob_get_clean();
@@ -58,7 +70,9 @@ function display_instagram( $atts = array() ) {
 
 	$instagram_feed = new SB_Instagram_Feed( $transient_name );
 
-	if ( $database_settings['sbi_caching_type'] === 'background' ) {
+	$instagram_feed->set_cache( $instagram_feed_settings->get_cache_time_in_seconds(), $settings );
+
+	if ( $settings['caching_type'] === 'background' ) {
 		$instagram_feed->add_report( 'background caching used' );
 		if ( $instagram_feed->regular_cache_exists() ) {
 			$instagram_feed->add_report( 'setting posts from cache' );
@@ -75,9 +89,8 @@ function display_instagram( $atts = array() ) {
 			$instagram_feed->set_cron_cache( $to_cache, $instagram_feed_settings->get_cache_time_in_seconds() );
 
 			SB_Instagram_Cron_Updater::do_single_feed_cron_update( $instagram_feed_settings, $to_cache, $atts, false );
-
+			$instagram_feed->set_cache( $instagram_feed_settings->get_cache_time_in_seconds(), $settings );
 			$instagram_feed->set_post_data_from_cache();
-
 		} elseif ( $instagram_feed->should_update_last_requested() ) {
 			$instagram_feed->add_report( 'updating last requested' );
 			$to_cache = array(
@@ -117,15 +130,11 @@ function display_instagram( $atts = array() ) {
 		$instagram_feed->maybe_set_header_data_from_backup();
 	}
 
-
 	// if need a header
 	if ( $instagram_feed->need_header( $settings, $feed_type_and_terms ) ) {
 		if ( $instagram_feed->should_use_backup() && $settings['minnum'] > 0 ) {
 			$instagram_feed->add_report( 'trying to set header from backup' );
 			$header_cache_success = $instagram_feed->maybe_set_header_data_from_backup();
-		} elseif ( $database_settings['sbi_caching_type'] === 'background' ) {
-			$instagram_feed->add_report( 'background header caching used' );
-			$instagram_feed->set_header_data_from_cache();
 		} elseif ( $instagram_feed->regular_header_cache_exists() ) {
 			// set_post_data_from_cache
 			$instagram_feed->add_report( 'page load caching used and regular header cache exists' );
@@ -178,7 +187,9 @@ function sbi_add_resized_image_data( $instagram_feed, $feed_id ) {
 	global $sb_instagram_posts_manager;
 
 	if ( ! $sb_instagram_posts_manager->image_resizing_disabled() ) {
-		SB_Instagram_Feed::update_last_requested( $instagram_feed->get_image_ids_post_set() );
+		if ( $instagram_feed->should_update_last_requested() ) {
+			SB_Instagram_Feed::update_last_requested( $instagram_feed->get_image_ids_post_set() );
+		}
 	}
 	?>
     <span class="sbi_resized_image_data" data-feed-id="<?php echo esc_attr( $feed_id ); ?>" data-resized="<?php echo esc_attr( sbi_json_encode( SB_Instagram_Feed::get_resized_images_source_set( $instagram_feed->get_image_ids_post_set(), 0, $feed_id ) ) ); ?>">
@@ -192,27 +203,27 @@ add_action( 'sbi_before_feed_end', 'sbi_add_resized_image_data', 10, 2 );
  * Resembles "display_instagram"
  */
 function sbi_get_next_post_set() {
-	if ( ! isset( $_POST['feed_id'] ) || strpos( $_POST['feed_id'], 'sbi' ) === false ) {
-		die( 'invalid feed ID');
+	if ( ! sbi_current_user_can( 'manage_instagram_feed_options') ) {
+		if ( ! isset( $_POST['feed_id'] ) || (strpos( $_POST['feed_id'], 'sbi' ) === false && strpos( $_POST['feed_id'], '*' ) === false ) ) {
+			die( 'invalid feed ID');
+		}
 	}
 
-	$feed_id = sanitize_text_field( $_POST['feed_id'] );
+	$feed_id = sanitize_text_field( wp_unslash( $_POST['feed_id'] ) );
+
 	$atts_raw = isset( $_POST['atts'] ) ? json_decode( stripslashes( $_POST['atts'] ), true ) : array();
 	if ( is_array( $atts_raw ) ) {
-		array_map( 'sanitize_text_field', $atts_raw );
+		$atts_raw = SB_Instagram_Settings::sanitize_raw_atts( $atts_raw );
 	} else {
 		$atts_raw = array();
 	}
 	$atts = $atts_raw; // now sanitized
 
 	$offset = isset( $_POST['offset'] ) ? (int)$_POST['offset'] : 0;
+	$page = isset( $_POST['page'] ) ? (int)$_POST['page'] : 1;
 
 	$database_settings = sbi_get_database_settings();
 	$instagram_feed_settings = new SB_Instagram_Settings( $atts, $database_settings );
-
-	if ( empty( $database_settings['connected_accounts'] ) && empty( $atts['accesstoken'] ) ) {
-		die( 'error no connected account' );
-	}
 
 	$instagram_feed_settings->set_feed_type_and_terms();
 	$instagram_feed_settings->set_transient_name();
@@ -223,59 +234,78 @@ function sbi_get_next_post_set() {
 	}
 
 	$settings = $instagram_feed_settings->get_settings();
-	$current_image_resolution = isset( $_POST['current_resolution'] ) ? (int)$_POST['current_resolution'] : 640;
 
-	switch ( $current_image_resolution ) {
-		case 150 :
-			$settings['imageres'] = 'thumb';
-			break;
-		case 320 :
-			$settings['imageres'] = 'medium';
-			break;
-		default :
-			$settings['imageres'] = 'full';
+	$location = isset( $_POST['location'] ) && in_array( $_POST['location'], array( 'header', 'footer', 'sidebar', 'content' ), true ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : 'unknown';
+	$post_id = isset( $_POST['post_id'] ) && $_POST['post_id'] !== 'unknown' ? (int)$_POST['post_id'] : 'unknown';
+	$feed_details = array(
+		'feed_id' => $transient_name,
+		'atts' => $atts,
+		'location' => array(
+			'post_id' => $post_id,
+			'html' => $location
+		)
+	);
+
+	$can_do_background_tasks = false;
+	if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
+		$nonce = isset( $_POST['locator_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['locator_nonce'] ) ) : '';
+		if ( wp_verify_nonce( $nonce, esc_attr( 'sbi-locator-nonce-' . $post_id . '-' . $transient_name ) ) ) {
+		    $can_do_background_tasks = true;
+		}
+	} else {
+		$can_do_background_tasks = true;
+	}
+
+	if ( $can_do_background_tasks ) {
+		sbi_do_background_tasks( $feed_details );
 	}
 
 	$feed_type_and_terms = $instagram_feed_settings->get_feed_type_and_terms();
 
 	$instagram_feed = new SB_Instagram_Feed( $transient_name );
-	if ( $database_settings['sbi_caching_type'] === 'background' ) {
+	$instagram_feed->set_cache( $instagram_feed_settings->get_cache_time_in_seconds(), $settings );
+
+	if ( $settings['caching_type'] === 'background' ) {
 		$instagram_feed->add_report( 'background caching used' );
 		if ( $instagram_feed->regular_cache_exists() ) {
 			$instagram_feed->add_report( 'setting posts from cache' );
 			$instagram_feed->set_post_data_from_cache();
 		}
 
-        if ( $instagram_feed->need_posts( $settings['num'], $offset ) && $instagram_feed->can_get_more_posts() ) {
-            while ( $instagram_feed->need_posts( $settings['num'], $offset ) && $instagram_feed->can_get_more_posts() ) {
-                $instagram_feed->add_remote_posts( $settings, $feed_type_and_terms, $instagram_feed_settings->get_connected_accounts_in_feed() );
-            }
+		if ( $instagram_feed->need_posts( $settings['minnum'], $offset, $page ) && $instagram_feed->can_get_more_posts() ) {
+			while ( $instagram_feed->need_posts( $settings['minnum'], $offset, $page ) && $instagram_feed->can_get_more_posts() ) {
+				$instagram_feed->add_remote_posts( $settings, $feed_type_and_terms, $instagram_feed_settings->get_connected_accounts_in_feed() );
+			}
 
-	        if ( $instagram_feed->need_to_start_cron_job() ) {
-		        $instagram_feed->add_report( 'needed to start cron job' );
-		        $to_cache = array(
-			        'atts' => $atts,
-			        'last_requested' => time(),
-		        );
+			$normal_method = true;
+			if ( $instagram_feed->need_to_start_cron_job() ) {
+				$instagram_feed->add_report( 'needed to start cron job' );
+				$to_cache = array(
+					'atts' => $atts,
+					'last_requested' => time(),
+				);
+				$normal_method = false;
 
-		        $instagram_feed->set_cron_cache( $to_cache, $instagram_feed_settings->get_cache_time_in_seconds() );
+			} else {
+				$instagram_feed->add_report( 'updating last requested and adding to cache' );
+				$to_cache = array(
+					'last_requested' => time(),
+				);
+			}
 
-	        } else {
-		        $instagram_feed->add_report( 'updating last requested and adding to cache' );
-		        $to_cache = array(
-			        'last_requested' => time(),
-		        );
-
-		        $instagram_feed->set_cron_cache( $to_cache, $instagram_feed_settings->get_cache_time_in_seconds(), $settings['backup_cache_enabled'] );
-	        }
-        }
+			if ( $normal_method ) {
+				$instagram_feed->set_cron_cache( $to_cache, $instagram_feed_settings->get_cache_time_in_seconds(), $settings['backup_cache_enabled'] );
+			} else {
+				$instagram_feed->set_cron_cache( $to_cache, $instagram_feed_settings->get_cache_time_in_seconds() );
+			}
+		}
 
 	} elseif ( $instagram_feed->regular_cache_exists() ) {
 		$instagram_feed->add_report( 'regular cache exists' );
 		$instagram_feed->set_post_data_from_cache();
 
-		if ( $instagram_feed->need_posts( $settings['num'], $offset ) && $instagram_feed->can_get_more_posts() ) {
-			while ( $instagram_feed->need_posts( $settings['num'], $offset ) && $instagram_feed->can_get_more_posts() ) {
+        if ( $instagram_feed->need_posts( $settings['minnum'], $offset, $page ) && $instagram_feed->can_get_more_posts() ) {
+	        while ( $instagram_feed->need_posts( $settings['minnum'], $offset, $page ) && $instagram_feed->can_get_more_posts() ) {
 				$instagram_feed->add_remote_posts( $settings, $feed_type_and_terms, $instagram_feed_settings->get_connected_accounts_in_feed() );
 			}
 
@@ -322,14 +352,11 @@ function sbi_get_next_post_set() {
 		'html' => $instagram_feed->get_the_items_html( $settings, $offset, $instagram_feed_settings->get_feed_type_and_terms(), $instagram_feed_settings->get_connected_accounts_in_feed() ),
 		'feedStatus' => $feed_status,
 		'report' => $instagram_feed->get_report(),
-        'resizedImages' => SB_Instagram_Feed::get_resized_images_source_set( $instagram_feed->get_image_ids_post_set(), 0, $feed_id )
+        'resizedImages' => SB_Instagram_Feed::get_resized_images_source_set( $instagram_feed->get_image_ids_post_set(), 1, $feed_id )
 	);
 
+	header( 'Content-Type: application/json; charset=utf-8' );
 	echo sbi_json_encode( $return );
-
-	global $sb_instagram_posts_manager;
-
-	$sb_instagram_posts_manager->update_successful_ajax_test();
 
 	die();
 }
@@ -343,22 +370,24 @@ add_action( 'wp_ajax_nopriv_sbi_load_more_clicked', 'sbi_get_next_post_set' );
  * @return string
  */
 function sbi_process_submitted_resize_ids() {
-	if ( ! isset( $_POST['feed_id'] ) || strpos( $_POST['feed_id'], 'sbi' ) === false ) {
-		die( 'invalid feed ID');
+	if ( ! sbi_current_user_can( 'manage_instagram_feed_options') ) {
+		if ( ! isset( $_POST['feed_id'] ) || (strpos( $_POST['feed_id'], 'sbi' ) === false && strpos( $_POST['feed_id'], '*' ) === false ) ) {
+			die( 'invalid feed ID');
+		}
 	}
 
 	$feed_id = sanitize_text_field( $_POST['feed_id'] );
 	$images_need_resizing_raw = isset( $_POST['needs_resizing'] ) ? $_POST['needs_resizing'] : array();
 	if ( is_array( $images_need_resizing_raw ) ) {
-		array_map( 'sanitize_text_field', $images_need_resizing_raw );
+		array_map( 'sbi_sanitize_instagram_ids', $images_need_resizing_raw );
 	} else {
 		$images_need_resizing_raw = array();
 	}
 	$images_need_resizing = $images_need_resizing_raw;
 
-	$atts_raw = isset( $_POST['atts'] ) ? json_decode( stripslashes( $_POST['atts'] ), true ) : array();
+	$atts_raw = isset( $_POST['atts'] ) ? json_decode( wp_unslash( $_POST['atts'] ), true ) : array();
 	if ( is_array( $atts_raw ) ) {
-		array_map( 'sanitize_text_field', $atts_raw );
+		$atts_raw = SB_Instagram_Settings::sanitize_raw_atts( $atts_raw );
 	} else {
 		$atts_raw = array();
 	}
@@ -370,54 +399,132 @@ function sbi_process_submitted_resize_ids() {
 	$database_settings = sbi_get_database_settings();
 	$instagram_feed_settings = new SB_Instagram_Settings( $atts, $database_settings );
 
-	if ( empty( $database_settings['connected_accounts'] ) && empty( $atts['accesstoken'] ) ) {
-		return '<div class="sb_instagram_error"><p>' . __( 'Please connect an account on the Instagram Feed plugin Settings page.', 'instagram-feed' ) . '</p></div>';
-	}
-
 	$instagram_feed_settings->set_feed_type_and_terms();
 	$instagram_feed_settings->set_transient_name();
 	$transient_name = $instagram_feed_settings->get_transient_name();
 	$settings = $instagram_feed_settings->get_settings();
 
+	$location = isset( $_POST['location'] ) && in_array( $_POST['location'], array( 'header', 'footer', 'sidebar', 'content' ), true ) ? sanitize_text_field( $_POST['location'] ) : 'unknown';
+	$post_id = isset( $_POST['post_id'] ) && $_POST['post_id'] !== 'unknown' ? (int)$_POST['post_id'] : 'unknown';
+	$feed_details = array(
+		'feed_id' => $transient_name,
+		'atts' => $atts,
+		'location' => array(
+			'post_id' => $post_id,
+			'html' => $location
+		)
+	);
+
+	$can_do_background_tasks = false;
+	if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
+		$nonce = isset( $_POST['locator_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['locator_nonce'] ) ) : '';
+		if ( wp_verify_nonce( $nonce, esc_attr( 'sbi-locator-nonce-' . $post_id . '-' . $transient_name ) ) ) {
+			$can_do_background_tasks = true;
+		}
+	} else {
+		$can_do_background_tasks = true;
+	}
+
+	if ( $can_do_background_tasks ) {
+		sbi_do_background_tasks( $feed_details );
+	}
+
 	if ( $cache_all ) {
 		$settings['cache_all'] = true;
 	}
 
-	if ( $transient_name !== $feed_id ) {
-		die( 'id does not match' );
+	if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
+		if ( $transient_name !== $feed_id ) {
+			die( 'id does not match' );
+		}
 	}
 
 	sbi_resize_posts_by_id( $images_need_resizing, $transient_name, $settings );
+	sbi_delete_image_cache( $transient_name );
 
 	global $sb_instagram_posts_manager;
 
-	if ( ! $sb_instagram_posts_manager->image_resizing_disabled() ) {
-		echo sbi_json_encode( SB_Instagram_Feed::get_resized_images_source_set( $settings['minnum'], $offset - $settings['minnum'], $feed_id ) );
+	if ( ! $sb_instagram_posts_manager->image_resizing_disabled( $transient_name ) ) {
+		$num = $settings['minnum'] * 2 + 5;
+
+		header( 'Content-Type: application/json; charset=utf-8' );
+		echo sbi_json_encode( SB_Instagram_Feed::get_resized_images_source_set( $num, $offset - $settings['minnum'], $feed_id, false ) );
 		die();
 	}
-
 
 	die( 'resizing success' );
 }
 add_action( 'wp_ajax_sbi_resized_images_submit', 'sbi_process_submitted_resize_ids' );
 add_action( 'wp_ajax_nopriv_sbi_resized_images_submit', 'sbi_process_submitted_resize_ids' );
 
-/**
- * Used for testing if admin-ajax.php can be successfully reached using
- * AJAX in the frontend
- */
-function sbi_update_successful_ajax() {
+function sbi_do_locator() {
+	if ( ! sbi_current_user_can( 'manage_instagram_feed_options') ) {
+		if ( ! isset( $_POST['feed_id'] ) || (strpos( $_POST['feed_id'], 'sbi' ) === false && strpos( $_POST['feed_id'], '*' ) === false ) ) {
+			die( 'invalid feed ID');
+		}
+	}
 
-    global $sb_instagram_posts_manager;
+	$feed_id = sanitize_text_field( wp_unslash( $_POST['feed_id'] ) );
 
-	delete_transient( 'sb_instagram_doing_ajax_test' );
+	$atts_raw = isset( $_POST['atts'] ) ? json_decode( wp_unslash( $_POST['atts'] ), true ) : array();
+	if ( is_array( $atts_raw ) ) {
+		$atts_raw = SB_Instagram_Settings::sanitize_raw_atts( $atts_raw );
+	} else {
+		$atts_raw = array();
+	}
+	$atts = $atts_raw; // now sanitized
 
-    $sb_instagram_posts_manager->update_successful_ajax_test();
+	$database_settings = sbi_get_database_settings();
+	$instagram_feed_settings = new SB_Instagram_Settings( $atts, $database_settings );
 
-	die();
+	$instagram_feed_settings->set_feed_type_and_terms();
+	$instagram_feed_settings->set_transient_name();
+	$transient_name = $instagram_feed_settings->get_transient_name();
+
+	$location = isset( $_POST['location'] ) && in_array( $_POST['location'], array( 'header', 'footer', 'sidebar', 'content' ), true ) ? sanitize_text_field( $_POST['location'] ) : 'unknown';
+	$post_id = isset( $_POST['post_id'] ) && $_POST['post_id'] !== 'unknown' ? (int)$_POST['post_id'] : 'unknown';
+	$feed_details = array(
+		'feed_id' => $feed_id,
+		'atts' => $atts,
+		'location' => array(
+			'post_id' => $post_id,
+			'html' => $location
+		)
+	);
+
+	$can_do_background_tasks = false;
+	if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
+		$nonce = isset( $_POST['locator_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['locator_nonce'] ) ) : '';
+		if ( wp_verify_nonce( $nonce, esc_attr( 'sbi-locator-nonce-' . $post_id . '-' . $transient_name ) ) ) {
+			$can_do_background_tasks = true;
+		}
+	} else {
+		$can_do_background_tasks = true;
+	}
+
+	if ( $can_do_background_tasks ) {
+		sbi_do_background_tasks( $feed_details );
+
+		wp_die( 'locating success' );
+	}
+
+	wp_die( 'skipped locating' );
 }
-add_action( 'wp_ajax_sbi_on_ajax_test_trigger', 'sbi_update_successful_ajax' );
-add_action( 'wp_ajax_nopriv_sbi_on_ajax_test_trigger', 'sbi_update_successful_ajax' );
+add_action( 'wp_ajax_sbi_do_locator', 'sbi_do_locator' );
+add_action( 'wp_ajax_nopriv_sbi_do_locator', 'sbi_do_locator' );
+
+function sbi_do_background_tasks( $feed_details ) {
+	if ( is_admin()
+		 && isset( $_GET['page'] )
+		 && $_GET['page'] === 'sbi-feed-builder') {
+		return;
+	}
+	$locator = new SB_Instagram_Feed_Locator( $feed_details );
+	$locator->add_or_update_entry();
+	if ( $locator->should_clear_old_locations() ) {
+		$locator->delete_old_locations();
+	}
+}
 
 /**
  * Outputs an organized error report for the front end.
@@ -427,24 +534,52 @@ add_action( 'wp_ajax_nopriv_sbi_on_ajax_test_trigger', 'sbi_update_successful_aj
  * @param string $feed_id
  */
 function sbi_error_report( $instagram_feed, $feed_id ) {
-    global $sb_instagram_posts_manager;
+	global $sb_instagram_posts_manager;
+	if ( ! sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
+		$sb_instagram_posts_manager->reset_frontend_errors();
+		return;
+	}
 
-    $style = current_user_can( 'manage_instagram_feed_options' ) ? ' style="display: block;"' : '';
+	$error_messages = $sb_instagram_posts_manager->get_frontend_errors( $instagram_feed );
 
-	$error_messages = $sb_instagram_posts_manager->get_frontend_errors();
-    if ( ! empty( $error_messages ) ) {?>
-        <div id="sbi_mod_error"<?php echo $style; ?>>
-            <span><?php _e('This error message is only visible to WordPress admins', 'instagram-feed' ); ?></span><br />
-        <?php foreach ( $error_messages as $error_message ) {
-            echo $error_message;
-        } ?>
+	if ( ! empty( $error_messages ) ) {?>
+        <div id="sbi_mod_error">
+            <span><?php esc_html_e('This error message is only visible to WordPress admins', 'instagram-feed' ); ?></span><br />
+			<?php foreach ( $error_messages as $error_message ) {
+
+				echo '<div><strong>' . esc_html( $error_message['error_message'] )  . '</strong>';
+				if ( sbi_current_user_can( 'manage_instagram_feed_options' ) ) {
+					echo '<br>' . $error_message['admin_only'];
+					echo '<br>' . $error_message['frontend_directions'];
+				}
+				echo '</div>';
+			} ?>
         </div>
-        <?php
-    }
+		<?php
+	}
 
 	$sb_instagram_posts_manager->reset_frontend_errors();
 }
 add_action( 'sbi_before_feed_end', 'sbi_error_report', 10, 2 );
+
+function sbi_delete_image_cache( $transient_name ) {
+	$cache = new SB_Instagram_Cache( $transient_name );
+
+	$cache->clear( 'resized_images' );
+}
+
+function sbi_current_user_can( $cap ) {
+	if ( $cap === 'manage_instagram_feed_options' ) {
+		$cap = current_user_can( 'manage_instagram_feed_options' ) ? 'manage_instagram_feed_options' : 'manage_options';
+	}
+	$cap = apply_filters( 'sbi_settings_pages_capability', $cap );
+
+	return current_user_can( $cap );
+}
+
+function sbi_doing_openssl() {
+	return extension_loaded( 'openssl' );
+}
 
 /**
  * Debug report added at the end of the feed when sbi_debug query arg is added to a page
@@ -455,60 +590,163 @@ add_action( 'sbi_before_feed_end', 'sbi_error_report', 10, 2 );
  */
 function sbi_debug_report( $instagram_feed, $feed_id ) {
 
-    if ( ! isset( $_GET['sbi_debug'] ) ) {
-        return;
-    }
+	if ( ! isset( $_GET['sbi_debug'] ) && ! isset( $_GET['sb_debug'] ) ) {
+		return;
+	}
+	global $sb_instagram_posts_manager;
 
-    ?>
-    <p>Status</p>
-    <ul>
-        <li>Time: <?php echo date( "Y-m-d H:i:s", time() ); ?></li>
-    <?php foreach ( $instagram_feed->get_report() as $item ) : ?>
-        <li><?php echo esc_html( $item ); ?></li>
-    <?php endforeach; ?>
+	$feed = $instagram_feed->get_feed_id();
+	$atts = array();
+	if ( ! empty( $feed ) ) {
+		$atts = array( 'feed' => 1 );
+	}
 
-	</ul>
+	$settings_obj = new SB_Instagram_Settings( $atts, sbi_get_database_settings() );
 
-    <?php
-	$database_settings = sbi_get_database_settings();
+	$settings = $settings_obj->get_settings();
 
 	$public_settings_keys = SB_Instagram_Settings::get_public_db_settings_keys();
-    ?>
-    <p>Settings</p>
-    <ul>
-        <?php foreach ( $public_settings_keys as $key ) : if ( isset( $database_settings[ $key ] ) ) : ?>
-        <li>
-            <small><?php echo esc_html( $key ); ?>:</small>
-        <?php if ( ! is_array( $database_settings[ $key ] ) ) :
-                echo $database_settings[ $key ];
-        else : ?>
-<pre>
-<?php var_export( $database_settings[ $key ] ); ?>
-</pre>
-        <?php endif; ?>
-        </li>
+	?>
 
-        <?php endif; endforeach; ?>
-    </ul>
-    <p>GDPR</p>
-    <ul>
+	<p>Status</p>
+	<ul>
+		<li>Time: <?php echo esc_html( date( "Y-m-d H:i:s", time() ) ); ?></li>
+		<?php foreach ( $instagram_feed->get_report() as $item ) : ?>
+			<li><?php echo esc_html( $item ); ?></li>
+		<?php endforeach; ?>
+
+	</ul>
+	<p>Settings</p>
+	<ul>
+		<?php foreach ( $public_settings_keys as $key ) : if ( isset( $settings[ $key ] ) ) : ?>
+			<li>
+				<small><?php echo esc_html( $key ); ?>:</small>
+				<?php if ( ! is_array( $settings[ $key ] ) ) :
+					echo esc_html( $settings[ $key ] );
+				else : ?>
+					<ul>
+						<?php foreach ( $settings[ $key ] as $sub_key => $value ) {
+							echo '<li><small>' . esc_html( $sub_key ). ':</small> '. esc_html( $value ) . '</li>';
+						} ?>
+					</ul>
+				<?php endif; ?>
+			</li>
+
+		<?php endif; endforeach; ?>
+	</ul>
+	<p>GDPR</p>
+	<ul>
 		<?php
-        $statuses = SB_Instagram_GDPR_Integrations::statuses();
-        foreach ( $statuses as $status_key => $value) : ?>
-            <li>
-                <small><?php echo esc_html( $status_key ); ?>:</small>
+		$statuses = SB_Instagram_GDPR_Integrations::statuses();
+		foreach ( $statuses as $status_key => $value) : ?>
+			<li>
+				<small><?php echo esc_html( $status_key ); ?>:</small>
 				<?php if ( $value == 1 ) { echo 'success'; } else {  echo 'failed'; } ?>
-            </li>
+			</li>
 
 		<?php endforeach; ?>
-        <li>
-            <small>Enabled:</small>
-		    <?php echo SB_Instagram_GDPR_Integrations::doing_gdpr( $database_settings ); ?>
-        </li>
-    </ul>
-    <?php
+		<li>
+			<small>Enabled:</small>
+			<?php echo SB_Instagram_GDPR_Integrations::doing_gdpr( $settings ); ?>
+		</li>
+	</ul>
+	<?php
 }
 add_action( 'sbi_before_feed_end', 'sbi_debug_report', 11, 2 );
+
+function sbi_maybe_palette_styles( $posts, $settings ) {
+	$custom_palette_class = trim(SB_Instagram_Display_Elements::get_palette_class( $settings ));
+	if ( SB_Instagram_Display_Elements::palette_type( $settings ) !== 'custom' ) {
+		return;
+	}
+
+	$feed_selector = '.' . $custom_palette_class;
+	$header_selector = '.' . trim(SB_Instagram_Display_Elements::get_palette_class( $settings, '_header' ));
+	$custom_colors = array(
+		'bg1' => $settings['custombgcolor1'],
+		'text1' => $settings['customtextcolor1'],
+		'text2' => $settings['customtextcolor2'],
+		'link1' => $settings['customlinkcolor1'],
+		'button1' => $settings['custombuttoncolor1'],
+		'button2' => $settings['custombuttoncolor2']
+	);
+	?>
+	<style type="text/css">
+		<?php if ( ! empty( $custom_colors['bg1'] ) ) : ?>
+		<?php echo $header_selector; ?>,
+		#sb_instagram<?php echo $feed_selector; ?>,
+		#sbi_lightbox .sbi_lb-outerContainer .sbi_lb-dataContainer,
+		#sbi_lightbox .sbi_lightbox_tooltip,
+		#sbi_lightbox .sbi_share_close{
+			background: <?php echo esc_html( $custom_colors['bg1'] ); ?>;
+		}
+		<?php endif; ?>
+		<?php if ( ! empty( $custom_colors['text1'] ) ) : ?>
+		#sb_instagram<?php echo $feed_selector; ?> .sbi_caption,
+		#sbi_lightbox .sbi_lb-outerContainer .sbi_lb-dataContainer .sbi_lb-details .sbi_lb-caption,
+		#sbi_lightbox .sbi_lb-outerContainer .sbi_lb-dataContainer .sbi_lb-number,
+		#sbi_lightbox.sbi_lb-comments-enabled .sbi_lb-commentBox p{
+			color: <?php echo esc_html( $custom_colors['text1'] ); ?>;
+		}
+		<?php endif; ?>
+		<?php if ( ! empty( $custom_colors['text2'] ) ) : ?>
+		<?php echo $header_selector; ?> .sbi_bio,
+									   #sb_instagram<?php echo $feed_selector; ?> .sbi_meta {
+										   color: <?php echo esc_html( $custom_colors['text2'] ); ?>;
+									   }
+		<?php endif; ?>
+		<?php if ( ! empty( $custom_colors['link1'] ) ) : ?>
+		<?php echo $header_selector; ?> a,
+									   #sb_instagram<?php echo $feed_selector; ?> .sbi_expand a,
+									   #sbi_lightbox .sbi_lb-outerContainer .sbi_lb-dataContainer .sbi_lb-details a,
+									   #sbi_lightbox.sbi_lb-comments-enabled .sbi_lb-commentBox .sbi_lb-commenter {
+										   color: <?php echo esc_html( $custom_colors['link1'] ); ?>;
+									   }
+		<?php endif; ?>
+		<?php if ( ! empty( $custom_colors['button1'] ) ) : ?>
+		#sb_instagram<?php echo $feed_selector; ?> #sbi_load .sbi_load_btn {
+			background: <?php echo esc_html( $custom_colors['button1'] ); ?>;
+		}
+		<?php endif; ?>
+		<?php if ( ! empty( $custom_colors['button2'] ) ) : ?>
+		#sb_instagram<?php echo $feed_selector; ?> #sbi_load .sbi_follow_btn a {
+			background: <?php echo esc_html( $custom_colors['button2'] ); ?>;
+		}
+		<?php endif; ?>
+	</style>
+	<?php
+}
+add_action( 'sbi_after_feed', 'sbi_maybe_palette_styles', 10, 2 );
+
+function sbi_maybe_button_hover_styles( $posts, $settings ) {
+	$follow_hover_color = str_replace( '#', '', SB_Instagram_Display_Elements::get_follow_hover_color( $settings ) );
+	$load_hover_color = str_replace( '#', '', SB_Instagram_Display_Elements::get_load_button_hover_color( $settings ) );
+
+	if ( empty( $load_hover_color ) && empty( $follow_hover_color ) ) {
+		return;
+	}
+
+	?>
+	<style type="text/css">
+		<?php if ( ! empty( $load_hover_color ) ) : ?>
+		#sb_instagram #sbi_load .sbi_load_btn:hover{
+			outline: none;
+			box-shadow: inset 0 0 20px 20px <?php echo sanitize_hex_color( '#' . $load_hover_color ); ?>;
+		}
+		<?php endif; ?>
+		<?php if ( ! empty( $follow_hover_color ) ) : ?>
+
+		#sb_instagram .sbi_follow_btn a:hover,
+		#sb_instagram .sbi_follow_btn a:focus{
+			outline: none;
+			box-shadow: inset 0 0 10px 20px <?php echo sanitize_hex_color( '#' . $follow_hover_color ); ?>;
+		}
+		<?php endif; ?>
+	</style>
+	<?php
+}
+add_action( 'sbi_after_feed', 'sbi_maybe_button_hover_styles', 10, 2 );
+
 
 /**
  * Uses post IDs to process images that may need resizing
@@ -521,84 +759,54 @@ add_action( 'sbi_before_feed_end', 'sbi_debug_report', 11, 2 );
 function sbi_resize_posts_by_id( $ids, $transient_name, $settings, $offset = 0 ) {
 	$instagram_feed = new SB_Instagram_Feed( $transient_name );
 
+	$instagram_feed->set_cache( MONTH_IN_SECONDS, $settings );
+
 	if ( $instagram_feed->regular_cache_exists() ) {
 		// set_post_data_from_cache
 		$instagram_feed->set_post_data_from_cache();
 
 		$cached_post_data = $instagram_feed->get_post_data();
+	} elseif ( sbi_current_user_can( 'manage_instagram_feed_options' ) && is_admin() ) {
+		$customizer_cache = new SB_Instagram_Cache( $transient_name, 1, MONTH_IN_SECONDS );
 
+		$cached_post_data = $customizer_cache->get_customizer_cache();
+	} else {
+		return array();
+	}
+
+	if ( ! isset( $settings['cache_all'] ) || ! $settings['cache_all'] ) {
 		$num_ids = count( $ids );
 		$found_posts = array();
 		$i = 0;
 		while ( count( $found_posts) < $num_ids && isset( $cached_post_data[ $i ] ) ) {
-		    if ( ! empty( $cached_post_data[ $i ]['id'] ) && in_array( $cached_post_data[ $i ]['id'], $ids, true ) ) {
-			    $found_posts[] = $cached_post_data[ $i ];
-            }
-		    $i++;
-        }
-
-		$fill_in_timestamp = date( 'Y-m-d H:i:s', time() + 120 );
-
-		if ( $offset !== 0 ) {
-			$fill_in_timestamp = date( 'Y-m-d H:i:s', strtotime( $instagram_feed->get_earliest_time_stamp() ) - 120 );
+			if ( ! empty( $cached_post_data[ $i ]['id'] ) && in_array( $cached_post_data[ $i ]['id'], $ids, true ) ) {
+				$found_posts[] = $cached_post_data[ $i ];
+			}
+			$i++;
 		}
-
-		$post_set = new SB_Instagram_Post_Set( $found_posts, $transient_name, $fill_in_timestamp );
-
-		$post_set->maybe_save_update_and_resize_images_for_posts();
-	}
-}
-
-function sbi_store_local_avatar( $connected_account ) {
-	$sbi_settings = get_option( 'sb_instagram_settings', array() );
-	$connected_accounts = $sbi_settings['connected_accounts'];
-	if ( sbi_create_local_avatar( $connected_account['username'], $connected_account['profile_picture'] ) ) {
-		$connected_accounts[ $connected_account['user_id'] ]['local_avatar'] = true;
 	} else {
-		$connected_accounts[ $connected_account['user_id'] ]['local_avatar'] = false;
+		$found_posts = array_slice( $cached_post_data, 0, 50 );
 	}
 
 
-	$sbi_settings['connected_accounts'] = $connected_accounts;
+	$fill_in_timestamp = date( 'Y-m-d H:i:s', time() + 120 );
 
-	update_option( 'sb_instagram_settings', $sbi_settings );
+	if ( $offset !== 0 ) {
+		$fill_in_timestamp = date( 'Y-m-d H:i:s', strtotime( $instagram_feed->get_earliest_time_stamp( $transient_name ) ) - 120 );
+	}
 
-	return $connected_accounts[ $connected_account['user_id'] ]['local_avatar'];
+	$image_sizes = array(
+		'personal' => array( 'full' => 640, 'low' => 320, 'thumb' => 150 ),
+		'business' => array( 'full' => 640, 'low' => 320, 'thumb' => 150 )
+	);
+
+	$post_set = new SB_Instagram_Post_Set( $found_posts, $transient_name, $fill_in_timestamp, $image_sizes );
+
+	$post_set->maybe_save_update_and_resize_images_for_posts();
 }
 
 function sbi_create_local_avatar( $username, $file_name ) {
-	$image_editor = wp_get_image_editor( $file_name );
-
-	if ( ! is_wp_error( $image_editor ) ) {
-		$upload = wp_upload_dir();
-
-		$full_file_name = trailingslashit( $upload['basedir'] ) . trailingslashit( SBI_UPLOADS_NAME ) . $username  . '.jpg';
-
-		$saved_image = $image_editor->save( $full_file_name );
-
-		if ( ! $saved_image ) {
-			global $sb_instagram_posts_manager;
-
-			$sb_instagram_posts_manager->add_error( 'image_editor_save', array(
-				__( 'Error saving edited image.', 'instagram-feed' ),
-				$full_file_name
-			) );
-		} else {
-			return true;
-		}
-	} else {
-		global $sb_instagram_posts_manager;
-
-		$message = __( 'Error editing image.', 'instagram-feed' );
-		if ( isset( $image_editor ) && isset( $image_editor->errors ) ) {
-			foreach ( $image_editor->errors as $key => $item ) {
-				$message .= ' ' . $key . '- ' . $item[0] . ' |';
-			}
-		}
-
-		$sb_instagram_posts_manager->add_error( 'image_editor', array( $file_name, $message ) );
-	}
-	return false;
+	return SB_Instagram_Connected_Account::create_local_avatar( $username, $file_name );
 }
 
 /**
@@ -615,7 +823,7 @@ function sbi_get_database_settings() {
 		'sb_instagram_disable_resize'       => false,
 		'sb_instagram_cache_time'           => 1,
 		'sb_instagram_cache_time_unit'      => 'hours',
-		'sbi_caching_type'                  => 'page',
+		'sbi_caching_type'                  => 'background',
 		'sbi_cache_cron_interval'           => '12hours',
 		'sbi_cache_cron_time'               => '1',
 		'sbi_cache_cron_am_pm'              => 'am',
@@ -716,14 +924,12 @@ function sbi_get_feed_template_part( $part, $settings = array() ) {
  * Triggered by a cron event to update feeds
  */
 function sbi_cron_updater() {
-    $sbi_settings = sbi_get_database_settings();
 
-    if ( $sbi_settings['sbi_caching_type'] === 'background' ) {
-        $cron_updater = new SB_Instagram_Cron_Updater();
+	$cron_updater = new SB_Instagram_Cron_Updater();
 
-        $cron_updater->do_feed_updates();
-    }
+	$cron_updater->do_feed_updates();
 
+	sbi_do_background_tasks( array() );
 }
 add_action( 'sbi_feed_update', 'sbi_cron_updater' );
 
@@ -733,6 +939,12 @@ add_action( 'sbi_feed_update', 'sbi_cron_updater' );
  * @return string
  */
 function sbi_maybe_clean( $maybe_dirty ) {
+	$encryption = new SB_Instagram_Data_Encryption();
+
+	$decrypted = $encryption->decrypt( $maybe_dirty );
+	if ( $decrypted ) {
+		$maybe_dirty = $decrypted;
+	}
 	if ( substr_count ( $maybe_dirty , '.' ) < 3 ) {
 		return str_replace( '634hgdf83hjdj2', '', $maybe_dirty );
 	}
@@ -743,6 +955,29 @@ function sbi_maybe_clean( $maybe_dirty ) {
 
 	return $cleaned;
 }
+
+/**
+ * If there are more feeds than a single batch
+ */
+function sbi_process_additional_batch() {
+	$sbi_settings = sbi_get_database_settings();
+
+	$args = array(
+		'cron_update' => true,
+		'additional_batch' => true,
+	);
+	$cron_records = \InstagramFeed\Builder\SBI_Db::feed_caches_query( $args );
+
+	$num = count( $cron_records );
+	if ( $num === \InstagramFeed\Builder\SBI_Db::RESULTS_PER_CRON_UPDATE ) {
+		wp_schedule_single_event( time() + 120, 'sbi_cron_additional_batch' );
+	}
+
+	SB_Instagram_Cron_Updater::update_batch( $cron_records );
+
+	sbi_do_background_tasks( array() );
+}
+add_action( 'sbi_cron_additional_batch', 'sbi_process_additional_batch' );
 
 /**
  * @param $whole
@@ -814,7 +1049,7 @@ function sbi_get_resized_uploads_url() {
 	$home_url = home_url();
 
 	if ( strpos( $home_url, 'https:' ) !== false ) {
-		str_replace( 'http:', 'https:', $base_url );
+		$base_url = str_replace( 'http:', 'https:', $base_url );
 	}
 
 	$resize_url = apply_filters( 'sbi_resize_url', trailingslashit( $base_url ) . trailingslashit( SBI_UPLOADS_NAME ) );
@@ -882,11 +1117,37 @@ function sbi_decode_emoji( $string ) {
 	return $string;
 }
 
+function sbi_sanitize_instagram_ids( $raw_id ) {
+	return preg_replace( '/[^0-9_]/', '', $raw_id );
+}
+
+function sbi_sanitize_alphanumeric_and_equals( $value ) {
+	return preg_replace( '/[^A-Za-z0-9=]/', '', $value );
+}
+
+function sbi_sanitize_username( $value ) {
+	return preg_replace( '/[^A-Za-z0-9_.]/', '', $value );
+}
+
 /**
  * @return int
  */
 function sbi_get_utc_offset() {
 	return get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
+}
+
+/**
+ * Deletes any cache or setting that may contain Instagram platform data
+ */
+function sbi_delete_all_platform_data() {
+	global $sb_instagram_posts_manager;
+	$manager = new SB_Instagram_Data_Manager();
+	$sb_instagram_posts_manager->add_action_log( 'Deleted all platform data.' );
+	$sb_instagram_posts_manager->reset_api_errors();
+	$manager->delete_caches();
+	$manager->delete_comments_data();
+	$manager->delete_hashtag_data();
+	SB_Instagram_Connected_Account::update_connected_accounts( array() );
 }
 
 function sbi_get_current_timestamp() {
@@ -895,6 +1156,10 @@ function sbi_get_current_timestamp() {
 	//$current_time = strtotime( 'November 25, 2022' ) + 1;
 
 	return $current_time;
+}
+
+function sbi_get_current_time() {
+	return sbi_get_current_timestamp();
 }
 
 function sbi_is_after_deprecation_deadline() {
@@ -914,20 +1179,30 @@ function sbi_private_account_near_expiration( $connected_account ) {
 	return $expires_in < 10;
 }
 
+
 function sbi_update_connected_account( $account_id, $to_update ) {
-	$if_database_settings = sbi_get_database_settings();
+	$args = [
+		'id' => $account_id
+	];
+	$results = InstagramFeed\Builder\SBI_Db::source_query( $args );
 
-	$connected_accounts = $if_database_settings['connected_accounts'];
+	if ( ! empty( $results ) ) {
+		$source = $results[0];
+		$info = ! empty( $source['info'] ) ? json_decode( $source['info'], true ) : array();
 
-	if ( isset( $connected_accounts[ $account_id ] ) ) {
-
-		foreach ( $to_update as $key => $value ) {
-			$connected_accounts[ $account_id ][ $key ] = $value;
+		if ( isset( $to_update['private'] ) ) {
+			$info['private'] = $to_update['private'];
 		}
 
-		$if_database_settings['connected_accounts'] = $connected_accounts;
+		foreach ( $to_update as $key => $value ) {
+			if ( isset( $source[ $key ] ) ) {
+				$source[ $key ] = $value;
+			}
+		}
 
-		update_option( 'sb_instagram_settings', $if_database_settings );
+		$source['id'] = $account_id;
+
+		InstagramFeed\Builder\SBI_Source::update_or_insert( $source );
 	}
 }
 
@@ -936,41 +1211,19 @@ function sbi_update_connected_account( $account_id, $to_update ) {
  * properly
  */
 function sb_instagram_cron_clear_cache() {
-	//Delete all transients
-	global $wpdb;
-	$table_name = $wpdb->prefix . "options";
-	$wpdb->query( "
-        DELETE
-        FROM $table_name
-        WHERE `option_name` LIKE ('%\_transient\_sbi\_%')
-        " );
-	$wpdb->query( "
-        DELETE
-        FROM $table_name
-        WHERE `option_name` LIKE ('%\_transient\_timeout\_sbi\_%')
-        " );
-	$wpdb->query( "
-        DELETE
-        FROM $table_name
-        WHERE `option_name` LIKE ('%\_transient\_&sbi\_%')
-        " );
-	$wpdb->query( "
-        DELETE
-        FROM $table_name
-        WHERE `option_name` LIKE ('%\_transient\_timeout\_&sbi\_%')
-        " );
-	$wpdb->query( "
-        DELETE
-        FROM $table_name
-        WHERE `option_name` LIKE ('%\_transient\_\$sbi\_%')
-        " );
-	$wpdb->query( "
-        DELETE
-        FROM $table_name
-        WHERE `option_name` LIKE ('%\_transient\_timeout\_\$sbi\_%')
-        " );
 
-	sb_instagram_clear_page_caches();
+}
+
+function sbi_clear_caches() {
+	global $wpdb;
+
+	$cache_table_name = $wpdb->prefix . 'sbi_feed_caches';
+
+	$sql = "
+		UPDATE $cache_table_name
+		SET cache_value = ''
+		WHERE cache_key NOT IN ( 'posts_backup', 'header_backup' );";
+	$wpdb->query( $sql );
 }
 
 /**
@@ -1018,7 +1271,7 @@ function sb_instagram_clear_page_caches() {
  * Makes the JavaScript file available and enqueues the stylesheet
  * for the plugin
  */
-function sb_instagram_scripts_enqueue() {
+function sb_instagram_scripts_enqueue( $enqueue = false ) {
 	//Register the script to make it available
 
 	//Options to pass to JS file
@@ -1030,29 +1283,30 @@ function sb_instagram_scripts_enqueue() {
 	}
 
 	if ( isset( $sb_instagram_settings['enqueue_js_in_head'] ) && $sb_instagram_settings['enqueue_js_in_head'] ) {
-		wp_enqueue_script( 'sb_instagram_scripts', trailingslashit( SBI_PLUGIN_URL ) . $js_file, array('jquery'), SBIVER, false );
+		wp_enqueue_script( 'sbi_scripts', trailingslashit( SBI_PLUGIN_URL ) . $js_file, array('jquery'), SBIVER, false );
 	} else {
-		wp_register_script( 'sb_instagram_scripts', trailingslashit( SBI_PLUGIN_URL ) . $js_file, array('jquery'), SBIVER, true );
+		wp_register_script( 'sbi_scripts', trailingslashit( SBI_PLUGIN_URL ) . $js_file, array('jquery'), SBIVER, true );
 	}
 
 	if ( isset( $sb_instagram_settings['enqueue_css_in_shortcode'] ) && $sb_instagram_settings['enqueue_css_in_shortcode'] ) {
-		wp_register_style( 'sb_instagram_styles', trailingslashit( SBI_PLUGIN_URL ) . 'css/sbi-styles.min.css', array(), SBIVER );
+		wp_register_style( 'sbi_styles', trailingslashit( SBI_PLUGIN_URL ) . 'css/sbi-styles.min.css', array(), SBIVER );
 	} else {
-		wp_enqueue_style( 'sb_instagram_styles', trailingslashit( SBI_PLUGIN_URL ) . 'css/sbi-styles.min.css', array(), SBIVER );
+		wp_enqueue_style( 'sbi_styles', trailingslashit( SBI_PLUGIN_URL ) . 'css/sbi-styles.min.css', array(), SBIVER );
 	}
 
 
 	$data = array(
 		'font_method' => 'svg',
 		'resized_url' => sbi_get_resized_uploads_url(),
-		'placeholder' => trailingslashit( SBI_PLUGIN_URL ) . 'img/placeholder.png'
-    );
+		'placeholder' => trailingslashit( SBI_PLUGIN_URL ) . 'img/placeholder.png',
+		'ajax_url'  => admin_url( 'admin-ajax.php' ),
+	);
 	//Pass option to JS file
-	wp_localize_script('sb_instagram_scripts', 'sb_instagram_js_options', $data );
+	wp_localize_script('sbi_scripts', 'sb_instagram_js_options', $data );
 
-	if ( SB_Instagram_Blocks::is_gb_editor() ) {
-		wp_enqueue_style( 'sb_instagram_styles' );
-		wp_enqueue_script( 'sb_instagram_scripts' );
+	if ( $enqueue || SB_Instagram_Blocks::is_gb_editor() ) {
+		wp_enqueue_style( 'sbi_styles' );
+		wp_enqueue_script( 'sbi_scripts' );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'sb_instagram_scripts_enqueue', 2 );
@@ -1092,12 +1346,12 @@ add_action( 'wp_footer', 'sb_instagram_custom_js' );
 //Custom CSS
 add_action( 'wp_head', 'sb_instagram_custom_css' );
 function sb_instagram_custom_css() {
-	$options = get_option('sb_instagram_settings');
+	$options = get_option( 'sb_instagram_settings', array() );
 
 	isset($options[ 'sb_instagram_custom_css' ]) ? $sb_instagram_custom_css = trim($options['sb_instagram_custom_css']) : $sb_instagram_custom_css = '';
 
 	//Show CSS if an admin (so can see Hide Photos link), if including Custom CSS or if hiding some photos
-	( current_user_can( 'edit_posts' ) || !empty($sb_instagram_custom_css) || !empty($sb_instagram_hide_photos) ) ? $sbi_show_css = true : $sbi_show_css = false;
+	( current_user_can( 'edit_posts' ) || !empty($sb_instagram_custom_css) ) ? $sbi_show_css = true : $sbi_show_css = false;
 
 	if( $sbi_show_css ) echo '<!-- Instagram Feed CSS -->';
 	if( $sbi_show_css ) echo "\r\n";
@@ -1105,7 +1359,7 @@ function sb_instagram_custom_css() {
 
 	if( !empty($sb_instagram_custom_css) ){
 		echo "\r\n";
-		echo stripslashes($sb_instagram_custom_css);
+		echo wp_strip_all_tags( stripslashes( $sb_instagram_custom_css ) );
 	}
 
 	if( current_user_can( 'edit_posts' ) ){
@@ -1165,20 +1419,20 @@ function sbi_critical_error_notice() {
 	}
 
 	$db_settings = sbi_get_database_settings();
-	if ( isset( $db_settings['disable_admin_notice'] ) && $db_settings['disable_admin_notice'] === 'on' ) {
+	if ( isset( $db_settings['disable_admin_notice'] ) && ($db_settings['disable_admin_notice'] === 'on' || $db_settings['disable_admin_notice'] === true) ) {
 		return;
 	}
 
 	?>
     <div class="sbi-critical-notice sbi-critical-notice-hide">
         <div class="sbi-critical-notice-icon">
-            <img src="<?php echo SBI_PLUGIN_URL . 'img/insta-logo.png'; ?>" width="45" alt="Instagram Feed icon" />
+            <img src="<?php echo esc_url( SBI_PLUGIN_URL . 'img/insta-logo.png' ); ?>" width="45" alt="Instagram Feed icon" />
         </div>
         <div class="sbi-critical-notice-text">
             <h3><?php esc_html_e( 'Instagram Feed Critical Issue', 'instagram-feed' ); ?></h3>
             <p>
 				<?php
-				$doc_url = admin_url() . '?page=sb-instagram-feed&amp;tab=configure';
+				$doc_url = admin_url( 'admin.php?page=sbi-settings' );
 				// Translators: %s is the link to the article where more details about critical are listed.
 				printf( esc_html__( 'An issue is preventing your Instagram Feeds from updating. %1$sResolve this issue%2$s.', 'instagram-feed' ), '<a href="' . esc_url( $doc_url ) . '" target="_blank">', '</a>' );
 				?>
@@ -1359,9 +1613,9 @@ function sbi_send_report_email() {
 
 	$header_image = SBI_PLUGIN_URL . 'img/balloon-120.png';
 
-	$link = admin_url( '?page=sb-instagram-feed');
+	$link = admin_url( 'admin.php?page=sbi-settings' );
 	//&tab=customize-advanced
-	$footer_link = admin_url('admin.php?page=sb-instagram-feed&tab=customize-advanced&flag=emails');
+	$footer_link = admin_url('admin.php?page=sbi-settings&flag=emails');
 
 	$is_expiration_notice = false;
 
@@ -1424,5 +1678,99 @@ function sbi_get_option( $option_name, $default ) {
 }
 
 function sbi_is_pro_version() {
-	return defined( 'SBI_STORE_URL' );
+	return ! defined( 'SBI_PLUGIN_NAME' ) || SBI_PLUGIN_NAME !== 'Instagram Feed Free';
+}
+
+function sbi_defaults() {
+	$defaults = array(
+		'sb_instagram_at'                   => '',
+		'sb_instagram_user_id'              => '',
+		'sb_instagram_preserve_settings'    => '',
+		'sb_instagram_ajax_theme'           => false,
+		'sb_instagram_disable_resize'       => false,
+		'sb_instagram_cache_time'           => 1,
+		'sb_instagram_cache_time_unit'      => 'hours',
+		'sbi_caching_type'                  => 'background',
+		'sbi_cache_cron_interval'           => '12hours',
+		'sbi_cache_cron_time'               => '1',
+		'sbi_cache_cron_am_pm'              => 'am',
+		'sb_instagram_width'                => '100',
+		'sb_instagram_width_unit'           => '%',
+		'sb_instagram_feed_width_resp'      => false,
+		'sb_instagram_height'               => '',
+		'sb_instagram_num'                  => '20',
+		'sb_instagram_height_unit'          => '',
+		'sb_instagram_cols'                 => '4',
+		'sb_instagram_disable_mobile'       => false,
+		'sb_instagram_image_padding'        => '5',
+		'sb_instagram_image_padding_unit'   => 'px',
+		'sb_instagram_sort'                 => 'none',
+		'sb_instagram_background'           => '',
+		'sb_instagram_show_btn'             => true,
+		'sb_instagram_btn_background'       => '',
+		'sb_instagram_btn_text_color'       => '',
+		'sb_instagram_btn_text'             => __( 'Load More...', 'instagram-feed' ),
+		'sb_instagram_image_res'            => 'auto',
+		'sb_instagram_lightbox_comments'    => true,
+		'sb_instagram_num_comments'         => 20,
+		'sb_instagram_show_bio' => true,
+		'sb_instagram_show_followers' => true,
+		//Header
+		'sb_instagram_show_header'          => true,
+		'sb_instagram_header_size'  => 'small',
+		'sb_instagram_header_color'         => '',
+		'sb_instagram_stories' => true,
+		'sb_instagram_stories_time' => 5000,
+		//Follow button
+		'sb_instagram_show_follow_btn'      => true,
+		'sb_instagram_folow_btn_background' => '',
+		'sb_instagram_follow_btn_text_color' => '',
+		'sb_instagram_follow_btn_text'      => __( 'Follow on Instagram', 'instagram-feed' ),
+		//Misc
+		'sb_instagram_custom_css'           => '',
+		'sb_instagram_custom_js'            => '',
+		'sb_instagram_cron'                 => 'no',
+		'sb_instagram_backup' => true,
+		'sb_ajax_initial'    => false,
+		'enqueue_css_in_shortcode' => false,
+		'enqueue_js_in_head' => false,
+		'disable_js_image_loading' => false,
+		'disable_admin_notice' => false,
+		'enable_email_report' => true,
+		'email_notification' => 'monday',
+		'email_notification_addresses' => get_option( 'admin_email' ),
+
+		'sb_instagram_disable_mob_swipe' => false,
+		'sb_instagram_disable_awesome'      => false,
+		'sb_instagram_disable_font'      => false,
+		'gdpr'      => 'auto'
+	);
+
+	return $defaults;
+}
+
+function sbi_doing_customizer( $settings ) {
+    return ! empty( $settings['customizer'] ) && $settings['customizer'] == true;
+}
+
+function sbi_header_html( $settings, $header_data, $location = 'inside' ) {
+	$customizer = sbi_doing_customizer( $settings );
+	if ( ! $customizer && ($location === 'inside' && $settings['headeroutside']) ) {
+		return;
+	} elseif ( ! $customizer && ($location === 'outside' && ! $settings['headeroutside']) ) {
+		return;
+	} elseif ( ! $customizer && empty( $header_data ) ) {
+		return;
+	}
+
+	if ( $location === 'inside' ) {
+		$settings['vue_args'] =  [
+			'condition' => ' && !$parent.valueIsEnabled($parent.customizerFeedData.settings.headeroutside)'
+		];
+	} else {
+		$settings['vue_args'] = [
+			'condition' => ' && $parent.valueIsEnabled($parent.customizerFeedData.settings.headeroutside)'
+		];
+	}
+	include sbi_get_feed_template_part( 'header', $settings );
 }

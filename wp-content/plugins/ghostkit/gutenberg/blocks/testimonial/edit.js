@@ -6,356 +6,370 @@ import classnames from 'classnames/dedupe';
 /**
  * Internal dependencies
  */
-import dashCaseToTitle from '../../utils/dash-case-to-title';
 import IconPicker from '../../components/icon-picker';
 import URLPicker from '../../components/url-picker';
+import RangeControl from '../../components/range-control';
 
 /**
  * WordPress dependencies
  */
-const {
-    applyFilters,
-} = wp.hooks;
+const { applyFilters } = wp.hooks;
 
 const { __ } = wp.i18n;
 
 const { Component, Fragment } = wp.element;
 
-const {
-    PanelBody,
-    BaseControl,
-    SelectControl,
-    RangeControl,
-    Button,
-} = wp.components;
+const { PanelBody, BaseControl, SelectControl, TextareaControl, ExternalLink, Button } =
+  wp.components;
 
-const {
-    withSelect,
-} = wp.data;
+const { withSelect } = wp.data;
 
-const {
-    InspectorControls,
-    InnerBlocks,
-    RichText,
-    MediaUpload,
-} = wp.blockEditor;
+const { InspectorControls, InnerBlocks, RichText, MediaUpload } = wp.blockEditor;
 
-/**
- * Select photo
- *
- * @param {array} media - media data.
- * @param {function} setAttributes - set attributes function.
- */
-function onPhotoSelect( media, setAttributes ) {
-    setAttributes( {
-        photo: '',
-        photoSizes: '',
-    } );
-
-    wp.media.attachment( media.id ).fetch().then( ( data ) => {
-        if ( data && data.sizes ) {
-            const { url } = data.sizes[ 'post-thumbnail' ] || data.sizes.medium || data.sizes.medium_large || data.sizes.full;
-            if ( url ) {
-                setAttributes( {
-                    photo: media.id,
-                    photoSizes: data.sizes,
-                } );
-            }
-        }
-    } );
-}
+const DEFAULT_SIZE_SLUG = 'thumbnail';
 
 /**
  * Block Edit Class.
  */
 class BlockEdit extends Component {
-    constructor( props ) {
-        super( props );
+  constructor(props) {
+    super(props);
 
-        this.onUpdate = this.onUpdate.bind( this );
+    this.onPhotoSelect = this.onPhotoSelect.bind(this);
+  }
+
+  onPhotoSelect(imageData, imageSize = false) {
+    const { attributes, setAttributes } = this.props;
+
+    imageSize = imageSize || attributes.photoSizeSlug || DEFAULT_SIZE_SLUG;
+
+    const result = {
+      photoId: imageData.id,
+      photoUrl: imageData.url || imageData.source_url,
+      photoAlt: imageData.alt || imageData.alt_text,
+      photoWidth:
+        imageData.width ||
+        (imageData.media_details && imageData.media_details.width
+          ? imageData.media_details.width
+          : undefined),
+      photoHeight:
+        imageData.height ||
+        (imageData.media_details && imageData.media_details.height
+          ? imageData.media_details.height
+          : undefined),
+      photoSizeSlug: imageSize,
+    };
+
+    let sizes = imageData.sizes && imageData.sizes[imageSize];
+
+    if (
+      !sizes &&
+      imageData.media_details &&
+      imageData.media_details.sizes &&
+      imageData.media_details.sizes[imageSize]
+    ) {
+      sizes = imageData.media_details.sizes[imageSize];
     }
 
-    componentDidMount() {
-        this.onUpdate();
+    // Prepare image data for selected size.
+    if (sizes) {
+      if (sizes.url) {
+        result.photoUrl = sizes.url;
+      }
+      if (sizes.source_url) {
+        result.photoUrl = sizes.source_url;
+      }
+      if (sizes.width) {
+        result.photoWidth = sizes.width;
+      }
+      if (sizes.height) {
+        result.photoHeight = sizes.height;
+      }
     }
 
-    componentDidUpdate() {
-        this.onUpdate();
-    }
+    setAttributes(result);
+  }
 
-    onUpdate() {
-        const {
-            photoData,
-            setAttributes,
-            attributes,
-        } = this.props;
+  render() {
+    const { attributes, setAttributes, editorSettings, photoImage, isSelected, hasChildBlocks } =
+      this.props;
 
-        // set photo tag to attribute
-        if ( attributes.photo && photoData ) {
-            setAttributes( { photoTag: photoData } );
-        }
-    }
+    let { className = '' } = this.props;
 
-    render() {
-        const {
-            attributes,
-            setAttributes,
-            isSelected,
-            hasChildBlocks,
-        } = this.props;
+    const {
+      icon,
+      source,
 
-        let { className = '' } = this.props;
+      photoId,
+      photoUrl,
+      photoAlt,
+      photoWidth,
+      photoHeight,
+      photoSizeSlug,
 
-        const {
-            icon,
-            source,
+      stars,
+      starsIcon,
 
-            photo,
-            photoTag,
-            photoSizes,
-            photoSize,
+      url,
+      ariaLabel,
+      target,
+      rel,
+    } = attributes;
 
-            stars,
-            starsIcon,
+    className = classnames('ghostkit-testimonial', className);
 
-            url,
-            target,
-            rel,
-        } = attributes;
+    className = applyFilters('ghostkit.editor.className', className, this.props);
 
-        className = classnames( 'ghostkit-testimonial', className );
+    return (
+      <Fragment>
+        <InspectorControls>
+          <PanelBody>
+            <IconPicker
+              label={__('Icon', 'ghostkit')}
+              value={icon}
+              onChange={(value) => setAttributes({ icon: value })}
+            />
+          </PanelBody>
+          <PanelBody title={__('Photo', 'ghostkit')}>
+            {!photoId ? (
+              <MediaUpload
+                onSelect={(media) => {
+                  this.onPhotoSelect(media);
+                }}
+                allowedTypes={['image']}
+                value={photoId}
+                render={({ open }) => (
+                  <Button onClick={open} isPrimary>
+                    {__('Select Image', 'ghostkit')}
+                  </Button>
+                )}
+              />
+            ) : null}
 
-        className = applyFilters( 'ghostkit.editor.className', className, this.props );
-
-        return (
-            <Fragment>
-                <InspectorControls>
-                    <PanelBody>
-                        <IconPicker
-                            label={ __( 'Icon', 'ghostkit' ) }
-                            value={ icon }
-                            onChange={ ( value ) => setAttributes( { icon: value } ) }
+            {photoId ? (
+              <Fragment>
+                <MediaUpload
+                  onSelect={(media) => {
+                    this.onPhotoSelect(media);
+                  }}
+                  allowedTypes={['image']}
+                  value={photoId}
+                  render={({ open }) => (
+                    <BaseControl help={__('Click the image to edit or update', 'ghostkit')}>
+                      {/* eslint-disable-next-line jsx-a11y/control-has-associated-label, jsx-a11y/anchor-is-valid */}
+                      <a
+                        href="#"
+                        onClick={open}
+                        className="ghostkit-gutenberg-media-upload"
+                        style={{ display: 'block' }}
+                      >
+                        <img
+                          src={photoUrl}
+                          alt={photoAlt}
+                          width={photoWidth}
+                          height={photoHeight}
                         />
-                    </PanelBody>
-                    <PanelBody title={ __( 'Photo', 'ghostkit' ) }>
-                        { ! photo ? (
-                            <MediaUpload
-                                onSelect={ ( media ) => {
-                                    onPhotoSelect( media, setAttributes );
-                                } }
-                                allowedTypes={ [ 'image' ] }
-                                value={ photo }
-                                render={ ( { open } ) => (
-                                    <Button onClick={ open } isPrimary>
-                                        { __( 'Select Image', 'ghostkit' ) }
-                                    </Button>
-                                ) }
-                            />
-                        ) : '' }
-
-                        { photo && photoTag ? (
-                            <Fragment>
-                                <MediaUpload
-                                    onSelect={ ( media ) => {
-                                        onPhotoSelect( media, setAttributes );
-                                    } }
-                                    allowedTypes={ [ 'image' ] }
-                                    value={ photo }
-                                    render={ ( { open } ) => (
-                                        <BaseControl help={ __( 'Click the image to edit or update', 'ghostkit' ) }>
-                                            { /* eslint-disable-next-line jsx-a11y/control-has-associated-label, jsx-a11y/anchor-is-valid */ }
-                                            <a
-                                                href="#"
-                                                onClick={ open }
-                                                className="ghostkit-gutenberg-media-upload"
-                                                style={ { display: 'block' } }
-                                                // eslint-disable-next-line react/no-danger
-                                                dangerouslySetInnerHTML={ { __html: photoTag } }
-                                            />
-                                        </BaseControl>
-                                    ) }
-                                />
-                                <Button
-                                    isLink
-                                    onClick={ ( e ) => {
-                                        setAttributes( {
-                                            photo: '',
-                                            photoTag: '',
-                                            photoSizes: '',
-                                        } );
-                                        e.preventDefault();
-                                    } }
-                                    className="button button-secondary"
-                                >
-                                    { __( 'Remove Image', 'ghostkit' ) }
-                                </Button>
-                                <div style={ { marginBottom: 13 } } />
-                                { photoSizes ? (
-                                    <SelectControl
-                                        label={ __( 'Size', 'ghostkit' ) }
-                                        value={ photoSize }
-                                        options={ ( () => {
-                                            const result = [];
-                                            Object.keys( photoSizes ).forEach( ( k ) => {
-                                                result.push( {
-                                                    value: k,
-                                                    label: dashCaseToTitle( k ),
-                                                } );
-                                            } );
-                                            return result;
-                                        } )() }
-                                        onChange={ ( v ) => setAttributes( { photoSize: v } ) }
-                                    />
-                                ) : '' }
-                            </Fragment>
-                        ) : '' }
-                    </PanelBody>
-                    <PanelBody title={ __( 'Stars', 'ghostkit' ) }>
-                        <RangeControl
-                            value={ stars }
-                            min={ 0 }
-                            max={ 5 }
-                            step={ 0.5 }
-                            beforeIcon="star-filled"
-                            allowReset
-                            onChange={ ( value ) => setAttributes( { stars: value } ) }
-                        />
-                        { 'number' === typeof stars ? (
-                            <IconPicker
-                                label={ __( 'Icon', 'ghostkit' ) }
-                                value={ starsIcon }
-                                onChange={ ( value ) => setAttributes( { starsIcon: value } ) }
-                            />
-                        ) : '' }
-                    </PanelBody>
-                </InspectorControls>
-                <URLPicker
-                    url={ url }
-                    rel={ rel }
-                    target={ target }
-                    onChange={ ( data ) => {
-                        setAttributes( data );
-                    } }
-                    isSelected={ isSelected }
-                    toolbarSettings
-                    inspectorSettings
+                      </a>
+                    </BaseControl>
+                  )}
                 />
-                <div className={ className }>
-                    { icon ? (
-                        <div className="ghostkit-testimonial-icon">
-                            <IconPicker.Dropdown
-                                onChange={ ( value ) => setAttributes( { icon: value } ) }
-                                value={ icon }
-                                renderToggle={ ( { onToggle } ) => (
-                                    <IconPicker.Preview
-                                        onClick={ onToggle }
-                                        name={ icon }
-                                    />
-                                ) }
-                            />
-                        </div>
-                    ) : '' }
-                    <div className="ghostkit-testimonial-content">
-                        <InnerBlocks
-                            templateLock={ false }
-                            renderAppender={ (
-                                hasChildBlocks
-                                    ? undefined
-                                    : () => <InnerBlocks.ButtonBlockAppender />
-                            ) }
-                        />
-                    </div>
-                    <div className="ghostkit-testimonial-photo">
-                        { ! photo ? (
-                            <MediaUpload
-                                onSelect={ ( media ) => {
-                                    onPhotoSelect( media, setAttributes );
-                                } }
-                                allowedTypes={ [ 'image' ] }
-                                value={ photo }
-                                render={ ( { open } ) => (
-                                    <Button onClick={ open }>
-                                        <span className="dashicons dashicons-format-image" />
-                                    </Button>
-                                ) }
-                            />
-                        ) : '' }
+                <div style={{ marginTop: -20 }} />
+                <Button
+                  isLink
+                  onClick={(e) => {
+                    setAttributes({
+                      photoId: '',
+                      photoUrl: '',
+                      photoAlt: '',
+                      photoWidth: '',
+                      photoHeight: '',
+                    });
+                    e.preventDefault();
+                  }}
+                  className="button button-secondary"
+                >
+                  {__('Remove Image', 'ghostkit')}
+                </Button>
+                <div style={{ marginBottom: 13 }} />
+                {editorSettings && editorSettings.imageSizes ? (
+                  <SelectControl
+                    label={__('Image Size', 'ghostkit')}
+                    value={photoSizeSlug || DEFAULT_SIZE_SLUG}
+                    onChange={(val) => {
+                      this.onPhotoSelect(photoImage, val);
+                    }}
+                    options={editorSettings.imageSizes.map((imgSize) => ({
+                      value: imgSize.slug,
+                      label: imgSize.name,
+                    }))}
+                  />
+                ) : null}
+                <TextareaControl
+                  label={__('Alt text (alternative text)')}
+                  value={photoAlt}
+                  onChange={(val) => setAttributes({ photoAlt: val })}
+                  help={
+                    <Fragment>
+                      <ExternalLink href="https://www.w3.org/WAI/tutorials/images/decision-tree">
+                        {__('Describe the purpose of the image', 'ghostkit')}
+                      </ExternalLink>
+                      {__('Leave empty if the image is purely decorative.', 'ghostkit')}
+                    </Fragment>
+                  }
+                />
+              </Fragment>
+            ) : null}
+          </PanelBody>
+          <PanelBody title={__('Stars', 'ghostkit')}>
+            <RangeControl
+              value={stars}
+              min={0}
+              max={5}
+              step={0.5}
+              beforeIcon="star-filled"
+              allowReset
+              onChange={(value) => setAttributes({ stars: value })}
+            />
+            {'number' === typeof stars ? (
+              <IconPicker
+                label={__('Icon', 'ghostkit')}
+                value={starsIcon}
+                onChange={(value) => setAttributes({ starsIcon: value })}
+              />
+            ) : (
+              ''
+            )}
+          </PanelBody>
+        </InspectorControls>
+        <URLPicker
+          url={url}
+          rel={rel}
+          ariaLabel={ariaLabel}
+          target={target}
+          onChange={(data) => {
+            setAttributes(data);
+          }}
+          isSelected={isSelected}
+          toolbarSettings
+          inspectorSettings
+        />
+        <div className={className}>
+          {icon ? (
+            <div className="ghostkit-testimonial-icon">
+              <IconPicker.Dropdown
+                onChange={(value) => setAttributes({ icon: value })}
+                value={icon}
+                renderToggle={({ onToggle }) => (
+                  <IconPicker.Preview onClick={onToggle} name={icon} />
+                )}
+              />
+            </div>
+          ) : (
+            ''
+          )}
+          <div className="ghostkit-testimonial-content">
+            <InnerBlocks
+              templateLock={false}
+              renderAppender={
+                hasChildBlocks ? undefined : () => <InnerBlocks.ButtonBlockAppender />
+              }
+            />
+          </div>
+          <div className="ghostkit-testimonial-photo">
+            {!photoId ? (
+              <MediaUpload
+                onSelect={(media) => {
+                  this.onPhotoSelect(media);
+                }}
+                allowedTypes={['image']}
+                value={photoId}
+                render={({ open }) => (
+                  <Button onClick={open}>
+                    <span className="dashicons dashicons-format-image" />
+                  </Button>
+                )}
+              />
+            ) : (
+              ''
+            )}
 
-                        { photo && photoTag ? (
-                            <Fragment>
-                                <MediaUpload
-                                    onSelect={ ( media ) => {
-                                        onPhotoSelect( media, setAttributes );
-                                    } }
-                                    allowedTypes={ [ 'image' ] }
-                                    value={ photo }
-                                    render={ ( { open } ) => (
-                                        // eslint-disable-next-line jsx-a11y/control-has-associated-label, jsx-a11y/anchor-is-valid
-                                        <a
-                                            href="#"
-                                            onClick={ open }
-                                            className="ghostkit-gutenberg-media-upload"
-                                            style={ { display: 'block' } }
-                                            // eslint-disable-next-line react/no-danger
-                                            dangerouslySetInnerHTML={ { __html: photoTag } }
-                                        />
-                                    ) }
-                                />
-                            </Fragment>
-                        ) : '' }
-                    </div>
-                    <div className="ghostkit-testimonial-meta">
-                        <RichText
-                            tagName="div"
-                            className="ghostkit-testimonial-name"
-                            placeholder={ __( 'Write name…', 'ghostkit' ) }
-                            value={ attributes.name }
-                            onChange={ ( value ) => setAttributes( { name: value } ) }
-                        />
-                        <RichText
-                            tagName="div"
-                            className="ghostkit-testimonial-source"
-                            placeholder={ __( 'Write source…', 'ghostkit' ) }
-                            value={ source }
-                            onChange={ ( value ) => setAttributes( { source: value } ) }
-                        />
-                    </div>
-                    { 'number' === typeof stars && starsIcon ? (
-                        <div className="ghostkit-testimonial-stars">
-                            <div className="ghostkit-testimonial-stars-wrap">
-                                <div className="ghostkit-testimonial-stars-front" style={ { width: `${ ( 100 * stars ) / 5 }%` } }>
-                                    <IconPicker.Preview name={ starsIcon } />
-                                    <IconPicker.Preview name={ starsIcon } />
-                                    <IconPicker.Preview name={ starsIcon } />
-                                    <IconPicker.Preview name={ starsIcon } />
-                                    <IconPicker.Preview name={ starsIcon } />
-                                </div>
-                                <div className="ghostkit-testimonial-stars-back">
-                                    <IconPicker.Preview name={ starsIcon } />
-                                    <IconPicker.Preview name={ starsIcon } />
-                                    <IconPicker.Preview name={ starsIcon } />
-                                    <IconPicker.Preview name={ starsIcon } />
-                                    <IconPicker.Preview name={ starsIcon } />
-                                </div>
-                            </div>
-                        </div>
-                    ) : '' }
+            {photoId ? (
+              <MediaUpload
+                onSelect={(media) => {
+                  this.onPhotoSelect(media);
+                }}
+                allowedTypes={['image']}
+                value={photoId}
+                render={({ open }) => (
+                  // eslint-disable-next-line jsx-a11y/control-has-associated-label, jsx-a11y/anchor-is-valid
+                  <a
+                    href="#"
+                    onClick={open}
+                    className="ghostkit-gutenberg-media-upload"
+                    style={{ display: 'block' }}
+                  >
+                    <img src={photoUrl} alt={photoAlt} width={photoWidth} height={photoHeight} />
+                  </a>
+                )}
+              />
+            ) : (
+              ''
+            )}
+          </div>
+          <div className="ghostkit-testimonial-meta">
+            <RichText
+              tagName="div"
+              className="ghostkit-testimonial-name"
+              placeholder={__('Write name…', 'ghostkit')}
+              value={attributes.name}
+              onChange={(value) => setAttributes({ name: value })}
+            />
+            <RichText
+              tagName="div"
+              className="ghostkit-testimonial-source"
+              placeholder={__('Write source…', 'ghostkit')}
+              value={source}
+              onChange={(value) => setAttributes({ source: value })}
+            />
+          </div>
+          {'number' === typeof stars && starsIcon ? (
+            <div className="ghostkit-testimonial-stars">
+              <div className="ghostkit-testimonial-stars-wrap">
+                <div
+                  className="ghostkit-testimonial-stars-front"
+                  style={{ width: `${(100 * stars) / 5}%` }}
+                >
+                  <IconPicker.Preview name={starsIcon} />
+                  <IconPicker.Preview name={starsIcon} />
+                  <IconPicker.Preview name={starsIcon} />
+                  <IconPicker.Preview name={starsIcon} />
+                  <IconPicker.Preview name={starsIcon} />
                 </div>
-            </Fragment>
-        );
-    }
+                <div className="ghostkit-testimonial-stars-back">
+                  <IconPicker.Preview name={starsIcon} />
+                  <IconPicker.Preview name={starsIcon} />
+                  <IconPicker.Preview name={starsIcon} />
+                  <IconPicker.Preview name={starsIcon} />
+                  <IconPicker.Preview name={starsIcon} />
+                </div>
+              </div>
+            </div>
+          ) : (
+            ''
+          )}
+        </div>
+      </Fragment>
+    );
+  }
 }
 
-export default withSelect( ( select, props ) => {
-    const { clientId } = props;
-    const { photo } = props.attributes;
-    const blockEditor = select( 'core/block-editor' );
+export default withSelect((select, { attributes, isSelected, clientId }) => {
+  const blockEditor = select('core/block-editor');
+  const { getMedia } = select('core');
 
-    return {
-        hasChildBlocks: blockEditor ? 0 < blockEditor.getBlockOrder( clientId ).length : false,
-        photoData: photo ? select( 'ghostkit/base/images' ).getImageTagData( {
-            id: photo,
-            size: props.attributes.photoSize,
-        } ) : false,
-    };
-} )( BlockEdit );
+  return {
+    hasChildBlocks: blockEditor ? 0 < blockEditor.getBlockOrder(clientId).length : false,
+    editorSettings: blockEditor.getSettings(),
+    photoImage: attributes.photoId && isSelected ? getMedia(attributes.photoId) : null,
+  };
+})(BlockEdit);

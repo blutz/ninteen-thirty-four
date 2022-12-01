@@ -3,7 +3,7 @@
  * Class Google\Site_Kit\Core\Admin\Dashboard
  *
  * @package   Google\Site_Kit
- * @copyright 2019 Google LLC
+ * @copyright 2021 Google LLC
  * @license   https://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0
  * @link      https://sitekit.withgoogle.com
  */
@@ -81,22 +81,6 @@ final class Dashboard {
 				$this->add_widgets();
 			}
 		);
-
-		$wp_dashboard_callback = function() {
-			if ( 'dashboard' === get_current_screen()->id && current_user_can( Permissions::VIEW_DASHBOARD ) ) {
-				// Enqueue fonts.
-				$this->assets->enqueue_fonts();
-
-				// Enqueue styles.
-				$this->assets->enqueue_asset( 'googlesitekit-wp-dashboard-css' );
-
-				// Enqueue scripts.
-				$this->assets->enqueue_asset( 'googlesitekit-wp-dashboard' );
-				$this->modules->enqueue_assets();
-			}
-		};
-
-		add_action( 'admin_enqueue_scripts', $wp_dashboard_callback, 30 );
 	}
 
 	/**
@@ -105,10 +89,16 @@ final class Dashboard {
 	 * @since 1.0.0
 	 */
 	private function add_widgets() {
-		// Only show the Dashboard Widget if the current user has access.
-		if ( ! current_user_can( Permissions::VIEW_DASHBOARD ) ) {
+		if ( ! current_user_can( Permissions::VIEW_WP_DASHBOARD_WIDGET ) ) {
 			return;
 		}
+
+		// Enqueue styles.
+		$this->assets->enqueue_asset( 'googlesitekit-wp-dashboard-css' );
+
+		// Enqueue scripts.
+		$this->assets->enqueue_asset( 'googlesitekit-wp-dashboard' );
+		$this->modules->enqueue_assets();
 
 		wp_add_dashboard_widget(
 			'google_dashboard_widget',
@@ -128,7 +118,7 @@ final class Dashboard {
 
 		$this->render_noscript_html();
 		?>
-		<div id="js-googlesitekit-wp-dashboard"></div>
+		<div id="js-googlesitekit-wp-dashboard" class="googlesitekit-plugin"></div>
 		<?php
 	}
 }

@@ -11,64 +11,59 @@ import metadata from './block.json';
 /**
  * WordPress dependencies
  */
-const {
-    applyFilters,
-} = wp.hooks;
-
-const { Component } = wp.element;
+const { applyFilters } = wp.hooks;
 
 const {
-    InnerBlocks,
+  useBlockProps,
+  useInnerBlocksProps: __stableUseInnerBlocksProps,
+  __experimentalUseInnerBlocksProps,
 } = wp.blockEditor;
 
 const { name } = metadata;
 
+const useInnerBlocksProps = __stableUseInnerBlocksProps || __experimentalUseInnerBlocksProps;
+
 /**
  * Block Save Class.
  */
-class BlockSave extends Component {
-    render() {
-        const {
-            verticalAlign,
-            horizontalAlign,
-            gap,
-        } = this.props.attributes;
+export default function BlockSave(props) {
+  const { verticalAlign, horizontalAlign, gap } = props.attributes;
 
-        let className = classnames(
-            'ghostkit-grid',
-            `ghostkit-grid-gap-${ gap }`,
-            verticalAlign ? `ghostkit-grid-align-items-${ verticalAlign }` : false,
-            horizontalAlign ? `ghostkit-grid-justify-content-${ horizontalAlign }` : false
-        );
+  let className = classnames(
+    'ghostkit-grid',
+    `ghostkit-grid-gap-${gap}`,
+    verticalAlign ? `ghostkit-grid-align-items-${verticalAlign}` : false,
+    horizontalAlign ? `ghostkit-grid-justify-content-${horizontalAlign}` : false
+  );
 
-        // background
-        const background = applyFilters( 'ghostkit.blocks.grid.background', '', {
-            ...{
-                name,
-            },
-            ...this.props,
-        } );
+  // background
+  const background = applyFilters('ghostkit.blocks.grid.background', '', {
+    ...{
+      name,
+    },
+    ...props,
+  });
 
-        if ( background ) {
-            className = classnames( className, 'ghostkit-grid-with-bg' );
-        }
+  if (background) {
+    className = classnames(className, 'ghostkit-grid-with-bg');
+  }
 
-        className = applyFilters( 'ghostkit.blocks.className', className, {
-            ...{
-                name,
-            },
-            ...this.props,
-        } );
+  className = applyFilters('ghostkit.blocks.className', className, {
+    ...{
+      name,
+    },
+    ...props,
+  });
 
-        return (
-            <div className={ className }>
-                { background }
-                <div className="ghostkit-grid-inner">
-                    <InnerBlocks.Content />
-                </div>
-            </div>
-        );
-    }
+  const blockProps = useBlockProps.save({
+    className,
+  });
+  const { children, ...innerBlocksProps } = useInnerBlocksProps.save(blockProps);
+
+  return (
+    <div {...innerBlocksProps}>
+      {background}
+      <div className="ghostkit-grid-inner">{children}</div>
+    </div>
+  );
 }
-
-export default BlockSave;

@@ -3,7 +3,7 @@
  * Class Google\Site_Kit\Core\Assets\Stylesheet
  *
  * @package   Google\Site_Kit
- * @copyright 2019 Google LLC
+ * @copyright 2021 Google LLC
  * @license   https://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0
  * @link      https://sitekit.withgoogle.com
  */
@@ -61,12 +61,21 @@ final class Stylesheet extends Asset {
 		if ( $this->args['fallback'] && wp_style_is( $this->handle, 'registered' ) ) {
 			return;
 		}
+		$src     = $this->args['src'];
+		$version = $this->args['version'];
+
+		list( $filename, $hash ) = Manifest::get( $this->handle );
+
+		if ( $filename ) {
+			$src     = $context->url( 'dist/assets/css/' . $filename );
+			$version = $hash;
+		}
 
 		wp_register_style(
 			$this->handle,
-			$this->args['src'],
+			$src,
 			(array) $this->args['dependencies'],
-			$this->args['version'],
+			$version,
 			$this->args['media']
 		);
 	}

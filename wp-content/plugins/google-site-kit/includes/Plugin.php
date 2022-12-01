@@ -3,15 +3,15 @@
  * Class Google\Site_Kit\Plugin
  *
  * @package   Google\Site_Kit
- * @copyright 2019 Google LLC
+ * @copyright 2021 Google LLC
  * @license   https://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0
  * @link      https://sitekit.withgoogle.com
  */
 
 namespace Google\Site_Kit;
 
+use Google\Site_Kit\Core\Util\Build_Mode;
 use Google\Site_Kit\Core\Util\Feature_Flags;
-use Google\Site_Kit\Core\Util\JSON_File;
 
 /**
  * Main class for the plugin.
@@ -64,7 +64,7 @@ final class Plugin {
 	 * @since 1.0.0
 	 */
 	public function register() {
-		if ( $this->context->is_network_active() ) {
+		if ( $this->context->is_network_mode() ) {
 			add_action(
 				'network_admin_notices',
 				function() {
@@ -73,15 +73,12 @@ final class Plugin {
 						<p>
 							<?php
 							echo wp_kses(
-								__( 'The Site Kit by Google plugin is <strong>not yet compatible</strong> for use in a WordPress multisite network, but we&#8217;re actively working on that.', 'google-site-kit' ),
+								__( 'The Site Kit by Google plugin does <strong>not yet offer</strong> a network mode, but we&#8217;re actively working on that.', 'google-site-kit' ),
 								array(
 									'strong' => array(),
 								)
 							);
 							?>
-						</p>
-						<p>
-							<?php esc_html_e( 'Meanwhile, we recommend deactivating it in the network and re-activating it for an individual site.', 'google-site-kit' ); ?>
 						</p>
 					</div>
 					<?php
@@ -129,7 +126,10 @@ final class Plugin {
 		);
 
 		$display_site_kit_meta = function() {
-			printf( '<meta name="generator" content="Site Kit by Google %s" />', esc_attr( GOOGLESITEKIT_VERSION ) );
+			echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				'googlesitekit_generator',
+				sprintf( '<meta name="generator" content="Site Kit by Google %s" />', esc_attr( GOOGLESITEKIT_VERSION ) )
+			);
 		};
 		add_action( 'wp_head', $display_site_kit_meta );
 		add_action( 'login_head', $display_site_kit_meta );
@@ -152,36 +152,53 @@ final class Plugin {
 			function() use ( $options, $activation_flag ) {
 				$transients   = new Core\Storage\Transients( $this->context );
 				$user_options = new Core\Storage\User_Options( $this->context, get_current_user_id() );
+				$assets       = new Core\Assets\Assets( $this->context );
 
 				$authentication = new Core\Authentication\Authentication( $this->context, $options, $user_options, $transients );
 				$authentication->register();
 
-				$permissions = new Core\Permissions\Permissions( $this->context, $authentication );
-				$permissions->register();
-
-				$modules = new Core\Modules\Modules( $this->context, $options, $user_options, $authentication );
+				$modules = new Core\Modules\Modules( $this->context, $options, $user_options, $authentication, $assets );
 				$modules->register();
 
-				$assets = new Core\Assets\Assets( $this->context );
+				$dismissals = new Core\Dismissals\Dismissals( $this->context, $user_options );
+				$dismissals->register();
+
+				$dismissed_items = $dismissals->get_dismissed_items();
+
+				$permissions = new Core\Permissions\Permissions( $this->context, $authentication, $modules, $user_options, $dismissed_items );
+				$permissions->register();
+
+				// Assets must be registered after Modules instance is registered.
 				$assets->register();
 
-				$screens = new Core\Admin\Screens( $this->context, $assets, $modules );
+				$screens = new Core\Admin\Screens( $this->context, $assets, $modules, $authentication );
 				$screens->register();
 
+				$user_surveys = new Core\User_Surveys\User_Surveys( $authentication, $user_options );
+				$user_surveys->register();
+
+				( new Core\Authentication\Setup( $this->context, $user_options, $authentication ) )->register();
+
 				( new Core\Util\Reset( $this->context ) )->register();
+				( new Core\Util\Reset_Persistent( $this->context ) )->register();
 				( new Core\Util\Developer_Plugin_Installer( $this->context ) )->register();
-				( new Core\Util\Tracking( $this->context, $user_options, $screens ) )->register();
+				( new Core\Tracking\Tracking( $this->context, $user_options, $screens ) )->register();
 				( new Core\REST_API\REST_Routes( $this->context, $authentication, $modules ) )->register();
+				( new Core\Util\REST_Entity_Search_Controller( $this->context ) )->register();
 				( new Core\Admin_Bar\Admin_Bar( $this->context, $assets, $modules ) )->register();
+				( new Core\Admin\Available_Tools() )->register();
 				( new Core\Admin\Notices() )->register();
+				( new Core\Admin\Pointers() )->register();
 				( new Core\Admin\Dashboard( $this->context, $assets, $modules ) )->register();
 				( new Core\Notifications\Notifications( $this->context, $options, $authentication ) )->register();
-				( new Core\Util\Debug_Data( $this->context, $options, $user_options, $authentication, $modules ) )->register();
+				( new Core\Util\Debug_Data( $this->context, $options, $user_options, $authentication, $modules, $permissions ) )->register();
 				( new Core\Util\Health_Checks( $authentication ) )->register();
 				( new Core\Admin\Standalone( $this->context ) )->register();
 				( new Core\Util\Activation_Notice( $this->context, $activation_flag, $assets ) )->register();
+				( new Core\Feature_Tours\Feature_Tours( $this->context, $user_options ) )->register();
 				( new Core\Util\Migration_1_3_0( $this->context, $options, $user_options ) )->register();
 				( new Core\Util\Migration_1_8_1( $this->context, $options, $user_options, $authentication ) )->register();
+				( new Core\Dashboard_Sharing\Dashboard_Sharing( $this->context, $user_options ) )->register();
 
 				// If a login is happening (runs after 'init'), update current user in dependency chain.
 				add_action(
@@ -214,8 +231,14 @@ final class Plugin {
 
 		// WP CLI Commands.
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			( new \Google\Site_Kit\Core\CLI\CLI_Commands( $this->context ) )->register();
+			( new Core\CLI\CLI_Commands( $this->context ) )->register();
 		}
+
+		// Add Plugin Row Meta.
+		( new Core\Admin\Plugin_Row_Meta() )->register();
+
+		// Add Plugin Action Links.
+		( new Core\Admin\Plugin_Action_Links( $this->context ) )->register();
 	}
 
 	/**
@@ -242,15 +265,16 @@ final class Plugin {
 			return false;
 		}
 
-		$config = new JSON_File( GOOGLESITEKIT_PLUGIN_DIR_PATH . 'dist/config.json' );
-		Feature_Flags::set_mode( $config['flagMode'] );
-		Feature_Flags::set_features(
-			new JSON_File( GOOGLESITEKIT_PLUGIN_DIR_PATH . 'feature-flags.json' )
-		);
+		if ( file_exists( GOOGLESITEKIT_PLUGIN_DIR_PATH . 'dist/config.php' ) ) {
+			$config = include GOOGLESITEKIT_PLUGIN_DIR_PATH . 'dist/config.php';
+			Build_Mode::set_mode( $config['buildMode'] );
+			Feature_Flags::set_features( (array) $config['features'] );
+		}
 
 		static::$instance = new static( $main_file );
 		static::$instance->register();
 
 		return true;
 	}
+
 }

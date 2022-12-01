@@ -1,90 +1,95 @@
 const { ghostkitVariables } = window;
 const $ = window.jQuery;
-const $doc = $( document );
+const $doc = $(document);
 
 // prepare media vars.
 const vars = {};
-Object.keys( ghostkitVariables.media_sizes ).forEach( ( k ) => {
-    vars[ `media_${ k }` ] = ghostkitVariables.media_sizes[ k ];
-} );
+Object.keys(ghostkitVariables.media_sizes).forEach((k) => {
+  vars[`media_${k}`] = ghostkitVariables.media_sizes[k];
+});
 
-function escapeRegExp( s ) {
-    return s.replace( /[-/\\^$*+?.()|[\]{}]/g, '\\$&' );
+function escapeRegExp(s) {
+  return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
 
 window.GHOSTKIT = {
-    themeName: ghostkitVariables.themeName,
+  themeName: ghostkitVariables.themeName,
 
-    settings: ghostkitVariables.settings,
+  settings: ghostkitVariables.settings,
 
-    disabledBlocks: ghostkitVariables.disabledBlocks,
+  disabledBlocks: ghostkitVariables.disabledBlocks,
 
-    vars,
-    replaceVars( str ) {
-        Object.keys( this.vars ).forEach( ( key ) => {
-            str = str.replace( new RegExp( `#{ghostkitvar:${ escapeRegExp( key ) }}`, 'g' ), `(max-width: ${ this.vars[ key ] }px)` );
-        } );
+  allowPluginCustomizer: ghostkitVariables.allowPluginCustomizer,
 
-        return str;
-    },
+  vars,
+  replaceVars(str) {
+    Object.keys(this.vars).forEach((key) => {
+      str = str.replace(
+        new RegExp(`#{ghostkitvar:${escapeRegExp(key)}}`, 'g'),
+        `(max-width: ${this.vars[key]}px)`
+      );
+    });
 
-    sidebars: ghostkitVariables.sidebars,
+    return str;
+  },
 
-    googleMapsAPIKey: ghostkitVariables.googleMapsAPIKey,
-    googleMapsAPIUrl: ghostkitVariables.googleMapsAPIUrl,
-    googleMapsLibrary: ghostkitVariables.googleMapsLibrary,
+  sidebars: ghostkitVariables.sidebars,
 
-    googleReCaptchaAPISiteKey: ghostkitVariables.googleReCaptchaAPISiteKey,
-    googleReCaptchaAPISecretKey: ghostkitVariables.googleReCaptchaAPISecretKey,
+  timezone: ghostkitVariables.timezone,
 
-    icons: ghostkitVariables.icons,
-    shapes: ghostkitVariables.shapes,
-    fonts: ghostkitVariables.fonts,
-    customTypographyList: ghostkitVariables.customTypographyList,
-    variants: ghostkitVariables.variants,
-    getVariants( name ) {
-        if ( 'undefined' !== typeof this.variants[ name ] ) {
-            return this.variants[ name ];
-        }
-        return false;
-    },
+  googleMapsAPIKey: ghostkitVariables.googleMapsAPIKey,
+  googleMapsAPIUrl: ghostkitVariables.googleMapsAPIUrl,
+  googleMapsLibrary: ghostkitVariables.googleMapsLibrary,
 
-    adminUrl: ghostkitVariables.admin_url,
-    adminTemplatesUrl: ghostkitVariables.admin_templates_url,
+  googleReCaptchaAPISiteKey: ghostkitVariables.googleReCaptchaAPISiteKey,
+  googleReCaptchaAPISecretKey: ghostkitVariables.googleReCaptchaAPISecretKey,
 
-    triggerEvent( name, ...args ) {
-        $doc.trigger( `${ name }.ghostkit`, [ ...args ] );
-    },
+  icons: ghostkitVariables.icons,
+  shapes: ghostkitVariables.shapes,
+  fonts: ghostkitVariables.fonts,
+  customTypographyList: ghostkitVariables.customTypographyList,
+  variants: ghostkitVariables.variants,
+  getVariants(name) {
+    if ('undefined' !== typeof this.variants[name]) {
+      return this.variants[name];
+    }
+    return false;
+  },
 
-    /**
-     * Check for block support GhostKit features.
-     *
-     * @param {Mixed} block - block props / block name
-     * @param {String} featureName - feature name
-     * @param {Mixed} defaultVal - default return value
-     *
-     * @return {Mixed} - supports flag
-     */
-    hasBlockSupport( block, featureName, defaultVal = false ) {
-        if ( 'string' === typeof block && wp && wp.blocks ) {
-            const {
-                getBlockType,
-            } = wp.blocks;
+  adminUrl: ghostkitVariables.admin_url,
+  adminTemplatesUrl: ghostkitVariables.admin_templates_url,
 
-            if ( getBlockType ) {
-                block = getBlockType( block );
-            }
-        }
+  triggerEvent(name, ...args) {
+    $doc.trigger(`${name}.ghostkit`, [...args]);
+  },
 
-        if (
-            block
-            && block.ghostkit
-            && block.ghostkit.supports
-            && 'undefined' !== typeof block.ghostkit.supports[ featureName ]
-        ) {
-            return block.ghostkit.supports[ featureName ];
-        }
+  /**
+   * Check for block support GhostKit features.
+   *
+   * @param {Mixed} block - block props / block name
+   * @param {String} featureName - feature name
+   * @param {Mixed} defaultVal - default return value
+   *
+   * @return {Mixed} - supports flag
+   */
+  hasBlockSupport(block, featureName, defaultVal = false) {
+    if ('string' === typeof block && wp && wp.blocks) {
+      const { getBlockType } = wp.blocks;
 
-        return defaultVal;
-    },
+      if (getBlockType) {
+        block = getBlockType(block);
+      }
+    }
+
+    if (
+      block &&
+      block.ghostkit &&
+      block.ghostkit.supports &&
+      'undefined' !== typeof block.ghostkit.supports[featureName]
+    ) {
+      return block.ghostkit.supports[featureName];
+    }
+
+    return defaultVal;
+  },
 };

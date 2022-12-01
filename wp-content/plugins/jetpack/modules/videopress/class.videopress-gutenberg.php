@@ -1,8 +1,8 @@
-<?php
+<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
 /**
  * Block Editor functionality for VideoPress users.
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 use Automattic\Jetpack\Assets;
@@ -35,6 +35,28 @@ class VideoPress_Gutenberg {
 		add_action( 'init', array( $this, 'register_video_block_with_videopress' ) );
 		add_action( 'jetpack_register_gutenberg_extensions', array( $this, 'set_extension_availability' ) );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'override_video_upload' ) );
+		add_action( 'enqueue_block_editor_assets', array( $this, 'add_resumable_upload_support' ) );
+	}
+
+	/**
+	 * Get site's ID.
+	 *
+	 * @return int $blog_id Site ID.
+	 */
+	private static function get_blog_id() {
+		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+			return get_current_blog_id();
+		} elseif ( method_exists( 'Jetpack', 'is_active' ) && Jetpack::is_active() ) {
+			/**
+			 * We're intentionally not using `get_current_blog_id` because it was returning unexpected values.
+			 *
+			 * @see https://github.com/Automattic/jetpack/pull/11193#issuecomment-457883886
+			 * @see https://github.com/Automattic/jetpack/pull/11193/commits/215cf789f3d8bd03ff9eb1bbdb693acb8831d273
+			 */
+			return Jetpack_Options::get_option( 'id' );
+		}
+
+		return null;
 	}
 
 	/**
@@ -48,47 +70,30 @@ class VideoPress_Gutenberg {
 	 * unavailable (key `unavailable_reason`)
 	 */
 	public function check_videopress_availability() {
-		// It is available on Simple Sites having the appropriate a plan.
-		if (
-			defined( 'IS_WPCOM' ) && IS_WPCOM
-			&& method_exists( 'Store_Product_List', 'get_site_specific_features_data' )
-		) {
-			$features = Store_Product_List::get_site_specific_features_data();
-			if ( in_array( 'videopress', $features['active'], true ) ) {
-				return array( 'available' => true );
+		if ( ! Jetpack_Plan::supports( 'videopress' ) ) {
+			return array(
+				'available'          => false,
+				'unavailable_reason' => 'missing_plan',
+			);
+		}
+
+		if ( ! defined( 'IS_WPCOM' ) || ! IS_WPCOM ) {
+			if ( Jetpack::is_connection_ready() ) {
+				if ( ! Jetpack::is_module_active( 'videopress' ) ) {
+					return array(
+						'available'          => false,
+						'unavailable_reason' => 'missing_module',
+					);
+				}
 			} else {
 				return array(
 					'available'          => false,
-					'unavailable_reason' => 'missing_plan',
+					'unavailable_reason' => 'unknown',
 				);
 			}
 		}
 
-		// It is available on Jetpack Sites having the module active.
-		if (
-			method_exists( 'Jetpack', 'is_active' ) && Jetpack::is_active()
-			&& method_exists( 'Jetpack', 'is_module_active' )
-			&& method_exists( 'Jetpack_Plan', 'supports' )
-		) {
-			if ( Jetpack::is_module_active( 'videopress' ) ) {
-				return array( 'available' => true );
-			} elseif ( ! Jetpack_Plan::supports( 'videopress' ) ) {
-				return array(
-					'available'          => false,
-					'unavailable_reason' => 'missing_plan',
-				);
-			} else {
-				return array(
-					'available'          => false,
-					'unavailable_reason' => 'missing_module',
-				);
-			}
-		}
-
-		return array(
-			'available'          => false,
-			'unavailable_reason' => 'unknown',
-		);
+		return array( 'available' => true );
 	}
 
 	/**
@@ -130,17 +135,7 @@ class VideoPress_Gutenberg {
 			return $content;
 		}
 
-		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
-			$blog_id = get_current_blog_id();
-		} elseif ( method_exists( 'Jetpack', 'is_active' ) && Jetpack::is_active() ) {
-			/**
-			 * We're intentionally not using `get_current_blog_id` because it was returning unexpected values.
-			 *
-			 * @see https://github.com/Automattic/jetpack/pull/11193#issuecomment-457883886
-			 * @see https://github.com/Automattic/jetpack/pull/11193/commits/215cf789f3d8bd03ff9eb1bbdb693acb8831d273
-			 */
-			$blog_id = Jetpack_Options::get_option( 'id' );
-		}
+		$blog_id = self::get_blog_id();
 
 		if ( ! isset( $blog_id ) ) {
 			return $content;
@@ -170,14 +165,27 @@ class VideoPress_Gutenberg {
 	}
 
 	/**
+	 * Temporary method to enable resumable uploads for testing by Automatticians
+	 */
+	public function add_resumable_upload_support() {
+		wp_enqueue_script(
+			'videopress-add-resumable-upload-support',
+			plugins_url( 'js/videopress-add-resumable-upload-support.js', __FILE__ ),
+			null,
+			'1',
+			false
+		);
+	}
+
+	/**
 	 * Replaces the video uploaded in the block editor.
 	 *
 	 * Enqueues a script that registers an API fetch middleware replacing the video uploads in Gutenberg so they are
 	 * uploaded against the WP.com API media endpoint and thus transcoded by VideoPress.
 	 */
 	public function override_video_upload() {
-		// Bail if Jetpack or VideoPress is not active.
-		if ( ! Jetpack::is_active() || ! Jetpack::is_module_active( 'videopress' ) ) {
+		// Bail if Jetpack is not connected or VideoPress module is not active.
+		if ( ! Jetpack::is_connection_ready() || ! Jetpack::is_module_active( 'videopress' ) ) {
 			return;
 		}
 

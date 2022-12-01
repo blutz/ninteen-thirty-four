@@ -52,10 +52,10 @@ class NK_AWB_VC_Extend {
     public function admin_enqueue_scripts( $page ) {
         if ( 'post.php' === $page || 'post-new.php' === $page ) {
             wp_enqueue_media();
-            wp_enqueue_style( 'nk-awb-vc-attach-file', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-attach-video.min.css', '', '1.7.0' );
-            wp_enqueue_style( 'nk-awb-vc-heading', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-heading.min.css', '', '1.7.0' );
-            wp_enqueue_style( 'nk-awb-vc-icon', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-icon.min.css', '', '1.7.0' );
-            wp_enqueue_script( 'nk-awb-vc-frontend', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-frontend.min.js', array( 'jquery' ), '1.7.0', true );
+            wp_enqueue_style( 'nk-awb-vc-attach-file', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-attach-video.min.css', '', '1.9.4' );
+            wp_enqueue_style( 'nk-awb-vc-heading', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-heading.min.css', '', '1.9.4' );
+            wp_enqueue_style( 'nk-awb-vc-icon', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-icon.min.css', '', '1.9.4' );
+            wp_enqueue_script( 'nk-awb-vc-frontend', nk_awb()->plugin_url . 'assets/admin/vc_extend/vc-awb-frontend.min.js', array( 'jquery' ), '1.9.4', true );
         }
     }
 
@@ -205,7 +205,7 @@ class NK_AWB_VC_Extend {
                     esc_html__( 'Color', 'advanced-backgrounds' ) => 'color',
                     esc_html__( 'Image', 'advanced-backgrounds' ) => 'image',
                     esc_html__( 'YouTube / Vimeo', 'advanced-backgrounds' ) => 'yt_vm_video',
-                    esc_html__( 'Local Video', 'advanced-backgrounds' ) => 'video',
+                    esc_html__( 'Self Hosted Video', 'advanced-backgrounds' ) => 'video',
                 ),
                 'group'            => $group_name,
                 'edit_field_class' => 'vc_col-sm-6 vc_column-with-padding',
@@ -357,7 +357,7 @@ class NK_AWB_VC_Extend {
             )
         );
 
-        // Local Video.
+        // Self Hosted Video.
         vc_add_param(
             $element,
             array(

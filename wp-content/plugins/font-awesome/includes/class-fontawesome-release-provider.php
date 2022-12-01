@@ -32,13 +32,13 @@ require_once trailingslashit( FONTAWESOME_DIR_PATH ) . 'includes/class-fontaweso
  */
 class FontAwesome_Release_Provider {
 	/**
-	 * Name of the transient that stores the cache of Font Awesome releases so we won't query
+	 * Name of the option that stores the Font Awesome release metadata so we won't query
 	 * the fontawesome.com releases API except when the admin settings page is re-loaded.
 	 *
-	 * @since 4.0.0-rc4
+	 * @since 4.0.0-rc22
 	 * @ignore
 	 */
-	const RELEASES_TRANSIENT = 'font-awesome-releases';
+	const OPTIONS_KEY = 'font-awesome-releases';
 
 	/**
 	 * Name of the transient that stores the cache of the last used Font Awesome
@@ -49,14 +49,6 @@ class FontAwesome_Release_Provider {
 	 * @internal
 	 */
 	const LAST_USED_RELEASE_TRANSIENT = 'font-awesome-last-used-release';
-
-	/**
-	 * Expiry time for the releases transient.
-	 *
-	 * @ignore
-	 * @internal
-	 */
-	const RELEASES_TRANSIENT_EXPIRY = YEAR_IN_SECONDS;
 
 	/**
 	 * Expiry time for the releases transient.
@@ -122,12 +114,43 @@ class FontAwesome_Release_Provider {
 	/**
 	 * Private constructor.
 	 *
+	 * Requires that releases metadata have already been loaded into the db option.
+	 *
 	 * @ignore
+	 * @internal
+	 * @throws ReleaseMetadataMissingException
 	 */
-	private function __construct() {}
+	private function __construct() {
+		$option_value = self::get_option();
+
+		if ( $option_value ) {
+			$this->releases     = $option_value['data']['releases'];
+			$this->refreshed_at = $option_value['refreshed_at'];
+
+			/**
+			 * Gracefully handle the upgrade scenario from plugin version 4.1.1 where
+			 * there was a "latest", referring to the latest 5.x, but not yet
+			 * keys for "latest_version_5" and "latest_version_6".
+			 */
+			$latest_version_5 = isset( $option_value['data']['latest_version_5'] )
+				? $option_value['data']['latest_version_5']
+				: ( isset( $option_value['data']['latest'] )
+					? $option_value['data']['latest']
+					: null
+				);
+
+			$this->latest_version_5 = $latest_version_5;
+
+			$this->latest_version_6 = isset( $option_value['data']['latest_version_6'] )
+				? $option_value['data']['latest_version_6']
+				: null;
+		} else {
+			throw new ReleaseMetadataMissingException();
+		}
+	}
 
 	/**
-	 * Loads release metadata and saves to a transient.
+	 * Loads release metadata and saves to the options table.
 	 *
 	 * Internal use only. Not part of this plugin's public API.
 	 *
@@ -138,10 +161,13 @@ class FontAwesome_Release_Provider {
 	 * @throws ReleaseProviderStorageException
 	 * @return void
 	 */
-	public function load_releases() {
+	public static function load_releases() {
 		$query = <<< EOD
 query {
-	latest: release(version: "latest") {
+	latest_version_5: release(version: "5.x") {
+		version
+	}
+	latest_version_6: release(version: "6.x") {
 		version
 	}
 	releases {
@@ -160,7 +186,7 @@ query {
 }
 EOD;
 
-		$body = json_decode( $this->query( $query ), true );
+		$body = json_decode( self::query( $query ), true );
 
 		$releases = array();
 
@@ -179,37 +205,28 @@ EOD;
 			);
 		}
 
-		$previous_transient = get_site_transient( self::RELEASES_TRANSIENT );
+		$refreshed_at     = time();
+		$latest_version_5 = isset( $body['data']['latest_version_5']['version'] ) ? $body['data']['latest_version_5']['version'] : null;
+		$latest_version_6 = isset( $body['data']['latest_version_6']['version'] ) ? $body['data']['latest_version_6']['version'] : null;
 
-		if ( $previous_transient ) {
-			// We must be refreshing the releases metadata, so delete the transient before trying to set it again.
-			delete_site_transient( self::RELEASES_TRANSIENT );
+		if ( is_null( $latest_version_5 ) ) {
+			throw ApiResponseException::with_wp_error( new WP_Error( 'missing_latest_version_5' ) );
 		}
 
-		$refreshed_at   = time();
-		$latest_version = isset( $body['data']['latest']['version'] ) ? $body['data']['latest']['version'] : null;
-
-		if ( is_null( $latest_version ) ) {
-			throw ApiResponseException::with_wp_error( new WP_Error( 'missing_latest_version' ) );
+		if ( is_null( $latest_version_6 ) ) {
+			throw ApiResponseException::with_wp_error( new WP_Error( 'missing_latest_version_6' ) );
 		}
 
-		$transient_value = array(
+		$option_value = array(
 			'refreshed_at' => $refreshed_at,
 			'data'         => array(
-				'latest'   => $latest_version,
-				'releases' => $releases,
+				'latest_version_5' => $latest_version_5,
+				'latest_version_6' => $latest_version_6,
+				'releases'         => $releases,
 			),
 		);
 
-		$ret = set_site_transient( self::RELEASES_TRANSIENT, $transient_value, self::RELEASES_TRANSIENT_EXPIRY );
-
-		if ( ! $ret ) {
-			throw new ReleaseProviderStorageException();
-		}
-
-		$this->releases       = $releases;
-		$this->refreshed_at   = $refreshed_at;
-		$this->latest_version = $latest_version;
+		self::update_option( $option_value );
 	}
 
 	/**
@@ -217,10 +234,7 @@ EOD;
 	 *
 	 * @internal
 	 * @ignore
-	 * @throws ReleaseMetadataMissingException
-	 * @throws ApiRequestException
-	 * @throws ApiResponseException
-	 * @throws ReleaseProviderStorageException
+	 * @return FontAwesome_Resource
 	 */
 	private function build_resource( $version, $file_basename, $flags = array(
 		'use_svg' => false,
@@ -262,53 +276,19 @@ EOD;
 	 * @throws ApiResponseException
 	 * @return array
 	 */
-	protected function query( $query ) {
+	protected static function query( $query ) {
 		return fa_metadata_provider()->metadata_query( $query, true );
 	}
 
 	/**
-	 * Retrieves Font Awesome releases metadata with as few network requests as possible.
+	 * Retrieves Font Awesome releases metadata from the singleton instance.
 	 *
-	 * Will first attempt to return releases already memoized by this Singleton instance.
-	 * Next, will try to retrieve a cached set of releases from a non-expiring transient.
+	 * Makes no network or database requests.
 	 *
-	 * If there's nothing cached, then it tries to load releases by making a network request to the
-	 * releases API endpoint.
-	 *
-	 * If that fails, it throws an exception.
-	 *
-	 * @see FontAwesome_Release_Provider::RELEASES_TRANSIENT()
-	 * @see FontAwesome_Release_Provider::RELEASES_TRANSIENT_EXPIRY()
-	 * @throws ReleaseMetadataMissingException
-	 * @throws ApiRequestException
-	 * @throws ApiResponseException
-	 * @throws ReleaseProviderStorageException
 	 * @return array
 	 */
 	protected function releases() {
-		if ( $this->releases ) {
-			return $this->releases;
-		} else {
-			$transient_value = get_site_transient( self::RELEASES_TRANSIENT );
-
-			if ( $transient_value ) {
-				$this->releases       = $transient_value['data']['releases'];
-				$this->refreshed_at   = $transient_value['refreshed_at'];
-				$this->latest_version = $transient_value['data']['latest'];
-
-				return $this->releases;
-			} elseif ( is_null( $this->releases ) ) {
-				$result = $this->load_releases();
-
-				if ( is_null( $this->releases ) ) {
-					throw new ReleaseMetadataMissingException();
-				} else {
-					return $this->releases;
-				}
-			} else {
-				return $this->releases;
-			}
-		}
+		return $this->releases;
 	}
 
 	/**
@@ -329,10 +309,6 @@ EOD;
 	/**
 	 * Returns a simple array of available Font Awesome versions as strings, sorted in descending version order.
 	 *
-	 * @throws ReleaseMetadataMissingException
-	 * @throws ApiRequestException
-	 * @throws ApiResponseException
-	 * @throws ReleaseProviderStorageException
 	 * @return array
 	 */
 	public function versions() {
@@ -350,8 +326,15 @@ EOD;
 	 * Returns an array containing version, shim, source URLs and integrity keys for given params.
 	 * They should be loaded in the order they appear in this collection.
 	 *
+	 * First tries to resolve this by using the LAST_USED_RELEASE_TRANSIENT, without
+	 * instantiating a Release Provider and thus incurring the cost of a trip to
+	 * the database to load the release metadata. If it does need to instantiate
+	 * the Release Provider, it will also populate that transient so that subsequent
+	 * invocations of the function will probably not incur the cost of a database
+	 * query.
+	 *
 	 * @param string $version
-	 * @param array  $flags boolean flags, defaults: array('use_pro' => false, 'use_svg' => false, 'use_shim' => true)
+	 * @param array  $flags boolean flags, defaults: array('use_pro' => false, 'use_svg' => false, 'use_compatibility' => true)
 	 * @throws ReleaseMetadataMissingException
 	 * @throws ApiRequestException
 	 * @throws ApiResponseException
@@ -359,10 +342,10 @@ EOD;
 	 * @throws ConfigCorruptionException when called with an invalid configuration
 	 * @return array
 	 */
-	public function get_resource_collection( $version, $flags = array(
-		'use_pro'  => false,
-		'use_svg'  => false,
-		'use_shim' => true,
+	public static function get_resource_collection( $version, $flags = array(
+		'use_pro'           => false,
+		'use_svg'           => false,
+		'use_compatibility' => true,
 	) ) {
 		$resources = array();
 
@@ -370,12 +353,12 @@ EOD;
 			throw new ConfigCorruptionException();
 		}
 
-		if ( $flags['use_shim'] && ! $flags['use_svg'] && version_compare( '5.1.0', $version, '>' ) ) {
+		if ( $flags['use_compatibility'] && ! $flags['use_svg'] && version_compare( '5.1.0', $version, '>' ) ) {
 			throw ConfigSchemaException::webfont_v4compat_introduced_later();
 		}
 
 		// If this is the same query as last time, then our LAST_USED_RELEASE_TRANSIENT should be current.
-		$last_used_transient = get_site_transient( self::LAST_USED_RELEASE_TRANSIENT );
+		$last_used_transient = self::get_last_used_release();
 
 		if ( $last_used_transient ) {
 			// For simplicity, we're require that it's exactly what we're looking for, else we'll re-build and overwrite it.
@@ -383,52 +366,174 @@ EOD;
 				$version === $last_used_transient['version']
 				&& $flags['use_pro'] === $last_used_transient['use_pro']
 				&& $flags['use_svg'] === $last_used_transient['use_svg']
-				&& $flags['use_shim'] === $last_used_transient['use_shim']
+				&& $flags['use_compatibility'] === $last_used_transient['use_compatibility']
 				&& is_array( $last_used_transient['resources'] )
+				/**
+				 * Checking for all because we only want to use a newer transient whose
+				 * resources is key/value array. So if it's the older version that is
+				 * just a list, we'll fall through and rebuild it below.
+				 */
+				&& isset( $last_used_transient['resources']['all'] )
 			) {
 				return new FontAwesome_ResourceCollection( $version, $last_used_transient['resources'] );
 			}
 		}
 
-		if ( ! array_key_exists( $version, $this->releases() ) ) {
+		$provider = self::instance();
+
+		if ( ! array_key_exists( $version, $provider->releases() ) ) {
 			throw new ReleaseMetadataMissingException();
 		}
 
-		array_push( $resources, $this->build_resource( $version, 'all', $flags ) );
-		if ( $flags['use_shim'] ) {
-			array_push( $resources, $this->build_resource( $version, 'v4-shims', $flags ) );
+		$resources['all'] = $provider->build_resource( $version, 'all', $flags );
+
+		if ( $flags['use_compatibility'] ) {
+			$resources['v4-shims'] = $provider->build_resource( $version, 'v4-shims', $flags );
 		}
 
 		$transient_value = array(
-			'version'   => $version,
-			'use_pro'   => $flags['use_pro'],
-			'use_svg'   => $flags['use_svg'],
-			'use_shim'  => $flags['use_shim'],
-			'resources' => $resources,
+			'version'           => $version,
+			'use_pro'           => $flags['use_pro'],
+			'use_svg'           => $flags['use_svg'],
+			'use_compatibility' => $flags['use_compatibility'],
+			'resources'         => $resources,
 		);
 
-		$ret = set_site_transient( self::LAST_USED_RELEASE_TRANSIENT, $transient_value, self::LAST_USED_RELEASE_TRANSIENT_EXPIRY );
-
-		if ( ! $ret ) {
-			throw new ReleaseProviderStorageException();
-		}
+		self::update_last_used_release( $transient_value );
 
 		return new FontAwesome_ResourceCollection( $version, $resources );
 	}
 
 	/**
-	 * Returns a version number corresponding to the most recent minor release.
+	 * Returns a version number corresponding to the most recent minor release
+	 * in the 5.x line.
 	 *
-	 * Internal use only. Clients should use the FontAwesome::latest_version()
-	 * public API method instead.
+	 * Internal use only. Clients should use the FontAwesome::latest_version_5()
+	 * or FontAwesome::latest_version_6() public API methods instead.
 	 *
 	 * @internal
 	 * @ignore
-	 * @return string|null most recent major.minor.patch version or null if there's
+	 * @deprecated
+	 * @return string|null most recent major.minor.patch 5.x version or null if there's
 	 *   not yet been a successful query to the API server for releases metadata.
 	 */
 	public function latest_version() {
-		return $this->latest_version;
+		return $this->latest_version_5;
+	}
+
+	/**
+	 * Returns a version number corresponding to the most recent minor release
+	 * in the 5.x line.
+	 *
+	 * Internal use only. Clients should use the FontAwesome::latest_version_5()
+	 * public API methods instead.
+	 *
+	 * @internal
+	 * @ignore
+	 * @deprecated
+	 * @return string|null most recent major.minor.patch 5.x version or null if there's
+	 *   not yet been a successful query to the API server for releases metadata.
+	 */
+	public function latest_version_5() {
+		return $this->latest_version_5;
+	}
+
+	/**
+	 * Returns a version number corresponding to the most recent minor release
+	 * in the 6.x line.
+	 *
+	 * Internal use only. Clients should use the FontAwesome::latest_version_6()
+	 * public API methods instead.
+	 *
+	 * @internal
+	 * @ignore
+	 * @deprecated
+	 * @return string|null most recent major.minor.patch 6.x version or null if there's
+	 *   not yet been a successful query to the API server for releases metadata.
+	 */
+	public function latest_version_6() {
+		return $this->latest_version_6;
+	}
+
+	/**
+	 * In multisite mode, we will store the releases metadata just once for the
+	 * whole network in a network option.
+	 *
+	 * Internal use only, not part of this plugin's public API.
+	 *
+	 * @internal
+	 * @ignore
+	 */
+	public static function update_option( $option_value ) {
+		if ( is_multisite() ) {
+			$network_id = get_current_network_id();
+			return update_network_option( $network_id, self::OPTIONS_KEY, $option_value );
+		} else {
+			return update_option( self::OPTIONS_KEY, $option_value, false );
+		}
+	}
+
+	/**
+	 * In multisite mode, we will store the releases metadata just once for the
+	 * whole network in a network option.
+	 *
+	 * Internal use only, not part of this plugin's public API.
+	 *
+	 * @internal
+	 * @ignore
+	 */
+	public static function get_option() {
+		if ( is_multisite() ) {
+			$network_id = get_current_network_id();
+			return get_network_option( $network_id, self::OPTIONS_KEY );
+		} else {
+			return get_option( self::OPTIONS_KEY );
+		}
+	}
+
+	/**
+	 * Internal use only, not part of this plugin's public API.
+	 *
+	 * @internal
+	 * @ignore
+	 */
+	public static function delete_option() {
+		if ( is_multisite() ) {
+			$network_id = get_current_network_id();
+			return delete_network_option( $network_id, self::OPTIONS_KEY );
+		} else {
+			return delete_option( self::OPTIONS_KEY );
+		}
+	}
+
+	/**
+	 * Internal use only, not part of this plugin's public API.
+	 *
+	 * @internal
+	 * @ignore
+	 */
+	public static function get_last_used_release() {
+		return get_transient( self::LAST_USED_RELEASE_TRANSIENT );
+	}
+
+	/**
+	 * Internal use only, not part of this plugin's public API.
+	 *
+	 * @internal
+	 * @ignore
+	 */
+	public static function update_last_used_release( $transient_value ) {
+		return set_transient( self::LAST_USED_RELEASE_TRANSIENT, $transient_value, self::LAST_USED_RELEASE_TRANSIENT_EXPIRY );
+	}
+
+	/**
+	 * Internal use only, not part of this plugin's public API.
+	 *
+	 * @internal
+	 * @ignore
+	 */
+	public static function delete_last_used_release() {
+		return delete_transient( self::LAST_USED_RELEASE_TRANSIENT );
 	}
 }
 

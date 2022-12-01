@@ -3,6 +3,7 @@
 if (!defined('UPDRAFTPLUS_DIR')) die('No direct access allowed');
 
 if (!class_exists('Updraft_Restorer_Skin')) require_once(UPDRAFTPLUS_DIR.'/includes/updraft-restorer-skin.php');
+if (!class_exists('UpdraftPlus_Search_Replace')) require_once(UPDRAFTPLUS_DIR.'/includes/class-search-replace.php');
 
 class Updraft_Restorer {
 
@@ -17,14 +18,30 @@ class Updraft_Restorer {
 	// Public: it is manipulated by the caller after the caller gets the object
 	public $delete = false;
 
+	private $errors;
+
 	private $created_by_version = false;
 
 	// This one can be set externally, if the information is available
 	public $ud_backup_is_multisite = -1;
 
+	public $ud_multisite_selective_restore = false;
+
 	private $ud_backup_set;
 
+	private $ud_foreign_working_dir;
+
+	private $ud_foreign_package;
+
 	public $ud_foreign;
+
+	private $ud_extract_count;
+	
+	private $ud_working_dir;
+
+	private $ud_extract_dir;
+	
+	private $ud_made_dirs;
 
 	// store restored table names
 	public $restored_table_names = array();
@@ -34,13 +51,15 @@ class Updraft_Restorer {
 	// The default of false means "use the global $wpdb"
 	private $wpdb_obj = false;
 
+	private $mysql_dbh = false;
+	
+	private $use_mysqli = false;
+
 	private $line_last_logged = 0;
 
 	private $our_siteurl;
 
 	private $configuration_bundle;
-
-	private $ajax_restore_auth_code;
 	
 	private $restore_options;
 	
@@ -58,9 +77,21 @@ class Updraft_Restorer {
 	
 	private $import_table_prefix = null;
 
+	private $final_import_table_prefix = null;
+
+	private $disable_atomic_on_current_table = false;
+
 	private $table_engine = '';
 
 	private $table_name = '';
+
+	private $new_table_name = '';
+
+	private $original_table_name = '';
+
+	private $tables_created = 0;
+
+	private $view_names = array();
 	
 	private $continuation_data;
 
@@ -72,11 +103,25 @@ class Updraft_Restorer {
 
 	private $include_unspecified_tables = false;
 
+	private $include_unspecified_plugins = false;
+
+	private $include_unspecified_themes = false;
+
 	private $tables_to_restore = array();
+
+	private $plugins_to_restore = array();
+
+	private $themes_to_restore = array();
 
 	private $stored_routine_supported = null;
 	
 	private $tables_to_skip = array();
+
+	private $plugins_to_skip = array();
+
+	private $themes_to_skip = array();
+
+	public $search_replace_obj = null;
 	
 	// Constants for use with the move_backup_in method
 	// These can't be arbitrarily changed; there is legacy code doing bitwise operations and numerical comparisons, and possibly legacy code still using the values directly.
@@ -98,8 +143,46 @@ class Updraft_Restorer {
 	private $generated_columns_exist_in_the_statement = array();
 
 	private $printed_new_table_prefix = false;
+
+	private $old_siteurl = '';
+
+	private $old_home = '';
+	
+	private $old_content = '';
+	
+	private $old_uploads = '';
 	
 	private $old_table_prefix = null;
+
+	private $old_abspath = '';
+
+	private $pre_restore_updatedir_writable;
+
+	private $abspath;
+
+	private $create_forbidden = false;
+	
+	private $drop_forbidden = false;
+	
+	private $lock_forbidden = false;
+	
+	private $rename_forbidden = false;
+
+	private $triggers_forbidden = false;
+	
+	private $prior_upload_path;
+	
+	private $insert_statements_run;
+	
+	private $start_time;
+	
+	private $last_error;
+	
+	private $last_error_no;
+	
+	private $max_allowed_packet;
+	
+	private $set_names;
 
 	/**
 	 * Constructor
@@ -117,6 +200,8 @@ class Updraft_Restorer {
 		$this->continuation_data = $continuation_data;
 
 		$this->setup_database_objects();
+
+		$this->search_replace_obj = new UpdraftPlus_Search_Replace();
 		
 		if ($short_init) return;
 		
@@ -159,12 +244,21 @@ class Updraft_Restorer {
 		if (isset($restore_options['tables_to_restore'])) $this->tables_to_restore = $restore_options['tables_to_restore'];
 		if (isset($restore_options['tables_to_skip'])) $this->tables_to_skip = $restore_options['tables_to_skip'];
 
+		if (isset($restore_options['include_unspecified_plugins'])) $this->include_unspecified_plugins = $restore_options['include_unspecified_plugins'];
+		if (isset($restore_options['plugins_to_restore'])) $this->plugins_to_restore = $restore_options['plugins_to_restore'];
+		if (isset($restore_options['plugins_to_skip'])) $this->plugins_to_skip = $restore_options['plugins_to_skip'];
+
+		if (isset($restore_options['include_unspecified_themes'])) $this->include_unspecified_themes = $restore_options['include_unspecified_themes'];
+		if (isset($restore_options['themes_to_restore'])) $this->themes_to_restore = $restore_options['themes_to_restore'];
+		if (isset($restore_options['themes_to_skip'])) $this->themes_to_skip = $restore_options['themes_to_skip'];
+
 		// Restore in the most helpful order
 		uksort($backup_set, array('UpdraftPlus_Manipulation_Functions', 'sort_restoration_entities'));
 		
 		$this->ud_backup_set = $backup_set;
 		
 		add_filter('updraftplus_logline', array($this, 'updraftplus_logline'), 10, 5);
+		add_action('updraftplus_restored_db_table', array($this, 'updraftplus_restored_db_table'), 10, 3);
 		
 		do_action('updraftplus_restorer_restore_options', $restore_options);
 		$this->ud_multisite_selective_restore = (is_array($restore_options) && !empty($restore_options['updraft_restore_ms_whichsites']) && $restore_options['updraft_restore_ms_whichsites'] > 0) ? $restore_options['updraft_restore_ms_whichsites'] : false;
@@ -295,7 +389,7 @@ class Updraft_Restorer {
 			}
 
 			// Clear any cached pages after the restore
-			$this->clear_cache();
+			$this->clear_caches();
 
 			// Have seen a case where the current theme in the DB began with a capital, but not on disk - and this breaks migrating from Windows to a case-sensitive system
 			$template = get_option('template');
@@ -326,7 +420,7 @@ class Updraft_Restorer {
 		restore_error_handler();
 		
 	}
-	
+
 	/**
 	 * Whether or not we must use the global $wpdb object for database queries.
 	 * That is to say: we *can* always use it. But we prefer to avoid the overhead since we are potentially doing very many queries.
@@ -429,8 +523,8 @@ class Updraft_Restorer {
 					$updraftplus->log(__("The backup records do not contain information about the proper size of this file.", 'updraftplus'), 'notice-restore');
 				}
 				if (!is_readable($fullpath)) {
-					$updraftplus->log(__('Could not find one of the files for restoration', 'updraftplus')." ($file)", 'warning-restore');
-					$updraftplus->log("$file: ".__('Could not find one of the files for restoration', 'updraftplus'), 'error');
+					$updraftplus->log(__('Could not read one of the files for restoration', 'updraftplus')." ($file)", 'warning-restore');
+					$updraftplus->log("$file: ".__('Could not read one of the files for restoration', 'updraftplus'), 'error');
 					return false;
 				}
 			}
@@ -524,8 +618,6 @@ class Updraft_Restorer {
 		$backup_set = $this->ud_backup_set;
 		
 		$services = isset($backup_set['service']) ? $updraftplus->get_canonical_service_list($backup_set['service']) : array();
-
-		$entities_to_download = $this->get_entities_to_download($entities_to_restore);
 		
 		$backupable_entities = $updraftplus->get_backupable_file_entities(true, true);
 		
@@ -533,17 +625,17 @@ class Updraft_Restorer {
 
 		if (!empty($restore_options['dummy_db_restore'])) {
 			$this->is_dummy_db_restore = true;
-			add_filter('updraftplus_restore_table_prefix', array($this, 'updraftplus_restore_table_prefix_dummy'));
+			add_filter('updraftplus_restore_table_prefix', array($this, 'updraftplus_random_restore_table_prefix'));
 		}
 
 		// Allow add-ons to adjust the restore directory (but only in the case of restore - otherwise, they could just use the filter built into UpdraftPlus::get_backupable_file_entities)
 		$backupable_entities = apply_filters('updraft_backupable_file_entities_on_restore', $backupable_entities, $restore_options, $backup_set);
 
-		@set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		if (function_exists('set_time_limit')) @set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 		
 		// Get an ordered list of things to restore
 		// This requires the global $updraft_restorer to be set up
-		$second_loop = $this->ensure_restore_files_present($entities_to_download, $backupable_entities, $services);
+		$second_loop = $this->ensure_restore_files_present($entities_to_restore, $backupable_entities, $services);
 		
 		if (!is_array($second_loop)) return $second_loop;
 		
@@ -589,8 +681,7 @@ class Updraft_Restorer {
 					$display_log_message = sprintf(__('A PHP exception (%s) has occurred: %s', 'updraftplus'), get_class($e), $e->getMessage());
 					error_log($log_message);
 					// @codingStandardsIgnoreLine
-					if (function_exists('wp_debug_backtrace_summary')) $log_message .= ' Backtrace: '.wp_debug_backtrace_summary();
-					$updraftplus->log($log_message);
+					if (function_exists('wp_debug_backtrace_summary')) $log_message .= ' Backtrace: '.str_replace(array(ABSPATH, "\n"), array('', ', '), $e->getTraceAsString());
 					$updraftplus->log($display_log_message, 'notice-restore');
 					die();
 				// @codingStandardsIgnoreLine
@@ -598,8 +689,7 @@ class Updraft_Restorer {
 					$log_message = 'PHP Fatal error ('.get_class($e).') has occurred. Error Message: '.$e->getMessage().' (Code: '.$e->getCode().', line '.$e->getLine().' in '.$e->getFile().')';
 					error_log($log_message);
 					// @codingStandardsIgnoreLine
-					if (function_exists('wp_debug_backtrace_summary')) $log_message .= ' Backtrace: '.wp_debug_backtrace_summary();
-					$updraftplus->log($log_message);
+					if (function_exists('wp_debug_backtrace_summary')) $log_message .= ' Backtrace: '.str_replace(array(ABSPATH, "\n"), array('', ', '), $e->getTraceAsString());
 					$display_log_message = sprintf(__('A PHP fatal error (%s) has occurred: %s', 'updraftplus'), get_class($e), $e->getMessage());
 					$updraftplus->log($display_log_message, 'notice-restore');
 					die();
@@ -638,7 +728,7 @@ class Updraft_Restorer {
 		}
 		
 		// If the database was restored, then check active plugins and make sure they all exist; otherwise, the site may go down
-		if (null !== $this->import_table_prefix) $this->check_active_plugins($this->import_table_prefix);
+		if (null !== $this->final_import_table_prefix) $this->check_active_plugins($this->final_import_table_prefix);
 
 		return true;
 	}
@@ -848,8 +938,12 @@ class Updraft_Restorer {
 
 		// Unzip package to working directory
 		if ('.zip' == strtolower(substr($package, -4, 4))) {
+
+			$folders_to_include = array();
+			if ('themes' == $type && !$this->include_unspecified_themes) $folders_to_include = $this->themes_to_restore;
+			if ('plugins' == $type && !$this->include_unspecified_plugins) $folders_to_include = $this->plugins_to_restore;
 		
-			$result = UpdraftPlus_Filesystem_Functions::unzip_file($package, $working_dir, $zip_starting_index);
+			$result = UpdraftPlus_Filesystem_Functions::unzip_file($package, $working_dir, $zip_starting_index, $folders_to_include);
 			
 		} elseif ('.tar' == strtolower(substr($package, -4, 4)) || '.tar.gz' == strtolower(substr($package, -7, 7)) || '.tar.bz2' == strtolower(substr($package, -8, 8))) {
 			if (!class_exists('UpdraftPlus_Archive_Tar')) {
@@ -1012,7 +1106,7 @@ class Updraft_Restorer {
 
 		$backup_dir = $wp_filesystem->find_folder($updraft_dir);
 
-		@set_time_limit(1800);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		if (function_exists('set_time_limit')) @set_time_limit(1800);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 		$packsize = round(filesize($backup_dir.$package)/1048576, 1).' Mb';
 		
@@ -1113,9 +1207,10 @@ class Updraft_Restorer {
 	 * @param  string  $type              specify type
 	 * @param  boolean $send_actions      send actions
 	 * @param  boolean $force_local       force local
+	 * @param  boolean $moving_old        indicates if we are moving old files
 	 * @return boolean
 	 */
-	public function move_backup_in($working_dir, $dest_dir, $preserve_existing = 1, $do_not_overwrite = array('plugins', 'themes', 'uploads', 'upgrade'), $type = 'not-others', $send_actions = false, $force_local = false) {
+	public function move_backup_in($working_dir, $dest_dir, $preserve_existing = 1, $do_not_overwrite = array('plugins', 'themes', 'uploads', 'upgrade'), $type = 'not-others', $send_actions = false, $force_local = false, $moving_old = false) {
 
 		global $wp_filesystem, $updraftplus;
 		$updraft_dir = $updraftplus->backups_dir_location();
@@ -1146,7 +1241,12 @@ class Updraft_Restorer {
 
 		$wpcore_config_moved = false;
 
-		if ('plugins' == $type || 'themes' == $type) $updraftplus->log("Top-level entities being moved: ".implode(', ', array_keys($upgrade_files)));
+		if ('plugins' == $type || 'themes' == $type) {
+			$upgrade_files_log = implode(', ', array_keys($upgrade_files));
+			if ('plugins' == $type && !empty($this->plugins_to_restore) && !$this->include_unspecified_plugins) $upgrade_files_log = implode(', ', $this->plugins_to_restore);
+			if ('themes' == $type && !empty($this->themes_to_restore) && !$this->include_unspecified_themes) $upgrade_files_log = implode(', ', $this->themes_to_restore);
+			$updraftplus->log("Top-level entities being moved: ".$upgrade_files_log);
+		}
 
 		foreach ($upgrade_files as $file => $filestruc) {
 
@@ -1209,6 +1309,38 @@ class Updraft_Restorer {
 			} elseif (('object-cache-backup.php' == $file || 'advanced-cache-backup.php' == $file) && 'others' == $type) {
 				if (!$wpfs->delete($working_dir."/".$file)) {
 					$this->restore_log_permission_failure_message($working_dir, 'Delete '.$working_dir."/".$file);
+				}
+				continue;
+			}
+
+			if ('plugins' == $type && !empty($this->plugins_to_skip) && in_array($file, $this->plugins_to_skip)) {
+				if (!$moving_old) {
+					$updraftplus->log("Skipping {$file} as user requested it to not be restored.", "notice-restore");
+					// Remove it from the temporary directory - so that it will be clean later
+					@$wpfs->delete($working_dir.'/'.$file, true);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+				}
+				continue;
+			} elseif ('plugins' == $type && !empty($this->plugins_to_restore) && !in_array($file, $this->plugins_to_restore) && !$this->include_unspecified_plugins) {
+				if (!$moving_old) {
+					$updraftplus->log("Skipping {$file} as it's not in the list of plugins to restore and we are not including unspecified plugins.", "notice-restore");
+					// Remove it from the temporary directory - so that it will be clean later
+					@$wpfs->delete($working_dir.'/'.$file, true);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+				}
+				continue;
+			}
+
+			if ('themes' == $type && !empty($this->themes_to_skip) && in_array($file, $this->themes_to_skip)) {
+				if (!$moving_old) {
+					$updraftplus->log("Skipping {$file} as user requested it to not be restored.", "notice-restore");
+					// Remove it from the temporary directory - so that it will be clean later
+					@$wpfs->delete($working_dir.'/'.$file, true);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+				}
+				continue;
+			} elseif ('themes' == $type && !empty($this->themes_to_restore) && !in_array($file, $this->themes_to_restore) && !$this->include_unspecified_themes) {
+				if (!$moving_old) {
+					$updraftplus->log("Skipping {$file} as it's not in the list of themes to restore and we are not including unspecified themes.", "notice-restore");
+					// Remove it from the temporary directory - so that it will be clean later
+					@$wpfs->delete($working_dir.'/'.$file, true);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 				}
 				continue;
 			}
@@ -1471,20 +1603,21 @@ class Updraft_Restorer {
 
 		if (empty($this->abspath)) $this->abspath = trailingslashit($wp_filesystem->abspath());
 
-		@set_time_limit(1800);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		if (function_exists('set_time_limit')) @set_time_limit(1800);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 		// This returns the wp_filesystem path
 		$working_dir = $this->unpack_package($backup_file, $this->delete, $type);
 		if (is_wp_error($working_dir)) return $working_dir;
 
 		$working_dir_localpath = WP_CONTENT_DIR.'/upgrade/'.basename($working_dir);
-		@set_time_limit(1800);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		if (function_exists('set_time_limit')) @set_time_limit(1800);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 		// We copy the variable because we may be importing with a different prefix (e.g. on multisite imports of individual blog data)
 		// The filter allows you to restore to a completely different prefix - i.e. don't replace this site; possibly useful for testing the restore process (but not yet tested)
 		$import_table_prefix = apply_filters('updraftplus_restore_table_prefix', $updraftplus->get_table_prefix(false));
 
 		$this->import_table_prefix = $import_table_prefix;
+		$this->final_import_table_prefix = $updraftplus->get_table_prefix(false);
 		
 		$now_done = apply_filters('updraftplus_pre_restore_move_in', false, $type, $working_dir, $info, $this->ud_backup_set, $this, $wp_filesystem_dir);
 		if (is_wp_error($now_done)) return $now_done;
@@ -1842,13 +1975,13 @@ class Updraft_Restorer {
 		// Firstly, try direct filesystem method into updraft_dir
 		if ($move_old_destination > 0 && 1 == $move_old_destination % 2) {
 			// The final 'true' forces direct filesystem access
-			$move_old = @$this->move_backup_in($get_dir, $updraft_dir.'/'.$type.'-old/', 3, array(), $type, false, true);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			$move_old = @$this->move_backup_in($get_dir, $updraft_dir.'/'.$type.'-old/', 3, array(), $type, false, true, true);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			if (is_wp_error($move_old)) $updraftplus->log_wp_error($move_old);
 		}
 
 		// Try wp_filesystem method into -old if that failed
 		if (2 >= $move_old_destination && (0 == $move_old_destination % 2 || (!empty($move_old) && is_wp_error($move_old)))) {
-			$move_old = @$this->move_backup_in($wp_filesystem_dir, $wp_filesystem_dir."-old/", 3, array(), $type);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			$move_old = @$this->move_backup_in($wp_filesystem_dir, $wp_filesystem_dir."-old/", 3, array(), $type, false, false, true);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			if (is_wp_error($move_old)) $updraftplus->log_wp_error($move_old);
 		}
 
@@ -1874,14 +2007,77 @@ class Updraft_Restorer {
 	/**
 	 * First added in UD 1.9.47.
 	 */
-	public function clear_cache() {
+	private function clear_caches() {
+		global $updraftplus;
+		
 		// Functions called here need to not assume that the relevant plugin actually exists - they should check for any functions they intend to call, before calling them.
-		$this->clear_cache_wpsupercache();
+		$methods = array(
+			'clear_cache_wpsupercache',
+			'clear_avada_fusion_cache', // avada theme with its theme engine called fusion
+			'clear_elementor_cache',
+		);
+		
+		foreach ($methods as $method) {
+			try {
+				call_user_func(array($this, $method));
+			} catch (Exception $e) {
+				$log_message = 'Exception ('.get_class($e).") occurred when cleaning up third-party cache ($method) during post-restore: ".$e->getMessage().' (Code: '.$e->getCode().', line '.$e->getLine().' in '.$e->getFile().')';
+				error_log($log_message);
+				$updraftplus->log($log_message);
+			} catch (Error $e) { // phpcs:ignore PHPCompatibility.Classes.NewClasses.errorFound
+				$log_message = 'Error ('.get_class($e).") occurred when cleaning up third-party cache ($method) during post-restore: ".$e->getMessage().' (Code: '.$e->getCode().', line '.$e->getLine().' in '.$e->getFile().')';
+				error_log($log_message);
+				$updraftplus->log($log_message);
+			}
+		}
+			
 		// It should be harmless to just purge the standard directory anyway (it's not backed up by default), and any others from other plugins
 		$cache_sub_directories = array('cache', 'wphb-cache', 'endurance-page-cache');
 		foreach ($cache_sub_directories as $sub_dir) {
 			if (!is_dir(WP_CONTENT_DIR.'/'.$sub_dir)) continue;
 			UpdraftPlus_Filesystem_Functions::remove_local_directory(WP_CONTENT_DIR.'/'.$sub_dir, true);
+		}
+	}
+
+	/**
+	 * Clear cached Fusion-theme's Dynamic CSS
+	 */
+	private function clear_avada_fusion_cache() {
+		global $updraftplus;
+		$upload_dir = $updraftplus->wp_upload_dir();
+		$fusion_css_dir = realpath($upload_dir['basedir']).DIRECTORY_SEPARATOR.'fusion-styles';
+		if (is_dir($fusion_css_dir)) {
+			$updraftplus->log("Avada/Fusion's dynamic CSS folder exists, and will be emptied (so that it will be automatically regenerated)");
+			UpdraftPlus_Filesystem_Functions::remove_local_directory($fusion_css_dir, true);
+		}
+	}
+
+	/**
+	 * Clear cached Elementor styles that are saved in CSS files in the uploads folder. Clearing the caches will regenerate new CSS files, according to the most recent settings.
+	 */
+	private function clear_elementor_cache() {
+		global $updraftplus;
+		$cache_uncleared = true;
+		if (apply_filters('updraftplus_elementor_direct_clear_cache', $cache_uncleared)) {
+			if (class_exists('\Elementor\Plugin')) class_alias('\Elementor\Plugin', 'UpdraftPlus_Elementor_Plugin'); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctions.class_aliasFound
+			if (class_exists('UpdraftPlus_Elementor_Plugin') && isset(UpdraftPlus_Elementor_Plugin::$instance) && isset(UpdraftPlus_Elementor_Plugin::$instance->files_manager) && is_object(UpdraftPlus_Elementor_Plugin::$instance->files_manager) && method_exists(UpdraftPlus_Elementor_Plugin::$instance->files_manager, 'clear_cache')) {
+				$updraftplus->log("Elementor's clear cache method exists and will be executed");
+				UpdraftPlus_Elementor_Plugin::$instance->files_manager->clear_cache();
+				$cache_uncleared = false;
+			}
+		}
+		if (apply_filters('updraftplus_elementor_manual_clear_cache', $cache_uncleared)) {
+			$upload_dir = $updraftplus->wp_upload_dir();
+			$elementor_css_dir = realpath($upload_dir['basedir']).DIRECTORY_SEPARATOR.'elementor'.DIRECTORY_SEPARATOR.'css';
+			if (is_dir($elementor_css_dir)) {
+				$updraftplus->log("Elementor's CSS directory exists, and will be emptied (so that it will be automatically regenerated)");
+				UpdraftPlus_Filesystem_Functions::remove_local_directory($elementor_css_dir, true);
+			}
+			// deleting only the Elementor's CSS files won't make Elementor regenerate the new CSS files the next time the website is loaded/visited again
+			// Elementor will regenerate the files only if these meta and options get deleted as well
+			delete_post_meta_by_key('_elementor_css');
+			delete_option('_elementor_global_css');
+			delete_option('elementor-custom-breakpoints-files');
 		}
 	}
 
@@ -2183,6 +2379,8 @@ class Updraft_Restorer {
 
 		$updraft_restorer_collate = isset($this->restore_options['updraft_restorer_collate']) ? $this->restore_options['updraft_restorer_collate'] : '';
 
+		$non_wp_table = false;
+
 		// Legacy, less reliable - in case it was not caught before. We added it in here (CREATE) as well as in DROP because of SQL dumps which lack DROP statements.
 		if (null === $this->old_table_prefix && preg_match('/^([a-z0-9]+)_.*$/i', $this->table_name, $tmatches)) {
 			$this->old_table_prefix = $tmatches[1].'_';
@@ -2197,6 +2395,11 @@ class Updraft_Restorer {
 			$this->new_table_name = $import_table_prefix.$this->table_name;
 		} else {
 			$this->new_table_name = $this->old_table_prefix ? UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $import_table_prefix, $this->table_name) : $this->table_name;
+			// if we have a different prefix but the table name has not changed after the replace then we are dealing with a table that does not use the WordPress table prefix, in order for an Atmoic restore to work on this table we need to attach our temporary prefix
+			if (!$this->rename_forbidden && $this->old_table_prefix && $this->new_table_name == $this->table_name) {
+				$non_wp_table = true;
+				$this->new_table_name = $import_table_prefix.$this->table_name;
+			}
 		}
 
 		// This CREATE TABLE command may be the de-facto mark for the end of processing a previous table (which is so if this is not the first table in the SQL dump)
@@ -2212,11 +2415,11 @@ class Updraft_Restorer {
 					if (!empty($updraftplus_addons_migrator->new_blogid)) switch_to_blog($updraftplus_addons_migrator->new_blogid);
 
 					if ('' == $this->old_siteurl) {
-						$this->old_siteurl = untrailingslashit($wpdb->get_row("SELECT option_value FROM $wpdb->options WHERE option_name='siteurl'")->option_value);
+						$this->old_siteurl = untrailingslashit($wpdb->get_row("SELECT option_value FROM ".$import_table_prefix.'options'." WHERE option_name='siteurl'")->option_value);
 						do_action('updraftplus_restore_db_record_old_siteurl', $this->old_siteurl);
 					}
 					if ('' == $this->old_home) {
-						$this->old_home = untrailingslashit($wpdb->get_row("SELECT option_value FROM $wpdb->options WHERE option_name='home'")->option_value);
+						$this->old_home = untrailingslashit($wpdb->get_row("SELECT option_value FROM ".$import_table_prefix.'options'." WHERE option_name='home'")->option_value);
 						do_action('updraftplus_restore_db_record_old_home', $this->old_home);
 					}
 					if ('' == $this->old_content) {
@@ -2226,10 +2429,44 @@ class Updraft_Restorer {
 					if (!empty($updraftplus_addons_migrator->new_blogid)) restore_current_blog();
 				}
 			}
-			
-			if ($this->restoring_table != $this->new_table_name) $this->restored_table($this->restoring_table, $import_table_prefix, $this->old_table_prefix, $this->table_engine);
+
+			if ('' !== $this->restoring_table && $this->restoring_table != $this->new_table_name) {
+				$final_table_name = $this->maybe_rename_restored_table();
+				$this->restored_table($final_table_name, $this->final_import_table_prefix, $this->old_table_prefix, $this->table_engine);
+			}
 
 		}
+
+		// Detect this as early as possible so we can turn off atomic restores if needed. If the table prefix has changed and key constraints are found, make sure they are updated
+		$constraint_change_message = '';
+		$constraints = array();
+		$constraint_found = false;
+		if (preg_match_all('/CONSTRAINT ([\a-zA-Z0-9_\']+) FOREIGN KEY \([a-zA-z0-9_\', ]+\) REFERENCES \'?([a-zA-z0-9_]+)\'? /i', $create_table_statement, $constraint_matches)) {
+			$constraints = $constraint_matches;
+			$constraint_found = true;
+		} elseif (preg_match_all('/ FOREIGN KEY \([a-zA-z0-9_\', ]+\) REFERENCES \'?([a-zA-z0-9_]+)\'? /i', $create_table_statement, $constraint_matches)) {
+			$constraints = $constraint_matches;
+			$constraint_found = true;
+		}
+
+		// Constraints were found so we need to disable the atomic restore for this table, which means resetting the import table prefix and current table name and finally dropping the original table if it exists
+		if ($constraint_found && !$this->rename_forbidden && !$this->is_dummy_db_restore) {
+			
+			$import_table_prefix = $this->final_import_table_prefix;
+			$this->disable_atomic_on_current_table = true;
+			
+			if ('' === $this->old_table_prefix) {
+				$this->new_table_name = $import_table_prefix.$this->table_name;
+			} else {
+				$this->new_table_name = $this->old_table_prefix ? UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $import_table_prefix, $this->table_name) : $this->table_name;
+			}
+
+			$updraftplus->log('Constraints found, will disable atomic restore for current table ('.$this->table_name.')', 'notice-restore');
+
+			$this->drop_tables(array($this->new_table_name));
+
+		}
+
 		$this->table_engine = "(?)";
 		$engine_change_message = '';
 		if (preg_match('/ENGINE=([^\s;]+)/', $create_table_statement, $eng_match)) {
@@ -2262,15 +2499,15 @@ class Updraft_Restorer {
 				}
 			}
 		}
-		// If the table prefix has changed and key constraints are found, make sure they are updated
-		$constraint_change_message = '';
-		if ($this->old_table_prefix != $import_table_prefix && (preg_match_all('/ FOREIGN KEY \([a-zA-z0-9_\', ]+\) REFERENCES \'?([a-zA-z0-9_]+)\'? /i', $create_table_statement, $constraint_matches))) {
-			foreach ($constraint_matches[0] as $constraint) {
-				$updated_constraint = str_replace($this->old_table_prefix, $import_table_prefix, $constraint);
+
+		if (!empty($constraints) && $this->old_table_prefix != $this->final_import_table_prefix) {
+			foreach ($constraints[0] as $constraint) {
+				$updated_constraint = str_replace($this->old_table_prefix, $this->final_import_table_prefix, $constraint);
 				$create_table_statement = str_replace($constraint, $updated_constraint, $create_table_statement);
 			}
 			$constraint_change_message = __('Found and replaced existing table foreign key constraints as the table prefix has changed.', 'updraftplus');
 		}
+
 		$collate_change_message = '';
 		$unsupported_collates_in_sql_line = array();
 		if (!empty($updraft_restorer_collate) && preg_match('/ COLLATE=([a-zA-Z0-9._-]+)/i', $create_table_statement, $collate_match)) {
@@ -2323,7 +2560,7 @@ class Updraft_Restorer {
 			} else {
 				$logline .= ' - skipping';
 			}
-			if ('' === $this->old_table_prefix) {
+			if ('' === $this->old_table_prefix || $non_wp_table) {
 				$create_table_statement = UpdraftPlus_Manipulation_Functions::str_replace_once($this->table_name, $this->new_table_name, $create_table_statement);
 			} else {
 				$create_table_statement = UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $import_table_prefix, $create_table_statement);
@@ -2419,6 +2656,12 @@ class Updraft_Restorer {
 
 		$updraftplus->log($logline);
 		$updraftplus->log($print_line, 'notice-restore');
+		// If this is a non wp table we don't want to replace our temp prefix with the final prefix, we need to drop our prefix
+		if ($non_wp_table) {
+			$this->original_table_name = UpdraftPlus_Manipulation_Functions::str_replace_once($this->import_table_prefix, '', $this->new_table_name);
+		} else {
+			$this->original_table_name = UpdraftPlus_Manipulation_Functions::str_replace_once($this->import_table_prefix, $this->final_import_table_prefix, $this->new_table_name);
+		}
 		$this->restoring_table = $this->new_table_name;
 		if ($charset_change_message) $updraftplus->log($charset_change_message, 'notice-restore');
 		if ($constraint_change_message) $updraftplus->log($constraint_change_message, 'notice-restore');
@@ -2560,12 +2803,14 @@ class Updraft_Restorer {
 		$this->create_forbidden = false;
 		$this->drop_forbidden = false;
 		$this->lock_forbidden = false;
+		$this->rename_forbidden = false;
 		
 		// This will get flipped if positive success is confirmed
 		$this->triggers_forbidden = true;
 
 		$this->last_error = '';
 		$random_table_name = 'updraft_tmp_'.rand(0, 9999999).md5(microtime(true));
+		$renamed_random_table_name = 'updraft_tmp_'.rand(0, 9999999).md5(microtime(true));
 		$last_created_generated_columns_table = '';
 
 		// The only purpose in funnelling queries directly here is to be able to get the error number
@@ -2620,10 +2865,18 @@ class Updraft_Restorer {
 			
 			$updraftplus->log('Error was: '.$this->last_error.' ('.$this->last_error_no.')');
 		} else {
+
+			if (1142 === $this->rename_table($random_table_name, $renamed_random_table_name)) {
+				$this->rename_forbidden = true;
+				$updraftplus->log('Database user has no permission to rename tables - restoration will be non-atomic', 'warning-restore');
+			} else {
+				// We renamed the table so update the $random_table_name
+				$random_table_name = $renamed_random_table_name;
+			}
 		
 			if (1142 === $this->lock_table($random_table_name)) {
 				$this->lock_forbidden = true;
-				$updraftplus->log("Database user has no permission to lock tables - will not lock after CREATE");
+				$updraftplus->log("Database user has no permission to lock tables - will not lock after CREATE", "warning-restore");
 			}
 		
 			if ($this->use_wpdb()) {
@@ -2650,6 +2903,7 @@ class Updraft_Restorer {
 			}
 			if (!$req && ($this->use_wpdb() || 1142 === $this->last_error_no)) {
 				$this->drop_forbidden = true;
+				$this->rename_forbidden = true;
 
 				// abort dummy restore process
 				if ($this->is_dummy_db_restore) {
@@ -2661,6 +2915,21 @@ class Updraft_Restorer {
 				$updraftplus->log(sprintf(__('Your database user does not have permission to drop tables. We will attempt to restore by simply emptying the tables; this should work as long as you are restoring from a WordPress version with the same database structure (%s)', 'updraftplus'), '('.$this->last_error.', '.$this->last_error_no.')'), 'warning-restore');
 				
 			}
+		}
+
+		if (defined('UPDRAFTPLUS_ATOMIC_RESTORE_DISABLED') && UPDRAFTPLUS_ATOMIC_RESTORE_DISABLED) {
+			$updraftplus->log('Atomic restore disabled by constant UPDRAFTPLUS_ATOMIC_RESTORE_DISABLED - restoration will be non-atomic', 'warning-restore');
+			$this->rename_forbidden = true;
+		}
+
+		// If this is not a dummy restore or not importing a single site into a multisite and we can rename and drop tables then change the import prefix and proceed with atomic restore
+		if (!$this->rename_forbidden && !$this->is_dummy_db_restore && !isset($this->restore_options['updraftplus_migrate_blogname']) && empty($this->ud_foreign)) {
+			add_filter('updraftplus_restore_table_prefix', array($this, 'updraftplus_random_restore_table_prefix'));
+			$import_table_prefix = isset($this->continuation_data['temp_import_table_prefix']) ? $this->continuation_data['temp_import_table_prefix'] : apply_filters('updraftplus_restore_table_prefix', $this->final_import_table_prefix);
+			$this->import_table_prefix = $import_table_prefix;
+			$updraftplus->jobdata_set('temp_import_table_prefix', $this->import_table_prefix);
+		} else {
+			$this->rename_forbidden = true;
 		}
 
 		$this->restoring_table = '';
@@ -2767,6 +3036,13 @@ class Updraft_Restorer {
 							$this->ud_backup_is_multisite = ($val) ? 1 : 0;
 						}
 					}
+				} elseif ('' == $this->old_abspath && preg_match('/^\# ABSPATH: ?(.*)$/', $buffer, $matches)) {
+					if (ABSPATH != $matches[1] && '/' != $matches[1]) {
+						$this->old_abspath = $matches[1];
+						$updraftplus->log(__('Old ABSPATH:', 'updraftplus').' '.$this->old_abspath, 'notice-restore', 'old-abspath');
+						$updraftplus->log("Old ABSPATH: {$this->old_abspath}");
+						do_action('updraftplus_restore_db_record_old_abspath', $this->old_abspath);
+					}
 				}
 				continue;
 			}
@@ -2844,6 +3120,7 @@ class Updraft_Restorer {
 						$sql_line = UpdraftPlus_Manipulation_Functions::str_replace_once($this->table_name, $this->table_prefix.$this->table_name, $sql_line);
 					}
 				}
+
 				// Run the SQL command; then set up for the next one.
 				$this->line++;
 				$updraftplus->log(__("Split line to avoid exceeding maximum packet size", 'updraftplus')." (".strlen($sql_line)." + ".strlen($buffer)." : ".$this->max_allowed_packet.")", 'notice-restore');
@@ -2883,7 +3160,11 @@ class Updraft_Restorer {
 			}
 
 			// The timed overhead of this is negligible
-			if (preg_match('/^\s*drop table (if exists )?\`?([^\`]*)\`?\s*'.$delimiter_regex.'/i', $sql_line, $matches)) {
+			if (preg_match('/^\s*drop view (if exists )?\`?([^\`]*)\`?\s*'.$delimiter_regex.'/i', $sql_line, $matches)) {
+				$sql_type = 16;
+				$this->view_names[] = $matches[2];
+				$this->view_names = array_unique($this->view_names);
+			} elseif (preg_match('/^\s*drop table (if exists )?\`?([^\`]*)\`?\s*'.$delimiter_regex.'/i', $sql_line, $matches)) {
 				$sql_type = 1;
 
 				if (!$this->printed_new_table_prefix) {
@@ -2909,11 +3190,19 @@ class Updraft_Restorer {
 
 				$this->new_table_name = $this->old_table_prefix ? UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $import_table_prefix, $this->table_name) : $this->table_name;
 
+				$non_wp_table = false;
+				
+				// if we have a different prefix but the table name has not changed after the replace then we are dealing with a table that does not use the WordPress table prefix, in order for an Atmoic restore to work on this table we need to attach our temporary prefix
+				if (!$this->rename_forbidden && $this->old_table_prefix && $this->new_table_name == $this->table_name) {
+					$non_wp_table = true;
+					$this->new_table_name = $import_table_prefix.$this->table_name;
+				}
+
 				if ($import_table_prefix != $this->old_table_prefix) {
-					if ('' != $this->old_table_prefix) {
-						$sql_line = UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $import_table_prefix, $sql_line);
-					} else {
+					if ('' === $this->old_table_prefix || $non_wp_table) {
 						$sql_line = UpdraftPlus_Manipulation_Functions::str_replace_once($this->table_name, $this->new_table_name, $sql_line);
+					} else {
+						$sql_line = UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $import_table_prefix, $sql_line);
 					}
 				}
 				
@@ -2955,26 +3244,40 @@ class Updraft_Restorer {
 					$sql_type = -1;
 					continue;
 				}
-				if ($import_table_prefix != $this->old_table_prefix) {
-					if ('' != $this->old_table_prefix) {
-						$sql_line = UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $import_table_prefix, $sql_line);
-					} else {
+				
+				$non_wp_table = false;
+
+				$this->new_table_name = $this->old_table_prefix ? UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $import_table_prefix, $this->table_name) : $this->table_name;
+				
+				// if we have a different prefix but the table name has not changed after the replace then we are dealing with a table that does not use the WordPress table prefix, in order for an Atmoic restore to work on this table we need to attach our temporary prefix
+				if (!$this->rename_forbidden && $this->old_table_prefix && $this->new_table_name == $this->table_name) {
+					$non_wp_table = true;
+					$this->new_table_name = $import_table_prefix.$this->table_name;
+				}
+
+				// If this is set then we have disabled atomic restores for this table so we need to make sure we are using the correct prefix when inserting the data
+				$temp_insert_table_prefix = $this->disable_atomic_on_current_table ? $this->final_import_table_prefix : $import_table_prefix;
+				if ($temp_insert_table_prefix != $this->old_table_prefix) {
+					if ('' === $this->old_table_prefix || $non_wp_table) {
 						$sql_line = UpdraftPlus_Manipulation_Functions::str_replace_once($this->table_name, $this->new_table_name, $sql_line);
+					} else {
+						$sql_line = UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $temp_insert_table_prefix, $sql_line);
 					}
 				}
 			} elseif (preg_match('/^\s*(\/\*\!40000 )?(alter|lock) tables? \`?([^\`\(]*)\`?\s+(write|disable|enable)/i', $sql_line, $matches)) {
 				// Only binary mysqldump produces this pattern (LOCK TABLES `table` WRITE, ALTER TABLE `table` (DISABLE|ENABLE) KEYS)
 				$sql_type = 4;
-				if ($import_table_prefix != $this->old_table_prefix) {
-					if ('' != $this->old_table_prefix) {
-						$sql_line = UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $import_table_prefix, $sql_line);
-					} else {
+				$temp_insert_table_prefix = $this->disable_atomic_on_current_table ? $this->final_import_table_prefix : $import_table_prefix;
+				if ($temp_insert_table_prefix != $this->old_table_prefix) {
+					if ('' === $this->old_table_prefix || $non_wp_table) {
 						$sql_line = UpdraftPlus_Manipulation_Functions::str_replace_once($this->table_name, $this->new_table_name, $sql_line);
+					} else {
+						$sql_line = UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $temp_insert_table_prefix, $sql_line);
 					}
 				}
 			} elseif (preg_match('/^(un)?lock tables/i', $sql_line)) {
 				// BackWPup produces these
-				$sql_type = 5;
+				$sql_type = 15;
 			} elseif (preg_match('/^(create|drop) database /i', $sql_line)) {
 				// WPB2D produces these, as do some phpMyAdmin dumps
 				$sql_type = 6;
@@ -3138,19 +3441,29 @@ class Updraft_Restorer {
 				if (null !== $this->old_table_prefix) {
 					foreach (array_keys($this->restore_this_table) as $table_name) {
 						// Code for a view can contain pretty much anything. As such, we want to be minimise the risks of unwanted matches.
+						if (in_array($table_name, $this->view_names)) continue; // since DROP VIEW statement is preceded by DROP TABLE statement (@see UpdraftPlus_Backup::write_table_backup_beginning), it makes the view name to be recognised as a real table and to be added to the $this->restore_this_table variable when executing the DROP TABLE statement via UpdraftPlus_Restore::sql_exec method. This line prevents a view name from being replaced and suffixed with $import_table_prefix during an atomic restoration and/or when the view uses the same table prefix
 						if (false !== strpos($sql_line, $table_name)) {
-							$new_table_name = ('' == $this->old_table_prefix) ? $import_table_prefix.$table_name : UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $import_table_prefix, $table_name);
+							$new_table_name = ('' == $this->old_table_prefix) ? $import_table_prefix.$table_name : UpdraftPlus_Manipulation_Functions::str_replace_once($this->old_table_prefix, $this->rename_forbidden ? $import_table_prefix : $this->final_import_table_prefix, $table_name);
 							$sql_line = str_replace($table_name, $new_table_name, $sql_line);
 						}
 					}
+					// by default during an atomic restoration, the last created table is renamed at the end of the restoration process (@see the `if ($this->restoring_table)` code at the end of this method), tipically the DB server will throw an error when creating a view that requires a table that doesn't exist in the database
+					if ($this->restoring_table) {
+						$final_table_name = $this->maybe_rename_restored_table();
+						$this->restored_table($final_table_name, $this->final_import_table_prefix, $this->old_table_prefix, $this->table_engine);
+						$this->restoring_table = ''; // reset this variable so that the same table renaming procedure at the end of this method doesn't get executed
+					}
 				}
+			} elseif (preg_match('/^SET @@GLOBAL.GTID_PURGED/i', $sql_line)) {
+				// skip the SET @@GLOBAL.GTID_PURGED command
+				$sql_type = 17;
 			} else {
 				// Prevent the previous value of $sql_type being retained for an unknown type
 				$sql_type = 0;
 			}
 
-			// Do not execute "USE" or "CREATE|DROP DATABASE" commands
-			if (6 != $sql_type && 7 != $sql_type && (9 != $sql_type || false == $this->triggers_forbidden) && 10 != $sql_type) {
+			// Do not execute "USE" or "CREATE|DROP DATABASE" or "SET @@GLOBAL.GTID_PURGED" commands
+			if (6 != $sql_type && 7 != $sql_type && (9 != $sql_type || false == $this->triggers_forbidden) && 10 != $sql_type && 17 != $sql_type) {
 				$do_exec = $this->sql_exec($sql_line, $sql_type);
 				if (is_wp_error($do_exec)) return $do_exec;
 			} else {
@@ -3230,7 +3543,11 @@ class Updraft_Restorer {
 		}
 		$this->maintenance_mode(false);
 
-		if ($this->restoring_table) $this->restored_table($this->restoring_table, $import_table_prefix, $this->old_table_prefix, $this->table_engine);
+		if ($this->restoring_table) {
+			$final_table_name = $this->maybe_rename_restored_table();
+			$this->restored_table($final_table_name, $this->final_import_table_prefix, $this->old_table_prefix, $this->table_engine);
+		}
+
 
 		// drop the dummy restored tables
 		if ($this->is_dummy_db_restore) $this->drop_tables($this->restored_table_names);
@@ -3296,6 +3613,53 @@ class Updraft_Restorer {
 		}
 
 		return $skip_table;
+	}
+
+	/**
+	 * This function will check if we are performing an atomic restore by renaming a temporary table to the final table name and returning the final table name
+	 *
+	 * @return string - returns the final table name
+	 */
+	private function maybe_rename_restored_table() {
+		global $updraftplus;
+
+		// If this is set then we do not want to attempt an atomic restore as it will remove the final table
+		if ($this->disable_atomic_on_current_table) {
+			$this->disable_atomic_on_current_table = false;
+			return $this->original_table_name;
+		}
+		
+		// If the table names are the same then we do not want to attempt an atomic restore as it will remove the final table
+		if ($this->original_table_name == $this->restoring_table) return $this->original_table_name;
+
+		// If we have skipped this table then we don't want to attempt the atomic restore
+		if (!$this->restore_this_table($this->original_table_name)) {
+			return $this->original_table_name;
+		}
+		
+		if (!$this->rename_forbidden) {
+			$updraftplus->log_e('Atomic restore: dropping original table (%s)', $this->original_table_name);
+			$this->drop_tables(array($this->original_table_name));
+			$updraftplus->log_e('Atomic restore: renaming new table (%s) to final table name (%s)', $this->restoring_table, $this->original_table_name);
+			$this->rename_table($this->restoring_table, $this->original_table_name);
+		}
+		
+		return $this->original_table_name;
+	}
+
+	/**
+	 * This function will try to rename a table, if successful returns true otherwise returns an error number
+	 *
+	 * @param string $current_table_name - the current table name
+	 * @param string $new_table_name     - the new table name
+	 *
+	 * @return boolean|integer - returns true if successful otherwise an error number
+	 */
+	private function rename_table($current_table_name, $new_table_name) {
+		$current_table_name = UpdraftPlus_Manipulation_Functions::backquote($current_table_name);
+		$new_table_name = UpdraftPlus_Manipulation_Functions::backquote($new_table_name);
+
+		return $this->sql_exec("ALTER TABLE $current_table_name RENAME TO $new_table_name;", 14);
 	}
 
 	private function lock_table($table) {
@@ -3448,10 +3812,30 @@ class Updraft_Restorer {
 	 * UPDATE is sql_type=5 (not used in the function, but used in Migrator and so noted here for reference)
 	 * $import_table_prefix is only use in one place in this function (long INSERTs), and otherwise need/should not be supplied
 	 *
-	 * @param  string  $sql_line            sql line to execute
-	 * @param  integer $sql_type            sql type
-	 * @param  string  $import_table_prefix import type prefix
-	 * @param  boolean $check_skipping      if true, then check whether the table is on the list of tables to skip
+	 * SQL Types:
+	 * 1 DROP
+	 * 2 CREATE
+	 * 3 INSERT
+	 * 4 LOCK
+	 * 5 UPDATE
+	 * 6 WPB2D CREATE/DROP
+	 * 7 WPB2D USE
+	 * 8 SET NAMES
+	 * 9 TRIGGER
+	 * 10 DELIMITER
+	 * 11 CREATE VIEW
+	 * 12 ROUTINE
+	 * 13 DROP FUNCTION|PROCEDURE
+	 * 14 ALTER
+	 * 15 UNLOCK
+	 * 16 DROP VIEW
+	 * 17 SET GLOBAL.GTID_PURGED
+	 *
+	 * @param  String  $sql_line            sql line to execute
+	 * @param  Integer $sql_type            sql type
+	 * @param  String  $import_table_prefix import type prefix
+	 * @param  Boolean $check_skipping      if true, then check whether the table is on the list of tables to skip
+	 *
 	 * @return Boolean|WP_Error|Void
 	 */
 	public function sql_exec($sql_line, $sql_type, $import_table_prefix = '', $check_skipping = true) {
@@ -3586,6 +3970,9 @@ class Updraft_Restorer {
 				// sql_type 12 is stored routine creation
 				// in case we dealt with an sql syntax error from the stored routine body, the restore operation should not be stopped
 				$req = true;
+			// Type 14 = ALTER TABLE
+			} elseif (14 == $sql_type && 1 == $this->errors) {
+				return 1142;
 			}
 			
 			if ($this->errors >= (defined('UPDRAFTPLUS_SQLEXEC_MAXIMUM_ERRORS') ? UPDRAFTPLUS_SQLEXEC_MAXIMUM_ERRORS : 50)) {
@@ -3707,7 +4094,10 @@ class Updraft_Restorer {
 			$this->restore_configuration_bundle($table);
 		}
 
-		if (preg_match('/^([\d+]_)?options$/', substr($table, strlen($import_table_prefix)), $matches)) {
+		if ($this->is_multisite && $import_table_prefix.'sitemeta' === $table) {
+			// the reason why this if statement is needed is that when *_options table is not included in the backup, then updraft_jobdata will never be wiped out from the *_sitemeta table as the below elseif statement will call wipe_state_data() only if *_options table is included
+			$updraftplus->wipe_state_data(false, 'sitemeta');
+		} elseif (preg_match('/^([\d+]_)?options$/', substr($table, strlen($import_table_prefix)), $matches)) {
 			// The second prefix here used to have a '!$this->is_multisite' on it (i.e. 'options' table on non-multisite). However, the user_roles entry exists in the main options table on multisite too.
 			if (($this->is_multisite && !empty($matches[1])) || $table == $import_table_prefix.'options') {
 			
@@ -3775,6 +4165,23 @@ class Updraft_Restorer {
 						if (!is_dir($edir.'/'.$dbase)) @mkdir($edir.'/'.$dbase);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 						$updraftplus->log_e("Elegant themes theme builder plugin data detected: resetting temporary folder");
 						update_option('et_images_temp_folder', $edir.'/'.$dbase);
+					}
+
+					// check if current restoration is a migration
+					if (!empty($this->restore_options['updraft_restorer_replacesiteurl'])) {
+						$wp_rocket_settings = $wpdb->get_row($wpdb->prepare("SELECT option_value FROM $new_table_name WHERE option_name = %s LIMIT 1", 'wp_rocket_settings'));
+
+						if (!empty($wp_rocket_settings->option_value)) {
+							$wp_rocket_settings = maybe_unserialize($wp_rocket_settings->option_value);
+
+							// if WP Rocket settings is found and cdn is enabled
+							if (isset($wp_rocket_settings['cdn'])) {
+								unset($wp_rocket_settings['cdn']);
+								update_option('wp_rocket_settings', $wp_rocket_settings);
+
+								$updraftplus->log_e("WP Rocket CDN option detected: disabling the option");
+							}
+						}
 					}
 				}
 
@@ -3857,6 +4264,51 @@ class Updraft_Restorer {
 		// Re-generate permalinks. Do this last - i.e. make sure everything else is fixed up first.
 		if ($table == $import_table_prefix.'options') $this->flush_rewrite_rules();
 
+	}
+
+	/**
+	 * This function will search and replace ABSPATH in the restored table
+	 *
+	 * @param string $table               - the table to search and replace
+	 * @param string $import_table_prefix - the import table prefix
+	 *
+	 * @return void
+	 */
+	public function updraftplus_restored_db_table($table, $import_table_prefix) {
+		
+		global $updraftplus;
+
+		// If this is set return as migrator will handle the abspath change, this way we don't search and replace each table twice
+		if (!empty($this->restore_options['updraft_restorer_replacesiteurl'])) return;
+
+		// If old abspath is not empty then it has changed so try and search replace it, just in case a bad plugin/theme has saved abspath to the DB
+		if (!empty($this->old_abspath)) {
+			$from_array = array();
+			$from_array[] = $this->old_abspath;
+			$to_array = array();
+			$to_array[] = ABSPATH;
+			$stripped_table = substr($table, strlen($import_table_prefix));
+			// The search/replace parameters are allowed to be either strings or arrays
+			$report = $this->search_replace_obj->icit_srdb_replacer($from_array, $to_array, array($table => $stripped_table), 5000);
+
+			// Output any errors encountered during the db work.
+			if (!empty($report['errors']) && is_array($report['errors'])) {
+				$updraftplus->log(__('Error:', 'updraftplus'), 'warning-restore', 'restore-db-error');
+				$processed_errors = array();
+				foreach ($report['errors'] as $error) {
+					if (in_array($error, $processed_errors)) continue;
+					$processed_errors[] = $error;
+					$num = count(array_keys($report['errors'], $error));
+					$err_string = $error;
+					if ($num > 1) $err_string .= ' (x'.$num.')';
+					$updraftplus->log($err_string, 'warning-restore');
+				}
+			} elseif (false == $report) {
+				$updraftplus->log(sprintf(__('Failed: the %s operation was not able to start.', 'updraftplus'), __('search and replace', 'updraftplus')), 'warning-notice');
+			} elseif (!is_array($report)) {
+				$updraftplus->log(sprintf(__('Failed: we did not understand the result returned by the %s operation.', 'updraftplus'), __('search and replace', 'updraftplus')), 'warning-notice');
+			}
+		}
 	}
 
 	/**
@@ -3949,13 +4401,13 @@ class Updraft_Restorer {
 	}
 
 	/**
-	 * This function will return the prefix which will use as a dummy table prefix
+	 * This function will return a random table prefix
 	 *
 	 * @param String $string - default prefix
 	 *
-	 * @return String - dummy prefix
+	 * @return String - the random prefix
 	 */
-	public function updraftplus_restore_table_prefix_dummy($string) {
+	public function updraftplus_random_restore_table_prefix($string) {
 		global $wpdb;
 		while (true) {
 			$random_string = UpdraftPlus_Manipulation_Functions::generate_random_string(2). '_';
@@ -4090,6 +4542,14 @@ class UpdraftPlus_WP_Filesystem_Direct extends WP_Filesystem_Direct {
 			return true;
 
 		return false;
+	}
+}
+
+/**
+ * Plugin class that is used for Elementor's namespace aliasing or could also be used for a variety of purposes of Elementor need
+ */
+if (!class_exists('\Elementor\Plugin')) {
+	class UpdraftPlus_Elementor_Plugin {
 	}
 }
 

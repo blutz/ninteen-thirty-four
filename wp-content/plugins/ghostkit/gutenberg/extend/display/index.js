@@ -3,47 +3,35 @@
  */
 import checkCoreBlock from '../check-core-block';
 import {
-    getActiveClass, replaceClass, addClass, removeClass, hasClass,
+  getActiveClass,
+  replaceClass,
+  addClass,
+  removeClass,
+  hasClass,
 } from '../../utils/classes-replacer';
 import ResponsiveTabPanel from '../../components/responsive-tab-panel';
 import getIcon from '../../utils/get-icon';
 import ActiveIndicator from '../../components/active-indicator';
+import ToggleGroup from '../../components/toggle-group';
 
 /**
  * WordPress dependencies
  */
 const { __ } = wp.i18n;
 
-const {
-    applyFilters,
-    addFilter,
-} = wp.hooks;
+const { applyFilters, addFilter } = wp.hooks;
 
-const {
-    Component,
-    Fragment,
-} = wp.element;
+const { Component, Fragment } = wp.element;
 
-const {
-    hasBlockSupport,
-} = wp.blocks;
+const { hasBlockSupport } = wp.blocks;
 
-const {
-    createHigherOrderComponent,
-} = wp.compose;
+const { createHigherOrderComponent } = wp.compose;
 
 const { InspectorControls } = wp.blockEditor;
 
-const {
-    PanelBody,
-    ButtonGroup,
-    Button,
-} = wp.components;
+const { PanelBody } = wp.components;
 
-const {
-    GHOSTKIT,
-    ghostkitVariables,
-} = window;
+const { GHOSTKIT, ghostkitVariables } = window;
 
 let initialOpenPanel = false;
 
@@ -54,19 +42,21 @@ let initialOpenPanel = false;
  *
  * @returns {Array} array for Select.
  */
-const getDefaultDisplay = function( screen = '' ) {
-    return [
-        {
-            label: 'all' === screen ? __( 'Default', 'ghostkit' ) : __( 'Inherit', 'ghostkit' ),
-            value: '',
-        }, {
-            label: __( 'Show', 'ghostkit' ),
-            value: 'block',
-        }, {
-            label: __( 'Hide', 'ghostkit' ),
-            value: 'none',
-        },
-    ];
+const getDefaultDisplay = function (screen = '') {
+  return [
+    {
+      label: 'all' === screen ? __('Default', 'ghostkit') : __('Inherit', 'ghostkit'),
+      value: '',
+    },
+    {
+      label: __('Show', 'ghostkit'),
+      value: 'block',
+    },
+    {
+      label: __('Hide', 'ghostkit'),
+      value: 'none',
+    },
+  ];
 };
 
 /**
@@ -75,24 +65,25 @@ const getDefaultDisplay = function( screen = '' ) {
  * @param {object} data - block data.
  * @return {boolean} allowed Display.
  */
-function allowedDisplay( data ) {
-    let allow = false;
-    const checkSupportVar = data && data.ghostkit && data.ghostkit.supports ? data : data.name;
+function allowedDisplay(data) {
+  let allow = false;
+  const checkSupportVar = data && data.ghostkit && data.ghostkit.supports ? data : data.name;
 
-    if ( hasBlockSupport( checkSupportVar, 'customClassName', true ) && GHOSTKIT.hasBlockSupport( checkSupportVar, 'display', false ) ) {
-        allow = true;
-    }
+  if (
+    hasBlockSupport(checkSupportVar, 'customClassName', true) &&
+    GHOSTKIT.hasBlockSupport(checkSupportVar, 'display', false)
+  ) {
+    allow = true;
+  }
 
-    if ( ! allow ) {
-        allow = data && data.attributes && applyFilters(
-            'ghostkit.blocks.allowDisplay',
-            checkCoreBlock( data.name ),
-            data,
-            data.name
-        );
-    }
+  if (!allow) {
+    allow =
+      data &&
+      data.attributes &&
+      applyFilters('ghostkit.blocks.allowDisplay', checkCoreBlock(data.name), data, data.name);
+  }
 
-    return allow;
+  return allow;
 }
 
 /**
@@ -103,17 +94,17 @@ function allowedDisplay( data ) {
  *
  * @returns {String} display value.
  */
-function getCurrentDisplay( className, screen ) {
-    if ( ! screen || 'all' === screen ) {
-        if ( hasClass( className, 'ghostkit-d-none' ) ) {
-            return 'none';
-        }
-        if ( hasClass( className, 'ghostkit-d-block' ) ) {
-            return 'block';
-        }
+function getCurrentDisplay(className, screen) {
+  if (!screen || 'all' === screen) {
+    if (hasClass(className, 'ghostkit-d-none')) {
+      return 'none';
     }
+    if (hasClass(className, 'ghostkit-d-block')) {
+      return 'block';
+    }
+  }
 
-    return getActiveClass( className, `ghostkit-d-${ screen }`, true );
+  return getActiveClass(className, `ghostkit-d-${screen}`, true);
 }
 
 /**
@@ -124,129 +115,105 @@ function getCurrentDisplay( className, screen ) {
  *
  * @return {string} Wrapped component.
  */
-const withInspectorControl = createHigherOrderComponent( ( OriginalComponent ) => {
-    class GhostKitDisplayWrapper extends Component {
-        constructor( props ) {
-            super( props );
+const withInspectorControl = createHigherOrderComponent((OriginalComponent) => {
+  class GhostKitDisplayWrapper extends Component {
+    constructor(props) {
+      super(props);
 
-            this.updateDisplay = this.updateDisplay.bind( this );
-        }
-
-        /**
-         * Update display object.
-         *
-         * @param {String} screen - name of screen size.
-         * @param {String} val - value for new display.
-         */
-        updateDisplay( screen, val ) {
-            const {
-                attributes,
-                setAttributes,
-            } = this.props;
-
-            const {
-                className,
-            } = attributes;
-
-            let newClassName = className;
-
-            if ( screen && 'all' !== screen ) {
-                newClassName = replaceClass( newClassName, `ghostkit-d-${ screen }`, val );
-            } else {
-                newClassName = removeClass( newClassName, 'ghostkit-d-none' );
-                newClassName = removeClass( newClassName, 'ghostkit-d-block' );
-
-                if ( val ) {
-                    newClassName = addClass( newClassName, `ghostkit-d-${ val }` );
-                }
-            }
-
-            setAttributes( {
-                className: newClassName,
-            } );
-        }
-
-        render() {
-            const { props } = this;
-            const {
-                className,
-            } = props.attributes;
-
-            const allow = allowedDisplay( props );
-
-            if ( ! allow ) {
-                return <OriginalComponent { ...props } />;
-            }
-
-            const filledTabs = {};
-            if ( ghostkitVariables && ghostkitVariables.media_sizes && Object.keys( ghostkitVariables.media_sizes ).length ) {
-                [
-                    'all',
-                    ...Object.keys( ghostkitVariables.media_sizes ),
-                ].forEach( ( media ) => {
-                    filledTabs[ media ] = !! getCurrentDisplay( className, media );
-                } );
-            }
-
-            // add new display controls.
-            return (
-                <Fragment>
-                    <OriginalComponent
-                        { ...props }
-                        setState={ this.setState }
-                    />
-                    <InspectorControls>
-                        <PanelBody
-                            title={ (
-                                <Fragment>
-                                    <span className="ghostkit-ext-icon">
-                                        { getIcon( 'extension-display' ) }
-                                    </span>
-                                    <span>{ __( 'Display', 'ghostkit' ) }</span>
-                                    { className && getActiveClass( className, 'ghostkit-d' ) ? (
-                                        <ActiveIndicator />
-                                    ) : '' }
-                                </Fragment>
-                            ) }
-                            initialOpen={ initialOpenPanel }
-                            onToggle={ () => {
-                                initialOpenPanel = ! initialOpenPanel;
-                            } }
-                        >
-                            <ResponsiveTabPanel filledTabs={ filledTabs }>
-                                {
-                                    ( tabData ) => (
-                                        <ButtonGroup>
-                                            {
-                                                getDefaultDisplay( tabData.name ).map( ( val ) => {
-                                                    const selected = getCurrentDisplay( className, tabData.name ) === val.value;
-
-                                                    return (
-                                                        <Button
-                                                            isSmall
-                                                            isPrimary={ selected }
-                                                            isPressed={ selected }
-                                                            onClick={ () => this.updateDisplay( tabData.name, val.value ) }
-                                                            key={ `display_${ val.label }` }
-                                                        >
-                                                            { val.label }
-                                                        </Button>
-                                                    );
-                                                } )
-                                            }
-                                        </ButtonGroup>
-                                    )
-                                }
-                            </ResponsiveTabPanel>
-                        </PanelBody>
-                    </InspectorControls>
-                </Fragment>
-            );
-        }
+      this.updateDisplay = this.updateDisplay.bind(this);
     }
 
-    return GhostKitDisplayWrapper;
-}, 'withInspectorControl' );
+    /**
+     * Update display object.
+     *
+     * @param {String} screen - name of screen size.
+     * @param {String} val - value for new display.
+     */
+    updateDisplay(screen, val) {
+      const { attributes, setAttributes } = this.props;
+
+      const { className } = attributes;
+
+      let newClassName = className;
+
+      if (screen && 'all' !== screen) {
+        newClassName = replaceClass(newClassName, `ghostkit-d-${screen}`, val);
+      } else {
+        newClassName = removeClass(newClassName, 'ghostkit-d-none');
+        newClassName = removeClass(newClassName, 'ghostkit-d-block');
+
+        if (val) {
+          newClassName = addClass(newClassName, `ghostkit-d-${val}`);
+        }
+      }
+
+      setAttributes({
+        className: newClassName,
+      });
+    }
+
+    render() {
+      const { props } = this;
+      const { className } = props.attributes;
+
+      const allow = allowedDisplay(props);
+
+      if (!allow) {
+        return <OriginalComponent {...props} />;
+      }
+
+      const filledTabs = {};
+      if (
+        ghostkitVariables &&
+        ghostkitVariables.media_sizes &&
+        Object.keys(ghostkitVariables.media_sizes).length
+      ) {
+        ['all', ...Object.keys(ghostkitVariables.media_sizes)].forEach((media) => {
+          filledTabs[media] = !!getCurrentDisplay(className, media);
+        });
+      }
+
+      // add new display controls.
+      return (
+        <Fragment>
+          <OriginalComponent {...props} setState={this.setState} />
+          <InspectorControls>
+            <PanelBody
+              title={
+                <Fragment>
+                  <span className="ghostkit-ext-icon">{getIcon('extension-display')}</span>
+                  <span>{__('Display', 'ghostkit')}</span>
+                  {className && getActiveClass(className, 'ghostkit-d') ? <ActiveIndicator /> : ''}
+                </Fragment>
+              }
+              initialOpen={initialOpenPanel}
+              onToggle={() => {
+                initialOpenPanel = !initialOpenPanel;
+              }}
+            >
+              <ResponsiveTabPanel filledTabs={filledTabs}>
+                {(tabData) => (
+                  <ToggleGroup
+                    value={getCurrentDisplay(className, tabData.name)}
+                    options={getDefaultDisplay(tabData.name).map((val) => ({
+                      value: val.value,
+                      label: val.label,
+                    }))}
+                    onChange={(value) => {
+                      this.updateDisplay(tabData.name, value);
+                    }}
+                  />
+                )}
+              </ResponsiveTabPanel>
+            </PanelBody>
+          </InspectorControls>
+        </Fragment>
+      );
+    }
+  }
+
+  return GhostKitDisplayWrapper;
+}, 'withInspectorControl');
 
 // Init filters.
-addFilter( 'editor.BlockEdit', 'ghostkit/display/additional-attributes', withInspectorControl );
+addFilter('editor.BlockEdit', 'ghostkit/display/additional-attributes', withInspectorControl);

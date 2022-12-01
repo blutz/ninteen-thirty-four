@@ -1,36 +1,46 @@
 <?php
 /**
-Plugin Name: PDFjs Viewer
+Plugin Name: PDFjs Viewer - Embed PDFs
 Plugin URI: http://byterevel.com/
 Description: Embed PDFs with the gorgeous PDF.js viewer
-Version: 1.5.9
+Version: 2.1.7
 Author: <a href="http://byterevel.com/">Ben Lawson</a>, <a href="https://www.twistermc.com/">Thomas McMahon</a>
 Contributors: FalconerWeb, twistermc
 License: GPLv2
  **/
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
+
 /**
  * Shortcode
  */
-include_once 'inc/shortcode.php';
+require 'inc/shortcode.php';
 
 /**
  * Generate the PDF embed code.
  */
-include_once 'inc/embed.php';
+require 'inc/embed.php';
 
 /**
  * Media Button for Classic Editor
  */
-include_once 'inc/media-button.php';
+require 'inc/media-button.php';
 
 /**
  * Gutenberg Block
  */
-include_once 'inc/gutenberg-block.php';
-
+require 'inc/gutenberg-block.php';
 
 /**
  * Options Page
  */
-include_once 'inc/options-page.php';
+require 'inc/options-page.php';
+
+/**
+ * Custom URL - Work in Progress
+ */
+$pdfjs_custom_page = get_option( 'pdfjs_custom_page', 0 );
+
+if ($pdfjs_custom_page) {
+	require 'inc/custom-page.php';
+}

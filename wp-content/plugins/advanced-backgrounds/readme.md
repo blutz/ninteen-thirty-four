@@ -2,33 +2,34 @@
 
 * Contributors: nko
 * Tags: parallax, video, youtube, background, gutenberg
-* Requires at least: 5.4
-* Tested up to: 5.5
-* Requires PHP: 5.5.9
-* Stable tag: 1.7.0
+* Requires at least: 5.8
+* Tested up to: 5.9
+* Requires PHP: 7.2
+* Stable tag: 1.9.4
 * License: GPLv2 or later
 * License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 
-Image backgrounds, YouTube / Vimeo / Self hosted video backgrounds with parallax support.
+Easy to use advanced Parallax, Image and Video backgrounds block plugin with parallax and video support.
 
 ## Description
 
-AWB let you to use parallax backgrounds with images, videos, youtube and vimeo. [Gutenberg](https://wordpress.org/gutenberg/) and WPBakery Page Builder support.
+**Parallax, Image and Video Backgrounds Plugin For WordPress**
+★★★★★<br>
 
-### Links
+**Create any type of backgrounds using advanced block settings**. We created [**Advanced WordPress Backgrounds plugin**](https://wpbackgrounds.com/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=head) to insert the Youtube and Image Parallax backgrounds with a few clicks on block sites of our clients.
 
-* [Live Demo](https://wpbackgrounds.com)
-* [GitHub](https://github.com/nk-o/awb)
+[See Live Demo](https://wpbackgrounds.com/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=head) | [Documentation](https://wpbackgrounds.com/docs/getting-started/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=head) | [GitHub](https://github.com/nk-crew/awb/)
 
-= Features =
+### Features
 
-* Background __Types__:
+* Background **Types**:
   * Color
   * Image
+  * Post Featured Image
   * Pattern images
   * Self Hosted Video
   * Youtube / Vimeo Video
-* __Parallax__ options powered by high performance JavaScript plugin [Jarallax](https://github.com/nk-o/jarallax)
+* **Parallax** options powered by high performance JavaScript plugin [Jarallax](https://github.com/nk-o/jarallax/)
   * Custom speed option
   * Enable / Disable for mobile devices option
   * Scroll effect
@@ -36,24 +37,13 @@ AWB let you to use parallax backgrounds with images, videos, youtube and vimeo. 
   * Scale effect
   * Scroll + Opacity effect
   * Scroll + Scale effect
-* __Mouse Parallax__
-* Custom __video__ start & end time
+* **Mouse Parallax**
+* Custom **video** start & end time
 * srcset supported (i.e. Google love it)
-* __Overlay__ color with transparency options
-* Stretch option. Will be useful on boxed websites.
-* Visual shortcode maker. You can create shortcode using visual builder
-* [Gutenberg](https://wordpress.org/gutenberg/) supported
-* __WPBakery Page Builder__ supported (extended row and col options + separate shortcode)
+* **Overlay** color with transparency options
+* **Gutenberg** block supported
+* **WPBakery Page Builder** supported (extended row and col options + separate shortcode)
 * Custom CSS offsets (paddings + margins)
-
-= Real Usage Examples =
-
-* [SquadForce - eSports Gaming WordPress Theme](https://wp.nkdev.info/squadforce/)
-* [Skylith - Multipurpose Gutenberg Theme](https://wp.nkdev.info/skylith/)
-* [Youplay - Gaming Theme](https://wp.nkdev.info/youplay/)
-* [Godlike - Gaming Theme](https://wp.nkdev.info/godlike/)
-* [Khaki - Multipurpose Theme](https://wp.nkdev.info/khaki/)
-* [Snow - Portfolio Theme](https://wp.nkdev.info/snow/)
 
 ## Installation
 
@@ -71,7 +61,7 @@ The manual installation method involves downloading our AWB plugin and uploading
 
 ### How to enable `Stretch` with Gutenberg
 
-[Read in documentation](https://wpbackgrounds.com/documentation/enable-stretch-option-with-gutenberg/)
+[Read in documentation](https://wpbackgrounds.com/docs/enable-stretch-option-with-gutenberg/)
 
 ## Screenshots
 
@@ -82,6 +72,82 @@ The manual installation method involves downloading our AWB plugin and uploading
 5. Extended WPBakery Page Builder ROW options
 
 ## Changelog
+
+= 1.9.4 =
+
+* fixed error on widgets screen
+
+= 1.9.3 =
+
+* fixed shortcode builder "Enable on Mobile Devices" checkbox displaying for Local videos
+* renamed `Local Video` to `Self Hosted Video`
+
+= 1.9.2 =
+
+* fixed self-hosted video preview loading in block editor
+* fixed Youtube / Vimeo video preview image loading in block editor
+
+= 1.9.1 =
+
+* added fallback image url in Gutenberg block preview to display image faster when page loaded
+* improved rest permissions check
+
+= 1.9.0 =
+
+* added support for Featured Image in the block background
+* added `nk-awb` classname to the block in editor
+* fixed block preview in FSE templates editor
+* fixed parallax re-rendering in the editor when the props were not changed
+* removed `will-change` usage from parallax - fixed the warning in the inspector in Firefox browser
+
+= 1.8.1 =
+
+* fixed tinymce error - `Failed to initialize plugin: awb`
+* disabled block align fallback in block-based themes
+
+= 1.8.0 =
+
+* dropped support for IE and old browsers
+* added support for block-based themes and WordPress 5.9
+* added Media Opacity and Background Color attributes to Gutenberg block
+* changed block to Blocks API v2 (less wrappers in the Gutenberg editor)
+* fixed block re-saving when image tag fetched
+* fixed invalid CSS for WPBakery gaps
+* removed usage of DOMContentLoaded for register block
+* minor changes
+
+= 1.7.7 =
+
+* added encode/decode to Gutenberg block image tag attribute
+* fixed shortcode inserter color overlay selection
+* fixed conflict with PublishPress Blocks plugin
+* fixed React state change inside render callback
+
+= 1.7.6 =
+
+* added WP 5.8 support
+
+= 1.7.5 =
+
+* added accessibility attributes to background videos (tabindex, aria-hidden)
+* fixed video start and end time save in block
+
+= 1.7.4 =
+
+* tested up to WordPress 5.7
+* moved to nk-crew GitHub repo
+
+= 1.7.3 =
+
+* fixed TwentyTwenty and TwentyTwentyOne video styles conflict
+
+= 1.7.1 =
+
+* added support for Gutenberg Wide alignment
+* added support for row gaps in WPBakery Page Builder
+* added GDPR compliance parameters to Youtube and Vimeo videos
+* fixed blur images on mobile devices
+* fixed deprecated jQuery ready event usage
 
 = 1.7.0 =
 

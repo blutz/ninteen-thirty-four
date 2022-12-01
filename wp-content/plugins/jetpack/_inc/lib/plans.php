@@ -7,7 +7,7 @@
  * Not to be confused with the `Jetpack_Plan` (singular)
  * class, which stores and syncs data about the site's _current_ plan.
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 class Jetpack_Plans {
 	/**
@@ -36,7 +36,7 @@ class Jetpack_Plans {
 			array(
 				'method'  => 'GET',
 				'headers' => array(
-					'X-Forwarded-For' => Jetpack::current_user_ip( true ),
+					'X-Forwarded-For' => ( new Automattic\Jetpack\Status\Visitor() )->get_ip( true ),
 				),
 			),
 			null,

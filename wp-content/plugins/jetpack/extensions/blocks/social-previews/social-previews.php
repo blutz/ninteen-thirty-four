@@ -4,7 +4,7 @@
  *
  * @since 8.x
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 namespace Automattic\Jetpack\Extensions\Social_Previews;
@@ -21,7 +21,7 @@ function register_block() {
 	Blocks::jetpack_register_block(
 		BLOCK_NAME,
 		array(
-			'plan_check' => true,
+			'plan_check' => false,
 		)
 	);
 }

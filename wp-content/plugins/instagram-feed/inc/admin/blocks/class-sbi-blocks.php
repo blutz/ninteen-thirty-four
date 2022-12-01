@@ -103,7 +103,7 @@ class SB_Instagram_Blocks {
 			array(
 				'wpnonce'  => wp_create_nonce( 'sb-instagram-blocks' ),
 				'canShowFeed' => ! empty( $db['connected_accounts'] ),
-				'configureLink' => get_admin_url() . '?page=sb-instagram-feed',
+				'configureLink' => admin_url( 'admin.php?page=sbi-settings' ),
 				'shortcodeSettings'    => $shortcodeSettings,
 				'i18n'     => $i18n,
 			)
@@ -141,8 +141,6 @@ class SB_Instagram_Blocks {
 	 * @return bool True if is Gutenberg REST API call.
 	 */
 	public static function is_gb_editor() {
-
-		// TODO: Find a better way to check if is GB editor API call.
 		return defined( 'REST_REQUEST' ) && REST_REQUEST && ! empty( $_REQUEST['context'] ) && 'edit' === $_REQUEST['context']; // phpcs:ignore
 	}
 

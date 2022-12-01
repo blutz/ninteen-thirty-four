@@ -45,8 +45,8 @@ abstract class UpdraftPlus_RemoteStorage_Addons_Base_v2 extends UpdraftPlus_Back
 	/**
 	 * download method: takes a file name (base name), and removes it from the cloud storage
 	 *
-	 * @param  string $file specific file for being removed from cloud storage
-	 * @return array
+	 * @param  String $file specific file for being removed from cloud storage
+	 * @return Array
 	 */
 	public function download($file) {
 		return $this->download_file(false, $file);
@@ -103,6 +103,13 @@ abstract class UpdraftPlus_RemoteStorage_Addons_Base_v2 extends UpdraftPlus_Back
 
 	}
 
+   /**
+	* This function lists the files found in the configured storage location
+	*
+	* @param  String $match a substring to require
+	*
+	* @return Array - each file is represented by an array with entries 'name' and (optional) 'size'
+	*/
 	public function listfiles($match = 'backup_') {
 
 		try {
@@ -131,11 +138,10 @@ abstract class UpdraftPlus_RemoteStorage_Addons_Base_v2 extends UpdraftPlus_Back
 	 *
 	 * @param Boolean $ret       - A boolean value
 	 * @param Array   $files     - An array of files to delete.
-	 * @param Boolean $ignore_it - unused parameter
 	 *
 	 * @return - On success returns true, false or WordPress Error on failure
 	 */
-	public function delete_files($ret, $files, $ignore_it = false) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $ignore_it is unused
+	public function delete_files($ret, $files) {
 
 		global $updraftplus;
 
@@ -166,32 +172,14 @@ abstract class UpdraftPlus_RemoteStorage_Addons_Base_v2 extends UpdraftPlus_Back
 		$ret = true;
 
 		if ($this->supports_feature('multi_delete')) {
-			$updraftplus->log("Delete remote files: ".implode($files));
+			$updraftplus->log("Delete remote files: ".implode(', ', $files));
 			try {
 				$responses = $this->do_delete($files);
-
-				if (is_array($responses)) {
-					foreach ($responses as $key => $response) {
-						if ('success' == $response) {
-							$updraftplus->log("$files[$key]: Delete succeeded");
-						} elseif (is_array($response)) {
-							$ret = false;
-							if (isset($response['error']) && isset($response['error']['code']) && isset($response['error']['message'])) {
-								$updraftplus->log("Delete failed for file: $files[$key] with error code: ".$response['error']['code']." message: ".$response['error']['message']);
-							} else {
-								$updraftplus->log("Delete failed for file: $files[$key]");
-							}
-						}
-					}
-				} elseif (!$responses) {
-					$ret = false;
-					$updraftplus->log("Delete failed for files: ".implode($files));
-				}
+				$ret = $this->process_multi_delete_responses($files, $responses);
 			} catch (Exception $e) {
 				$updraftplus->log('ERROR:'.implode($files).': Failed to delete files: '.$e->getMessage().' (code: '.$e->getCode().', line: '.$e->getLine().', file: '.$e->getFile().')');
 				$ret = false;
 			}
-
 			return $ret;
 		}
 
@@ -288,7 +276,7 @@ abstract class UpdraftPlus_RemoteStorage_Addons_Base_v2 extends UpdraftPlus_Back
 	 * Modifies handerbar template options
 	 *
 	 * @param array $opts
-	 * @return array - Modified handerbar template options
+	 * @return Array - Modified handerbar template options
 	 */
 	public function transform_options_for_template($opts) {
 		if (method_exists($this, 'do_transform_options_for_template')) {

@@ -153,6 +153,7 @@ class UpdraftPlus_Filesystem_Functions {
 			$all_jobs = $wpdb->get_results("SELECT $key_column, $value_column FROM $table WHERE $key_column LIKE 'updraft_jobdata_%' LIMIT 100", ARRAY_A);
 			
 			foreach ($all_jobs as $job) {
+				$nonce = str_replace('updraft_jobdata_', '', $job[$key_column]);
 				$val = maybe_unserialize($job[$value_column]);
 				// TODO: Can simplify this after a while (now all jobs use job_time_ms) - 1 Jan 2014
 				$delete = false;
@@ -165,7 +166,23 @@ class UpdraftPlus_Filesystem_Functions {
 				} elseif (!empty($val['job_type']) && 'backup' != $val['job_type'] && empty($val['backup_time_ms']) && empty($val['job_time_ms'])) {
 					$delete = true;
 				}
-				if ($delete) delete_site_option($job[$key_column]);
+				if (isset($val['temp_import_table_prefix']) && '' != $val['temp_import_table_prefix'] && $wpdb->prefix != $val['temp_import_table_prefix']) {
+					$tables_to_remove = array();
+					$prefix = $wpdb->esc_like($val['temp_import_table_prefix'])."%";
+					$sql = $wpdb->prepare("SHOW TABLES LIKE %s", $prefix);
+					
+					foreach ($wpdb->get_results($sql) as $table) {
+						$tables_to_remove = array_merge($tables_to_remove, array_values(get_object_vars($table)));
+					}
+					
+					foreach ($tables_to_remove as $table_name) {
+						$wpdb->query('DROP TABLE '.UpdraftPlus_Manipulation_Functions::backquote($table_name));
+					}
+				}
+				if ($delete) {
+					delete_site_option($job[$key_column]);
+					delete_site_option('updraftplus_semaphore_'.$nonce);
+				}
 			}
 		}
 		$updraft_dir = $updraftplus->backups_dir_location();
@@ -433,13 +450,14 @@ class UpdraftPlus_Filesystem_Functions {
 	 *
 	 * @global WP_Filesystem_Base $wp_filesystem WordPress filesystem subclass.
 	 *
-	 * @param String  $file			  - Full path and filename of ZIP archive.
-	 * @param String  $to			  - Full path on the filesystem to extract archive to.
-	 * @param Integer $starting_index - index of entry to start unzipping from (allows resumption)
+	 * @param String  $file               - Full path and filename of ZIP archive.
+	 * @param String  $to                 - Full path on the filesystem to extract archive to.
+	 * @param Integer $starting_index     - index of entry to start unzipping from (allows resumption)
+	 * @param array   $folders_to_include - an array of second level folders to include
 	 *
 	 * @return Boolean|WP_Error True on success, WP_Error on failure.
 	 */
-	public static function unzip_file($file, $to, $starting_index = 0) {
+	public static function unzip_file($file, $to, $starting_index = 0, $folders_to_include = array()) {
 		global $wp_filesystem;
 
 		if (!$wp_filesystem || !is_object($wp_filesystem)) {
@@ -479,14 +497,18 @@ class UpdraftPlus_Filesystem_Functions {
 		}
 		
 		if (class_exists('ZipArchive', false) && apply_filters('unzip_file_use_ziparchive', true)) {
-			$result = self::unzip_file_go($file, $to, $needed_dirs, 'ziparchive', $starting_index);
+			$result = self::unzip_file_go($file, $to, $needed_dirs, 'ziparchive', $starting_index, $folders_to_include);
 			if (true === $result || (is_wp_error($result) && 'incompatible_archive' != $result->get_error_code())) return $result;
+			if (is_wp_error($result)) {
+				global $updraftplus;
+				$updraftplus->log("ZipArchive returned an error (will try again with PclZip): ".$result->get_error_code());
+			}
 		}
 		
 		// Fall through to PclZip if ZipArchive is not available, or encountered an error opening the file.
 		// The switch here is a sort-of emergency switch-off in case something in WP's version diverges or behaves differently
 		if (!defined('UPDRAFTPLUS_USE_INTERNAL_PCLZIP') || UPDRAFTPLUS_USE_INTERNAL_PCLZIP) {
-			return self::unzip_file_go($file, $to, $needed_dirs, 'pclzip', $starting_index);
+			return self::unzip_file_go($file, $to, $needed_dirs, 'pclzip', $starting_index, $folders_to_include);
 		} else {
 			return _unzip_file_pclzip($file, $to, $needed_dirs);
 		}
@@ -576,15 +598,16 @@ class UpdraftPlus_Filesystem_Functions {
 	 *
 	 * @global WP_Filesystem_Base $wp_filesystem WordPress filesystem subclass.
 	 *
-	 * @param String  $file		  	  - full path and filename of ZIP archive.
-	 * @param String  $to		  	  - full path on the filesystem to extract archive to.
-	 * @param Array	  $needed_dirs	  - a partial list of required folders needed to be created.
-	 * @param String  $method	 	  - either 'ziparchive' or 'pclzip'.
-	 * @param Integer $starting_index - index of entry to start unzipping from (allows resumption)
+	 * @param String  $file               - full path and filename of ZIP archive.
+	 * @param String  $to                 - full path on the filesystem to extract archive to.
+	 * @param Array	  $needed_dirs        - a partial list of required folders needed to be created.
+	 * @param String  $method             - either 'ziparchive' or 'pclzip'.
+	 * @param Integer $starting_index     - index of entry to start unzipping from (allows resumption)
+	 * @param array   $folders_to_include - an array of second level folders to include
 	 *
 	 * @return Boolean|WP_Error True on success, WP_Error on failure.
 	 */
-	private static function unzip_file_go($file, $to, $needed_dirs = array(), $method = 'ziparchive', $starting_index = 0) {
+	private static function unzip_file_go($file, $to, $needed_dirs = array(), $method = 'ziparchive', $starting_index = 0, $folders_to_include = array()) {
 		global $wp_filesystem, $updraftplus;
 		
 		$class_to_use = ('ziparchive' == $method) ? 'UpdraftPlus_ZipArchive' : 'UpdraftPlus_PclZip';
@@ -611,6 +634,8 @@ class UpdraftPlus_Filesystem_Functions {
 		$uncompressed_size = 0;
 
 		$num_files = $z->numFiles;
+
+		if (false === $num_files) return new WP_Error('incompatible_archive', __('Incompatible Archive.'), array($method.'_error' => $z->last_error));
 		
 		for ($i = $starting_index; $i < $num_files; $i++) {
 			if (!$info = $z->statIndex($i)) {
@@ -622,6 +647,12 @@ class UpdraftPlus_Filesystem_Functions {
 
 			// Don't extract invalid files:
 			if (0 !== validate_file($info['name'])) continue;
+
+			if (!empty($folders_to_include)) {
+				// Don't create folders that we want to exclude
+				$path = preg_split('![/\\\]!', untrailingslashit($info['name']));
+				if (isset($path[1]) && !in_array($path[1], $folders_to_include)) continue;
+			}
 
 			$uncompressed_size += $info['size'];
 
@@ -640,7 +671,7 @@ class UpdraftPlus_Filesystem_Functions {
 		* Require we have enough space to unzip the file and copy its contents, with a 10% buffer.
 		*/
 		if (self::wp_doing_cron()) {
-			$available_space = @disk_free_space(WP_CONTENT_DIR);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			$available_space = function_exists('disk_free_space') ? @disk_free_space(WP_CONTENT_DIR) : false;// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			if ($available_space && ($uncompressed_size * 2.1) > $available_space) {
 				return new WP_Error('disk_full_unzip_file', __('Could not copy files. You may have run out of disk space.'), compact('uncompressed_size', 'available_space'));
 			}
@@ -692,6 +723,12 @@ class UpdraftPlus_Filesystem_Functions {
 
 			// Don't extract invalid files:
 			if (0 !== validate_file($info['name'])) continue;
+
+			if (!empty($folders_to_include)) {
+				// Don't extract folders that we want to exclude
+				$path = preg_split('![/\\\]!', untrailingslashit($info['name']));
+				if (isset($path[1]) && !in_array($path[1], $folders_to_include)) continue;
+			}
 
 			// PclZip will return (boolean)false for an empty file
 			if (isset($info['size']) && 0 == $info['size']) {

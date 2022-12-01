@@ -1,8 +1,8 @@
 <?php
 /**
- * Functions and template tags for using site logos.
+ * Functions and template tags for Site Logo theme tool.
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 /**
@@ -11,22 +11,24 @@
  * @uses get_option()
  * @uses esc_url_raw()
  * @uses set_url_scheme()
+ * @param string $show 'url' or 'id' for site logo.
  * @return mixed The URL or ID of our site logo, false if not set
  * @since 1.0
  */
 function jetpack_get_site_logo( $show = 'url' ) {
-	$logo = site_logo()->logo;
+	$logo_id = site_logo()->logo;
 
 	// Return false if no logo is set
-	if ( ! isset( $logo['id'] ) || 0 == $logo['id'] ) {
+	if ( ! $logo_id ) {
 		return false;
 	}
 
 	// Return the ID if specified, otherwise return the URL by default
-	if ( 'id' == $show ) {
-		return $logo['id'];
+	if ( 'id' === $show ) {
+		return $logo_id;
 	} else {
-		return esc_url_raw( set_url_scheme( $logo['url'] ) );
+		$logo_url = wp_get_attachment_url( $logo_id );
+		return esc_url_raw( set_url_scheme( $logo_url ) );
 	}
 }
 
@@ -54,7 +56,7 @@ function jetpack_get_site_logo_dimensions() {
 	// If the size is the default `thumbnail`, get its dimensions. Otherwise, get them from $_wp_additional_image_sizes
 	if ( empty( $size ) ) {
 		return false;
-	} elseif ( 'thumbnail' == $size ) {
+	} elseif ( 'thumbnail' === $size ) {
 		$dimensions = array(
 			'width'  => get_option( 'thumbnail_size_w' ),
 			'height' => get_option( 'thumbnail_size_h' ),
@@ -128,12 +130,13 @@ function jetpack_the_site_logo() {
 	}
 
 	// Check for WP 4.5 Site Logo and Jetpack logo.
-	$logo_id      = get_theme_mod( 'custom_logo' );
-	$jetpack_logo = site_logo()->logo;
+	$logo_id = get_theme_mod( 'custom_logo' );
+	// Get the option directly so the updated logo can be injected into customizer previews.
+	$jetpack_logo_id = get_option( 'site_logo' );
 
-	// Use WP Core logo if present, otherwise use Jetpack's.
-	if ( ! $logo_id && isset( $jetpack_logo['id'] ) ) {
-		$logo_id = $jetpack_logo['id'];
+	// Use WP Core logo if present and is an id (of an attachment), otherwise use Jetpack's.
+	if ( ! is_numeric( $logo_id ) && $jetpack_logo_id ) {
+		$logo_id = $jetpack_logo_id;
 	}
 
 	/*
@@ -167,7 +170,12 @@ function jetpack_the_site_logo() {
 				)
 			)
 		),
-		$jetpack_logo,
+		// Return array format in filter for back compatibility.
+		array(
+			'id'    => $jetpack_logo_id,
+			'url'   => wp_get_attachment_url( $jetpack_logo_id ),
+			'sizes' => array(),
+		),
 		$size
 	);
 	/* phpcs:enable WordPress.Security.EscapeOutput */
@@ -190,6 +198,7 @@ function jetpack_is_customize_preview() {
  * Sanitize the string of classes used for header text.
  * Limit to A-Z,a-z,0-9,(space),(comma),_,-
  *
+ * @param string $classes Unsanitized string of CSS classes.
  * @return string Sanitized string of CSS classes.
  */
 function jetpack_sanitize_header_text_classes( $classes ) {

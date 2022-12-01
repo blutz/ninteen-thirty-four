@@ -6,11 +6,11 @@ Description: Simple and fast WordPress caching plugin.
 Author: KeyCDN
 Author URI: https://www.keycdn.com
 License: GPLv2 or later
-Version: 1.6.2
+Version: 1.8.12
 */
 
 /*
-Copyright (C) 2020 KeyCDN
+Copyright (C) 2022 KeyCDN
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,36 +31,26 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// constants
-define( 'CE_VERSION', '1.6.2' );
-define( 'CE_MIN_PHP', '5.6' );
-define( 'CE_MIN_WP', '5.1' );
-define( 'CE_FILE', __FILE__ );
-define( 'CE_BASE', plugin_basename( __FILE__ ) );
-define( 'CE_DIR', __DIR__ );
+require __DIR__ . '/constants.php';
 
-// hooks
 add_action( 'plugins_loaded', array( 'Cache_Enabler', 'init' ) );
-register_activation_hook( __FILE__, array( 'Cache_Enabler', 'on_activation' ) );
-register_deactivation_hook( __FILE__, array( 'Cache_Enabler', 'on_deactivation' ) );
-register_uninstall_hook( __FILE__, array( 'Cache_Enabler', 'on_uninstall' ) );
+register_activation_hook( CACHE_ENABLER_FILE, array( 'Cache_Enabler', 'on_activation' ) );
+register_deactivation_hook( CACHE_ENABLER_FILE, array( 'Cache_Enabler', 'on_deactivation' ) );
+register_uninstall_hook( CACHE_ENABLER_FILE, array( 'Cache_Enabler', 'on_uninstall' ) );
 
-// register autoload
 spl_autoload_register( 'cache_enabler_autoload' );
 
-// load required classes
 function cache_enabler_autoload( $class_name ) {
-    // check if classes were loaded in advanced-cache.php
-    if ( in_array( $class_name, array( 'Cache_Enabler', 'Cache_Enabler_Engine', 'Cache_Enabler_Disk' ) ) && ! class_exists( $class_name ) ) {
+    if ( in_array( $class_name, array( 'Cache_Enabler', 'Cache_Enabler_Engine', 'Cache_Enabler_Disk' ), true ) ) {
         require_once sprintf(
             '%s/inc/%s.class.php',
-            CE_DIR,
+            CACHE_ENABLER_DIR,
             strtolower( $class_name )
         );
     }
 }
 
-// load WP-CLI command
 if ( defined( 'WP_CLI' ) && WP_CLI && class_exists( 'WP_CLI' ) ) {
-    require_once CE_DIR . '/inc/cache_enabler_cli.class.php';
+    require_once CACHE_ENABLER_DIR . '/inc/cache_enabler_cli.class.php';
+    WP_CLI::add_command( 'cache-enabler', 'Cache_Enabler_CLI' );
 }

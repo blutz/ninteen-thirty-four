@@ -1,11 +1,13 @@
 {
-	"name": "ghostkit/form-field-number",
-	"category": "ghostkit",
-    "supports": {
-        "html": false,
-        "className": false,
-        "anchor": true,
-        "reusable": false
-    },
-    "parent": [ "ghostkit/form" ]
+  "name": "ghostkit/form-field-number",
+  "parent": ["ghostkit/form"],
+  "category": "design",
+  "title": "Number",
+  "description": "Form field number.",
+  "supports": {
+    "html": false,
+    "className": false,
+    "anchor": true,
+    "reusable": false
+  }
 }

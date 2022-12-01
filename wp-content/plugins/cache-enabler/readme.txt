@@ -1,19 +1,19 @@
 === Cache Enabler ===
 Contributors: keycdn
-Tags: cache, caching, performance, gzip, webp, speed
+Tags: cache, caching, performance, webp, gzip, brotli, mobile, speed
+Tested up to: 6.0
+Stable tag: 1.8.12
 Requires at least: 5.1
-Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 
-A lightweight caching plugin for WordPress that makes your website faster by generating static HTML files. WebP and Gzip support included.
+A lightweight caching plugin for WordPress that makes your website faster by generating static HTML files.
 
 
 == Description ==
-Cache Enabler is a simple, yet powerful WordPress caching plugin that is easy to use, needs minimal configuration, and best of all helps improve site performance for a faster load time. It creates static HTML files and stores them on the server's disk. This allows the web server to deliver the static HTML files avoiding resource intensive backend processes from the WordPress core, plugins, and database lookups.
+Cache Enabler is a simple, yet powerful WordPress caching plugin that is easy to use, needs minimal configuration, and best of all helps improve site performance for a faster load time. It creates static HTML files of frontend pages and stores them on the server's disk. This allows the static HTML files to be delivered instead of generating pages on the fly, avoiding resource intensive backend processes from the WordPress core, plugins, and database.
 
 
 = Features =
@@ -22,18 +22,18 @@ Cache Enabler is a simple, yet powerful WordPress caching plugin that is easy to
 * Manual cache clearing
 * WP-CLI cache clearing
 * Cache expiry
-* Cache size display in the WordPress dashboard
+* WebP support (convert images to WebP with [Optimus](https://optimus.io))
+* Mobile support
+* Brotli and Gzip pre-compression support
 * Minification of HTML excluding or including inline CSS and JavaScript
-* WordPress multisite network support
-* WebP support (convert images to WebP with [Optimus](https://optimus.io "Optimus"))
-* Gzip pre-compression support
+* Real-time cache size display in the WordPress dashboard
 * Custom post type support
 * `304 Not Modified` support
-* Works perfectly with [Autoptimize](https://wordpress.org/plugins/autoptimize/) and the majority of third party plugins
+* Works perfectly with [Autoptimize](https://wordpress.org/plugins/autoptimize/)
 
 
 = How does the caching work? =
-Cache Enabler captures page contents and saves it as a static HTML file on the server’s disk. Converting inline image URLs to WebP as a separate static HTML file and pre-compressing both static HTML files with Gzip is possible. The accepted static HTML file is then delivered to users without any database lookups or on the fly compression for a faster site load time.
+Cache Enabler captures page contents and saves it as a static HTML file on the server's disk. The static HTML file created can be one of several possible cache versions depending on the plugin settings and HTTP request. Accepted static HTML files are then delivered without any database queries or on the fly compression, allowing for a quicker page load.
 
 
 = Documentation =
@@ -46,7 +46,7 @@ Cache Enabler captures page contents and saves it as a static HTML file on the s
 
 
 = Want to help? =
-* Want to file a bug, contribute some code, or improve translations? Excellent! Check out our [GitHub issues](https://github.com/keycdn/cache-enabler) or [translations](https://translate.wordpress.org/projects/wp-plugins/cache-enabler/).
+* Want to file a bug, contribute some code, or improve translations? Excellent! Check out our [GitHub issues](https://github.com/keycdn/cache-enabler/issues) or [translations](https://translate.wordpress.org/projects/wp-plugins/cache-enabler/).
 
 
 = Maintainer =
@@ -54,6 +54,93 @@ Cache Enabler captures page contents and saves it as a static HTML file on the s
 
 
 == Changelog ==
+
+= 1.8.12 =
+* Update directory validation (@robwoodgate)
+
+= 1.8.11 =
+* Fix directory validation
+
+= 1.8.10 =
+* Fix recursive chmod issue (#317 @robwoodgate)
+
+= 1.8.9 =
+* Update sanitization
+
+= 1.8.8 =
+* Add server input sanitization
+
+= 1.8.7 =
+* Update plugin upgrade process for multisite networks (#303)
+* Update `wp-config.php` file handling (#302)
+
+= 1.8.6 =
+* Update requirements check notices (#300)
+* Update `advanced-cache.php` drop-in file handling (#297)
+* Add additional validation when creating cached files (#299)
+* Add type casts to several filter hooks (#299)
+* Add `cache_enabler_settings_before_validation` filter hook (#298)
+
+= 1.8.5 =
+* Update required WordPress version from 5.5 to 5.1 (#295)
+* Fix plugin upgrade process when disk settings are outdated and a frontend page is requested (#295)
+
+= 1.8.4 =
+* Update `advanced-cache.php` drop-in file handling (#292)
+
+= 1.8.3 =
+* Update index file handling (#289)
+
+= 1.8.2 =
+* Update cache size transient handling (#287)
+
+= 1.8.1 =
+* Fix requirements check (#285)
+
+= 1.8.0 =
+* Update `advanced-cache.php` drop-in file handling to improve reliability and compatibility (#260 and #283)
+* Update settings file to be deleted before the `home` option is updated to prevent a leftover settings file (#279)
+* Update `cache_enabler_bypass_cache` filter hook default value to allow a complete override (#277)
+* Update cache size transient to be in real time (#237 and #269)
+* Update cache expiry time to always be a non-negative integer (#265)
+* Update WP-CLI `clear` subcommand (#261)
+* Update required WordPress version from 5.1 to 5.5 (#260)
+* Update plugin upgrade process to improve reliability and compatibility (#260)
+* Update getting the cache file path to improve creating cache files (#256)
+* Update HTML5 doctype check to be less strict (#254)
+* Update permalink structure handling (#251 and #263)
+* Update requirements check to improve notices shown (#249 and #260)
+* Update cache clearing structure to enhance the automatic cache clearing actions (#247)
+* Add WP-Cron event to clear the expired cache on an hourly basis (#237, #268, and #281)
+* Add new cache clearing structure for option actions (#272 and #280)
+* Add cache engine restart support (#271 and #278)
+* Add `constants.php` file to plugin directory to allow constant overrides (#260)
+* Add wildcard cache clearing support (#246)
+* Add Brotli compression support (#243 @nlemoine)
+* Add new cache clearing structure for term actions (#234 @davelit)
+* Add cache iterator to improve cache object handling (#237)
+* Fix WebP URL conversion edge case (#275)
+* Deprecate `cache_enabler_clear_site_cache_by_blog_id` and `cache_enabler_clear_page_cache_by_post_id` action hooks in favor of replacements (#247 and #274)
+
+= 1.7.2 =
+* Update string to be translatable (#235 @timse201)
+* Add `cache_enabler_mkdir_mode` filter hook (#233)
+
+= 1.7.1 =
+* Fix directory creation handling (#221 @stevegrunwell)
+
+= 1.7.0 =
+* Update cache clearing for theme, plugin, post, and upgrade actions (#215 and #216)
+* Update cache handling with cache keys (#211)
+* Update settings file deletion handling (#205)
+* Update output buffer handling (#203)
+* Update removing CSS and JavaScript comments during HTML minification (#202)
+* Update WebP URL conversion for installations in a subdirectory (#198)
+* Add `CACHE_ENABLER_DIR` as definable plugin directory constant (#195 @stevegrunwell)
+* Add explicit directory access permissions (#194 @stevegrunwell)
+* Add exclusive lock when writing files (#191 @nawawi)
+* Fix clear cache request handling (#212)
+* Fix getting `wp-config.php` (#210 @stevegrunwell)
 
 = 1.6.2 =
 * Fix removing CSS and JavaScript comments during HTML minification (#188)

@@ -70,7 +70,7 @@ class SB_Instagram_SiteHealth {
 
 
 		if ( $sb_instagram_posts_manager->are_critical_errors() ) {
-			$link = admin_url( '?page=sb-instagram-feed');
+			$link = admin_url( 'admin.php?page=sbi-settings');
 			$result['status'] = 'critical';
 			$result['label'] = __( 'Your Instagram Feed is experiencing an error.', 'instagram-feed' );
 			$result['description'] = sprintf( __( 'A critical issue has been detected with your Instagram Feed. Visit the %sInstagram Feed settings page%s to fix the issue.', 'instagram-feed' ), '<a href="' . esc_url( $link ) . '">', '</a>' );

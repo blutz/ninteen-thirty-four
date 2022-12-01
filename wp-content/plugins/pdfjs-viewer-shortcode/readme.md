@@ -2,9 +2,9 @@
 
 * Contributors: FalconerWeb, twistermc
 * Tags: pdf, pdf.js, viewer, reader, embed, mozilla, shortcode
-* Requires at least: 4.0
-* Tested up to: 5.6
-* Stable tag: 1.5.9
+* Requires at least: 4.9
+* Tested up to: 5.9
+* Stable tag: 2.1.7
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 * Requires PHP: 7.2
@@ -18,15 +18,14 @@ Incorporate [Mozilla's PDF.js](https://github.com/mozilla/pdf.js/) viewer into y
 Features:
 
 *   Gutenberg Block and Shortcode
-*   Elegant speckled gray theme
+*   Elegant Theme that adapts to dark and light mode (if browser supports dynamic CSS)
 *   Customizable buttons
 *   Page navigation drawer
-*   Advanced search functionality
-*   Language support for all languages
+*   Search functionality
 *   Protected PDF password entry
 *   Loading bar & displays partially loaded PDF (great for huge PDFs!)
 *   Document outline
-*   Advanced zoom settings
+*   Zoom settings
 *   Classic Editor: Easy to use editor media button that generates the shortcode for you
 *   Support for mobile devices
 
@@ -34,7 +33,7 @@ Shortcode Syntax:
 
 `[pdfjs-viewer url=http://www.website.com/test.pdf viewer_width=600px viewer_height=700px fullscreen=true download=true print=true]`
 
-*   `url` (required): direct url to pdf file
+*   `attachment_id` (required): ID of the media file in WordPress
 *   `viewer_width` (optional): width of the viewer (default: 100%)
 *   `viewer_height` (optional): height of the viewer (default: 800px)
 *   `fullscreen` (optional): true/false, displays fullscreen link above viewer (default: true)
@@ -44,7 +43,6 @@ Shortcode Syntax:
 *   `download` (optional): true/false, enables or disables download button (default: true)
 *   `print` (optional): true/false, enables or disables print button (default: true)
 *   `zoom` (optional): auto/page-actual/page-width/page-fit/50/75/100/200/300/400, PDF zoom level (default: auto)
-*   `search_term` (optional): string, highlights matching text on PDF load. Only single words are working at this time.
 
 Want to help develop the plugin? Found a bug? [Find us on GitHub](https://github.com/TwisterMc/PDF.js-Viewer-Shortcode).
 
@@ -57,6 +55,66 @@ Older blocks will be marked as _invalid_ in Gutenberg as we add new features. Yo
 This plugin can be installed either directly from your WordPress admin panel by searching for **PDF.js Viewer**, or downloading from the Wordpress Plugin Repository and uploading and expanding the archive into your sites `wp-content/plugins` directory.
 
 ## Changelog
+
+### 2.1.7
+
+* Fixed the fullscreen settings for new PDFs
+* Fixing a bug where, on fresh installs, the fullscreen text would be 'on'
+* Tested with WordPress 6.0-beta3-53297
+
+### 2.1.6
+
+* Added testing up to WordPress 5.9.
+* Added a few more variables into the Alternative PDF Loading version.
+* Moved the Alternative PDF Loading to beta.
+
+### 2.1.5
+
+* Detect ACF before running ACF code. 
+* Beta: Added a feature flag to load the PDF in full screen view differently.
+
+### 2.1.4
+
+* Decoding PDF urls when other plugins encode them in the classic editor.
+
+### 2.1.3
+
+* Adding a version number to some JS files to break caches
+* Fixing an issue where the fullscreen text didn't have spaces
+* Updating the shortcode in the read me
+
+### 2.1.2
+
+* Reverting to the file in the URL
+
+### 2.1.1
+
+* Updating how we call the WordPress plugin directory.
+* Updating function names.
+* More sanitization.
+
+### 2.1.0
+
+* Added the file ID to the URL.
+* Hooked WordPress into the viewer to pull the URL in. Should fix some possible security concerns.
+* Removed the file URL from the URL.
+* Removed the `pdfjs_set_custom_edits` filter.
+* Removed the `pdfjs_set_custom_domain` filter.
+* Sanitizing inputs
+* Removing search term.
+
+### 2.0.2
+* Preventing XSS with the search term
+
+### 2.0.1
+* Now works with ACF fields! Thanks @imj13
+
+### 2.0.0
+
+* Major PDFjs Upgrade to version 2.6.347
+* Changing the insert PDF button to fire on a class not ID.
+* Updated the minimum version of WordPress supported.
+* Maybe Edge is happy now?
 
 ### 1.5.9
 * Fixing the issue that made Edge unhappy. *fingers crossed*

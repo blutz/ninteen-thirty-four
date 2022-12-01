@@ -3,7 +3,7 @@
  * This file contains some 'remember' functions inspired by the core Classic Editor Plugin
  * Used to align the 'last editor' metadata so that it is set on all Jetpack and WPCOM sites
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 namespace Jetpack\EditorType;
@@ -24,13 +24,21 @@ function remember_classic_editor( $post ) {
 /**
  * Remember when the block editor was used to edit a post.
  *
- * @param  object $editor_settings This is hooked into a filter and this is the settings that are passed in.
- * @param  object $post            The post being editted.
- * @return object                  The unmodified $editor_settings parameter.
+ * @param  array                   $editor_settings This is hooked into a filter and this is the settings that are passed in.
+ * @param  WP_Block_Editor_Context $post            The block editor context.
+ *
+ * @return array The unmodified $editor_settings parameter.
  */
 function remember_block_editor( $editor_settings, $post ) {
-	$post_type = get_post_type( $post );
+	if ( ! empty( $post->post ) ) {
+		$post = $post->post;
+	}
 
+	if ( empty( $post ) ) {
+		return $editor_settings;
+	}
+
+	$post_type = get_post_type( $post );
 	if ( $post_type && can_edit_post_type( $post_type ) ) {
 		remember_editor( $post->ID, 'block-editor' );
 	}

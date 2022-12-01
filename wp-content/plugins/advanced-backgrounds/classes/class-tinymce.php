@@ -37,23 +37,23 @@ class NK_AWB_TinyMCE {
     public function admin_enqueue_scripts( $page ) {
         if ( 'post.php' === $page || 'post-new.php' === $page ) {
             wp_enqueue_media();
-            wp_enqueue_style( 'awb-tinymce', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-button.min.css', '', '1.7.0' );
+            wp_enqueue_style( 'awb-tinymce', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-button.min.css', array(), '1.9.4' );
             wp_enqueue_style( 'wp-color-picker' );
             wp_enqueue_script( 'wp-color-picker' );
             wp_enqueue_script( 'wp-color-picker-alpha', nk_awb()->plugin_url . 'assets/vendor/wp-color-picker-alpha/wp-color-picker-alpha.js', array( 'wp-color-picker', 'wp-i18n' ), '2.1.4', true );
             wp_enqueue_script( 'conditionize', nk_awb()->plugin_url . 'assets/vendor/conditionize/conditionize.min.js', array( 'jquery' ), '1.0.1', true );
 
-            wp_enqueue_style( 'awb-tinymce-attach-video', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-video.min.css', '', '1.7.0' );
-            wp_enqueue_script( 'awb-tinymce-attach-video', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-video.min.js', '', '1.7.0', true );
+            wp_enqueue_style( 'awb-tinymce-attach-video', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-video.min.css', array(), '1.9.4' );
+            wp_enqueue_script( 'awb-tinymce-attach-video', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-video.min.js', array( 'jquery' ), '1.9.4', true );
 
-            wp_enqueue_style( 'awb-tinymce-attach-image', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-image.min.css', '', '1.7.0' );
-            wp_enqueue_script( 'awb-tinymce-attach-image', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-image.min.js', '', '1.7.0', true );
+            wp_enqueue_style( 'awb-tinymce-attach-image', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-image.min.css', array(), '1.9.4' );
+            wp_enqueue_script( 'awb-tinymce-attach-image', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-awb-attach-image.min.js', array( 'jquery' ), '1.9.4', true );
 
             // add tiny mce data.
             $data_tiny_mce = array(
                 'imageSizes' => self::get_image_sizes(),
             );
-            wp_enqueue_script( 'awb-tinymce-localize', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-localize.min.js', '', '1.7.0', true );
+            wp_enqueue_script( 'awb-tinymce-localize', nk_awb()->plugin_url . 'assets/admin/tinymce/mce-localize.min.js', array(), '1.9.4', true );
             wp_localize_script( 'awb-tinymce-localize', 'AWBTinyMCEOptions', $data_tiny_mce );
         }
     }

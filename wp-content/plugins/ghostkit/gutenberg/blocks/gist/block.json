@@ -1,32 +1,35 @@
 {
-	"name": "ghostkit/gist",
-	"category": "text",
-    "supports": {
-        "html": false,
-        "className": false,
-        "anchor": true,
-        "align": [ "wide", "full" ]
+  "name": "ghostkit/gist",
+  "category": "text",
+  "title": "GitHub Gist",
+  "description": "Embed code parts form GitHub Gist to your site or documentation.",
+  "keywords": ["github", "gist"],
+  "supports": {
+    "html": false,
+    "className": false,
+    "anchor": true,
+    "align": ["wide", "full"]
+  },
+  "attributes": {
+    "url": {
+      "type": "string",
+      "default": ""
     },
-    "attributes": {
-        "url": {
-            "type": "string",
-            "default": ""
-        },
-        "file": {
-            "type": "string",
-            "default": ""
-        },
-        "caption": {
-            "type": "string",
-            "default": ""
-        },
-        "showFooter": {
-            "type": "boolean",
-            "default": true
-        },
-        "showLineNumbers": {
-            "type": "boolean",
-            "default": true
-        }
+    "file": {
+      "type": "string",
+      "default": ""
+    },
+    "caption": {
+      "type": "string",
+      "default": ""
+    },
+    "showFooter": {
+      "type": "boolean",
+      "default": true
+    },
+    "showLineNumbers": {
+      "type": "boolean",
+      "default": true
     }
+  }
 }

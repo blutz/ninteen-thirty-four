@@ -26,60 +26,64 @@ class SB_Instagram_Cron_Updater
 	 * @since 2.0/5.0
 	 */
 	public static function do_feed_updates() {
-		$feed_caches = SB_Instagram_Cron_Updater::get_feed_cache_option_names();
-		shuffle(  $feed_caches );
-		$settings = sbi_get_database_settings();
+		$cron_records = \InstagramFeed\Builder\SBI_Db::feed_caches_query( array( 'cron_update' => true ) );
 
-		// this is outputted in system info
+		$num = count( $cron_records );
+		if ( $num === \InstagramFeed\Builder\SBI_Db::RESULTS_PER_CRON_UPDATE ) {
+			wp_schedule_single_event( time() + 120, 'sbi_cron_additional_batch' );
+		}
+
+		self::update_batch( $cron_records );
+	}
+
+	/**
+	 * @param $cron_records
+	 *
+	 * @since 6.0
+	 */
+	public static function update_batch( $cron_records ) {
 		$report = array(
 			'notes' => array(
-				'time_ran' => date( 'Y-m-d H:i:s' ),
-				'num_found_transients' => count( $feed_caches )
-			)
+				'time_ran'             => date( 'Y-m-d H:i:s' ),
+				'num_found_transients' => count( $cron_records ),
+			),
 		);
 
-		foreach ( $feed_caches as $feed_cache ) {
+		$settings = sbi_get_database_settings();
 
-			$feed_id  = str_replace( '_transient_', '', $feed_cache['option_name'] );
+		foreach ( $cron_records as $feed_cache ) {
+			$feed_id            = $feed_cache['feed_id'];
 			$report[ $feed_id ] = array();
 
-			$transient = get_transient( $feed_id );
+			$cache = new SB_Instagram_Cache( $feed_id );
+			$cache->retrieve_and_set();
+			$cache->update_last_updated();
+			$posts_cache = $cache->get( 'posts' );
 
-			if ( $transient ) {
-				$feed_data                  = json_decode( $transient, true );
+			if ( $posts_cache ) {
+				$feed_data = json_decode( $posts_cache, true );
 
-				// shortcode attributes are saved in order to recreate the feed is needed
-				$atts = isset( $feed_data['atts'] ) ? $feed_data['atts'] : false;
-				$last_retrieve = isset( $feed_data['last_retrieve'] ) ? (int)$feed_data['last_retrieve'] : 0;
-				// the last approximate time the feed was requested to be displayed on a page is recorded
-				// in order to stop updating feeds not in use.
-				$last_requested = isset( $feed_data['last_requested'] ) ? (int)$feed_data['last_requested'] : false;
+				$atts                                = isset( $feed_data['atts'] ) ? $feed_data['atts'] : false;
+				$last_retrieve                       = isset( $feed_data['last_retrieve'] ) ? (int) $feed_data['last_retrieve'] : 0;
+				$last_requested                      = isset( $feed_data['last_requested'] ) ? (int) $feed_data['last_requested'] : false;
 				$report[ $feed_id ]['last_retrieve'] = date( 'Y-m-d H:i:s', $last_retrieve );
-				if ( $atts !== false ) {
+				if ( $atts !== false ) { // not needed after v6?
 
-					if ( ! $last_requested || $last_requested > (time() - 60*60*24*30) ) {
+					if ( ! $last_requested || $last_requested > ( time() - 60 * 60 * 24 * 30 ) ) {
 						$instagram_feed_settings = new SB_Instagram_Settings( $atts, $settings );
 
-						if ( empty( $settings['connected_accounts'] ) && empty( $atts['accesstoken'] ) ) {
-							$report[ $feed_id ]['did_update'] = 'no - no connected account';
-						} else {
-							SB_Instagram_Cron_Updater::do_single_feed_cron_update( $instagram_feed_settings, $feed_data, $atts );
+						self::do_single_feed_cron_update( $instagram_feed_settings, $feed_data, $atts );
 
-							$report[ $feed_id ]['did_update'] = 'yes';
-						}
+						$report[ $feed_id ]['did_update'] = 'yes';
 					} else {
 						$report[ $feed_id ]['did_update'] = 'no - not recently requested';
 					}
-
-
 				} else {
 					$report[ $feed_id ]['did_update'] = 'no - missing atts';
 				}
-
 			} else {
-				$report[ $feed_id ]['did_update'] = 'no - no transient found';
+				$report[ $feed_id ]['did_update'] = 'no - no post cache found';
 			}
-
 		}
 
 		update_option( 'sbi_cron_report', $report, false );
@@ -112,6 +116,7 @@ class SB_Instagram_Cron_Updater
 		$feed_type_and_terms = $instagram_feed_settings->get_feed_type_and_terms();
 
 		$instagram_feed = new SB_Instagram_Feed( $transient_name );
+		$instagram_feed->set_cache( $instagram_feed_settings->get_cache_time_in_seconds(), $settings );
 
 		while ( $instagram_feed->need_posts( $settings['num'] ) && $instagram_feed->can_get_more_posts() ) {
 			$instagram_feed->add_remote_posts( $settings, $feed_type_and_terms, $instagram_feed_settings->get_connected_accounts_in_feed() );
@@ -135,21 +140,17 @@ class SB_Instagram_Cron_Updater
 			$post_data = $instagram_feed->get_post_data();
 			$post_data = array_slice( $post_data, 0, $settings['num'] );
 
-			if ( $settings['favor_local'] ) {
-				$image_sizes = array(
-					'personal' => array( 'full' => 640, 'low' => 320 ),
-					'business' => array( 'full' => 640, 'low' => 320 )
-				);
-			} else {
-				$image_sizes = array(
-					'personal' => array( 'low' => 320 ),
-					'business' => array( 'full' => 640, 'low' => 320 )
-				);
-			}
+			$image_sizes = array(
+				'personal' => array( 'full' => 640, 'low' => 320, 'thumb' => 150 ),
+				'business' => array( 'full' => 640, 'low' => 320, 'thumb' => 150 )
+			);
+
 			$post_set = new SB_Instagram_Post_Set( $post_data, $transient_name, NULL, $image_sizes );
 
 			$post_set->maybe_save_update_and_resize_images_for_posts();
 		}
+
+		sbi_delete_image_cache( $transient_name );
 
 		return $instagram_feed;
 	}

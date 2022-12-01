@@ -3,7 +3,7 @@
  * Class Google\Site_Kit\Core\Authentication\Clients\Google_Site_Kit_Proxy_Client
  *
  * @package   Google\Site_Kit
- * @copyright 2019 Google LLC
+ * @copyright 2021 Google LLC
  * @license   https://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0
  * @link      https://sitekit.withgoogle.com
  */
@@ -11,8 +11,8 @@
 namespace Google\Site_Kit\Core\Authentication\Clients;
 
 use Google\Site_Kit\Core\Authentication\Google_Proxy;
+use Google\Site_Kit\Core\Authentication\Clients\OAuth2;
 use Google\Site_Kit\Core\Authentication\Exception\Google_Proxy_Code_Exception;
-use Google\Site_Kit_Dependencies\Google\Auth\OAuth2;
 use Google\Site_Kit_Dependencies\Google\Auth\HttpHandler\HttpHandlerFactory;
 use Google\Site_Kit_Dependencies\GuzzleHttp\Psr7;
 use Google\Site_Kit_Dependencies\GuzzleHttp\Psr7\Request;
@@ -34,7 +34,7 @@ class Google_Site_Kit_Proxy_Client extends Google_Site_Kit_Client {
 	 * @since 1.1.2
 	 * @var string
 	 */
-	protected $proxy_base_path = Google_Proxy::BASE_URL;
+	protected $proxy_base_path = Google_Proxy::PRODUCTION_BASE_URL;
 
 	/**
 	 * Construct the Google client.
@@ -51,6 +51,8 @@ class Google_Site_Kit_Proxy_Client extends Google_Site_Kit_Client {
 		unset( $config['proxy_base_path'] );
 
 		parent::__construct( $config );
+
+		$this->setApplicationName( Google_Proxy::get_application_name() );
 	}
 
 	/**

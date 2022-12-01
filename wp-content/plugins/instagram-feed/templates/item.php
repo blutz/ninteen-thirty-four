@@ -3,7 +3,7 @@
  * Smash Balloon Instagram Feed Item Template
  * Adds an image, link, and other data for each post in the feed
  *
- * @version 2.5 Instagram Feed by Smash Balloon
+ * @version 2.9 Instagram Feed by Smash Balloon
  *
  */
 
@@ -11,7 +11,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
-$classes = SB_Instagram_Display_Elements::get_item_classes( $settings, $offset );
+$classes = SB_Instagram_Display_Elements::get_item_classes( $settings, $post );
 $post_id = SB_Instagram_Parse::get_post_id( $post );
 $timestamp = SB_Instagram_Parse::get_timestamp( $post );
 $media_type = SB_Instagram_Parse::get_media_type( $post );

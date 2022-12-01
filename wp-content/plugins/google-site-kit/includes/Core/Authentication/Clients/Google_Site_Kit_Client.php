@@ -3,22 +3,25 @@
  * Class Google\Site_Kit\Core\Authentication\Clients\Google_Site_Kit_Client
  *
  * @package   Google\Site_Kit
- * @copyright 2019 Google LLC
+ * @copyright 2021 Google LLC
  * @license   https://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0
  * @link      https://sitekit.withgoogle.com
  */
 
 namespace Google\Site_Kit\Core\Authentication\Clients;
 
+use Google\Site_Kit\Core\Authentication\Clients\OAuth2;
 use Google\Site_Kit\Core\Authentication\Exception\Google_OAuth_Exception;
 use Google\Site_Kit_Dependencies\Google_Client;
-use Google\Site_Kit_Dependencies\Google\Auth\OAuth2;
 use Google\Site_Kit_Dependencies\Google\Auth\HttpHandler\HttpHandlerFactory;
 use Google\Site_Kit_Dependencies\Google\Auth\HttpHandler\HttpClientCache;
 use Google\Site_Kit_Dependencies\GuzzleHttp\ClientInterface;
+use Google\Site_Kit_Dependencies\Psr\Http\Message\RequestInterface;
+use Google\Site_Kit\Core\Util\URL;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
+use WP_User;
 
 /**
  * Extended Google API client with custom functionality for Site Kit.
@@ -103,10 +106,10 @@ class Google_Site_Kit_Client extends Google_Client {
 			$callback = $this->getConfig( 'token_callback' );
 
 			try {
-				$creds = $this->fetchAccessTokenWithRefreshToken( $token['refresh_token'] );
+				$token_response = $this->fetchAccessTokenWithRefreshToken( $token['refresh_token'] );
 				if ( $callback ) {
 					// Due to original callback signature this can only accept the token itself.
-					call_user_func( $callback, '', $creds['access_token'] );
+					call_user_func( $callback, '', $token_response['access_token'] );
 				}
 			} catch ( Exception $e ) {
 				// Pass exception to special callback if provided.
@@ -142,13 +145,13 @@ class Google_Site_Kit_Client extends Google_Client {
 
 		$http_handler = HttpHandlerFactory::build( $this->getHttpClient() );
 
-		$creds = $this->fetchAuthToken( $auth, $http_handler );
-		if ( $creds && isset( $creds['access_token'] ) ) {
-			$creds['created'] = time();
-			$this->setAccessToken( $creds );
+		$token_response = $this->fetchAuthToken( $auth, $http_handler );
+		if ( $token_response && isset( $token_response['access_token'] ) ) {
+			$token_response['created'] = time();
+			$this->setAccessToken( $token_response );
 		}
 
-		return $creds;
+		return $token_response;
 	}
 
 	/**
@@ -158,11 +161,12 @@ class Google_Site_Kit_Client extends Google_Client {
 	 * @since 1.2.0 Ported from Google_Site_Kit_Proxy_Client.
 	 *
 	 * @param string $refresh_token Optional. Refresh token. Unused here.
+	 * @param array  $extra_params  Optional. Array of extra parameters to fetch with.
 	 * @return array Access token.
 	 *
 	 * @throws LogicException Thrown when no refresh token is available.
 	 */
-	public function fetchAccessTokenWithRefreshToken( $refresh_token = null ) {
+	public function fetchAccessTokenWithRefreshToken( $refresh_token = null, $extra_params = array() ) {
 		if ( null === $refresh_token ) {
 			$refresh_token = $this->getRefreshToken();
 			if ( ! $refresh_token ) {
@@ -176,16 +180,62 @@ class Google_Site_Kit_Client extends Google_Client {
 
 		$http_handler = HttpHandlerFactory::build( $this->getHttpClient() );
 
-		$creds = $this->fetchAuthToken( $auth, $http_handler );
-		if ( $creds && isset( $creds['access_token'] ) ) {
-			$creds['created'] = time();
-			if ( ! isset( $creds['refresh_token'] ) ) {
-				$creds['refresh_token'] = $refresh_token;
+		$token_response = $this->fetchAuthToken( $auth, $http_handler, $extra_params );
+		if ( $token_response && isset( $token_response['access_token'] ) ) {
+			$token_response['created'] = time();
+			if ( ! isset( $token_response['refresh_token'] ) ) {
+				$token_response['refresh_token'] = $refresh_token;
 			}
-			$this->setAccessToken( $creds );
+			$this->setAccessToken( $token_response );
+
+			/**
+			 * Fires when the current user has just been reauthorized to access Google APIs with a refreshed access token.
+			 *
+			 * In other words, this action fires whenever Site Kit has just obtained a new access token based on
+			 * the refresh token for the current user, which typically happens once every hour when using Site Kit,
+			 * since that is the lifetime of every access token.
+			 *
+			 * @since 1.25.0
+			 *
+			 * @param array $token_response Token response data.
+			 */
+			do_action( 'googlesitekit_reauthorize_user', $token_response );
 		}
 
-		return $creds;
+		return $token_response;
+	}
+
+	/**
+	 * Executes deferred HTTP requests.
+	 *
+	 * @since 1.38.0
+	 *
+	 * @param RequestInterface $request Request object to execute.
+	 * @param string           $expected_class Expected class to return.
+	 * @return object An object of the type of the expected class or Psr\Http\Message\ResponseInterface.
+	 */
+	public function execute( RequestInterface $request, $expected_class = null ) {
+		$request = $request->withHeader( 'X-Goog-Quota-User', self::getQuotaUser() );
+
+		return parent::execute( $request, $expected_class );
+	}
+
+	/**
+	 * Returns a string that uniquely identifies a user of the application.
+	 *
+	 * @since 1.38.0
+	 *
+	 * @return string Unique user identifier.
+	 */
+	public static function getQuotaUser() {
+		$user_id = get_current_user_id();
+		$url     = get_home_url();
+
+		$scheme = URL::parse( $url, PHP_URL_SCHEME );
+		$host   = URL::parse( $url, PHP_URL_HOST );
+		$path   = URL::parse( $url, PHP_URL_PATH );
+
+		return "{$scheme}://{$user_id}@{$host}{$path}";
 	}
 
 	/**
@@ -198,14 +248,15 @@ class Google_Site_Kit_Client extends Google_Client {
 	 *
 	 * @param OAuth2        $auth         OAuth2 instance.
 	 * @param callable|null $http_handler Optional. HTTP handler callback. Default null.
+	 * @param array         $extra_params Optional. Array of extra parameters to fetch with.
 	 * @return array Access token.
 	 */
-	protected function fetchAuthToken( OAuth2 $auth, callable $http_handler = null ) {
+	protected function fetchAuthToken( OAuth2 $auth, callable $http_handler = null, $extra_params = array() ) {
 		if ( is_null( $http_handler ) ) {
 			$http_handler = HttpHandlerFactory::build( HttpClientCache::getHttpClient() );
 		}
 
-		$request     = $auth->generateCredentialsRequest();
+		$request     = $auth->generateCredentialsRequest( $extra_params );
 		$response    = $http_handler( $request );
 		$credentials = $auth->parseTokenResponse( $response );
 		if ( ! empty( $credentials['error'] ) ) {
@@ -230,4 +281,27 @@ class Google_Site_Kit_Client extends Google_Client {
 	protected function handleAuthTokenErrorResponse( $error, array $data ) {
 		throw new Google_OAuth_Exception( $error );
 	}
+
+	/**
+	 * Create a default Google OAuth2 object.
+	 *
+	 * @return OAuth2 Created OAuth2 instance.
+	 */
+	protected function createOAuth2Service() {
+		$auth = new OAuth2(
+			array(
+				'clientId'           => $this->getClientId(),
+				'clientSecret'       => $this->getClientSecret(),
+				'authorizationUri'   => self::OAUTH2_AUTH_URL,
+				'tokenCredentialUri' => self::OAUTH2_TOKEN_URI,
+				'redirectUri'        => $this->getRedirectUri(),
+				'issuer'             => $this->getConfig( 'client_id' ),
+				'signingKey'         => $this->getConfig( 'signing_key' ),
+				'signingAlgorithm'   => $this->getConfig( 'signing_algorithm' ),
+			)
+		);
+
+		return $auth;
+	}
+
 }

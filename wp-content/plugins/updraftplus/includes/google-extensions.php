@@ -106,7 +106,7 @@ public function updraftplus_getResumeUri() { return $this->resumeUri; }
     $this->request = $request;
     $this->mimeType = $mimeType;
     $this->data = $data;
-    $this->size = strlen($this->data);
+    $this->size = is_null($this->data) ? 0 : strlen($this->data);
     $this->resumable = $resumable;
     if (!$chunkSize) {
       $chunkSize = 256 * 1024;
@@ -148,6 +148,7 @@ public function updraftplus_getResumeUri() { return $this->resumeUri; }
 
   /**
    * Send the next part of the file to upload.
+   *
    * @param [$chunk] the next set of bytes to send. If false will used $data passed
    * at construct time.
    */
@@ -165,7 +166,7 @@ public function updraftplus_getResumeUri() { return $this->resumeUri; }
     $headers = array(
       'content-range' => "bytes $this->progress-$lastBytePos/$this->size",
       'content-type' => $this->request->getRequestHeader('content-type'),
-      'content-length' => $this->chunkSize,
+      'content-length' => strlen($chunk),
       'expect' => '',
     );
 
@@ -201,7 +202,7 @@ public function updraftplus_getResumeUri() { return $this->resumeUri; }
       // No problems, but upload not complete.
       return false;
     } else {
-      return Google_Http_REST::decodeHttpResponse($response, $this->client);
+      return UDP_Google_Http_REST::decodeHttpResponse($response, $this->client);
     }
   }
 

@@ -77,6 +77,10 @@ abstract class autoptimizeBase
     {
         $url = apply_filters( 'autoptimize_filter_cssjs_alter_url', $url );
 
+        if ( is_null( $url ) ) {
+            return false;
+        }
+
         if ( false !== strpos( $url, '%' ) ) {
             $url = urldecode( $url );
         }
@@ -95,6 +99,8 @@ abstract class autoptimizeBase
         } elseif ( ( false === $double_slash_position ) && ( false === strpos( $url, $site_host ) ) ) {
             if ( AUTOPTIMIZE_WP_SITE_URL === $site_host ) {
                 $url = AUTOPTIMIZE_WP_SITE_URL . $url;
+            } elseif ( 0 === strpos( $url, '/' ) ) {
+                $url = '//' . $site_host . autoptimizeUtils::path_canonicalize( $url );
             } else {
                 $url = AUTOPTIMIZE_WP_SITE_URL . autoptimizeUtils::path_canonicalize( $url );
             }
@@ -145,6 +151,14 @@ abstract class autoptimizeBase
             $tmp_ao_root = preg_replace( '/https?:/', '', AUTOPTIMIZE_WP_SITE_URL );
         }
 
+        if ( is_multisite() && ! is_main_site() && ! empty( $this->cdn_url ) && apply_filters( 'autoptimize_filter_base_getpage_multisite_cdn_juggling', true ) ) {
+            // multisite child sites with CDN need the network_site_url as tmp_ao_root but only if directory-based multisite.
+            $_network_site_url = network_site_url();
+            if ( strpos( AUTOPTIMIZE_WP_SITE_URL, $_network_site_url ) !== false ) {
+                $tmp_ao_root = preg_replace( '/https?:/', '', $_network_site_url );
+            }
+        }
+
         $tmp_url = preg_replace( '/https?:/', '', $url );
         $path    = str_replace( $tmp_ao_root, '', $tmp_url );
 
@@ -156,7 +170,11 @@ abstract class autoptimizeBase
         }
 
         // Prepend with WP_ROOT_DIR to have full path to file.
-        $path = str_replace( '//', '/', WP_ROOT_DIR . $path );
+        $path = str_replace( '//', '/', trailingslashit( WP_ROOT_DIR ) . $path );
+
+        // Allow path to be altered, e.g. in the case of bedrock-like setups where
+        // core, theme & plugins might be in different locations on the filesystem.
+        $path = apply_filters( 'autoptimize_filter_base_getpath_path', $path, $url );
 
         // Final check: does file exist and is it readable?
         if ( file_exists( $path ) && is_file( $path ) && is_readable( $path ) ) {
@@ -301,13 +319,12 @@ abstract class autoptimizeBase
 
         // Allows API/filter to further tweak the cdn url...
         $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', $cdn_url );
-        if ( ! empty( $cdn_url ) ) {
-            $this->debug_log( 'before=' . $url );
+        if ( ! empty( $cdn_url ) && false === strpos( $url, $cdn_url ) ) {
 
             // Simple str_replace-based approach fails when $url is protocol-or-host-relative.
             $is_protocol_relative = autoptimizeUtils::is_protocol_relative( $url );
             $is_host_relative     = ( ! $is_protocol_relative && ( '/' === $url[0] ) );
-            $cdn_url              = rtrim( $cdn_url, '/' );
+            $cdn_url              = esc_url( rtrim( $cdn_url, '/' ) );
 
             if ( $is_host_relative ) {
                 // Prepending host-relative urls with the cdn url.
@@ -321,11 +338,8 @@ abstract class autoptimizeBase
                 } else {
                     $site_url = AUTOPTIMIZE_WP_SITE_URL;
                 }
-                $this->debug_log( '`' . $site_url . '` -> `' . $cdn_url . '` in `' . $url . '`' );
                 $url = str_replace( $site_url, $cdn_url, $url );
             }
-
-            $this->debug_log( 'after=' . $url );
         }
 
         // Allow API filter to take further care of CDN replacement.
@@ -659,7 +673,7 @@ abstract class autoptimizeBase
             'js/jquery/jquery.js',
         );
         foreach ( $minified_variants as $ending ) {
-            if ( autoptimizeUtils::str_ends_in( $filepath, $ending ) ) {
+            if ( autoptimizeUtils::str_ends_in( $filepath, $ending ) && true === apply_filters( 'autoptimize_filter_base_prepare_exclude_minified', true ) ) {
                 return false;
             }
         }

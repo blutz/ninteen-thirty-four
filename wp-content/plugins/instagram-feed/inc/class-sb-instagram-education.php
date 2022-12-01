@@ -24,7 +24,7 @@ class SB_Instagram_Education {
 	 * @since 5.5
 	 */
 	public function hooks() {
-		$this->plugin_version = defined( 'SBI_STORE_URL' ) ? 'pro' : 'free';
+		$this->plugin_version = sbi_is_pro_version() ? 'pro' : 'free';
 	}
 
 	/**
@@ -38,25 +38,25 @@ class SB_Instagram_Education {
 			array(
 				'title' => esc_html__( 'Get the Most out of Hashtags', 'instagram-feed' ),
 				'content' => esc_html__( 'You can use hashtags on Instagram for so many things; targeted promotions, engaging with your audience, running contests, or just for categorizing posts. Learn more about how you can display Instagram hashtag feeds on your website using the Instagram Feed Pro plugin.', 'instagram-feed' ),
-				'more' => 'https://smashballoon.com/instagram-feed/features/#hashtag',
+				'more' => 'https://smashballoon.com/instagram-feed/features/?utm_campaign=instagram-free&utm_source=dyk-messages&utm_content=hashtag#hashtag',
 				'item' => 1,
 			),
 			array(
 				'title' => esc_html__( 'Keep Visitors on Your Site', 'instagram-feed' ),
 				'content' => esc_html__( "You've done the hard work of getting a visitor onto your site, now keep them there by displaying your Instagram content inside a pop-up lightbox, rather than sending your visitors away to Instagram.  Learn more about the Instagram Feed Pro lightbox feature.", 'instagram-feed' ),
-				'more' => 'https://smashballoon.com/instagram-feed/features/#popuplightbox',
+				'more' => 'https://smashballoon.com/instagram-feed/features/?utm_campaign=instagram-free&utm_source=dyk-messages&utm_content=popuplightbox#popuplightbox',
 				'item' => 2,
 			),
 			array(
 				'title' => esc_html__( 'Highlight Your Posts and Create Carousels', 'instagram-feed' ),
 				'content' => esc_html__( "Feature specific Instagram posts in your feeds by using the Highlight layout to feature specific posts, either by using their ID or a hashtag in their caption. Also create rotating carousels of your photos and videos to best utilize the space on your site. These layouts and more are available in our Pro version.", 'instagram-feed' ),
-				'more' => 'https://smashballoon.com/instagram-feed/features/#highlight',
+				'more' => 'https://smashballoon.com/instagram-feed/features/?utm_campaign=instagram-free&utm_source=dyk-messages&utm_content=highlight#highlight',
 				'item' => 3,
 			),
 			array(
 				'title' => esc_html__( 'Moderate your Feed Content', 'instagram-feed' ),
 				'content' => esc_html__( "Control exactly which posts show up in your feed by using the Visual Moderation Mode feature to pick and choose what to display. Remove specific posts or create a whitelist of approved content using Instagram Feed Pro.", 'instagram-feed' ),
-				'more' => 'https://smashballoon.com/instagram-feed/features/#moderation',
+				'more' => 'https://smashballoon.com/instagram-feed/features/?utm_campaign=instagram-free&utm_source=dyk-messages&utm_content=moderation#moderation',
 				'item' => 4,
 			),
 		);

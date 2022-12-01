@@ -49,88 +49,63 @@ import * as formFieldRadio from './form/fields/radio';
 import * as formFieldHidden from './form/fields/hidden';
 import * as formSubmitButton from './form/fields/submit';
 
-const {
-    registerBlockCollection,
-    registerBlockType,
-} = wp.blocks;
+const { registerBlockType } = wp.blocks;
 
 /**
  * Register blocks
  */
-window.jQuery( () => {
-    [
-        grid,
-        gridColumn,
-        progress,
-        button,
-        buttonSingle,
-        divider,
-        dividerShape,
-        alert,
-        iconBox,
-        imageCompare,
-        countdown,
-        counterBox,
-        accordion,
-        accordionItem,
-        tabs,
-        tabsTab,
-        tabsLegacy,
-        tabsLegacyTab,
-        video,
-        carousel,
-        carouselSlide,
-        pricingTable,
-        pricingTableItem,
-        testimonial,
-        toc,
-        twitter,
-        instagram,
-        markdown,
-        googleMaps,
-        gist,
-        changelog,
-        widgetizedArea,
-        gif,
-        form,
-        formFieldText,
-        formFieldEmail,
-        formFieldName,
-        formFieldUrl,
-        formFieldPhone,
-        formFieldNumber,
-        formFieldDate,
-        formFieldTextarea,
-        formFieldSelect,
-        formFieldCheckbox,
-        formFieldRadio,
-        formFieldHidden,
-        formSubmitButton,
-    ].forEach( ( { name, settings } ) => {
-        let { category } = settings;
 
-        // Collections are not supported.
-        if ( 'undefined' === typeof registerBlockCollection ) {
-            category = 'ghostkit';
-        }
-
-        // Fallback for WP < 5.5
-        const fallbackCategories = {
-            design: 'layout',
-            media: 'common',
-            text: 'common',
-        };
-        const allCategories = wp.blocks.getCategories();
-        Object.keys( fallbackCategories ).forEach( ( newCat ) => {
-            if ( category === newCat ) {
-                const hasCategory = allCategories.some( ( newCategory ) => newCategory.slug === category );
-                category = hasCategory ? category : fallbackCategories[ newCat ];
-            }
-        } );
-
-        registerBlockType( name, {
-            category,
-            ...settings,
-        } );
-    } );
-} );
+// Previously we used the jQuery's 'ready' event, but it was conflicting with PublishPress Blocks plugin.
+document.addEventListener('DOMContentLoaded', () => {
+  [
+    grid,
+    gridColumn,
+    progress,
+    button,
+    buttonSingle,
+    divider,
+    dividerShape,
+    alert,
+    iconBox,
+    imageCompare,
+    countdown,
+    counterBox,
+    accordion,
+    accordionItem,
+    tabs,
+    tabsTab,
+    tabsLegacy,
+    tabsLegacyTab,
+    video,
+    carousel,
+    carouselSlide,
+    pricingTable,
+    pricingTableItem,
+    testimonial,
+    toc,
+    twitter,
+    instagram,
+    markdown,
+    googleMaps,
+    gist,
+    changelog,
+    widgetizedArea,
+    gif,
+    form,
+    formFieldText,
+    formFieldEmail,
+    formFieldName,
+    formFieldUrl,
+    formFieldPhone,
+    formFieldNumber,
+    formFieldDate,
+    formFieldTextarea,
+    formFieldSelect,
+    formFieldCheckbox,
+    formFieldRadio,
+    formFieldHidden,
+    formSubmitButton,
+  ].forEach(({ name, settings }) => {
+    registerBlockType(name, settings);
+  });
+});

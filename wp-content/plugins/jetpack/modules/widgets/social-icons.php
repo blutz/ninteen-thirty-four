@@ -4,6 +4,9 @@
  * Social Icons Widget.
  */
 class Jetpack_Widget_Social_Icons extends WP_Widget {
+
+	const ID_BASE = 'jetpack_widget_social_icons';
+
 	/**
 	 * Default widget options.
 	 *
@@ -20,6 +23,7 @@ class Jetpack_Widget_Social_Icons extends WP_Widget {
 		$widget_ops = array(
 			'classname'                   => 'jetpack_widget_social_icons',
 			'description'                 => __( 'Add social-media icons to your site.', 'jetpack' ),
+			'show_instance_in_rest'       => true,
 			'customize_selective_refresh' => true,
 		);
 
@@ -52,6 +56,19 @@ class Jetpack_Widget_Social_Icons extends WP_Widget {
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_icon_scripts' ) );
 			add_action( 'wp_footer', array( $this, 'include_svg_icons' ), 9999 );
 		}
+
+		add_filter( 'widget_types_to_hide_from_legacy_widget_block', array( $this, 'hide_widget_in_block_editor' ) );
+	}
+
+	/**
+	 * Remove the "Social Icons" widget from the Legacy Widget block
+	 *
+	 * @param array $widget_types List of widgets that are currently removed from the Legacy Widget block.
+	 * @return array $widget_types New list of widgets that will be removed.
+	 */
+	public function hide_widget_in_block_editor( $widget_types ) {
+		$widget_types[] = self::ID_BASE;
+		return $widget_types;
 	}
 
 	/**
@@ -126,7 +143,7 @@ class Jetpack_Widget_Social_Icons extends WP_Widget {
 		echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		if ( ! empty( $title ) ) {
-			echo $args['before_title'] . esc_html( $title ) . $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		if ( ! empty( $instance['icons'] ) ) :
@@ -209,6 +226,7 @@ class Jetpack_Widget_Social_Icons extends WP_Widget {
 
 		$instance['title']     = sanitize_text_field( $new_instance['title'] );
 		$instance['icon-size'] = $this->defaults['icon-size'];
+		$instance['url-icons'] = array_key_exists( 'url-icons', $new_instance ) ? $new_instance['url-icons'] : array();
 
 		if ( in_array( $new_instance['icon-size'], array( 'small', 'medium', 'large' ), true ) ) {
 			$instance['icon-size'] = $new_instance['icon-size'];
@@ -217,13 +235,15 @@ class Jetpack_Widget_Social_Icons extends WP_Widget {
 		$instance['new-tab'] = isset( $new_instance['new-tab'] ) ? (bool) $new_instance['new-tab'] : false;
 		$instance['icons']   = array();
 
-		foreach ( $new_instance['url-icons'] as $url ) {
-			$url = filter_var( $url, FILTER_SANITIZE_URL );
+		if ( array_key_exists( 'url-icons', $new_instance ) ) {
+			foreach ( $new_instance['url-icons'] as $url ) {
+				$url = filter_var( $url, FILTER_SANITIZE_URL );
 
-			if ( ! empty( $url ) ) {
-				$instance['icons'][] = array(
-					'url' => $url,
-				);
+				if ( ! empty( $url ) ) {
+					$instance['icons'][] = array(
+						'url' => $url,
+					);
+				}
 			}
 		}
 
@@ -458,6 +478,14 @@ class Jetpack_Widget_Social_Icons extends WP_Widget {
 				'label' => 'Behance',
 			),
 			array(
+				'url'   => array(
+					'blogger.com',
+					'blogspot.com',
+				),
+				'icon'  => 'blogger',
+				'label' => 'Blogger',
+			),
+			array(
 				'url'   => array( 'codepen.io' ),
 				'icon'  => 'codepen',
 				'label' => 'CodePen',
@@ -493,6 +521,11 @@ class Jetpack_Widget_Social_Icons extends WP_Widget {
 				'label' => 'Etsy',
 			),
 			array(
+				'url'   => array( 'eventbrite.com' ),
+				'icon'  => 'eventbrite',
+				'label' => 'Eventbrite',
+			),
+			array(
 				'url'   => array( 'facebook.com' ),
 				'icon'  => 'facebook',
 				'label' => 'Facebook',
@@ -506,6 +539,11 @@ class Jetpack_Widget_Social_Icons extends WP_Widget {
 				'url'   => array( 'foursquare.com' ),
 				'icon'  => 'foursquare',
 				'label' => 'Foursquare',
+			),
+			array(
+				'url'   => array( 'ghost.org' ),
+				'icon'  => 'ghost',
+				'label' => 'Ghost',
 			),
 			array(
 				'url'   => array( 'goodreads.com' ),
@@ -546,6 +584,11 @@ class Jetpack_Widget_Social_Icons extends WP_Widget {
 				'url'   => array( 'medium.com' ),
 				'icon'  => 'medium',
 				'label' => 'Medium',
+			),
+			array(
+				'url'   => array( 'patreon.com' ),
+				'icon'  => 'patreon',
+				'label' => 'Patreon',
 			),
 			array(
 				'url'   => array( 'pinterest.' ),
@@ -603,6 +646,11 @@ class Jetpack_Widget_Social_Icons extends WP_Widget {
 				'label' => 'Stack Overflow',
 			),
 			array(
+				'url'   => array( 'strava.com' ),
+				'icon'  => 'strava',
+				'label' => 'Strava',
+			),
+			array(
 				'url'   => array( 'stumbleupon.com' ),
 				'icon'  => 'stumbleupon',
 				'label' => 'StumbleUpon',
@@ -611,6 +659,11 @@ class Jetpack_Widget_Social_Icons extends WP_Widget {
 				'url'   => array( 'telegram.me', 't.me' ),
 				'icon'  => 'telegram',
 				'label' => 'Telegram',
+			),
+			array(
+				'url'   => array( 'tiktok.com' ),
+				'icon'  => 'tiktok',
+				'label' => 'TikTok',
 			),
 			array(
 				'url'   => array( 'tumblr.com' ),
@@ -638,6 +691,16 @@ class Jetpack_Widget_Social_Icons extends WP_Widget {
 				'label' => 'VK',
 			),
 			array(
+				'url'   => array( 'whatsapp.com' ),
+				'icon'  => 'whatsapp',
+				'label' => 'WhatsApp',
+			),
+			array(
+				'url'   => array( 'woocommerce.com' ),
+				'icon'  => 'woocommerce',
+				'label' => 'WooCommerce',
+			),
+			array(
 				'url'   => array( 'wordpress.com', 'wordpress.org' ),
 				'icon'  => 'wordpress',
 				'label' => 'WordPress',
@@ -648,12 +711,17 @@ class Jetpack_Widget_Social_Icons extends WP_Widget {
 				'label' => 'Yelp',
 			),
 			array(
+				'url'   => array( 'xanga.com' ),
+				'icon'  => 'xanga',
+				'label' => 'Xanga',
+			),
+			array(
 				'url'   => array( 'youtube.com' ),
 				'icon'  => 'youtube',
 				'label' => 'YouTube',
 			),
 
-			// keep feed at the end so that more specific icons can take precedence
+			// keep feed at the end so that more specific icons can take precedence.
 			array(
 				'url'   => array(
 					'/feed/',         // WordPress default feed url.

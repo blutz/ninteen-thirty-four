@@ -7,13 +7,14 @@ This project provides a modal / popup block for the  WordPress Gutenberg editor.
 - Multiple methods for triggering modal including button, text link, image link, external class, and page load.
 - User definable modal content using Gutenberg blocks, for example, image, paragraph etc. 
 - Supports multiple modals on the same page.
-- Uses create-guton-block for easy config.
+- Allows for modal to modal links. Just add the class bod-modal-to-modal to the trigger link
+- Uses create-guten-block for easy config.
 
 ## Options
 
-**Model Title** Title to display at the top of the modal window.
+**Modal Title** Title to display at the top of the modal window.
 
-**Model Content** Block into which you can add other blocks to create required modal content.
+**Modal Content** Block into which you can add other blocks to create required modal content.
 
 ### Trigger Options
 
@@ -57,11 +58,31 @@ This project provides a modal / popup block for the  WordPress Gutenberg editor.
 
 **Delay Before Showing Modal** Timer delay in ms before displaying modal (1000 = 1 second).
 
-### Style Options
+**Display Once** Display the modal one time only.
+
+**Modal Id** Optional ID used to identify modals on different pages as the same. That is, all modals with the same ID and Display Once set to yes are treated as the same modal. Used to stop same modal on different pages being displayed more than once.
+
+**Show Once Every x Days** Optional number of days before display once expires and modal is shown again. If not set defaults to 30 days.
+
+**URL Content Trigger** Only trigger modal if the URL contains this text
+
+### Modal Options
 
 **Overlay Background Color** RGBA / Hex modal overlay color.
 
+**Modal Size** One of Small (max 400px wide), Medium (max 600px wide), Large (max 800px wide),  XL (max 100px wide), FullScreen.
+
+**Modal Border Radius** Used to create rounded corners. Can be px, em, rem, % or mix of values. For example, '10px', '5rem 10px', '10px 5px 10px 10px'. Specify a max of 4 values in standard border-radius css format.
+
+**Disable Close on Overlay Click** Toogle defaults to off. If set to on then user cannot close modal by clicking on overlay.
+
+**Disable Close on Escape** Toogle defaults to off. If set to on then user cannot close modal by pressing Escape key.
+
+### Title Options
+
 **Title Text Size** Title uses H2 tag, this is used to change the size.
+
+**Title Align** Left, Center, Right
 
 **Modal Title Color** RGBA / Hex color to use for modal title text.
 
@@ -69,13 +90,27 @@ This project provides a modal / popup block for the  WordPress Gutenberg editor.
 
 **Title Padding** Padding around the title box. Can be px, em, rem, % or mix of values. For example, '10px', '5rem 10px', '10px 5px 10px 10px'. Specify a max of 4 values in standard padding css format.
 
-**Modal Size** One of Small (max 400px wide), Medium (max 600px wide), Large (max 800px wide),  XL (max 100px wide), FullScreen.
+**Show Close X in Title** If selected a close 'X' button will be shown in the title bar of the modal. Note the screen level close X will not be shown.
+
+**Close X Size** Size of close 'X' in title. Can be px, em, rem, % or mix of values. For example, '10px', '5rem 10px', '10px 5px 10px 10px'. Specify a max of 4 values in standard padding css format.
+
+### Content Options
 
 **Modal Background Color** RGBA / Hex color for modal background.
 
+**Background Image** Background Image to use for modal content area. Displays a centered image with the background-size set to cover. 
+
 **Modal Padding** Padding around modal portion of window. Can be px, em, rem, % or mix of values. For example, '10px', '5rem 10px', '10px 5px 10px 10px'. Specify a max of 4 values in standard padding css format.
 
-**Modal Border Radius** Used to create rounded corners. Can be px, em, rem, % or mix of values. For example, '10px', '5rem 10px', '10px 5px 10px 10px'. Specify a max of 4 values in standard border-radius css format.
+**Show Close Btn** Defaults to N. If yes close button is displayed in the modal window.
+
+**Close Btn Label** Label text for close button.
+
+**Close Btn Bg Color** Bavkground color for close button.
+
+**Close Btn Text Color** Color for close button text.
+
+**Close Button Align** Align the close button to the left, center or right in the modal window. 
 
 ## Requirements
 

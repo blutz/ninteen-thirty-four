@@ -101,6 +101,10 @@ class FontAwesome_Config_Controller extends WP_REST_Controller {
 
 			$given_options = isset( $body['options'] ) ? $body['options'] : null;
 
+			if ( is_null( $given_options ) ) {
+				return new FontAwesome_REST_Response( new WP_Error( 'fontawesome_client_exception' ), 400 );
+			}
+
 			$api_token = isset( $given_options['apiToken'] ) ? $given_options['apiToken'] : null;
 
 			if ( is_string( $api_token ) ) {
@@ -181,17 +185,20 @@ class FontAwesome_Config_Controller extends WP_REST_Controller {
 		if ( isset( $given_options['usePro'] ) ) {
 			$item['usePro'] = $given_options['usePro'];
 		}
-		if ( isset( $given_options['v4Compat'] ) ) {
-			$item['v4Compat'] = $given_options['v4Compat'];
+
+		/**
+		 * The new option key is "compat", overriding the old v4Compat key.
+		 */
+		if ( isset( $given_options['compat'] ) ) {
+			$item['compat'] = $given_options['compat'];
+		} elseif ( isset( $given_options['v4Compat'] ) ) {
+			$item['compat'] = $given_options['v4Compat'];
 		}
 		if ( isset( $given_options['technology'] ) ) {
 			$item['technology'] = $given_options['technology'];
 		}
 		if ( isset( $given_options['pseudoElements'] ) ) {
 			$item['pseudoElements'] = $given_options['pseudoElements'];
-		}
-		if ( isset( $given_options['usePro'] ) ) {
-			$item['usePro'] = $given_options['usePro'];
 		}
 
 		$version_is_symbolic_latest = isset( $given_options['version'] )
@@ -215,14 +222,20 @@ class FontAwesome_Config_Controller extends WP_REST_Controller {
 		 * a major.minor.patch version like 5.12.0.
 		 *
 		 * If this is a kit-based config, then the version must either be
-		 * concrete or the exact, case-sensitive, string 'latest'.
+		 * concrete or one of the exact, case-sensitive, strings 'latest',
+		 * '5.x', or '6.x'.
 		 */
 		if ( isset( $given_options['kitToken'] ) && is_string( $given_options['kitToken'] ) && $version_is_symbolic_latest ) {
 			$item['version'] = 'latest';
-		} elseif ( $version_is_concrete ) {
+		} elseif ( $version_is_concrete || '5.x' === $given_options['version'] || '6.x' === $given_options['version'] ) {
 			$item['version'] = $given_options['version'];
 		} else {
 			throw ConfigSchemaException::concrete_version_expected();
+		}
+
+		// V6 is not supported on Pro CDN.
+		if ( 1 === preg_match( '/^6\./', $item['version'] ) && boolval( $item['usePro'] ) && ! is_string( $given_options['kitToken'] ) ) {
+			throw ConfigSchemaException::v6_pro_cdn_not_supported();
 		}
 
 		if (

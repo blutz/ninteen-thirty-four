@@ -3,7 +3,7 @@
  * Class Google\Site_Kit\Core\Assets\Script
  *
  * @package   Google\Site_Kit
- * @copyright 2019 Google LLC
+ * @copyright 2021 Google LLC
  * @license   https://www.apache.org/licenses/LICENSE-2.0 Apache License 2.0
  * @link      https://sitekit.withgoogle.com
  */
@@ -68,21 +68,13 @@ class Script extends Asset {
 		$src     = $this->args['src'];
 		$version = $this->args['version'];
 
-		$filename = '';
-		if ( class_exists( '\Google\Site_Kit\Core\Assets\Manifest' ) ) {
-			if ( isset( Manifest::$assets[ $this->handle ] ) ) {
-				$filename = Manifest::$assets[ $this->handle ];
-			} else {
-				$handle = str_replace( 'googlesitekit-', '', $this->handle );
-				if ( isset( Manifest::$assets[ $handle ] ) ) {
-					$filename = Manifest::$assets[ $handle ];
-				}
-			}
-		}
+		if ( $src ) {
+			list( $filename, $hash ) = Manifest::get( $this->handle );
 
-		if ( ! empty( $filename ) ) {
-			$src     = $context->url( 'dist/assets/js/' . $filename );
-			$version = null;
+			if ( $filename ) {
+				$src     = $context->url( 'dist/assets/js/' . $filename );
+				$version = $hash;
+			}
 		}
 
 		wp_register_script(
@@ -117,7 +109,7 @@ class Script extends Asset {
 	 * @since 1.21.0
 	 */
 	private function set_locale_data() {
-		$json_translations = BC_Functions::load_script_textdomain( $this->handle, 'google-site-kit' );
+		$json_translations = load_script_textdomain( $this->handle, 'google-site-kit' );
 		if ( ! $json_translations ) {
 			return;
 		}

@@ -48,6 +48,20 @@ class Jetpack_Components {
 	}
 
 	/**
+	 * Renders the frontend-nudge with the provided props.
+	 *
+	 * @param array $props Component properties.
+	 *
+	 * @return string The component markup.
+	 */
+	public static function render_frontend_nudge( $props ) {
+		return self::render_component(
+			'frontend-nudge',
+			$props
+		);
+	}
+
+	/**
 	 * Load and display a pre-rendered component
 	 *
 	 * @since 7.7.0
@@ -58,23 +72,21 @@ class Jetpack_Components {
 	 */
 	public static function render_upgrade_nudge( $props ) {
 		$plan_slug = $props['plan'];
-		jetpack_require_lib( 'plans' );
+		require_once JETPACK__PLUGIN_DIR . '_inc/lib/plans.php';
 		$plan = Jetpack_Plans::get_plan( $plan_slug );
 
 		if ( ! $plan ) {
 			return self::render_component(
 				'upgrade-nudge',
 				array(
-					'planName'   => __( 'a paid plan', 'jetpack' ),
-					'upgradeUrl' => '',
+					'checkoutUrl' => '',
 				)
 			);
 		}
 
-		// WP.com plan objects have a dedicated `path_slug` field, Jetpack plan objects don't
-		// For Jetpack, we thus use the plan slug with the 'jetpack_' prefix removed.
+		// WP.com plan objects have a dedicated `path_slug` field, Jetpack plan objects don't.
 		$plan_path_slug = wp_startswith( $plan_slug, 'jetpack_' )
-			? substr( $plan_slug, strlen( 'jetpack_' ) )
+			? $plan_slug
 			: $plan->path_slug;
 
 		$post_id = get_the_ID();
@@ -100,8 +112,7 @@ class Jetpack_Components {
 		return self::render_component(
 			'upgrade-nudge',
 			array(
-				'planName'   => $plan->product_name,
-				'upgradeUrl' => $upgrade_url,
+				'checkoutUrl' => $upgrade_url,
 			)
 		);
 	}

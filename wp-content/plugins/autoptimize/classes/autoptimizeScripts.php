@@ -58,8 +58,12 @@ class autoptimizeScripts extends autoptimizeBase
         'nonce',
         'post_id',
         'data-noptimize',
+        'data-cfasync',
+        'data-pagespeed-no-defer',
         'logHuman',
         'amp-mobile-version-switcher',
+        'data-rocketlazyloadscript',
+        'rocket-browser-checker-js-after',
     );
 
     /**
@@ -115,6 +119,13 @@ class autoptimizeScripts extends autoptimizeBase
      * @var bool
      */
     private $defer_not_aggregate = false;
+
+    /**
+     * Setting; defer inline JS?
+     *
+     * @var bool
+     */
+    private $defer_inline = false;
 
     /**
      * Setting; try/catch wrapping or not.
@@ -208,14 +219,23 @@ class autoptimizeScripts extends autoptimizeBase
      */
     public function read( $options )
     {
-        $noptimize_js = apply_filters( 'autoptimize_filter_js_noptimize', false, $this->content );
+        $noptimize_js = false;
+
+        // If page/ post check post_meta to see if optimize is off.
+        if ( false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_js_optimize' ) ) {
+            $noptimize_js = true;
+        }
+
+        // And a filter to enforce JS noptimize.
+        $noptimize_js = apply_filters( 'autoptimize_filter_js_noptimize', $noptimize_js, $this->content );
+
+        // And finally bail if noptimize_js is true.
         if ( $noptimize_js ) {
             return false;
         }
 
         // only optimize known good JS?
         $allowlist_js = apply_filters( 'autoptimize_filter_js_allowlist', '', $this->content );
-        $allowlist_js = apply_filters( 'autoptimize_filter_js_whitelist', $allowlist_js, $this->content ); // fixme: to be removed in next version.
         if ( ! empty( $allowlist_js ) ) {
             $this->allowlist = array_filter( array_map( 'trim', explode( ',', $allowlist_js ) ) );
         }
@@ -241,10 +261,17 @@ class autoptimizeScripts extends autoptimizeBase
         if ( $this->aggregate && apply_filters( 'autoptimize_filter_js_dontaggregate', false ) ) {
             $this->aggregate = false;
         }
-        
+        // and the filter that should have been there to begin with.
+        $this->aggregate = apply_filters( 'autoptimize_filter_js_aggregate', $this->aggregate );
+
         // Defer when not aggregating.
-        if ( false === $this->aggregate && apply_filters( 'autoptimize_js_filter_defer_not_aggregate', $options['defer_not_aggregate'] ) ) {
+        if ( false === $this->aggregate && apply_filters( 'autoptimize_filter_js_defer_not_aggregate', $options['defer_not_aggregate'] ) ) {
             $this->defer_not_aggregate = true;
+        }
+
+        // Defer inline JS?
+        if ( ( true === $this->defer_not_aggregate && apply_filters( 'autoptimize_js_filter_defer_inline', $options['defer_inline'] ) ) || apply_filters( 'autoptimize_js_filter_force_defer_inline', false ) ) {
+            $this->defer_inline = true;
         }
 
         // include inline?
@@ -348,14 +375,10 @@ class autoptimizeScripts extends autoptimizeBase
                                 }
                             }
                         }
-                        
+
                         // not aggregating but deferring?
-                        if ( $this->defer_not_aggregate && false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path && strpos( $new_tag, ' defer' ) === false ) {
+                        if ( $this->defer_not_aggregate && false === $this->aggregate && ( str_replace( $this->dontmove, '', $path ) === $path || ( apply_filters( 'autoptimize_filter_js_defer_external', true ) && str_replace( $this->dontmove, '', $orig_tag ) === $orig_tag ) ) && strpos( $new_tag, ' defer' ) === false && strpos( $new_tag, ' async' ) === false ) {
                             $new_tag = str_replace( '<script ', '<script defer ', $new_tag );
-                            // and remove async as async+defer=async while we explicitly want defer.
-                            if ( strpos( $new_tag, ' async' ) !== false && apply_filters( 'autoptimize_filter_js_defer_remove_async', true ) ) {
-                                $new_tag = str_replace( array( ' async', ' async="async"', " async='async'" ), '', $new_tag );
-                            }
                         }
 
                         // Should we minify the non-aggregated script?
@@ -374,6 +397,11 @@ class autoptimizeScripts extends autoptimizeBase
                                     $new_tag = '';
                                 }
                             }
+                        }
+
+                        // Check if we still need to CDN (esp. for already minified resources).
+                        if ( ! empty( $this->cdn_url ) || has_filter( 'autoptimize_filter_base_replace_cdn' ) ) {
+                            $new_tag = str_replace( $url, $this->url_replace_cdn( $url ), $new_tag );
                         }
 
                         if ( $this->ismovable( $new_tag ) ) {
@@ -408,16 +436,33 @@ class autoptimizeScripts extends autoptimizeBase
                         $code            = preg_replace( '/(?:^\\s*<!--\\s*|\\s*(?:\\/\\/)?\\s*-->\\s*$)/', '', $code );
                         $this->scripts[] = 'INLINE;' . $code;
                     } else {
-                        // Can we move this?
-                        $autoptimize_js_moveable = apply_filters( 'autoptimize_js_moveable', '', $tag );
-                        if ( $this->ismovable( $tag ) || '' !== $autoptimize_js_moveable ) {
-                            if ( $this->movetolast( $tag ) || 'last' === $autoptimize_js_moveable ) {
-                                $this->move['last'][] = $tag;
+                        $_inline_deferable = apply_filters( 'autoptimize_filters_js_inline_deferable', array( 'nonce', 'post_id', 'syntaxhighlighter' ) );
+                        $_inline_dontmove  = array_values( array_diff( $this->dontmove, $_inline_deferable ) );
+                        if ( false === $this->defer_inline ) {
+                            // Can we move this?
+                            $autoptimize_js_moveable = apply_filters( 'autoptimize_js_moveable', '', $tag );
+                            if ( $this->ismovable( $tag ) || '' !== $autoptimize_js_moveable ) {
+                                if ( $this->movetolast( $tag ) || 'last' === $autoptimize_js_moveable ) {
+                                    $this->move['last'][] = $tag;
+                                } else {
+                                    $this->move['first'][] = $tag;
+                                }
                             } else {
-                                $this->move['first'][] = $tag;
+                                $tag = '';
                             }
+                        } else if ( str_replace( $_inline_dontmove, '', $tag ) === $tag && strlen( $tag ) < apply_filters( 'autoptimize_filter_script_defer_inline_maxsize', 200000 ) ) {
+                            // defer inline JS by base64 encoding it but only if string is not ridiculously huge (to avoid issues with below regex mainly).
+                            preg_match( '#<script(?:[^>](?!id=))*\s*(?:id=(["\'])([^"\']+)\1)*+[^>]*+>(.*?)<\/script>#is', $tag, $match );
+                            if ( $match[2] ) {
+                                $_id = 'id="' . $match[2] . '" ';
+                            } else {
+                                $_id = '';
+                            }
+
+                            $new_tag       = '<script defer ' . $_id . 'src="data:text/javascript;base64,' . base64_encode( $match[3] ) . '"></script>';
+                            $this->content = str_replace( $tag, $new_tag, $this->content );
+                            $tag           = '';
                         } else {
-                            // We shouldn't touch this.
                             $tag = '';
                         }
                     }
@@ -451,7 +496,7 @@ class autoptimizeScripts extends autoptimizeBase
      * @param string $tag Script node & child(ren).
      * @return bool
      */
-    public function should_aggregate( $tag )
+    public static function should_aggregate( $tag )
     {
         if ( empty( $tag ) ) {
             return false;

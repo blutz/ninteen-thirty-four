@@ -12,60 +12,50 @@ const { name } = metadata;
 
 export { metadata, name };
 
-/**
- * WordPress dependencies
- */
-const { __ } = wp.i18n;
-
 export const settings = {
-    ...metadata,
-    title: __( 'Accordion', 'ghostkit' ),
-    description: __( 'Toggle the visibility of content across your project.', 'ghostkit' ),
-    icon: getIcon( 'block-accordion', true ),
-    keywords: [
-        __( 'accordion', 'ghostkit' ),
-        __( 'collapsible', 'ghostkit' ),
-        __( 'collapse', 'ghostkit' ),
-    ],
-    ghostkit: {
-        previewUrl: 'https://ghostkit.io/blocks/accordion/',
-        supports: {
-            styles: true,
-            frame: true,
-            spacings: true,
-            display: true,
-            scrollReveal: true,
-            customCSS: true,
+  ...metadata,
+  icon: getIcon('block-accordion', true),
+  ghostkit: {
+    previewUrl: 'https://ghostkit.io/blocks/accordion/',
+    supports: {
+      styles: true,
+      frame: true,
+      spacings: true,
+      display: true,
+      scrollReveal: true,
+      customCSS: true,
+    },
+  },
+  example: {
+    innerBlocks: [
+      {
+        name: 'ghostkit/accordion-item',
+        attributes: {
+          active: true,
+          heading: 'Accordion Item 1',
+          itemNumber: 1,
         },
-    },
-    example: {
         innerBlocks: [
-            {
-                name: 'ghostkit/accordion-item',
-                attributes: {
-                    active: true,
-                    heading: 'Accordion Item 1',
-                    itemNumber: 1,
-                },
-                innerBlocks: [
-                    {
-                        name: 'core/paragraph',
-                        attributes: {
-                            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent et eros eu felis.',
-                        },
-                    },
-                ],
-            }, {
-                name: 'ghostkit/accordion-item',
-                attributes: {
-                    active: false,
-                    heading: 'Accordion Item 2',
-                    itemNumber: 2,
-                },
+          {
+            name: 'core/paragraph',
+            attributes: {
+              content:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent et eros eu felis.',
             },
+          },
         ],
-    },
-    edit,
-    save,
-    transforms,
+      },
+      {
+        name: 'ghostkit/accordion-item',
+        attributes: {
+          active: false,
+          heading: 'Accordion Item 2',
+          itemNumber: 2,
+        },
+      },
+    ],
+  },
+  edit,
+  save,
+  transforms,
 };

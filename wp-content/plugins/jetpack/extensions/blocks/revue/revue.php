@@ -4,7 +4,7 @@
  *
  * @since 8.3.0
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 namespace Automattic\Jetpack\Extensions\Revue;
@@ -226,7 +226,7 @@ function get_deprecated_v1_revue_button( $attributes ) {
 	}
 
 	if ( $has_border_radius ) {
-		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+		// phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual
 		if ( 0 == $attributes['borderRadius'] ) {
 			$classes[] = 'no-border-radius';
 		} else {

@@ -11,10 +11,10 @@
          "Blocks collection and extensions for Gutenberg": [
             ""
          ],
-         "nK": [
+         "Ghost Kit Team": [
             ""
          ],
-         "https://nkdev.info": [
+         "https://ghostkit.io/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=byline": [
             ""
          ],
          "Go Pro": [
@@ -86,16 +86,31 @@
          "Default": [
             ""
          ],
+         "Every %d Minutes": [
+            ""
+         ],
          "Default Fonts Site": [
             ""
          ],
          "User don't have permissions to change Customizer options.": [
             ""
          ],
+         "User don't have permissions to change options.": [
+            ""
+         ],
+         "Options not found.": [
+            ""
+         ],
          "Provide image ID.": [
             ""
          ],
+         "Image not found.": [
+            ""
+         ],
          "Provide Instagram Access Token.": [
+            ""
+         ],
+         "Instagram data failed to load.": [
             ""
          ],
          "Provide Twitter Consumer Key.": [
@@ -111,18 +126,6 @@
             ""
          ],
          "Provide Username.": [
-            ""
-         ],
-         "User don't have permissions to change options.": [
-            ""
-         ],
-         "Options not found.": [
-            ""
-         ],
-         "Image not found.": [
-            ""
-         ],
-         "Instagram data failed to load.": [
             ""
          ],
          "Twitter data failed to load.": [
@@ -377,31 +380,10 @@
          "Write label…": [
             ""
          ],
-         "Item": [
-            ""
-         ],
-         "A single item within a accordion block.": [
-            ""
-         ],
          "Collapse one item only": [
             ""
          ],
          "Add Accordion Item": [
-            ""
-         ],
-         "Accordion": [
-            ""
-         ],
-         "Toggle the visibility of content across your project.": [
-            ""
-         ],
-         "accordion": [
-            ""
-         ],
-         "collapsible": [
-            ""
-         ],
-         "collapse": [
             ""
          ],
          "Accordion Item": [
@@ -446,22 +428,7 @@
          "Color": [
             ""
          ],
-         "Alert": [
-            ""
-         ],
-         "Provide contextual feedback messages for user actions.": [
-            ""
-         ],
-         "alert": [
-            ""
-         ],
-         "notification": [
-            ""
-         ],
          "Focus": [
-            ""
-         ],
-         "Size": [
             ""
          ],
          "Corner Radius": [
@@ -497,37 +464,19 @@
          "Write text…": [
             ""
          ],
-         "Button": [
-            ""
-         ],
-         "A single button within a buttons wrapper block.": [
-            ""
-         ],
-         "Align": [
-            ""
-         ],
          "Add Button": [
             ""
          ],
-         "Change important links to buttons to get more click rate.": [
-            ""
-         ],
-         "btn": [
-            ""
-         ],
-         "button": [
-            ""
-         ],
-         "Slide": [
-            ""
-         ],
-         "A single slide within a carousel block.": [
+         "Align": [
             ""
          ],
          "Slides": [
             ""
          ],
          "Effect": [
+            ""
+         ],
+         "Slide": [
             ""
          ],
          "Coverflow": [
@@ -543,6 +492,9 @@
             ""
          ],
          "Autoplay (seconds)": [
+            ""
+         ],
+         "Pause autoplay on mouse over": [
             ""
          ],
          "Slides per view": [
@@ -575,18 +527,6 @@
          "Dynamic bullets": [
             ""
          ],
-         "Carousel": [
-            ""
-         ],
-         "Carousel for any type of content – images or other blocks.": [
-            ""
-         ],
-         "carousel": [
-            ""
-         ],
-         "slider": [
-            ""
-         ],
          "1.0.0": [
             ""
          ],
@@ -603,18 +543,6 @@
             ""
          ],
          "Improved": [
-            ""
-         ],
-         "Changelog": [
-            ""
-         ],
-         "Show the changes log of your product.": [
-            ""
-         ],
-         "changelog": [
-            ""
-         ],
-         "log": [
             ""
          ],
          "Changed": [
@@ -702,21 +630,6 @@
          "This countdown has been ended already!": [
             ""
          ],
-         "Countdown": [
-            ""
-         ],
-         "Countdown timer for upcoming event.": [
-            ""
-         ],
-         "timer": [
-            ""
-         ],
-         "count": [
-            ""
-         ],
-         "number": [
-            ""
-         ],
          "Number Size": [
             ""
          ],
@@ -726,34 +639,19 @@
          "Top": [
             ""
          ],
-         "Animate in viewport": [
+         "Number Alignment": [
             ""
          ],
          "Show Content": [
             ""
          ],
+         "Animate in viewport": [
+            ""
+         ],
          "Animate from": [
             ""
          ],
-         "Number Position Top": [
-            ""
-         ],
-         "Number Position Left": [
-            ""
-         ],
-         "Number Position Right": [
-            ""
-         ],
          "Write number…": [
-            ""
-         ],
-         "Number Box": [
-            ""
-         ],
-         "Show your progress and rewards using counting numbers.": [
-            ""
-         ],
-         "counter": [
             ""
          ],
          "Line": [
@@ -768,16 +666,10 @@
          "Double": [
             ""
          ],
+         "Size": [
+            ""
+         ],
          "Divider": [
-            ""
-         ],
-         "Divide your long texts and blocks.": [
-            ""
-         ],
-         "divider": [
-            ""
-         ],
-         "spacer": [
             ""
          ],
          "Subject": [
@@ -840,9 +732,6 @@
          "Inline": [
             ""
          ],
-         "Form field checkbox.": [
-            ""
-         ],
          "Date Settings": [
             ""
          ],
@@ -852,22 +741,13 @@
          "Max": [
             ""
          ],
-         "Form field date.": [
-            ""
-         ],
          "Email Confirmation": [
             ""
          ],
          "Confirm Email": [
             ""
          ],
-         "Form field email.": [
-            ""
-         ],
          "Value": [
-            ""
-         ],
-         "Form field hidden.": [
             ""
          ],
          "Name Fields": [
@@ -894,46 +774,16 @@
          "Last Default": [
             ""
          ],
-         "Form field name.": [
-            ""
-         ],
          "Number Settings": [
             ""
          ],
          "Step": [
             ""
          ],
-         "Form field number.": [
-            ""
-         ],
-         "Form field phone.": [
-            ""
-         ],
-         "Form field radio.": [
-            ""
-         ],
          "Multiple": [
             ""
          ],
-         "Form field select.": [
-            ""
-         ],
          "Submit": [
-            ""
-         ],
-         "Submit Button": [
-            ""
-         ],
-         "Form submit button.": [
-            ""
-         ],
-         "Form field text.": [
-            ""
-         ],
-         "Form field textarea.": [
-            ""
-         ],
-         "Form field url.": [
             ""
          ],
          "Form": [
@@ -987,18 +837,6 @@
          "Search for a term or paste a Giphy URL": [
             ""
          ],
-         "Search for and insert an animated image.": [
-            ""
-         ],
-         "animated": [
-            ""
-         ],
-         "giphy": [
-            ""
-         ],
-         "image": [
-            ""
-         ],
          "Gist Simple plugin is not defined.": [
             ""
          ],
@@ -1021,18 +859,6 @@
             ""
          ],
          "Show all files": [
-            ""
-         ],
-         "GitHub Gist": [
-            ""
-         ],
-         "Embed code parts form GitHub Gist to your site or documentation.": [
-            ""
-         ],
-         "github": [
-            ""
-         ],
-         "gist": [
             ""
          ],
          "Enter Style JSON": [
@@ -1143,18 +969,6 @@
          "Add an API key in block settings.": [
             ""
          ],
-         "Google Maps": [
-            ""
-         ],
-         "Show maps with custom styles, markers and settings.": [
-            ""
-         ],
-         "maps": [
-            ""
-         ],
-         "google": [
-            ""
-         ],
          "Bright": [
             ""
          ],
@@ -1176,6 +990,9 @@
          "Auto": [
             ""
          ],
+         "Grow": [
+            ""
+         ],
          "%d Column (%s)": [
             ""
          ],
@@ -1188,19 +1005,7 @@
          "Vertical alignment": [
             ""
          ],
-         "Start": [
-            ""
-         ],
-         "Center": [
-            ""
-         ],
-         "End": [
-            ""
-         ],
          "Sticky Content": [
-            ""
-         ],
-         "No": [
             ""
          ],
          "Bottom": [
@@ -1210,12 +1015,6 @@
             ""
          ],
          "Select Column": [
-            ""
-         ],
-         "Column": [
-            ""
-         ],
-         "A single column within a grid block.": [
             ""
          ],
          "Grid": [
@@ -1242,52 +1041,25 @@
          "Horizontal alignment": [
             ""
          ],
-         "Around": [
-            ""
-         ],
-         "Between": [
-            ""
-         ],
          "Select Grid": [
             ""
          ],
-         "Responsive grid block to build layouts of all shapes and sizes thanks to a twelve column system. Visual columns size and order change.": [
-            ""
-         ],
-         "row": [
-            ""
-         ],
-         "columns": [
-            ""
-         ],
-         "section": [
-            ""
-         ],
-         "Icon Position Top": [
-            ""
-         ],
-         "Icon Position Left": [
-            ""
-         ],
-         "Icon Position Right": [
-            ""
-         ],
-         "Icon Box": [
-            ""
-         ],
-         "Icons are one of the best visual replacement for text descriptions.": [
-            ""
-         ],
-         "icon": [
-            ""
-         ],
-         "icon-box": [
+         "Icon Alignment": [
             ""
          ],
          "Start Position": [
             ""
          ],
          "Before Image Settings": [
+            ""
+         ],
+         "Select Image": [
+            ""
+         ],
+         "Click the image to edit or update": [
+            ""
+         ],
+         "Remove Image": [
             ""
          ],
          "Image Size": [
@@ -1305,13 +1077,10 @@
          "Image Before": [
             ""
          ],
+         "image": [
+            ""
+         ],
          "Image After": [
-            ""
-         ],
-         "Compare two images with a slider.": [
-            ""
-         ],
-         "compare": [
             ""
          ],
          "Photos Number": [
@@ -1356,12 +1125,6 @@
          "A valid Access Token is required to use Instagram feed. You can fill it in the block settings in Inspector.": [
             ""
          ],
-         "Show Instagram feed and user data.": [
-            ""
-         ],
-         "instagram": [
-            ""
-         ],
          "Write your _Markdown_ **here**...": [
             ""
          ],
@@ -1369,18 +1132,6 @@
             ""
          ],
          "Preview": [
-            ""
-         ],
-         "Lightweight markup language with plain-text-formatting syntax.": [
-            ""
-         ],
-         "formatting": [
-            ""
-         ],
-         "markup": [
-            ""
-         ],
-         "md": [
             ""
          ],
          "Are you sure you wish to leave this page?": [
@@ -1428,12 +1179,6 @@
          "Popular": [
             ""
          ],
-         "Pricing Table Item": [
-            ""
-         ],
-         "A single item within a pricing table block.": [
-            ""
-         ],
          "ItemsVertical Start": [
             ""
          ],
@@ -1450,18 +1195,6 @@
             ""
          ],
          "Add Pricing Table": [
-            ""
-         ],
-         "Pricing Table": [
-            ""
-         ],
-         "Sell your products or services and show all features.": [
-            ""
-         ],
-         "pricing": [
-            ""
-         ],
-         "table": [
             ""
          ],
          "Percent": [
@@ -1485,22 +1218,10 @@
          "Write caption…": [
             ""
          ],
-         "Progress": [
-            ""
-         ],
-         "Show the progress of your work, skills or earnings.": [
-            ""
-         ],
-         "progress": [
-            ""
-         ],
-         "bar": [
-            ""
-         ],
          "PRO Shapes": [
             ""
          ],
-         "Additional 30 shapes available for PRO users only": [
+         "Additional 30 shapes available for Pro users only": [
             ""
          ],
          "Read More": [
@@ -1516,18 +1237,6 @@
             ""
          ],
          "Width": [
-            ""
-         ],
-         "Shape Divider": [
-            ""
-         ],
-         "Decorations for section shapes.": [
-            ""
-         ],
-         "shape": [
-            ""
-         ],
-         "svg": [
             ""
          ],
          "Allowed Headers": [
@@ -1569,19 +1278,10 @@
          "Table of Contents": [
             ""
          ],
-         "No headings found.": [
+         "Start adding Heading blocks to create a table of contents. Headings with HTML anchors will be linked here.": [
             ""
          ],
          "Write title…": [
-            ""
-         ],
-         "Automatically generate a table of contents by parsing page headers in content.": [
-            ""
-         ],
-         "table of contents": [
-            ""
-         ],
-         "toc": [
             ""
          ],
          "Tab %d": [
@@ -1594,6 +1294,15 @@
             ""
          ],
          "Tabs align": [
+            ""
+         ],
+         "Start": [
+            ""
+         ],
+         "Center": [
+            ""
+         ],
+         "End": [
             ""
          ],
          "Tab label": [
@@ -1629,22 +1338,10 @@
          "Add Tab": [
             ""
          ],
-         "Separate content on the tabs with titles.": [
-            ""
-         ],
          "Pills": [
             ""
          ],
          "Photo": [
-            ""
-         ],
-         "Select Image": [
-            ""
-         ],
-         "Click the image to edit or update": [
-            ""
-         ],
-         "Remove Image": [
             ""
          ],
          "Stars": [
@@ -1654,21 +1351,6 @@
             ""
          ],
          "Write source…": [
-            ""
-         ],
-         "Testimonial": [
-            ""
-         ],
-         "Show how your users love your products and what saying.": [
-            ""
-         ],
-         "testimonial": [
-            ""
-         ],
-         "blockquote": [
-            ""
-         ],
-         "quote": [
             ""
          ],
          "Username": [
@@ -1740,27 +1422,6 @@
          "A valid API data is required to use Twitter feed. You can fill it in the block settings in Inspector.": [
             ""
          ],
-         "Show Twitter feed and user data.": [
-            ""
-         ],
-         "twitter": [
-            ""
-         ],
-         "Video": [
-            ""
-         ],
-         "Plain and Fullscreen YouTube, Vimeo and Self-Hosted videos.": [
-            ""
-         ],
-         "video": [
-            ""
-         ],
-         "youtube": [
-            ""
-         ],
-         "vimeo": [
-            ""
-         ],
          "Plain": [
             ""
          ],
@@ -1771,15 +1432,6 @@
             ""
          ],
          "--- Select Sidebar ---": [
-            ""
-         ],
-         "Select registered sidebars and put it in any place.": [
-            ""
-         ],
-         "widget": [
-            ""
-         ],
-         "sidebar": [
             ""
          ],
          "Custom Color Picker": [
@@ -1801,6 +1453,12 @@
             ""
          ],
          "L": [
+            ""
+         ],
+         "Horizontal": [
+            ""
+         ],
+         "Vertical": [
             ""
          ],
          "Search Icon": [
@@ -1908,7 +1566,13 @@
          "PRO": [
             ""
          ],
-         "Adobe Fonts available for PRO users only. Read more about Ghost Kit PRO plugin here - ": [
+         "Custom Fonts": [
+            ""
+         ],
+         "Adobe Fonts available for Pro users only. Read more about Ghost Kit Pro plugin here - ": [
+            ""
+         ],
+         "Custom Fonts available for Pro users only. Read more about Ghost Kit Pro plugin here - ": [
             ""
          ],
          "Font Family": [
@@ -1956,13 +1620,25 @@
          "Display": [
             ""
          ],
-         "Solid": [
-            ""
-         ],
          "Frame": [
             ""
          ],
          "Border Color": [
+            ""
+         ],
+         "Border Radius": [
+            ""
+         ],
+         "Top Left": [
+            ""
+         ],
+         "Top Right": [
+            ""
+         ],
+         "Bottom Right": [
+            ""
+         ],
+         "Bottom Left": [
             ""
          ],
          "Shadow": [
@@ -1980,19 +1656,28 @@
          "Spread": [
             ""
          ],
-         "Top Left": [
+         "Fade in": [
             ""
          ],
-         "Top Right": [
+         "Zoom in": [
             ""
          ],
-         "Bottom Right": [
+         "Zoom in from Bottom": [
             ""
          ],
-         "Bottom Left": [
+         "Zoom in from Left": [
+            ""
+         ],
+         "Zoom in from Right": [
             ""
          ],
          "Animate on Scroll": [
+            ""
+         ],
+         "Remove animation": [
+            ""
+         ],
+         "Advanced options are placed in the block settings panel.": [
             ""
          ],
          "Distance": [
@@ -2017,6 +1702,9 @@
             ""
          ],
          "Add Template": [
+            ""
+         ],
+         "Templates Library": [
             ""
          ],
          "Variants": [
@@ -2175,13 +1863,445 @@
          "Enable All Blocks": [
             ""
          ],
-         "Breakpoints available for PRO users only. Read more about Ghost Kit PRO plugin here - ": [
+         "Breakpoints available for Pro users only. Read more about Ghost Kit Pro plugin here - ": [
+            ""
+         ],
+         "Adobe and Custom Fonts available for Pro users only. Read more about Ghost Kit Pro plugin here - ": [
             ""
          ],
          "Post Type General Name\u0004Templates": [
             ""
          ],
          "Post Type Singular Name\u0004Template": [
+            ""
+         ],
+         "block title\u0004Item": [
+            ""
+         ],
+         "block title\u0004Accordion": [
+            ""
+         ],
+         "block title\u0004Alert": [
+            ""
+         ],
+         "block title\u0004Button": [
+            ""
+         ],
+         "block title\u0004Buttons": [
+            ""
+         ],
+         "block title\u0004Slide": [
+            ""
+         ],
+         "block title\u0004Carousel": [
+            ""
+         ],
+         "block title\u0004Changelog": [
+            ""
+         ],
+         "block title\u0004Countdown": [
+            ""
+         ],
+         "block title\u0004Number Box": [
+            ""
+         ],
+         "block title\u0004Divider": [
+            ""
+         ],
+         "block title\u0004Checkbox": [
+            ""
+         ],
+         "block title\u0004Date": [
+            ""
+         ],
+         "block title\u0004Email": [
+            ""
+         ],
+         "block title\u0004Hidden": [
+            ""
+         ],
+         "block title\u0004Name": [
+            ""
+         ],
+         "block title\u0004Number": [
+            ""
+         ],
+         "block title\u0004Phone": [
+            ""
+         ],
+         "block title\u0004Radio": [
+            ""
+         ],
+         "block title\u0004Select": [
+            ""
+         ],
+         "block title\u0004Submit Button": [
+            ""
+         ],
+         "block title\u0004Text": [
+            ""
+         ],
+         "block title\u0004Textarea": [
+            ""
+         ],
+         "block title\u0004URL": [
+            ""
+         ],
+         "block title\u0004GIF": [
+            ""
+         ],
+         "block title\u0004GitHub Gist": [
+            ""
+         ],
+         "block title\u0004Google Maps": [
+            ""
+         ],
+         "block title\u0004Column": [
+            ""
+         ],
+         "block title\u0004Grid": [
+            ""
+         ],
+         "block title\u0004Icon Box": [
+            ""
+         ],
+         "block title\u0004Image Compare": [
+            ""
+         ],
+         "block title\u0004Instagram": [
+            ""
+         ],
+         "block title\u0004Markdown": [
+            ""
+         ],
+         "block title\u0004Pricing Table Item": [
+            ""
+         ],
+         "block title\u0004Pricing Table": [
+            ""
+         ],
+         "block title\u0004Progress": [
+            ""
+         ],
+         "block title\u0004Shape Divider": [
+            ""
+         ],
+         "block title\u0004Table of Contents": [
+            ""
+         ],
+         "block title\u0004Tab": [
+            ""
+         ],
+         "block title\u0004Tabs": [
+            ""
+         ],
+         "block title\u0004Testimonial": [
+            ""
+         ],
+         "block title\u0004Twitter": [
+            ""
+         ],
+         "block title\u0004Video": [
+            ""
+         ],
+         "block title\u0004Widgetized Area": [
+            ""
+         ],
+         "block description\u0004A single item within a accordion block.": [
+            ""
+         ],
+         "block description\u0004Toggle the visibility of content across your project.": [
+            ""
+         ],
+         "block description\u0004Provide contextual feedback messages for user actions.": [
+            ""
+         ],
+         "block description\u0004A single button within a buttons wrapper block.": [
+            ""
+         ],
+         "block description\u0004Change important links to buttons to get more click rate.": [
+            ""
+         ],
+         "block description\u0004A single slide within a carousel block.": [
+            ""
+         ],
+         "block description\u0004Carousel for any type of content - images or other blocks.": [
+            ""
+         ],
+         "block description\u0004Show the changes log of your product.": [
+            ""
+         ],
+         "block description\u0004Countdown timer for upcoming event.": [
+            ""
+         ],
+         "block description\u0004Show your progress and rewards using counting numbers.": [
+            ""
+         ],
+         "block description\u0004Divide your long texts and blocks.": [
+            ""
+         ],
+         "block description\u0004Form field checkbox.": [
+            ""
+         ],
+         "block description\u0004Form field date.": [
+            ""
+         ],
+         "block description\u0004Form field email.": [
+            ""
+         ],
+         "block description\u0004Form field hidden.": [
+            ""
+         ],
+         "block description\u0004Form field name.": [
+            ""
+         ],
+         "block description\u0004Form field number.": [
+            ""
+         ],
+         "block description\u0004Form field phone.": [
+            ""
+         ],
+         "block description\u0004Form field radio.": [
+            ""
+         ],
+         "block description\u0004Form field select.": [
+            ""
+         ],
+         "block description\u0004Form submit button.": [
+            ""
+         ],
+         "block description\u0004Form field text.": [
+            ""
+         ],
+         "block description\u0004Form field textarea.": [
+            ""
+         ],
+         "block description\u0004Form field url.": [
+            ""
+         ],
+         "block description\u0004Search for and insert an animated image.": [
+            ""
+         ],
+         "block description\u0004Embed code parts form GitHub Gist to your site or documentation.": [
+            ""
+         ],
+         "block description\u0004Show maps with custom styles, markers and settings.": [
+            ""
+         ],
+         "block description\u0004A single column within a grid block.": [
+            ""
+         ],
+         "block description\u0004Responsive grid block to build layouts of all shapes and sizes thanks to a twelve column system. Visual columns size and order change.": [
+            ""
+         ],
+         "block description\u0004Icons are one of the best visual replacement for text descriptions.": [
+            ""
+         ],
+         "block description\u0004Compare two images with a slider.": [
+            ""
+         ],
+         "block description\u0004Show Instagram feed and user data.": [
+            ""
+         ],
+         "block description\u0004Lightweight markup language with plain-text-formatting syntax.": [
+            ""
+         ],
+         "block description\u0004A single item within a pricing table block.": [
+            ""
+         ],
+         "block description\u0004Sell your products or services and show all features.": [
+            ""
+         ],
+         "block description\u0004Show the progress of your work, skills or earnings.": [
+            ""
+         ],
+         "block description\u0004Decorations for section shapes.": [
+            ""
+         ],
+         "block description\u0004Summarize your post with a list of headings. Add HTML anchors to Heading blocks to link them here.": [
+            ""
+         ],
+         "block description\u0004A single tab within a tabs block.": [
+            ""
+         ],
+         "block description\u0004Separate content on the tabs with titles.": [
+            ""
+         ],
+         "block description\u0004Show how your users love your products and what saying.": [
+            ""
+         ],
+         "block description\u0004Show Twitter feed and user data.": [
+            ""
+         ],
+         "block description\u0004Plain and Fullscreen YouTube, Vimeo and Self-Hosted videos.": [
+            ""
+         ],
+         "block description\u0004Select registered sidebars and put it in any place.": [
+            ""
+         ],
+         "block keyword\u0004accordion": [
+            ""
+         ],
+         "block keyword\u0004collapsible": [
+            ""
+         ],
+         "block keyword\u0004collapse": [
+            ""
+         ],
+         "block keyword\u0004alert": [
+            ""
+         ],
+         "block keyword\u0004notification": [
+            ""
+         ],
+         "block keyword\u0004btn": [
+            ""
+         ],
+         "block keyword\u0004button": [
+            ""
+         ],
+         "block keyword\u0004carousel": [
+            ""
+         ],
+         "block keyword\u0004slider": [
+            ""
+         ],
+         "block keyword\u0004changelog": [
+            ""
+         ],
+         "block keyword\u0004log": [
+            ""
+         ],
+         "block keyword\u0004timer": [
+            ""
+         ],
+         "block keyword\u0004count": [
+            ""
+         ],
+         "block keyword\u0004number": [
+            ""
+         ],
+         "block keyword\u0004counter": [
+            ""
+         ],
+         "block keyword\u0004divider": [
+            ""
+         ],
+         "block keyword\u0004spacer": [
+            ""
+         ],
+         "block keyword\u0004animated": [
+            ""
+         ],
+         "block keyword\u0004giphy": [
+            ""
+         ],
+         "block keyword\u0004image": [
+            ""
+         ],
+         "block keyword\u0004github": [
+            ""
+         ],
+         "block keyword\u0004gist": [
+            ""
+         ],
+         "block keyword\u0004maps": [
+            ""
+         ],
+         "block keyword\u0004google": [
+            ""
+         ],
+         "block keyword\u0004row": [
+            ""
+         ],
+         "block keyword\u0004columns": [
+            ""
+         ],
+         "block keyword\u0004section": [
+            ""
+         ],
+         "block keyword\u0004icon": [
+            ""
+         ],
+         "block keyword\u0004icon-box": [
+            ""
+         ],
+         "block keyword\u0004compare": [
+            ""
+         ],
+         "block keyword\u0004instagram": [
+            ""
+         ],
+         "block keyword\u0004formatting": [
+            ""
+         ],
+         "block keyword\u0004markup": [
+            ""
+         ],
+         "block keyword\u0004md": [
+            ""
+         ],
+         "block keyword\u0004pricing": [
+            ""
+         ],
+         "block keyword\u0004table": [
+            ""
+         ],
+         "block keyword\u0004progress": [
+            ""
+         ],
+         "block keyword\u0004bar": [
+            ""
+         ],
+         "block keyword\u0004shape": [
+            ""
+         ],
+         "block keyword\u0004svg": [
+            ""
+         ],
+         "block keyword\u0004table of contents": [
+            ""
+         ],
+         "block keyword\u0004toc": [
+            ""
+         ],
+         "block keyword\u0004summary": [
+            ""
+         ],
+         "block keyword\u0004document outline": [
+            ""
+         ],
+         "block keyword\u0004tabs": [
+            ""
+         ],
+         "block keyword\u0004tab": [
+            ""
+         ],
+         "block keyword\u0004testimonial": [
+            ""
+         ],
+         "block keyword\u0004blockquote": [
+            ""
+         ],
+         "block keyword\u0004quote": [
+            ""
+         ],
+         "block keyword\u0004twitter": [
+            ""
+         ],
+         "block keyword\u0004video": [
+            ""
+         ],
+         "block keyword\u0004youtube": [
+            ""
+         ],
+         "block keyword\u0004vimeo": [
+            ""
+         ],
+         "block keyword\u0004widget": [
+            ""
+         ],
+         "block keyword\u0004sidebar": [
             ""
          ]
       }

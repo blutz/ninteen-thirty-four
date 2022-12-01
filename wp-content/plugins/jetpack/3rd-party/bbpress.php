@@ -2,7 +2,7 @@
 /**
  * Compatibility functions for bbpress.
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 add_action( 'init', 'jetpack_bbpress_compat', 11 ); // Priority 11 needed to ensure sharing_display is loaded.
@@ -23,7 +23,7 @@ function jetpack_bbpress_compat() {
 	 *
 	 * @since 8.5.0 Moved from root-level file and check_rest_api_compat()
 	 */
-	require_once 'class-jetpack-bbpress-rest-api.php';
+	require_once __DIR__ . '/class-jetpack-bbpress-rest-api.php';
 	Jetpack_BbPress_REST_API::instance();
 
 	// Adds sharing buttons to bbPress items.

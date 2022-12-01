@@ -1,6 +1,8 @@
 <?php
 /**
- * The functions to display Content or Excerpt in a theme.
+ * Theme Tools: the functions to display Content or Excerpt in a theme.
+ *
+ * @package automattic/jetpack
  */
 
 /**
@@ -24,30 +26,46 @@ $blog_display = ( 'content, excerpt' === $blog_display ) ? 'mixed' : $blog_displ
 /**
  * If the theme doesn't support 'jetpack-content-options[ 'blog-display' ]', don't continue.
  */
-if ( ! in_array( $blog_display, array( 'content', 'excerpt', 'mixed' ) ) ) {
+if ( ! in_array( $blog_display, array( 'content', 'excerpt', 'mixed' ), true ) ) {
 	return;
 }
 
 /**
  * Apply Content filters.
+ *
+ * @since 9.7.0 Deprecated $content parameter.
+ *
+ * @param string $content Post content. Deprecated.
  */
-function jetpack_blog_display_custom_excerpt( $content ) {
+function jetpack_blog_display_custom_excerpt( $content = '' ) {
+	if ( ! empty( $content ) ) {
+		_doing_it_wrong(
+			'jetpack_blog_display_custom_excerpt',
+			esc_html__( 'You do not need to pass a $content parameter anymore.', 'jetpack' ),
+			'jetpack-9.7.0'
+		);
+	}
+
 	$post = get_post();
+	if ( empty( $post ) ) {
+		return '';
+	}
+
 	if ( empty( $post->post_excerpt ) ) {
 		$text = strip_shortcodes( $post->post_content );
 		$text = str_replace( ']]>', ']]&gt;', $text );
-		$text = strip_tags( $text );
+		$text = wp_strip_all_tags( $text );
 		/** This filter is documented in wp-includes/formatting.php */
 		$excerpt_length = apply_filters( 'excerpt_length', 55 );
 		/** This filter is documented in wp-includes/formatting.php */
-		$excerpt_more = apply_filters( 'excerpt_more', ' ' . '[...]' );
+		$excerpt_more = apply_filters( 'excerpt_more', ' [...]' );
 
 		/*
 		 * translators: If your word count is based on single characters (e.g. East Asian characters),
 		 * enter 'characters_excluding_spaces' or 'characters_including_spaces'. Otherwise, enter 'words'.
 		 * Do not translate into your own language.
 		 */
-		if ( strpos( _x( 'words', 'Word count type. Do not translate!' ), 'characters' ) === 0 && preg_match( '/^utf\-?8$/i', get_option( 'blog_charset' ) ) ) {
+		if ( strpos( _x( 'words', 'Word count type. Do not translate!', 'jetpack' ), 'characters' ) === 0 && preg_match( '/^utf\-?8$/i', get_option( 'blog_charset' ) ) ) {
 			$text = trim( preg_replace( "/[\n\r\t ]+/", ' ', $text ), ' ' );
 			preg_match_all( '/./u', $text, $words );
 			$words = array_slice( $words[0], 0, $excerpt_length + 1 );
@@ -72,20 +90,28 @@ function jetpack_blog_display_custom_excerpt( $content ) {
 
 /**
  * Display Excerpt instead of Content.
+ *
+ * @param string $content Post content.
  */
 function jetpack_the_content_to_the_excerpt( $content ) {
 	if ( ( is_home() || is_archive() ) && ! is_post_type_archive( array( 'jetpack-testimonial', 'jetpack-portfolio', 'product' ) ) ) {
 		if ( post_password_required() ) {
-			$content = sprintf( '<p>%s</p>', esc_html__( 'There is no excerpt because this is a protected post.', 'jetpack' ) );
+			$excerpt = sprintf( '<p>%s</p>', esc_html__( 'There is no excerpt because this is a protected post.', 'jetpack' ) );
 		} else {
-			$content = jetpack_blog_display_custom_excerpt( $content );
+			$excerpt = jetpack_blog_display_custom_excerpt();
 		}
 	}
-	return $content;
+	if ( empty( $excerpt ) ) {
+		return $content;
+	} else {
+		return $excerpt;
+	}
 }
 
 /**
  * Display Content instead of Excerpt.
+ *
+ * @param string $content The post excerpt.
  */
 function jetpack_the_excerpt_to_the_content( $content ) {
 	if ( ( is_home() || is_archive() ) && ! is_post_type_archive( array( 'jetpack-testimonial', 'jetpack-portfolio', 'product' ) ) ) {
@@ -111,6 +137,8 @@ function jetpack_the_excerpt_to_the_content( $content ) {
 
 /**
  * Display both Content and Excerpt instead of Content in the Customizer so live preview can switch between them.
+ *
+ * @param string $content The post content.
  */
 function jetpack_the_content_customizer( $content ) {
 	$class = jetpack_the_content_customizer_class();
@@ -118,7 +146,7 @@ function jetpack_the_content_customizer( $content ) {
 		if ( post_password_required() ) {
 			$excerpt = sprintf( '<p>%s</p>', esc_html__( 'There is no excerpt because this is a protected post.', 'jetpack' ) );
 		} else {
-			$excerpt = jetpack_blog_display_custom_excerpt( $content );
+			$excerpt = jetpack_blog_display_custom_excerpt();
 		}
 	}
 	if ( empty( $excerpt ) ) {
@@ -130,6 +158,8 @@ function jetpack_the_content_customizer( $content ) {
 
 /**
  * Display both Content and Excerpt instead of Excerpt in the Customizer so live preview can switch between them.
+ *
+ * @param string $excerpt The post excerpt.
  */
 function jetpack_the_excerpt_customizer( $excerpt ) {
 	if ( ( is_home() || is_archive() ) && ! is_post_type_archive( array( 'jetpack-testimonial', 'jetpack-portfolio', 'product' ) ) ) {
@@ -159,6 +189,8 @@ function jetpack_the_excerpt_customizer( $excerpt ) {
 
 /**
  * Display Content instead of Excerpt in the Customizer when theme uses a 'Mixed' display.
+ *
+ * @param string $content The post excerpt.
  */
 function jetpack_the_excerpt_mixed_customizer( $content ) {
 	if ( ( is_home() || is_archive() ) && ! is_post_type_archive( array( 'jetpack-testimonial', 'jetpack-portfolio', 'product' ) ) ) {
@@ -173,6 +205,8 @@ function jetpack_the_excerpt_mixed_customizer( $content ) {
 /**
  * Returns a class value, `output-the-content` by default.
  * Used for themes with a 'Mixed' Blog Display so we can tell which output is by default.
+ *
+ * @param string|null $new_class CSS class added to content container.
  */
 function jetpack_the_content_customizer_class( $new_class = null ) {
 	static $class;

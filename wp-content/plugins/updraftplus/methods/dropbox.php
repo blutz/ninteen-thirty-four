@@ -231,6 +231,13 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 				 */
 				$quota_info = $dropbox->quotaInfo();
 
+				// Access token expired try to refresh and then call quota info again
+				if ("401" == $quota_info['code']) {
+					$this->log('HTTP code 401 (unauthorized) code returned from Dropbox; attempting to refresh access token');
+					$dropbox->refreshAccessToken();
+					$quota_info = $dropbox->quotaInfo();
+				}
+
 				if ("200" != $quota_info['code']) {
 					$message = "account/info did not return HTTP 200; returned: ". $quota_info['code'];
 				} elseif (!isset($quota_info['body'])) {
@@ -299,6 +306,10 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 				if (empty($response['code']) || "200" != $response['code']) {
 					$this->log('Unexpected HTTP code returned from Dropbox: '.$response['code']." (".serialize($response).")");
 					if ($response['code'] >= 400) {
+						if (401 == $response['code']) {
+							$this->log('HTTP code 401 returned from Dropbox, refreshing access token');
+							$dropbox->refreshAccessToken();
+						}
 						$this->log(sprintf(__('error: failed to upload file to %s (see log file for more)', 'updraftplus'), $file), 'error');
 						$file_success = 0;
 					} else {
@@ -367,8 +378,8 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 	/**
 	 * This method gets a list of files from the remote stoage that match the string passed in and returns an array of backups
 	 *
-	 * @param  string $match a substring to require (tested via strpos() !== false)
-	 * @return array
+	 * @param  String $match a substring to require (tested via strpos() !== false)
+	 * @return Array
 	 */
 	public function listfiles($match = 'backup_') {
 
@@ -387,11 +398,11 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 
 		try {
 			/* Some users could have a large amount of backups, the max search is 1000 entries we should continue to search until there are no more entries to bring back. */
-			$start = 0;
+			$cursor = '';
 			$matches = array();
 
 			while (true) {
-				$search = $dropbox->search($match, $searchpath, 1000, $start);
+				$search = $dropbox->search($match, $searchpath, 1000, $cursor);
 				if (empty($search['code']) || 200 != $search['code']) return new WP_Error('response_error', sprintf(__('%s returned an unexpected HTTP response: %s', 'updraftplus'), 'Dropbox', $search['code']), $search['body']);
 
 				if (empty($search['body'])) return array();
@@ -404,8 +415,8 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 					break;
 				}
 
-				if (isset($search['body']->more) && true == $search['body']->more && isset($search['body']->start)) {
-					$start = $search['body']->start;
+				if (isset($search['body']->has_more) && true == $search['body']->has_more && isset($search['body']->cursor)) {
+					$cursor = $search['body']->cursor;
 				} else {
 					break;
 				}
@@ -531,7 +542,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		
 		foreach ($remote_files as $file_info) {
 			if ($file_info['name'] == $file) {
-				return $updraftplus->chunked_download($file, $this, $file_info['size'], true, null, 2*1048576);
+				return $updraftplus->chunked_download($file, $this, $file_info['size'], apply_filters('updraftplus_dropbox_downloads_manually_break_up', false), null, 2*1048576);
 			}
 		}
 
@@ -552,10 +563,10 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 	 */
 	public function chunked_download($file, $headers, $data, $fh) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 
-		$opts = $this->get_options();
+		$opts = $this->get_options();// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- filter use
 		$storage = $this->get_storage();
 
-		$try_the_other_one = false;
+		$try_the_other_one = false;// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- filter use
 
 		$ufile = apply_filters('updraftplus_dropbox_modpath', $file, $this);
 
@@ -566,26 +577,9 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		try {
 			$get = $storage->download($ufile, $fh, $options);
 		} catch (Exception $e) {
-			// TODO: Remove this October 2013 (we stored in the wrong place for a while...)
-			$try_the_other_one = true;
-			$possible_error = $e->getMessage();
 			$this->log($e);
+			$this->log($e->getMessage(), 'error');
 			$get = false;
-		}
-
-		// TODO: Remove this October 2013 (we stored files in the wrong place for a while...)
-		if ($try_the_other_one) {
-			$dropbox_folder = trailingslashit($opts['folder']);
-			try {
-				$get = $storage->download($dropbox_folder.'/'.$file, $fh, $options);
-				if (isset($get['response']['body'])) {
-					$this->log("downloaded ".round(strlen($get['response']['body'])/1024, 1).' KB');
-				}
-			} catch (Exception $e) {
-				$this->log($possible_error, 'error');
-				$this->log($e->getMessage(), 'error');
-				$get = false;
-			}
 		}
 		
 		return $get;
@@ -631,9 +625,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		ob_start();
 		$classes = $this->get_css_classes();
 
-		$defmsg = '<tr class="'.$classes.'"><td></td><td><strong>'.__('Need to use sub-folders?', 'updraftplus').'</strong> '.__('Backups are saved in', 'updraftplus').' apps/UpdraftPlus. '.__('If you backup several sites into the same Dropbox and want to organize with sub-folders, then ', 'updraftplus').'<a href="https://updraftplus.com/shop/" target="_blank">'.__("there's an add-on for that.", 'updraftplus').'</a></td></tr>';
-
-		$defmsg = '<tr class="'.$classes.'"><td></td><td><strong>'.__('Need to use sub-folders?', 'updraftplus').'</strong> '.__('Backups are saved in', 'updraftplus').' apps/UpdraftPlus. '.__('If you backup several sites into the same Dropbox and want to organize with sub-folders, then ', 'updraftplus').'<a href="'.apply_filters("updraftplus_com_link", "https://updraftplus.com/shop/").'" target="_blank">'.__("there's an add-on for that.", 'updraftplus').'</a></td></tr>';
+		$defmsg = '<tr class="'.$classes.'"><td></td><td><strong>'.__('Need to use sub-folders?', 'updraftplus').'</strong> '.sprintf(__('Backups are saved in %s.', 'updraftplus'), 'apps/UpdraftPlus').' '.sprintf(__('If you backup several sites into the same Dropbox and want to organize with sub-folders, then %scheck out Premium%s', 'updraftplus'), '<a href="'.apply_filters("updraftplus_com_link", "https://updraftplus.com/shop/").'" target="_blank">', '</a>').'</td></tr>';
 				
 		$extra_config = apply_filters('updraftplus_dropbox_extra_config_template', $defmsg, $this);
 		echo $extra_config;
@@ -690,7 +682,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 	 * Modifies handerbar template options
 	 *
 	 * @param array $opts
-	 * @return array - Modified handerbar template options
+	 * @return Array - Modified handerbar template options
 	 */
 	public function transform_options_for_template($opts) {
 		if (!empty($opts['tk_access_token'])) {
@@ -713,7 +705,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 	 * Gives settings keys which values should not passed to handlebarsjs context.
 	 * The settings stored in UD in the database sometimes also include internal information that it would be best not to send to the front-end (so that it can't be stolen by a man-in-the-middle attacker)
 	 *
-	 * @return array - Settings array keys which should be filtered
+	 * @return Array - Settings array keys which should be filtered
 	 */
 	public function filter_frontend_settings_keys() {
 		return array(
@@ -767,7 +759,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 	}
 
 	/**
-	 * This function will complete the oAuth flow, if admin_notice is true then add the action to display the authed admin notice, otherwise echo this notice to page.
+	 * This function will complete the oAuth flow, if return_instead_of_echo is true then add the action to display the authed admin notice, otherwise echo this notice to page.
 	 *
 	 * @param string  $raw_state              - the state
 	 * @param string  $raw_code               - the oauth code
@@ -789,6 +781,8 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 			if (isset($raw_code)) {
 				// set code so it can be accessed in the next authentication step
 				$opts['code'] = stripslashes($raw_code);
+				// remove our flag so we know this authentication is complete
+				if (isset($opts['auth_in_progress'])) unset($opts['auth_in_progress']);
 				$this->set_options($opts, true);
 				$auth_result = $this->auth_token($return_instead_of_echo);
 				if ($return_instead_of_echo) return $auth_result;
@@ -810,6 +804,8 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 			$opts['tk_access_token'] = '';
 			unset($opts['tk_request_token']);
 			$opts['ownername'] = '';
+			// Set a flag so we know this authentication is in progress
+			$opts['auth_in_progress'] = true;
 			$this->set_options($opts, true);
 
 			$this->set_instance_id($instance_id);
@@ -857,7 +853,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		$this->log(__('Success:', 'updraftplus').' '.sprintf(__('you have authenticated your %s account', 'updraftplus'), 'Dropbox'));
 
 		if (empty($account_info['code']) || "200" != $account_info['code']) {
-			$message .= " (".__('though part of the returned information was not as expected - your mileage may vary', 'updraftplus').") ". $account_info['code'];
+			$message .= " (".__('though part of the returned information was not as expected - whether this indicates a real problem cannot be determined', 'updraftplus').") ". $account_info['code'];
 			if (!empty($accountinfo_err)) $message .= "<br>".htmlspecialchars($accountinfo_err);
 		} else {
 			$body = $account_info['body'];
@@ -944,7 +940,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 	/**
 	 * This basically reproduces the relevant bits of bootstrap.php from the SDK
 	 *
-	 * @param  boolean $deauthenticate indicates if we should bootstrap for a deauth or auth request
+	 * @param  Boolean $deauthenticate indicates if we should bootstrap for a deauth or auth request
 	 * @return object
 	 */
 	public function bootstrap($deauthenticate = false) {
@@ -970,7 +966,7 @@ class UpdraftPlus_BackupModule_dropbox extends UpdraftPlus_BackupModule {
 		$key = empty($opts['secret']) ? '' : $opts['secret'];
 		$sec = empty($opts['appkey']) ? '' : $opts['appkey'];
 		
-		$oauth2_id = base64_decode('dzQxM3o0cWhqejY1Nm5l');
+		$oauth2_id = defined('UPDRAFTPLUS_DROPBOX_CLIENT_ID') ? UPDRAFTPLUS_DROPBOX_CLIENT_ID : base64_decode('dzQxM3o0cWhqejY1Nm5l');
 
 		// Set the callback URL
 		$callbackhome = UpdraftPlus_Options::admin_page_url().'?page=updraftplus&action=updraftmethod-dropbox-auth';

@@ -1,4 +1,9 @@
-<?php
+<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+/**
+ * Endpoint used to fetch information to connect to a Publicize service.
+ *
+ * @package automattic/jetpack
+ */
 
 /**
  * Publicize: List Publicize Services
@@ -23,6 +28,9 @@ class WPCOM_REST_API_V2_Endpoint_List_Publicize_Services extends WP_REST_Control
 	 */
 	public $wpcom_is_wpcom_only_endpoint = true;
 
+	/**
+	 * Constructor.
+	 */
 	public function __construct() {
 		$this->namespace = 'wpcom/v2';
 		$this->rest_base = 'publicize/services';
@@ -49,6 +57,8 @@ class WPCOM_REST_API_V2_Endpoint_List_Publicize_Services extends WP_REST_Control
 	}
 
 	/**
+	 * Schema for the publicize services endpoint.
+	 *
 	 * @return array
 	 */
 	public function get_item_schema() {
@@ -58,15 +68,15 @@ class WPCOM_REST_API_V2_Endpoint_List_Publicize_Services extends WP_REST_Control
 			'type'       => 'object',
 			'properties' => array(
 				'name'  => array(
-					'description' => __( 'Alphanumeric identifier for the Publicize Service', 'jetpack' ),
+					'description' => __( 'Alphanumeric identifier for the Jetpack Social service', 'jetpack' ),
 					'type'        => 'string',
 				),
 				'label' => array(
-					'description' => __( 'Human readable label for the Publicize Service', 'jetpack' ),
+					'description' => __( 'Human readable label for the Jetpack Social service', 'jetpack' ),
 					'type'        => 'string',
 				),
 				'url'   => array(
-					'description' => __( 'The URL used to connect to the Publicize Service', 'jetpack' ),
+					'description' => __( 'The URL used to connect to the Jetpack Social service', 'jetpack' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 				),
@@ -81,22 +91,21 @@ class WPCOM_REST_API_V2_Endpoint_List_Publicize_Services extends WP_REST_Control
 	 *
 	 * @see Publicize::get_available_service_data()
 	 *
-	 * @param WP_REST_Request $request
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
 	 * @return WP_REST_Response suitable for 1-page collection
 	 */
 	public function get_items( $request ) {
 		global $publicize;
-		/**
-		 * We need this because Publicize::get_available_service_data() uses `Jetpack_Keyring_Service_Helper`
-		 * and `Jetpack_Keyring_Service_Helper` relies on `menu_page_url()`.
-		 *
-		 * We also need add_submenu_page(), as the URLs for connecting each service
-		 * rely on the `sharing` menu subpage being present.
-		 */
-		include_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-		// The `sharing` submenu page must exist for service connect URLs to be correct.
-		add_submenu_page( 'options-general.php', '', '', 'manage_options', 'sharing', '__return_empty_string' );
+		if ( ! defined( 'IS_WPCOM' ) || ! IS_WPCOM ) {
+			/**
+			 * We need this because Publicize::get_available_service_data() uses `Jetpack_Keyring_Service_Helper`
+			 * and `Jetpack_Keyring_Service_Helper` needs a `sharing` page to be registered.
+			 */
+			jetpack_require_lib( 'class.jetpack-keyring-service-helper' );
+			Jetpack_Keyring_Service_Helper::register_sharing_page();
+		}
 
 		$services_data = $publicize->get_available_service_data();
 
@@ -115,8 +124,9 @@ class WPCOM_REST_API_V2_Endpoint_List_Publicize_Services extends WP_REST_Control
 	/**
 	 * Filters out data based on ?_fields= request parameter
 	 *
-	 * @param array           $service
-	 * @param WP_REST_Request $request
+	 * @param array           $service UI service connection data for a specific Publicize service.
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
 	 * @return array filtered $service
 	 */
 	public function prepare_item_for_response( $service, $request ) {
@@ -147,7 +157,7 @@ class WPCOM_REST_API_V2_Endpoint_List_Publicize_Services extends WP_REST_Control
 		if ( ! $publicize ) {
 			return new WP_Error(
 				'publicize_not_available',
-				__( 'Sorry, Publicize is not available on your site right now.', 'jetpack' ),
+				__( 'Sorry, Jetpack Social is not available on your site right now.', 'jetpack' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -158,10 +168,9 @@ class WPCOM_REST_API_V2_Endpoint_List_Publicize_Services extends WP_REST_Control
 
 		return new WP_Error(
 			'invalid_user_permission_publicize',
-			__( 'Sorry, you are not allowed to access Publicize data on this site.', 'jetpack' ),
+			__( 'Sorry, you are not allowed to access Jetpack Social data on this site.', 'jetpack' ),
 			array( 'status' => rest_authorization_required_code() )
 		);
 	}
 }
-
 wpcom_rest_api_v2_load_plugin( 'WPCOM_REST_API_V2_Endpoint_List_Publicize_Services' );

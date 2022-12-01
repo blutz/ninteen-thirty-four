@@ -31,7 +31,7 @@ div.sharedaddy h3.sd-title:before {
 	display: block;
 	width: 100%;
 	min-width: 30px;
-	border-top: 1px solid #ddd;
+	border-top: 1px solid #dcdcde;
 	margin-bottom: 1em;
 }
 
@@ -72,6 +72,16 @@ body.highlander-dark h3.sd-title:before {
 
 .sd-gplus .sd-content {
 	font-size: 12px;
+}
+
+/* Sharing email errors */
+.sd-content .share-email-error .share-email-error-title {
+	margin: 0.5em 0;
+}
+.sd-content .share-email-error .share-email-error-text {
+	font-family: "Open Sans", sans-serif;
+	font-size: 12px;
+	margin: 0.5em 0;
 }
 
 
@@ -145,7 +155,7 @@ body.highlander-dark h3.sd-title:before {
 .sd-social-official .sd-content>ul>li .digg_button>a:hover,
 .sd-social-official .sd-content>ul>li .digg_button>a:active {
 	color: #555;
-	background: #fafafa;
+	background: #f6f7f7;
 	border: 1px solid #999999;
 }
 
@@ -562,8 +572,7 @@ body .sd-social-icon .sd-content li.share-custom a span {
 
 
 .sd-social-icon .sd-content ul li[class*='share-'] a.sd-button:before {
-	top: 1px;
-	top: 0px\9; /* IE8 and below */
+	top: 0;
 }
 
 .sd-social-icon .sd-content ul li[class*='share-'] a.sd-button.share-custom {
@@ -621,7 +630,7 @@ body .sd-social-icon .sd-content li.share-custom a span {
 }
 
 .sd-social-icon .sd-content ul li[class*='share-'].share-press-this a.sd-button {
-	background: #1e8cbe;
+	background: #4f94d4;
 	color: #fff !important;
 }
 
@@ -665,7 +674,7 @@ body .sd-social-icon .sd-content li.share-custom a span {
 .sharing-screen-reader-text:hover,
 .sharing-screen-reader-text:active,
 .sharing-screen-reader-text:focus {
-	background-color: #f1f1f1;
+	background-color: #f0f0f1;
 	border-radius: 3px;
 	box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
 	clip: auto !important;
@@ -684,77 +693,10 @@ body .sd-social-icon .sd-content li.share-custom a span {
 }
 
 
-/**
- * Sharing Email Dialog
- */
-
-#sharing_email {
-	width: 342px;
-	position: absolute;
-	z-index: 1001;
-	border: 1px solid #ccc;
-	padding: 15px;
-	background: #fff;
-	box-shadow: 0px 5px 20px rgba(0,0,0,.2);
-	text-align: left;
-}
-
-div.sharedaddy.sharedaddy-dark #sharing_email {
-	border-color: #fff;
-}
-
-#sharing_email .errors {
-	color: #fff;
-	background-color: #771a09;
-	font-size: 12px;
-	padding: 5px 8px;
-	line-height: 1;
-	margin: 10px 0 0 0;
-}
-
-#sharing_email label {
-	font-size: 12px;
-	color: #333;
-	font-weight: bold;
-	display: block;
-	padding: 0 0 4px 0;
-	text-align: left;
-	text-shadow: none;
-}
-
-#sharing_email form {
-	margin: 0;
-}
-
-#sharing_email input[type="text"], #sharing_email input[type="email"] {
-	width: 100%;
-	box-sizing: border-box;
-	-moz-box-sizing:border-box;
-	-webkit-box-sizing:border-box;
-	border: 1px solid #ccc;
-	margin-bottom: 1em;
-	background: #fff;
-	font-size: 12px;
-	color: #333;
-	max-width: none;
-	padding: 1px 3px;
-}
 #jetpack-source_f_name {
 	display: none!important;
 	position: absolute !important;
 	left: -9000px;
-}
-
-#sharing_email .sharing_cancel {
-	padding: 0 0 0 1em;
-	font-size: 12px;
-	text-shadow: none;
-}
-
-#sharing_email .recaptcha {
-	width: 312px;
-	height: 123px;
-	margin: 0 0 1em 0;
 }
 
 .sd-content .share-customize-link {
@@ -765,4 +707,10 @@ div.sharedaddy.sharedaddy-dark #sharing_email {
 .sd-content .share-customize-link a {
 	font-size: 11px;
 	font-family: "Open Sans", sans-serif;
+}
+
+@media print {
+	.sharedaddy.sd-sharing-enabled {
+		display: none;
+	}
 }

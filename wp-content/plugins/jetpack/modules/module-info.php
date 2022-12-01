@@ -8,7 +8,7 @@
  * - The second creates a information block.
  * It is hooked into `jetpack_module_more_info_ . $module`
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 use Automattic\Jetpack\Redirect;
@@ -172,7 +172,7 @@ function latex_more_info() {
 		'LaTeX is a powerful markup language for writing complex mathematical equations and formulas.
 		Jetpack combines the power of LaTeX and the simplicity of WordPress to give you the ultimate
 		in math blogging platforms. Use $latex your latex code here$ or [latex]your latex code here[/latex]
-		to include  in your posts and comments. Enjoy all sorts of options and embrace your inner nerd.',
+		to include in your posts and comments. Enjoy all sorts of options and embrace your inner nerd.',
 		'jetpack'
 	);
 }
@@ -191,7 +191,7 @@ add_filter( 'jetpack_learn_more_button_sharedaddy', 'sharedaddy_load_more_link' 
  */
 function sharedaddy_more_info() {
 	esc_html_e(
-		'Visitors can share your posts with Twitter, Facebook, Reddit, Digg, LinkedIn, Google+, print,
+		'Visitors can share your posts with Twitter, Facebook, Reddit, Digg, LinkedIn, print,
 		and email. You can configure services to appear as icons, text, or both and some services like Twitter
 		have additional options.',
 		'jetpack'
@@ -655,7 +655,7 @@ add_action( 'jetpack_learn_more_button_verification-tools', 'jetpack_verificatio
  */
 function jetpack_verification_tools_more_info() {
 	esc_html_e(
-		'Verify your site ownership with services like Google, Bing, Pinterest, and Yandex. This gives you access to
+		'Verify your site ownership with services like Google, Bing, Pinterest, Yandex, and Facebook. This gives you access to
 		advanced features on these services and get verification badges.',
 		'jetpack'
 	);
@@ -722,6 +722,25 @@ function jetpack_custom_jetpack_manage() {
 	);
 }
 add_action( 'jetpack_module_more_info_manage', 'jetpack_custom_jetpack_manage' );
+
+/**
+ * Post list info.
+ */
+function jetpack_post_list_link() {
+	echo esc_url( Redirect::get_url( 'jetpack-support-post-list' ) );
+}
+add_action( 'jetpack_learn_more_button_post-list', 'jetpack_post_list_link' );
+
+/**
+ * Post List description.
+ */
+function jetpack_post_list_info() {
+	esc_html_e(
+		'Display extra information alongside each post in your dashboard’s Posts screen.',
+		'jetpack'
+	);
+}
+add_action( 'jetpack_module_more_info_post-list', 'jetpack_post_list_info' );
 
 /**
  * Sitemaps support link.
@@ -873,3 +892,35 @@ function jetpack_more_info_copy_post() {
 	esc_html_e( 'Create a new post based on an existing post.', 'jetpack' );
 }
 add_action( 'jetpack_module_more_info_copy-post', 'jetpack_more_info_copy_post' );
+
+/**
+ * Google Fonts support link.
+ */
+function jetpack_google_fonts_more_link() {
+	echo esc_url( Redirect::get_url( 'jetpack-support-google-fonts' ) );
+}
+add_action( 'jetpack_learn_more_button_google-fonts', 'jetpack_google_fonts_more_link' );
+
+/**
+ * Google Fonts description.
+ */
+function jetpack_more_info_google_fonts() {
+	esc_html_e( 'A selection of Google fonts for block enabled themes.  This feature is still being developed.', 'jetpack' );
+}
+add_action( 'jetpack_module_more_info_google-fonts', 'jetpack_more_info_google_fonts' );
+
+/**
+ * WAF support link.
+ */
+function jetpack_waf_more_link() {
+	echo esc_url( Redirect::get_url( 'jetpack-support-waf' ) );
+}
+add_action( 'jetpack_learn_more_button_waf', 'jetpack_waf_more_link' );
+
+/**
+ * WAF description.
+ */
+function jetpack_more_info_waf() {
+	esc_html_e( 'The Jetpack Firewall is a web application firewall designed to protect your WordPress site from malicious requests.', 'jetpack' );
+}
+add_action( 'jetpack_module_more_info_waf', 'jetpack_more_info_waf' );

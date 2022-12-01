@@ -12,8 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
 
-class SB_Instagram_Token_Refresher
-{
+class SB_Instagram_Token_Refresher {
+
 
 	/**
 	 * @var array
@@ -25,9 +25,9 @@ class SB_Instagram_Token_Refresher
 	 */
 	private $report;
 
-	public function __construct(  $connected_account ) {
+	public function __construct( $connected_account ) {
 		$this->connected_account = $connected_account;
-		$this->report = array();
+		$this->report            = array();
 	}
 
 	public function get_report() {
@@ -46,7 +46,7 @@ class SB_Instagram_Token_Refresher
 	 */
 	public static function refresh_time_has_passed_threshold( $connected_account ) {
 		$expiration_timestamp = isset( $connected_account['expires_timestamp'] ) ? $connected_account['expires_timestamp'] : time();
-		$current_time = sbi_get_current_timestamp();
+		$current_time         = sbi_get_current_timestamp();
 
 		$refresh_threshold = $expiration_timestamp - SBI_REFRESH_THRESHOLD_OFFSET;
 
@@ -67,7 +67,7 @@ class SB_Instagram_Token_Refresher
 	 * @return bool
 	 */
 	public static function minimum_time_interval_since_last_attempt_has_passed( $connected_account ) {
-		$last_attempt = isset( $connected_account['last_refresh_attempt'] ) ? (int)$connected_account['last_refresh_attempt'] : 0;
+		$last_attempt = isset( $connected_account['last_refresh_attempt'] ) ? (int) $connected_account['last_refresh_attempt'] : 0;
 		$current_time = sbi_get_current_timestamp();
 		if ( $current_time > $last_attempt + SBI_MINIMUM_INTERVAL ) {
 			return true;
@@ -83,17 +83,16 @@ class SB_Instagram_Token_Refresher
 	 * @return bool
 	 */
 	public function should_attempt_refresh() {
-		if ( SB_Instagram_Token_Refresher::refresh_time_has_passed_threshold( $this->connected_account ) ) {
+		if ( self::refresh_time_has_passed_threshold( $this->connected_account ) ) {
 
-			if ( SB_Instagram_Token_Refresher::minimum_time_interval_since_last_attempt_has_passed( $this->connected_account ) ) {
+			if ( self::minimum_time_interval_since_last_attempt_has_passed( $this->connected_account ) ) {
 				$this->report['should_do_update'] = true;
-				$this->report['reason'] = '';
+				$this->report['reason']           = '';
 				return true;
 			} else {
 				$this->report['should_do_update'] = false;
-				$this->report['reason'] = 'has not been enough time since last attempt';
+				$this->report['reason']           = 'has not been enough time since last attempt';
 			}
-
 		} else {
 			$this->report['should_do_update'] = false;
 			$this->report['reason']           = 'token expiration date not close enough';
@@ -118,19 +117,19 @@ class SB_Instagram_Token_Refresher
 		if ( ! $connection->is_wp_error() && ! $connection->is_instagram_error() ) {
 			$access_token_data = $connection->get_data();
 
-			if ( ! empty( $access_token_data ) ) {
+			if ( ! empty( $access_token_data ) && ! empty( $access_token_data['expires_in'] ) ) {
 				$this->report['did_update'] = true;
 				$this->add_renewal_data( $access_token_data );
 
 				return true;
 			} else {
 				$this->report['did_update'] = false;
-				$this->report['reason'] = 'successful connection but no data returned';
+				$this->report['reason']     = 'successful connection but no data returned';
 			}
 		} else {
 			$this->report['did_update'] = false;
-			$this->report['reason'] = 'could not connect to Instagram';
-			$this->report['error_log'] = $connection;
+			$this->report['reason']     = 'could not connect to Instagram';
+			$this->report['error_log']  = $connection;
 		}
 
 		return false;
@@ -141,14 +140,7 @@ class SB_Instagram_Token_Refresher
 	 * the access token for a connected account and saves it in the database.
 	 */
 	public function update_last_attempt_timestamp() {
-		$options                        = get_option( 'sb_instagram_settings', array() );
-		$connected_accounts = isset( $options['connected_accounts'] ) ? $options['connected_accounts'] : array();
-
-		$connected_accounts[ $this->connected_account['user_id'] ]['last_refresh_attempt'] = time();
-
-		$options['connected_accounts'] = $connected_accounts;
-
-		update_option( 'sb_instagram_settings', $options );
+		sbi_update_connected_account( $this->connected_account['user_id'], array( 'last_updated' => time() ) );
 	}
 
 	/**
@@ -176,18 +168,14 @@ class SB_Instagram_Token_Refresher
 	 * @param $token_data
 	 */
 	private function add_renewal_data( $token_data ) {
-		$options                        = get_option( 'sb_instagram_settings', array() );
-		$connected_accounts = isset( $options['connected_accounts'] ) ? $options['connected_accounts'] : array();
-
-		$expires_in = $token_data['expires_in'];
+		$expires_in        = $token_data['expires_in'];
 		$expires_timestamp = sbi_get_current_timestamp() + $expires_in;
 
-		$connected_accounts[ $this->connected_account['user_id'] ]['expires_timestamp'] = $expires_timestamp;
-		$connected_accounts[ $this->connected_account['user_id'] ]['access_token'] = $token_data['access_token'];
-
-		$options['connected_accounts'] = $connected_accounts;
-
-		update_option( 'sb_instagram_settings', $options );
+		$to_update = array(
+			'access_token' => $token_data['access_token'],
+			'expires'      => date( 'Y-m-d H:i:s', $expires_timestamp ),
+		);
+		sbi_update_connected_account( $this->connected_account['user_id'], $to_update );
 	}
 
 }

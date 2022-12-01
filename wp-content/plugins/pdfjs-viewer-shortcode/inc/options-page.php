@@ -1,4 +1,68 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
+
+/**
+ * Create Array of Settings
+ * In Development
+ */
+$plugin_settings = array(
+	'dowload' => array(
+		'name' => 'Show Download Button',
+		'slug' => 'download_button',
+	),
+	'print' => array(
+		'name' => 'Show Print Button',
+		'slug' => 'print_button',
+	),
+	'search' => array(
+		'name' => 'Show Search Button',
+		'slug' => 'search_button',
+	),
+
+	'fullscreen' => array(
+		'name' => 'Show Fullscreen Link',
+		'slug' => 'fullscreen_link',
+	),
+	'fullscreen_text' => array(
+		'name' => 'Fullscreen Link Text',
+		'slug' => 'fullscreen_link_text',
+	),
+	'fullscreen_tab' => array(
+		'name' => 'Fullscreen Links in New Tabs',
+		'slug' => 'fullscreen_link_target',
+	),
+
+	'height' => array(
+		'name' => 'Embed Height',
+		'slug' => 'embed_height',
+	),
+	'width' => array(
+		'name' => 'Embed Width',
+		'slug' => 'embed_width',
+	),
+
+	'viewer' => array(
+		'name' => 'SViewer Scale',
+		'slug' => 'viewer_scale',
+	),
+	'sidebar' => array(
+		'name' => 'Page Mode (aka Sidebar)',
+		'slug' => 'viewer_pagemode',
+	),
+);
+
+// Future Things
+// $keys = array_keys($plugin_settings);
+// for($i = 0; $i < count($plugin_settings); $i++) {
+//     echo $keys[$i] . '  ';
+//     foreach($plugin_settings[$keys[$i]] as $key => $value) {
+//         echo $key . " : " . $value ;
+//     }
+//     echo  ' | ';
+// }
+// var_dump($plugin_settings);
+
+
 /**
  * Settings Page in WP Admin
  */
@@ -13,6 +77,7 @@ function pdfjs_register_settings() {
 	register_setting( 'pdfjs_options_group', 'pdfjs_embed_width', 'pdfjs_callback' );
 	register_setting( 'pdfjs_options_group', 'pdfjs_viewer_scale', 'pdfjs_callback' );
 	register_setting( 'pdfjs_options_group', 'pdfjs_viewer_pagemode', 'pdfjs_callback' );
+	register_setting( 'pdfjs_options_group', 'pdfjs_custom_page', 'pdfjs_callback' );
 }
 add_action( 'admin_init', 'pdfjs_register_settings' );
 
@@ -22,7 +87,7 @@ function pdfjs_register_options_page() {
 }
 add_action( 'admin_menu', 'pdfjs_register_options_page' );
 
-// create the settings page
+// create the settings page.
 function pdfjs_options_page() {
 	?>
 	<div class="wrap">
@@ -42,13 +107,14 @@ function pdfjs_options_page() {
 			$embed_width          = get_option( 'pdfjs_embed_width', 0 );
 			$viewer_scale         = get_option( 'pdfjs_viewer_scale', 'auto' );
 			$viewer_pagemode      = get_option( 'pdfjs_viewer_pagemode', 'none' );
+			$pdfjs_custom_page    = get_option( 'pdfjs_custom_page', '' );
 			?>
 
+			<h2 class="title"><?php esc_html_e( 'Defaults', 'pdfjs-viewer' ); ?></h2>
+			<p>
+				<?php esc_html_e( 'Most defaults only affect new posts and existing posts when you edit them. Not all options work with the shortcode.', 'pdfjs-viewer' ); ?>
+			</p>
 			<table class="form-table" role="presentation">
-				<h2 class="title"><?php esc_html_e( 'Defaults', 'pdfjs-viewer' ); ?></h2>
-				<p>
-					<?php esc_html_e( 'Most defaults only affect new posts and existing posts when you edit them. Not all options work with the shortcode.', 'pdfjs-viewer' ); ?>
-				</p>
 				<tr>
 					<th scope="row"><label for="pdfjs_download_button"><?php esc_html_e( 'Show Download Button', 'pdfjs-viewer' ); ?></label></th>
 					<td><input type="checkbox" id="pdfjs_download_button" name="pdfjs_download_button" <?php echo $download_button ? 'checked' : ''; ?> /></td>
@@ -67,7 +133,7 @@ function pdfjs_options_page() {
 				</tr>
 				<tr>
 					<th scope="row"><label for="pdfjs_fullscreen_link_text"><?php esc_html_e( 'Fullscreen Link Text', 'pdfjs-viewer' ); ?></label></th>
-					<td><input type="text" class="regular-text" id="pdfjs_fullscreen_link_text" name="pdfjs_fullscreen_link_text" value="<?php echo $fullscreen_link_text ? $fullscreen_link_text : 'View Fullscreen'; ?>" /></td>
+					<td><input type="text" class="regular-text" id="pdfjs_fullscreen_link_text" name="pdfjs_fullscreen_link_text" value="<?php echo esc_html( $fullscreen_link_text ? $fullscreen_link_text : 'View Fullscreen' ); ?>" /></td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="pdfjs_fullscreen_link_target"><?php esc_html_e( 'Fullscreen Links in New Tabs', 'pdfjs-viewer' ); ?></label></th>
@@ -75,12 +141,12 @@ function pdfjs_options_page() {
 				</tr>
 				<tr>
 					<th scope="row"><label for="pdfjs_embed_height"><?php esc_html_e( 'Embed Height', 'pdfjs-viewer' ); ?></label></th>
-					<td><input type="number" class="regular-text" id="pdfjs_embed_height" name="pdfjs_embed_height" value="<?php echo $embed_height ? $embed_height : 800; ?>" /></td>
+					<td><input type="number" class="regular-text" id="pdfjs_embed_height" name="pdfjs_embed_height" value="<?php echo esc_html( $embed_height ? $embed_height : 800 ); ?>" /></td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="pdfjs_embed_width"><?php esc_html_e( 'Embed Width', 'pdfjs-viewer' ); ?></label></th>
 					<td>
-						<input type="number" class="regular-text" id="pdfjs_embed_width" name="pdfjs_embed_width" value="<?php echo $embed_width ? $embed_width : 0; ?>" />
+						<input type="number" class="regular-text" id="pdfjs_embed_width" name="pdfjs_embed_width" value="<?php echo esc_html( $embed_width ? $embed_width : 0 ); ?>" />
 						<p><?php esc_html_e( 'Note: 0 = 100%', 'pdfjs-viewer' ); ?></p>
 					</td>
 				</tr>
@@ -114,13 +180,17 @@ function pdfjs_options_page() {
 						</select>
 					</td>
 				</tr>
+				<tr>
+					<th scope="row"><label for="pdfjs_custom_page"><?php esc_html_e( 'Alternative PDF Loading', 'pdfjs-viewer' ); ?></label></th>
+					<td><input type="checkbox" id="pdfjs_custom_page" name="pdfjs_custom_page" <?php echo $pdfjs_custom_page ? 'checked' : ''; ?> /> <span style="color:rebeccapurple;"> - Beta. Test with caution and <a href="https://wordpress.org/support/plugin/pdfjs-viewer-shortcode/" target="_blank">leave feedback</a> on how it works.</span></td>
+				</tr>
 			</table>
 			<?php submit_button(); ?>
 			<p>
 				<?php esc_html_e( 'When editing existing content, it may cause existing blocks to have "unexpected or invalid content" upon editing. Don\'t worry, just click the three little dots, choose "Attempt Block Recovery", and everything should be working again. This "unexpected or invalid content" will not affect live content, just content in the editor.', 'pdfjs-viewer' ); ?>
 			</p>
 			<p>
-				<sup>1</sup> <?php esc_html_e( 'These options are not customizable per page/post at this time. Only globally.'); ?>
+				<sup>1</sup> <?php esc_html_e( 'These options are not customizable per page/post at this time. Only globally.' ); ?>
 			</p>
 		</form>
 	</div>

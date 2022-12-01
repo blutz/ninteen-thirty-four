@@ -4,7 +4,7 @@
  *
  * @since 9.0.0
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 namespace Automattic\Jetpack\Extensions\SimplePayments;
@@ -50,7 +50,12 @@ function render_block( $attr, $content ) {
 		return $content;
 	}
 
-	$simple_payments = Jetpack_Simple_Payments::getInstance();
+	$simple_payments = Jetpack_Simple_Payments::get_instance();
+
+	if ( ! $simple_payments->is_valid( $attr ) ) {
+		return '';
+	}
+
 	$simple_payments->enqueue_frontend_assets();
 
 	// For AMP requests, make sure the purchase link redirects to the non-AMP post URL.

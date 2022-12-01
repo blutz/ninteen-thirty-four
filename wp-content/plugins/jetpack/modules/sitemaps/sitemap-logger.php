@@ -1,8 +1,8 @@
-<?php
+<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
 /**
  * A message logger for the Jetpack Sitemap module.
  *
- * @package Jetpack
+ * @package automattic/jetpack
  * @since 4.8.0
  */
 
@@ -46,7 +46,7 @@ class Jetpack_Sitemap_Logger {
 	public function __construct( $message = null ) {
 		$this->key       = wp_generate_password( 5, false );
 		$this->starttime = microtime( true );
-		if ( ! is_null( $message ) ) {
+		if ( $message !== null ) {
 			$this->report( $message );
 		}
 	}

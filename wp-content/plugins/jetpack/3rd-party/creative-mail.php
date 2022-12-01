@@ -5,10 +5,12 @@
  *
  * @since 8.9.0
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 namespace Automattic\Jetpack\Creative_Mail;
+
+use Automattic\Jetpack\Plugins_Installer;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -67,8 +69,7 @@ function try_install() {
  * @return bool result of installation
  */
 function install_and_activate() {
-	jetpack_require_lib( 'plugins' );
-	$result = \Jetpack_Plugins::install_and_activate_plugin( PLUGIN_SLUG );
+	$result = Plugins_Installer::install_and_activate_plugin( PLUGIN_SLUG );
 
 	if ( is_wp_error( $result ) ) {
 		return false;
@@ -86,7 +87,7 @@ function activate() {
 	$result = activate_plugin( PLUGIN_FILE );
 
 	// Activate_plugin() returns null on success.
-	return is_null( $result );
+	return $result === null;
 }
 
 /**
