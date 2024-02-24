@@ -1,4 +1,4 @@
-button,
+.button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
@@ -20,7 +20,7 @@ input[type="submit"] {
     border-color: $color__border-button-focus;
   }
 }
-.wp-block-button__link, button, [type="submit"] {
+.wp-block-button__link, .button, [type="submit"] {
   cursor: pointer;
   background: $gradient__primary;
   border: none;
@@ -46,4 +46,8 @@ input[type="submit"] {
   font-size: 0.8rem;
   margin-bottom: 1px;
   margin-left: 7px;
+}
+
+.ghostkit-accordion-item .ghostkit-accordion-item-heading > button {
+  text-align: left;
 }

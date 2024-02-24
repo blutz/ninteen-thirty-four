@@ -530,7 +530,7 @@ table {
   color: #2774AE;
   font-weight: normal; }
 
-button,
+.button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
@@ -543,12 +543,12 @@ input[type="submit"] {
   font-size: 0.75rem;
   line-height: 1;
   padding: .6em 1em .4em; }
-  button:hover,
+  .button:hover,
   input[type="button"]:hover,
   input[type="reset"]:hover,
   input[type="submit"]:hover {
     border-color: #ccc #bbb #aaa; }
-  button:active, button:focus,
+  .button:active, .button:focus,
   input[type="button"]:active,
   input[type="button"]:focus,
   input[type="reset"]:active,
@@ -557,7 +557,7 @@ input[type="submit"] {
   input[type="submit"]:focus {
     border-color: #aaa #bbb #bbb; }
 
-.wp-block-button__link, button, [type="submit"] {
+.wp-block-button__link, .button, [type="submit"] {
   cursor: pointer;
   background: radial-gradient(ellipse at bottom -25% right -25%, #2774ae 0%, #07385a 100%);
   border: none;
@@ -568,9 +568,9 @@ input[type="submit"] {
   font-weight: bold;
   transition: box-shadow 0.2s;
   line-height: 1.5; }
-  .wp-block-button__link, .wp-block-button__link:visited, button, button:visited, [type="submit"], [type="submit"]:visited {
+  .wp-block-button__link, .wp-block-button__link:visited, .button, .button:visited, [type="submit"], [type="submit"]:visited {
     color: #fff; }
-  .wp-block-button__link:hover, button:hover, [type="submit"]:hover {
+  .wp-block-button__link:hover, .button:hover, [type="submit"]:hover {
     box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.2); }
 
 .button--secondary .wp-block-button__link {
@@ -580,6 +580,9 @@ input[type="submit"] {
   font-size: 0.8rem;
   margin-bottom: 1px;
   margin-left: 7px; }
+
+.ghostkit-accordion-item .ghostkit-accordion-item-heading > button {
+  text-align: left; }
 
 input[type="text"],
 input[type="email"],
