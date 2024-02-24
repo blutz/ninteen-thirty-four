@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /wp-content/uploads/
+  RewriteCond %{REQUEST_URI} ^/wp-content/uploads/[^/]+/
+  RewriteRule (.*) https://www.unicamp.org/$1 [R,QSA,L]
+</IfModule>
+

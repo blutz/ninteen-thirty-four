@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    "https://downloads.wordpress.org/plugin/advanced-backgrounds.1.12.1.zip",
+    "https://downloads.wordpress.org/plugin/font-awesome.4.4.0.zip",
+    "https://downloads.wordpress.org/plugin/ghostkit.3.2.2.zip",
+    "https://downloads.wordpress.org/plugin/modal-block.zip",
+    "https://downloads.wordpress.org/plugin/pdfjs-viewer-shortcode.2.1.8.zip",
+    "https://downloads.wordpress.org/plugin/redirection.5.4.2.zip",
+    "https://downloads.wordpress.org/plugin/simple-iframe.zip",
+    "https://downloads.wordpress.org/plugin/instagram-feed.6.2.8.zip"
+  ],
+  "themes": ["./ninteen-thirty-four"]
+}

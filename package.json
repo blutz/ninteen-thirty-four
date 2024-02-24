@@ -1,0 +1,30 @@
+{
+  "name": "ninteen-thirty-four",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "wp-env start",
+    "start-fresh": "wp-env start --update",
+    "stop": "wp-env stop",
+    "cli": "wp-env run cli wp",
+    "setup:download": "./state/_download.sh",
+    "setup:import": "./state/_import.sh",
+    "setup:config": "./state/_config.sh",
+    "setup": "npm run setup:download && npm run setup:import && npm run setup:config"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blutz/ninteen-thirty-four.git"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/blutz/ninteen-thirty-four/issues"
+  },
+  "homepage": "https://github.com/blutz/ninteen-thirty-four#readme",
+  "devDependencies": {
+    "@wordpress/env": "^9.4.0"
+  }
+}
