@@ -1,4 +1,5 @@
 .button,
+.menu-toggle,
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
@@ -20,7 +21,10 @@ input[type="submit"] {
     border-color: $color__border-button-focus;
   }
 }
-.wp-block-button__link, .button, [type="submit"] {
+.menu-toggle,
+.wp-block-button__link,
+.button,
+[type="submit"] {
   cursor: pointer;
   background: $gradient__primary;
   border: none;
