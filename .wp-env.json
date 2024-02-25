@@ -1,5 +1,6 @@
 {
   "plugins": [
+    "./hashtabs",
     "https://downloads.wordpress.org/plugin/advanced-backgrounds.1.12.1.zip",
     "https://downloads.wordpress.org/plugin/font-awesome.4.4.0.zip",
     "https://downloads.wordpress.org/plugin/ghostkit.3.2.2.zip",
