@@ -18,5 +18,8 @@
     "@wordpress/scripts": "^27.3.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.33.2"
+  },
+  "dependencies": {
+    "slugify": "^1.6.6"
   }
 }

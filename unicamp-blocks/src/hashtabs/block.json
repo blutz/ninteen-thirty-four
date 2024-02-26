@@ -21,14 +21,15 @@
       "type": "array",
       "source": "query",
       "selector": "ol li",
+      "default": [
+        {"title": "Tab 1", "slug": "tab1"},
+        {"title": "Tab 2", "slug": "tab2"},
+        {"title": "Tab 3", "slug": "tab3"}
+      ],
       "query": {
-        "slug": {
+        "title": {
           "type": "string",
-          "attribute": "data-tab-title"
-        },
-        "id": {
-          "type": "string",
-          "attribute": "data-tab-id"
+          "source": "html"
         }
       }
     }
