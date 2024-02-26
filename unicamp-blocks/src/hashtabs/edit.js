@@ -65,16 +65,18 @@ function TabControl({tab, slug, deleteTab, showDeleteButton, showReorderButtons,
       deleteTab()
     }
   }
-  const id = `unicamp-hashtab-${slug}`
-  return <div id={id}>
-    {tab.title}
-    <br />
-    <small>#{slug}</small>
-    {showDeleteButton && <Button icon='remove' isDestructive={true} variant='tertiary' size='small' onClick={handleDelete} label='Delete' showTooltip={true} disabled={isFirst && isLast} /> }
-    {showReorderButtons && <span>
-      <Button icon='arrow-up' variant='tertiary' size='small' label='Move up' showTooltip={true} onClick={handleMoveUp} disabled={isFirst} />
-      <Button icon='arrow-down' variant='tertiary' size='small' label='Move up' showTooltip={true} onClick={handleMoveDown} disabled={isLast} />
-    </span>}
+  return <div className='unicamp-blocks__hashtabs__tab-control'>
+    <div>
+      {tab.title}
+      <div className='unicamp-blocks__hashtabs__tab-control__slug'>#{slug}</div>
+    </div>
+    <div>
+      {showDeleteButton && <Button icon='no-alt' isDestructive={true} variant='tertiary' size='small' onClick={handleDelete} label='Delete' showTooltip={true} disabled={isFirst && isLast} /> }
+      {showReorderButtons && <span>
+        <Button icon='arrow-up' variant='tertiary' size='small' label='Move up' showTooltip={true} onClick={handleMoveUp} disabled={isFirst} />
+        <Button icon='arrow-down' variant='tertiary' size='small' label='Move up' showTooltip={true} onClick={handleMoveDown} disabled={isLast} />
+      </span>}
+    </div>
   </div>
 }
 
@@ -114,17 +116,15 @@ function Controls({tabs, slugs, handleNewTab, handleDeleteTab, setTabOrder}) {
             isFirst={i === 0}
             isLast={(i+1) === tabs.length}
           />))}
-        {inReorderMode ?
-          <div>
-            <Button variant='link' onClick={() => setInReorderMode(false)}>Done</Button>
-          </div>
+        <div className='unicamp-blocks__hashtabs__control-buttons'>{inReorderMode ?
+          <Button variant='link' onClick={() => setInReorderMode(false)}>Done</Button>
           :
-          <div>
-            <Button variant='link' onClick={handleNewTab}>Add tab</Button>
+          <>
+            <Button variant='link' onClick={handleNewTab}>+ Add tab</Button>
             &nbsp; • &nbsp;
             <Button variant='link' onClick={() => setInReorderMode(true)}>Reorder</Button>
-          </div>
-        }
+          </>
+        }</div>
       </PanelBody>
     </InspectorControls>
   )

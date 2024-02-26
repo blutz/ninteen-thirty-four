@@ -10,4 +10,28 @@
   border: 1px dotted #f00;
 }
 
+.unicamp-blocks__hashtabs__tab-control {
+  display: flex;
+  flex-direction: row;
+  margin-left: -15px;
+  margin-right: -16px;
+  padding: 8px 16px 4px 16px;
+  justify-content: space-between;
+  align-items: center;
+}
+.unicamp-blocks__hashtabs__tab-control:nth-child(2n) {
+  background-color: #f6f7f7;
+}
+
+.unicamp-blocks__hashtabs__control-buttons {
+  margin-top: 5px;
+}
+
+.unicamp-blocks__hashtabs__tab-control__slug {
+  padding: 2px;
+  color: #8c8f94;
+  font-size: 0.8em;
+  margin-top: -4px;
+}
+
 /*# sourceMappingURL=index.css.map*/

@@ -101,11 +101,12 @@ function TabControl({
       deleteTab();
     }
   }
-  const id = `unicamp-hashtab-${slug}`;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    id: id
-  }, tab.title, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "#", slug), showDeleteButton && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    icon: "remove",
+    className: "unicamp-blocks__hashtabs__tab-control"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, tab.title, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "unicamp-blocks__hashtabs__tab-control__slug"
+  }, "#", slug)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, showDeleteButton && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    icon: "no-alt",
     isDestructive: true,
     variant: "tertiary",
     size: "small",
@@ -129,7 +130,7 @@ function TabControl({
     showTooltip: true,
     onClick: handleMoveDown,
     disabled: isLast
-  })));
+  }))));
 }
 function Controls({
   tabs,
@@ -182,16 +183,18 @@ function Controls({
     handleMoveDown: () => handleMoveDown(i),
     isFirst: i === 0,
     isLast: i + 1 === tabs.length
-  })), inReorderMode ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "unicamp-blocks__hashtabs__control-buttons"
+  }, inReorderMode ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
     variant: "link",
     onClick: () => setInReorderMode(false)
-  }, "Done")) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+  }, "Done") : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
     variant: "link",
     onClick: handleNewTab
-  }, "Add tab"), "\xA0 \u2022 \xA0", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+  }, "+ Add tab"), "\xA0 \u2022 \xA0", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
     variant: "link",
     onClick: () => setInReorderMode(true)
-  }, "Reorder"))));
+  }, "Reorder")))));
 }
 
 /**
