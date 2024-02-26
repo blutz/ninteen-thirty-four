@@ -24,7 +24,18 @@
       "selector": "span"
     },
     "slug": {
-      "type": "string"
+      "type": "string",
+      "source": "attribute",
+      "attribute": "data-tab-title",
+      "selector": "li",
+      "default": "hi"
+    },
+    "id": {
+      "type": "string",
+      "source": "attribute",
+      "attribute": "data-tab-id",
+      "selector": "li",
+      "default": "this-is-my-tab-id"
     }
   }
 }

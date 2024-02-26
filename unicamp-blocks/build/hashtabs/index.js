@@ -19,6 +19,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./editor.scss */ "./src/hashtabs/editor.scss");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__);
 
 /**
  * Retrieves the translation of text.
@@ -42,9 +44,8 @@ __webpack_require__.r(__webpack_exports__);
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 
-const BLOCK_TEMPLATE = [['unicamp/unicamp-blocks-hashtab-title-container', {}], ['core/paragraph', {
-  placeholder: "Put something here..."
-}]];
+
+const BLOCK_TEMPLATE = [['unicamp/unicamp-blocks-hashtab-title-container', {}], ['unicamp/unicamp-blocks-hashtab-content', {}]];
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -54,10 +55,15 @@ const BLOCK_TEMPLATE = [['unicamp/unicamp-blocks-hashtab-title-container', {}], 
  *
  * @return {Element} Element to render.
  */
-function Edit() {
+function Edit({
+  attributes,
+  clientId
+}) {
+  const innerBlocks = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_4__.useSelect)(select => select(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.store).getBlock(clientId).innerBlocks);
+  console.log(innerBlocks);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks, {
+  }, JSON.stringify(attributes), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks, {
     template: BLOCK_TEMPLATE,
     templateLock: "all"
   }));
@@ -213,6 +219,16 @@ module.exports = window["wp"]["blocks"];
 
 /***/ }),
 
+/***/ "@wordpress/data":
+/*!******************************!*\
+  !*** external ["wp","data"] ***!
+  \******************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["data"];
+
+/***/ }),
+
 /***/ "@wordpress/i18n":
 /*!******************************!*\
   !*** external ["wp","i18n"] ***!
@@ -229,7 +245,7 @@ module.exports = window["wp"]["i18n"];
   \*********************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/unicamp-blocks-hashtabs","version":"0.1.0","title":"Hashtabs","category":"widgets","icon":"pets","description":"Tabs that respond to and modify the browser hash (e.g. #about)","example":{},"supports":{"html":false},"textdomain":"unicamp-blocks-hashtabs","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/unicamp-blocks-hashtabs","version":"0.1.0","title":"Hashtabs","category":"widgets","icon":"pets","description":"Tabs that respond to and modify the browser hash (e.g. #about)","example":{},"supports":{"html":false},"textdomain":"unicamp-blocks-hashtabs","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"tabs":{"type":"array","source":"query","selector":"ol li","query":{"slug":{"type":"string","attribute":"data-tab-title"},"id":{"type":"string","attribute":"data-tab-id"}}}}}');
 
 /***/ })
 

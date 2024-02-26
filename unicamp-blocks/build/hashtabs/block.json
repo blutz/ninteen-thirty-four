@@ -15,5 +15,22 @@
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
-  "viewScript": "file:./view.js"
+  "viewScript": "file:./view.js",
+  "attributes": {
+    "tabs": {
+      "type": "array",
+      "source": "query",
+      "selector": "ol li",
+      "query": {
+        "slug": {
+          "type": "string",
+          "attribute": "data-tab-title"
+        },
+        "id": {
+          "type": "string",
+          "attribute": "data-tab-id"
+        }
+      }
+    }
+  }
 }

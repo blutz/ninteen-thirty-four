@@ -237,7 +237,7 @@ module.exports = window["wp"]["i18n"];
   \**************************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/unicamp-blocks-hashtab-title","version":"0.1.0","title":"Hashtab Title","category":"widgets","icon":"pets","description":"Title of a tab","example":{},"supports":{"html":false},"textdomain":"unicamp-blocks-hashtab-title","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"title":{"type":"string","default":"tab title","source":"html","selector":"span"},"slug":{"type":"string"}}}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/unicamp-blocks-hashtab-title","version":"0.1.0","title":"Hashtab Title","category":"widgets","icon":"pets","description":"Title of a tab","example":{},"supports":{"html":false},"textdomain":"unicamp-blocks-hashtab-title","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"title":{"type":"string","default":"tab title","source":"html","selector":"span"},"slug":{"type":"string","source":"attribute","attribute":"data-tab-title","selector":"li","default":"hi"},"id":{"type":"string","source":"attribute","attribute":"data-tab-id","selector":"li","default":"this-is-my-tab-id"}}}');
 
 /***/ })
 
