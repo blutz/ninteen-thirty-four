@@ -19,14 +19,15 @@ export default function save({attributes: {tabs}}) {
   return (
     <div { ...useBlockProps.save() }>
       <ol>
-        {tabs.map(tab =>
+        {tabs.map((tab, i) =>
           <RichText.Content
             tagName='li'
             value={tab.title}
+            key={i}
           />
         )}
       </ol>
+      <InnerBlocks.Content />
     </div>
   );
 }
-      //<InnerBlocks.Content />

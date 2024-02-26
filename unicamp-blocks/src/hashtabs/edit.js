@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -6,8 +6,9 @@ import { useState } from 'react'
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, InnerBlocks, RichText, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, Button } from '@wordpress/components';
+import { useBlockProps, InnerBlocks, RichText, InspectorControls, useInnerBlocksProps } from '@wordpress/block-editor';
+import { PanelBody, Button } from '@wordpress/components'
+import { useDispatch, useSelect } from '@wordpress/data'
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -16,11 +17,6 @@ import { PanelBody, Button } from '@wordpress/components';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
-
-const BLOCK_TEMPLATE = [
-  ['unicamp/unicamp-blocks-hashtab-title-container', {}],
-  ['unicamp/unicamp-blocks-hashtab-content', {}],
-];
 
 function dupes(arr) {
   const dupes = arr.filter((el, i) => arr.indexOf(el) !== i)
@@ -78,8 +74,24 @@ function TabControl({tab, slug}) {
  *
  * @return {Element} Element to render.
  */
-export default function Edit({attributes: { tabs }, setAttributes}) {
+export default function Edit({clientId, attributes: { tabs }, setAttributes}) {
   const [selectedTab, setSelectedTab] = useState(0)
+  const slugs = useMemo(() => getSlugs(tabs), [tabs])
+  const innerBlocksTemplate = tabs.map(() => ['unicamp/unicamp-blocks-hashtab', {}])
+  // TODO: dispatch the replaceInnerBlocks event to reorder blocks
+  // https://developer.wordpress.org/block-editor/reference-guides/data/data-core-block-editor/#replaceinnerblocks
+  // https://wordpress.stackexchange.com/questions/344957/how-can-you-reset-innerblock-content-to-base-template
+  const { updateBlockAttributes } = useDispatch("core/block-editor")
+  const { innerBlocks } = useSelect(select => ({
+      innerBlocks: select("core/block-editor").getBlocks(clientId)
+  }))
+  const blockIds = innerBlocks.map(block => block.clientId)
+  const selectedId = blockIds[selectedTab]
+  useEffect(() => {
+    updateBlockAttributes(blockIds, {hidden: true}, false)
+    updateBlockAttributes([selectedId], {hidden: false}, false)
+  }, [selectedTab])
+
   function handleTabTitleChange(newTitle, i) {
     const newTabs = [...tabs]
     newTabs[i] = {...tabs[i]}
@@ -93,7 +105,7 @@ export default function Edit({attributes: { tabs }, setAttributes}) {
       tabs: [...tabs, {title: `Tab ${tabs.length+1}`}]
     })
   }
-  const slugs = getSlugs(tabs)
+
   // TODO: Handle no tabs
   return (
     <>
@@ -106,6 +118,7 @@ export default function Edit({attributes: { tabs }, setAttributes}) {
         </PanelBody>
       </InspectorControls>
       <div { ...useBlockProps() }>
+        <h1>{clientId}</h1>
         <ol>
           {tabs.map((tab, i) =>
             <RichText
@@ -118,13 +131,12 @@ export default function Edit({attributes: { tabs }, setAttributes}) {
             />
           )}
         </ol>
-        <strong>Selected tab:</strong> {selectedTab}
+        <hr />
+        <InnerBlocks
+          template={innerBlocksTemplate}
+          templateLock='all'
+        />
       </div>
     </>
   );
 }
-      //{JSON.stringify(attributes)}
-      //<InnerBlocks
-        //template={BLOCK_TEMPLATE}
-        //templateLock='all'
-      ///>

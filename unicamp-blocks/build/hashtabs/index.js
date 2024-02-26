@@ -18,9 +18,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./editor.scss */ "./src/hashtabs/editor.scss");
-/* harmony import */ var slugify__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! slugify */ "./node_modules/slugify/slugify.js");
-/* harmony import */ var slugify__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(slugify__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./editor.scss */ "./src/hashtabs/editor.scss");
+/* harmony import */ var slugify__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! slugify */ "./node_modules/slugify/slugify.js");
+/* harmony import */ var slugify__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(slugify__WEBPACK_IMPORTED_MODULE_5__);
 
 
 
@@ -33,6 +35,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
@@ -40,7 +43,6 @@ __webpack_require__.r(__webpack_exports__);
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 
-const BLOCK_TEMPLATE = [['unicamp/unicamp-blocks-hashtab-title-container', {}], ['unicamp/unicamp-blocks-hashtab-content', {}]];
 function dupes(arr) {
   const dupes = arr.filter((el, i) => arr.indexOf(el) !== i);
   if (dupes.length) {
@@ -64,7 +66,7 @@ function dedupe(dupes, src) {
 function getSlugs(tabs) {
   const slugs = tabs.map(tab => {
     const text = new DOMParser().parseFromString(tab.title, "text/html").documentElement.textContent;
-    return slugify__WEBPACK_IMPORTED_MODULE_4___default()(text, {
+    return slugify__WEBPACK_IMPORTED_MODULE_5___default()(text, {
       lower: true,
       strict: true,
       replacement: '',
@@ -95,12 +97,36 @@ function TabControl({
  * @return {Element} Element to render.
  */
 function Edit({
+  clientId,
   attributes: {
     tabs
   },
   setAttributes
 }) {
   const [selectedTab, setSelectedTab] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+  const slugs = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => getSlugs(tabs), [tabs]);
+  const innerBlocksTemplate = tabs.map(() => ['unicamp/unicamp-blocks-hashtab', {}]);
+  // TODO: dispatch the replaceInnerBlocks event to reorder blocks
+  // https://developer.wordpress.org/block-editor/reference-guides/data/data-core-block-editor/#replaceinnerblocks
+  // https://wordpress.stackexchange.com/questions/344957/how-can-you-reset-innerblock-content-to-base-template
+  const {
+    updateBlockAttributes
+  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.useDispatch)("core/block-editor");
+  const {
+    innerBlocks
+  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.useSelect)(select => ({
+    innerBlocks: select("core/block-editor").getBlocks(clientId)
+  }));
+  const blockIds = innerBlocks.map(block => block.clientId);
+  const selectedId = blockIds[selectedTab];
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    updateBlockAttributes(blockIds, {
+      hidden: true
+    }, false);
+    updateBlockAttributes([selectedId], {
+      hidden: false
+    }, false);
+  }, [selectedTab]);
   function handleTabTitleChange(newTitle, i) {
     const newTabs = [...tabs];
     newTabs[i] = {
@@ -118,7 +144,7 @@ function Edit({
       }]
     });
   }
-  const slugs = getSlugs(tabs);
+
   // TODO: Handle no tabs
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
     title: "Tabs"
@@ -131,20 +157,18 @@ function Edit({
     onClick: handleNewTab
   }, "Add tab")))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, clientId), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText, {
     tagName: "li",
     key: i,
     value: tab.title,
     onChange: val => handleTabTitleChange(val, i),
     onFocus: () => setSelectedTab(i),
     multiline: false
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Selected tab:"), " ", selectedTab));
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks, {
+    template: innerBlocksTemplate,
+    templateLock: "all"
+  })));
 }
-//{JSON.stringify(attributes)}
-//<InnerBlocks
-//template={BLOCK_TEMPLATE}
-//templateLock='all'
-///>
 
 /***/ }),
 
@@ -243,12 +267,12 @@ function save({
 }) {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, tabs.map(tab => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
     tagName: "li",
-    value: tab.title
-  }))));
+    value: tab.title,
+    key: i
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks.Content, null));
 }
-//<InnerBlocks.Content />
 
 /***/ }),
 
@@ -393,6 +417,17 @@ module.exports = window["wp"]["blocks"];
 
 "use strict";
 module.exports = window["wp"]["components"];
+
+/***/ }),
+
+/***/ "@wordpress/data":
+/*!******************************!*\
+  !*** external ["wp","data"] ***!
+  \******************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = window["wp"]["data"];
 
 /***/ }),
 

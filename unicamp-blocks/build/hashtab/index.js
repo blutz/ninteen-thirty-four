@@ -51,10 +51,29 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @return {Element} Element to render.
  */
-function Edit() {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)()
-  }, "Hashtab content block, example content");
+function Edit({
+  attributes: {
+    hidden
+  }
+}) {
+  const displayStyle = hidden ? {
+    display: 'none'
+  } : null;
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)(),
+    style: {
+      ...displayStyle
+    }
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks, {
+    defaultBlock: {
+      name: 'core/paragraph',
+      attributes: {
+        content: 'Lorem ipsum...'
+      }
+    },
+    directInsert: true,
+    templateLock: false
+  }));
 }
 
 /***/ }),
@@ -146,9 +165,9 @@ __webpack_require__.r(__webpack_exports__);
  * @return {Element} Element to render.
  */
 function save() {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save()
-  }, "Hashtab content block saved data");
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks.Content, null));
 }
 
 /***/ }),
