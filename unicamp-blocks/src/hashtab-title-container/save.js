@@ -4,7 +4,7 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, RichText } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
 
 /**
  * The save function defines the way in which the different attributes should
@@ -15,13 +15,10 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  *
  * @return {Element} Element to render.
  */
-export default function save({attributes}) {
+export default function save() {
   return (
-    <li {...useBlockProps.save()}>
-      <RichText.Content
-        tagName='span'
-        value={ attributes.title }
-      />
-    </li>
+    <ol { ...useBlockProps.save() }>
+      <InnerBlocks.Content />
+    </ol>
   );
 }

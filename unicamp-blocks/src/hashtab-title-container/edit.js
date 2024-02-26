@@ -21,12 +21,6 @@ import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
  */
 import './editor.scss';
 
-const BLOCK_TEMPLATE = [
-  ['unicamp/unicamp-blocks-hashtab-title-container', {}],
-  ['core/paragraph', {placeholder: "Put something here..."}],
-];
-
-
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -37,11 +31,15 @@ const BLOCK_TEMPLATE = [
  */
 export default function Edit() {
   return (
-    <div { ...useBlockProps() }>
+    <ol { ...useBlockProps() }>
       <InnerBlocks
-        template={BLOCK_TEMPLATE}
-        templateLock='all'
+        allowedBlocks={['unicamp/unicamp-blocks-hashtab-title']}
+        orientation='horizontal'
+        template={[['unicamp/unicamp-blocks-hashtab-title'], ['unicamp/unicamp-blocks-hashtab-title']]}
+        renderAppender={InnerBlocks.ButtonBlockAppender}
+        templateLock={false}
       />
-    </div>
+
+    </ol>
   );
 }
