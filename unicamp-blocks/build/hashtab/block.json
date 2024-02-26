@@ -4,6 +4,9 @@
   "name": "unicamp/unicamp-blocks-hashtab",
   "version": "0.1.0",
   "title": "Hashtab Content",
+  "parent": [
+    "unicamp/unicamp-blocks-hashtabs"
+  ],
   "category": "widgets",
   "icon": "pets",
   "description": "Content inside a tab",

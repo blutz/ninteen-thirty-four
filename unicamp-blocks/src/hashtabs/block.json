@@ -4,6 +4,7 @@
   "name": "unicamp/unicamp-blocks-hashtabs",
   "version": "0.1.0",
   "title": "Hashtabs",
+  "allowedBlocks": ["unicamp/unicamp-blocks-hashtab"],
   "category": "widgets",
   "icon": "pets",
   "description": "Tabs that respond to and modify the browser hash (e.g. #about)",

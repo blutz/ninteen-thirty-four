@@ -1,9 +1,4 @@
-/**
- * Retrieves the translation of text.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
- */
-import { __ } from '@wordpress/i18n';
+import { useState } from 'react'
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -11,7 +6,8 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, InnerBlocks, RichText } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks, RichText, InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, Button } from '@wordpress/components';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -65,6 +61,14 @@ function getSlugs(tabs) {
   return slugs
 }
 
+function TabControl({tab, slug}) {
+  return <div>
+    {tab.title}
+    <br />
+    <small>#{slug}</small>
+  </div>
+}
+
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -75,6 +79,7 @@ function getSlugs(tabs) {
  * @return {Element} Element to render.
  */
 export default function Edit({attributes: { tabs }, setAttributes}) {
+  const [selectedTab, setSelectedTab] = useState(0)
   function handleTabTitleChange(newTitle, i) {
     const newTabs = [...tabs]
     newTabs[i] = {...tabs[i]}
@@ -83,22 +88,39 @@ export default function Edit({attributes: { tabs }, setAttributes}) {
       tabs: newTabs,
     })
   }
+  function handleNewTab() {
+    setAttributes({
+      tabs: [...tabs, {title: `Tab ${tabs.length+1}`}]
+    })
+  }
   const slugs = getSlugs(tabs)
   // TODO: Handle no tabs
   return (
-    <div { ...useBlockProps() }>
-      <ol>
-        {tabs.map((tab, i) =>
-          <RichText
-            tagName='li'
-            value={tab.title}
-            onChange={val => handleTabTitleChange(val, i)}
-            multiline={false}
-            key={i}
-          />
-        )}
-      </ol>
-    </div>
+    <>
+      <InspectorControls>
+        <PanelBody title='Tabs'>
+          {tabs.map((tab, i) => <TabControl tab={tab} slug={slugs[i]} key={i} />)}
+          <div>
+            <Button variant='link' onClick={handleNewTab}>Add tab</Button>
+          </div>
+        </PanelBody>
+      </InspectorControls>
+      <div { ...useBlockProps() }>
+        <ol>
+          {tabs.map((tab, i) =>
+            <RichText
+              tagName='li'
+              key={i}
+              value={tab.title}
+              onChange={val => handleTabTitleChange(val, i)}
+              onFocus={() => setSelectedTab(i)}
+              multiline={false}
+            />
+          )}
+        </ol>
+        <strong>Selected tab:</strong> {selectedTab}
+      </div>
+    </>
   );
 }
       //{JSON.stringify(attributes)}

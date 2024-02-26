@@ -14,19 +14,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./editor.scss */ "./src/hashtabs/editor.scss");
 /* harmony import */ var slugify__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! slugify */ "./node_modules/slugify/slugify.js");
 /* harmony import */ var slugify__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(slugify__WEBPACK_IMPORTED_MODULE_4__);
 
-/**
- * Retrieves the translation of text.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
- */
 
 
 /**
@@ -35,6 +30,7 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
+
 
 
 /**
@@ -83,6 +79,12 @@ function getSlugs(tabs) {
   }
   return slugs;
 }
+function TabControl({
+  tab,
+  slug
+}) {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, tab.title, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "#", slug));
+}
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -98,6 +100,7 @@ function Edit({
   },
   setAttributes
 }) {
+  const [selectedTab, setSelectedTab] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
   function handleTabTitleChange(newTitle, i) {
     const newTabs = [...tabs];
     newTabs[i] = {
@@ -108,17 +111,34 @@ function Edit({
       tabs: newTabs
     });
   }
+  function handleNewTab() {
+    setAttributes({
+      tabs: [...tabs, {
+        title: `Tab ${tabs.length + 1}`
+      }]
+    });
+  }
   const slugs = getSlugs(tabs);
   // TODO: Handle no tabs
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+    title: "Tabs"
+  }, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(TabControl, {
+    tab: tab,
+    slug: slugs[i],
+    key: i
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+    variant: "link",
+    onClick: handleNewTab
+  }, "Add tab")))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)()
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText, {
     tagName: "li",
+    key: i,
     value: tab.title,
     onChange: val => handleTabTitleChange(val, i),
-    multiline: false,
-    key: i
-  }))));
+    onFocus: () => setSelectedTab(i),
+    multiline: false
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Selected tab:"), " ", selectedTab));
 }
 //{JSON.stringify(attributes)}
 //<InnerBlocks
@@ -365,14 +385,14 @@ module.exports = window["wp"]["blocks"];
 
 /***/ }),
 
-/***/ "@wordpress/i18n":
-/*!******************************!*\
-  !*** external ["wp","i18n"] ***!
-  \******************************/
+/***/ "@wordpress/components":
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
 /***/ ((module) => {
 
 "use strict";
-module.exports = window["wp"]["i18n"];
+module.exports = window["wp"]["components"];
 
 /***/ }),
 
@@ -383,7 +403,7 @@ module.exports = window["wp"]["i18n"];
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/unicamp-blocks-hashtabs","version":"0.1.0","title":"Hashtabs","category":"widgets","icon":"pets","description":"Tabs that respond to and modify the browser hash (e.g. #about)","example":{},"supports":{"html":false},"textdomain":"unicamp-blocks-hashtabs","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"tabs":{"type":"array","source":"query","selector":"ol li","default":[{"title":"Tab 1","slug":"tab1"},{"title":"Tab 2","slug":"tab2"},{"title":"Tab 3","slug":"tab3"}],"query":{"title":{"type":"string","source":"html"}}}}}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/unicamp-blocks-hashtabs","version":"0.1.0","title":"Hashtabs","allowedBlocks":["unicamp/unicamp-blocks-hashtab"],"category":"widgets","icon":"pets","description":"Tabs that respond to and modify the browser hash (e.g. #about)","example":{},"supports":{"html":false},"textdomain":"unicamp-blocks-hashtabs","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"tabs":{"type":"array","source":"query","selector":"ol li","default":[{"title":"Tab 1","slug":"tab1"},{"title":"Tab 2","slug":"tab2"},{"title":"Tab 3","slug":"tab3"}],"query":{"title":{"type":"string","source":"html"}}}}}');
 
 /***/ })
 

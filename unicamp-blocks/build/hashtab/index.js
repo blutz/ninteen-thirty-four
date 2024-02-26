@@ -223,7 +223,7 @@ module.exports = window["wp"]["i18n"];
   \********************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/unicamp-blocks-hashtab","version":"0.1.0","title":"Hashtab Content","category":"widgets","icon":"pets","description":"Content inside a tab","example":{},"supports":{"html":false},"textdomain":"unicamp-blocks-hashtab","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/unicamp-blocks-hashtab","version":"0.1.0","title":"Hashtab Content","parent":["unicamp/unicamp-blocks-hashtabs"],"category":"widgets","icon":"pets","description":"Content inside a tab","example":{},"supports":{"html":false},"textdomain":"unicamp-blocks-hashtab","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js"}');
 
 /***/ })
 
