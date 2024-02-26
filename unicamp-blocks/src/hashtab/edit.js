@@ -34,7 +34,7 @@ export default function Edit({attributes: {hidden}}) {
   return (
     <div {...useBlockProps()} style={{...displayStyle}}>
       <InnerBlocks
-        defaultBlock={{ name: 'core/paragraph', attributes: { content: 'Lorem ipsum...' } }}
+        defaultBlock={{ name: 'core/paragraph', attributes: { content: 'Tab content here...' } }}
         directInsert={true}
         templateLock={false}
       />

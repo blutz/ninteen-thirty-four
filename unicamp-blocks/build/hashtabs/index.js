@@ -83,9 +83,35 @@ function getSlugs(tabs) {
 }
 function TabControl({
   tab,
-  slug
+  slug,
+  deleteTab
 }) {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, tab.title, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "#", slug));
+  function handleDelete() {
+    if (window.confirm("Delete this tab and its content?")) {
+      deleteTab();
+    }
+  }
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, tab.title, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "#", slug), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+    onClick: handleDelete
+  }, "Delete"));
+}
+function Controls({
+  tabs,
+  slugs,
+  handleNewTab,
+  handleDeleteTab
+}) {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+    title: "Tabs"
+  }, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(TabControl, {
+    tab: tab,
+    slug: slugs[i],
+    key: i,
+    deleteTab: () => handleDeleteTab(i)
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+    variant: "link",
+    onClick: handleNewTab
+  }, "Add tab"))));
 }
 
 /**
@@ -110,7 +136,8 @@ function Edit({
   // https://developer.wordpress.org/block-editor/reference-guides/data/data-core-block-editor/#replaceinnerblocks
   // https://wordpress.stackexchange.com/questions/344957/how-can-you-reset-innerblock-content-to-base-template
   const {
-    updateBlockAttributes
+    updateBlockAttributes,
+    replaceInnerBlocks
   } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.useDispatch)("core/block-editor");
   const {
     innerBlocks
@@ -144,18 +171,27 @@ function Edit({
       }]
     });
   }
+  function handleDeleteTab(i) {
+    // Delete the content block
+    const newBlocks = [...innerBlocks];
+    newBlocks.splice(i, 1);
+    replaceInnerBlocks(clientId, newBlocks);
+
+    // Delete the tab
+    const newTabs = [...tabs];
+    newTabs.splice(i, 1);
+    setAttributes({
+      tabs: newTabs
+    });
+  }
 
   // TODO: Handle no tabs
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
-    title: "Tabs"
-  }, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(TabControl, {
-    tab: tab,
-    slug: slugs[i],
-    key: i
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
-    variant: "link",
-    onClick: handleNewTab
-  }, "Add tab")))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Controls, {
+    tabs: tabs,
+    slugs: slugs,
+    handleNewTab: handleNewTab,
+    handleDeleteTab: handleDeleteTab
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)()
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, clientId), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText, {
     tagName: "li",

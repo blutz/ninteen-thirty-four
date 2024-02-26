@@ -68,7 +68,7 @@ function Edit({
     defaultBlock: {
       name: 'core/paragraph',
       attributes: {
-        content: 'Lorem ipsum...'
+        content: 'Tab content here...'
       }
     },
     directInsert: true,

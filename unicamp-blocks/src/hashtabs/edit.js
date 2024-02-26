@@ -57,14 +57,38 @@ function getSlugs(tabs) {
   return slugs
 }
 
-function TabControl({tab, slug}) {
+function TabControl({tab, slug, deleteTab}) {
+  function handleDelete() {
+    if(window.confirm("Delete this tab and its content?")) {
+      deleteTab()
+    }
+  }
   return <div>
     {tab.title}
     <br />
     <small>#{slug}</small>
+    <Button onClick={handleDelete}>Delete</Button>
   </div>
 }
 
+function Controls({tabs, slugs, handleNewTab, handleDeleteTab}) {
+  return (
+    <InspectorControls>
+      <PanelBody title='Tabs'>
+        {tabs.map((tab, i) => (
+          <TabControl
+            tab={tab}
+            slug={slugs[i]}
+            key={i}
+            deleteTab={() => handleDeleteTab(i)}
+          />))}
+        <div>
+          <Button variant='link' onClick={handleNewTab}>Add tab</Button>
+        </div>
+      </PanelBody>
+    </InspectorControls>
+  )
+}
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -81,7 +105,7 @@ export default function Edit({clientId, attributes: { tabs }, setAttributes}) {
   // TODO: dispatch the replaceInnerBlocks event to reorder blocks
   // https://developer.wordpress.org/block-editor/reference-guides/data/data-core-block-editor/#replaceinnerblocks
   // https://wordpress.stackexchange.com/questions/344957/how-can-you-reset-innerblock-content-to-base-template
-  const { updateBlockAttributes } = useDispatch("core/block-editor")
+  const { updateBlockAttributes, replaceInnerBlocks } = useDispatch("core/block-editor")
   const { innerBlocks } = useSelect(select => ({
       innerBlocks: select("core/block-editor").getBlocks(clientId)
   }))
@@ -105,18 +129,27 @@ export default function Edit({clientId, attributes: { tabs }, setAttributes}) {
       tabs: [...tabs, {title: `Tab ${tabs.length+1}`}]
     })
   }
+  function handleDeleteTab(i) {
+    // Delete the content block
+    const newBlocks = [...innerBlocks]
+    newBlocks.splice(i, 1)
+    replaceInnerBlocks(clientId, newBlocks)
+
+    // Delete the tab
+    const newTabs = [...tabs]
+    newTabs.splice(i, 1)
+    setAttributes({tabs: newTabs})
+  }
 
   // TODO: Handle no tabs
   return (
     <>
-      <InspectorControls>
-        <PanelBody title='Tabs'>
-          {tabs.map((tab, i) => <TabControl tab={tab} slug={slugs[i]} key={i} />)}
-          <div>
-            <Button variant='link' onClick={handleNewTab}>Add tab</Button>
-          </div>
-        </PanelBody>
-      </InspectorControls>
+      <Controls
+        tabs={tabs}
+        slugs={slugs}
+        handleNewTab={handleNewTab}
+        handleDeleteTab={handleDeleteTab}
+      />
       <div { ...useBlockProps() }>
         <h1>{clientId}</h1>
         <ol>
