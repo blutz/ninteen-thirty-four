@@ -94,6 +94,9 @@ function TabControl({
   isLast
 }) {
   function handleDelete() {
+    if (isFirst && isLast) {
+      return;
+    }
     if (window.confirm("Delete this tab and its content?")) {
       deleteTab();
     }
@@ -108,7 +111,8 @@ function TabControl({
     size: "small",
     onClick: handleDelete,
     label: "Delete",
-    showTooltip: true
+    showTooltip: true,
+    disabled: isFirst && isLast
   }), showReorderButtons && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
     icon: "arrow-up",
     variant: "tertiary",
@@ -271,8 +275,6 @@ function Edit({
       tabs: order.map(i => tabs[i])
     });
   }
-
-  // TODO: Handle no tabs
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Controls, {
     tabs: tabs,
     slugs: slugs,
@@ -281,7 +283,7 @@ function Edit({
     setTabOrder: setTabOrder
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, clientId), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, tabs.length === 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, "Add a tab in the sidebar to get started"), tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
     tagName: "li",
     key: i,
     value: tab.title,

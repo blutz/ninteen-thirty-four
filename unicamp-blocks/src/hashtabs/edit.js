@@ -60,6 +60,7 @@ function getSlugs(tabs) {
 
 function TabControl({tab, slug, deleteTab, showDeleteButton, showReorderButtons, handleMoveUp, handleMoveDown, isFirst, isLast}) {
   function handleDelete() {
+    if(isFirst && isLast) { return }
     if(window.confirm("Delete this tab and its content?")) {
       deleteTab()
     }
@@ -69,7 +70,7 @@ function TabControl({tab, slug, deleteTab, showDeleteButton, showReorderButtons,
     {tab.title}
     <br />
     <small>#{slug}</small>
-    {showDeleteButton && <Button icon='remove' isDestructive={true} variant='tertiary' size='small' onClick={handleDelete} label='Delete' showTooltip={true} /> }
+    {showDeleteButton && <Button icon='remove' isDestructive={true} variant='tertiary' size='small' onClick={handleDelete} label='Delete' showTooltip={true} disabled={isFirst && isLast} /> }
     {showReorderButtons && <span>
       <Button icon='arrow-up' variant='tertiary' size='small' label='Move up' showTooltip={true} onClick={handleMoveUp} disabled={isFirst} />
       <Button icon='arrow-down' variant='tertiary' size='small' label='Move up' showTooltip={true} onClick={handleMoveDown} disabled={isLast} />
@@ -189,7 +190,6 @@ export default function Edit({clientId, attributes: { tabs }, setAttributes}) {
     setAttributes({tabs: order.map(i => tabs[i])})
   }
 
-  // TODO: Handle no tabs
   return (
     <>
       <Controls
@@ -200,8 +200,8 @@ export default function Edit({clientId, attributes: { tabs }, setAttributes}) {
         setTabOrder={setTabOrder}
       />
       <div { ...useBlockProps() }>
-        <h1>{clientId}</h1>
         <ol>
+          {(tabs.length === 0) && <div>Add a tab in the sidebar to get started</div>}
           {tabs.map((tab, i) =>
             <RichText
               tagName='li'
