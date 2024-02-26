@@ -25,9 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
 function unicamp_blocks_unicamp_blocks_block_init() {
-  register_block_type( __DIR__ . '/build/hashtab-content' );
-  register_block_type( __DIR__ . '/build/hashtab-title' );
-  register_block_type( __DIR__ . '/build/hashtab-title-container' );
+  register_block_type( __DIR__ . '/build/hashtab' );
   register_block_type( __DIR__ . '/build/hashtabs' );
 }
 add_action( 'init', 'unicamp_blocks_unicamp_blocks_block_init' );

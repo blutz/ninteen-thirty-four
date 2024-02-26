@@ -2,10 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/hashtab-title/edit.js":
-/*!***********************************!*\
-  !*** ./src/hashtab-title/edit.js ***!
-  \***********************************/
+/***/ "./src/hashtab/edit.js":
+/*!*****************************!*\
+  !*** ./src/hashtab/edit.js ***!
+  \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -18,7 +18,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./editor.scss */ "./src/hashtab-title/editor.scss");
+/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./editor.scss */ "./src/hashtab/editor.scss");
 
 /**
  * Retrieves the translation of text.
@@ -51,36 +51,27 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @return {Element} Element to render.
  */
-function Edit({
-  attributes,
-  setAttributes
-}) {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+function Edit() {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
     ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
-    tagName: "span",
-    onChange: newVal => setAttributes({
-      title: newVal
-    }),
-    value: attributes.title || ''
-  }));
+  }, "Hashtab content block, example content");
 }
 
 /***/ }),
 
-/***/ "./src/hashtab-title/index.js":
-/*!************************************!*\
-  !*** ./src/hashtab-title/index.js ***!
-  \************************************/
+/***/ "./src/hashtab/index.js":
+/*!******************************!*\
+  !*** ./src/hashtab/index.js ***!
+  \******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
 /* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style.scss */ "./src/hashtab-title/style.scss");
-/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./src/hashtab-title/edit.js");
-/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./src/hashtab-title/save.js");
-/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./block.json */ "./src/hashtab-title/block.json");
+/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style.scss */ "./src/hashtab/style.scss");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./src/hashtab/edit.js");
+/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./src/hashtab/save.js");
+/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./block.json */ "./src/hashtab/block.json");
 /**
  * Registers a new block provided a unique name and an object defining its behavior.
  *
@@ -122,10 +113,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/hashtab-title/save.js":
-/*!***********************************!*\
-  !*** ./src/hashtab-title/save.js ***!
-  \***********************************/
+/***/ "./src/hashtab/save.js":
+/*!*****************************!*\
+  !*** ./src/hashtab/save.js ***!
+  \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -154,23 +145,18 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @return {Element} Element to render.
  */
-function save({
-  attributes
-}) {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+function save() {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
-    tagName: "span",
-    value: attributes.title
-  }));
+  }, "Hashtab content block saved data");
 }
 
 /***/ }),
 
-/***/ "./src/hashtab-title/editor.scss":
-/*!***************************************!*\
-  !*** ./src/hashtab-title/editor.scss ***!
-  \***************************************/
+/***/ "./src/hashtab/editor.scss":
+/*!*********************************!*\
+  !*** ./src/hashtab/editor.scss ***!
+  \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -179,10 +165,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/hashtab-title/style.scss":
-/*!**************************************!*\
-  !*** ./src/hashtab-title/style.scss ***!
-  \**************************************/
+/***/ "./src/hashtab/style.scss":
+/*!********************************!*\
+  !*** ./src/hashtab/style.scss ***!
+  \********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -231,13 +217,13 @@ module.exports = window["wp"]["i18n"];
 
 /***/ }),
 
-/***/ "./src/hashtab-title/block.json":
-/*!**************************************!*\
-  !*** ./src/hashtab-title/block.json ***!
-  \**************************************/
+/***/ "./src/hashtab/block.json":
+/*!********************************!*\
+  !*** ./src/hashtab/block.json ***!
+  \********************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/unicamp-blocks-hashtab-title","version":"0.1.0","title":"Hashtab Title","category":"widgets","icon":"pets","description":"Title of a tab","example":{},"supports":{"html":false},"textdomain":"unicamp-blocks-hashtab-title","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"title":{"type":"string","default":"tab title","source":"html","selector":"span"},"slug":{"type":"string","source":"attribute","attribute":"data-tab-title","selector":"li","default":"hi"},"id":{"type":"string","source":"attribute","attribute":"data-tab-id","selector":"li","default":"this-is-my-tab-id"}}}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/unicamp-blocks-hashtab","version":"0.1.0","title":"Hashtab Content","category":"widgets","icon":"pets","description":"Content inside a tab","example":{},"supports":{"html":false},"textdomain":"unicamp-blocks-hashtab","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js"}');
 
 /***/ })
 
@@ -351,8 +337,8 @@ module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/tru
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			"hashtab-title/index": 0,
-/******/ 			"hashtab-title/style-index": 0
+/******/ 			"hashtab/index": 0,
+/******/ 			"hashtab/style-index": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -402,7 +388,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/tru
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["hashtab-title/style-index"], () => (__webpack_require__("./src/hashtab-title/index.js")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["hashtab/style-index"], () => (__webpack_require__("./src/hashtab/index.js")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "unicamp/unicamp-blocks-hashtab-content",
+  "name": "unicamp/unicamp-blocks-hashtab",
   "version": "0.1.0",
   "title": "Hashtab Content",
   "category": "widgets",
@@ -11,7 +11,7 @@
   "supports": {
     "html": false
   },
-  "textdomain": "unicamp-blocks-hashtab-content",
+  "textdomain": "unicamp-blocks-hashtab",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
