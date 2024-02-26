@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
+import { Icon } from '@wordpress/components'
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -6,7 +7,7 @@ import { useState, useMemo, useEffect } from 'react'
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, InnerBlocks, RichText, InspectorControls, useInnerBlocksProps } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks, RichText, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, Button } from '@wordpress/components'
 import { useDispatch, useSelect } from '@wordpress/data'
 
@@ -57,21 +58,45 @@ function getSlugs(tabs) {
   return slugs
 }
 
-function TabControl({tab, slug, deleteTab}) {
+function TabControl({tab, slug, deleteTab, showDeleteButton, showReorderButtons, handleMoveUp, handleMoveDown, isFirst, isLast}) {
   function handleDelete() {
     if(window.confirm("Delete this tab and its content?")) {
       deleteTab()
     }
   }
-  return <div>
+  const id = `unicamp-hashtab-${slug}`
+  return <div id={id}>
     {tab.title}
     <br />
     <small>#{slug}</small>
-    <Button onClick={handleDelete}>Delete</Button>
+    {showDeleteButton && <Button icon='remove' isDestructive={true} variant='tertiary' size='small' onClick={handleDelete} label='Delete' showTooltip={true} /> }
+    {showReorderButtons && <span>
+      <Button icon='arrow-up' variant='tertiary' size='small' label='Move up' showTooltip={true} onClick={handleMoveUp} disabled={isFirst} />
+      <Button icon='arrow-down' variant='tertiary' size='small' label='Move up' showTooltip={true} onClick={handleMoveDown} disabled={isLast} />
+    </span>}
   </div>
 }
 
-function Controls({tabs, slugs, handleNewTab, handleDeleteTab}) {
+function Controls({tabs, slugs, handleNewTab, handleDeleteTab, setTabOrder}) {
+  const [inReorderMode, setInReorderMode] = useState(false)
+  function handleMoveUp(i) {
+    if(i === 0) { return }
+    const newOrder = [...Array(tabs.length)].map((_, j) => {
+      if(j === i) { return j-1 }
+      else if(j === (i-1)) { return i }
+      else { return j }
+    })
+    setTabOrder(newOrder)
+  }
+  function handleMoveDown(i) {
+    if((i+1) >= tabs.length) { return }
+    const newOrder = [...Array(tabs.length)].map((_, j) => {
+      if(j === i) { return j+1 }
+      else if(j === (i+1)) { return i }
+      else { return j }
+    })
+    setTabOrder(newOrder)
+  }
   return (
     <InspectorControls>
       <PanelBody title='Tabs'>
@@ -79,12 +104,26 @@ function Controls({tabs, slugs, handleNewTab, handleDeleteTab}) {
           <TabControl
             tab={tab}
             slug={slugs[i]}
-            key={i}
+            key={slugs[i]}
             deleteTab={() => handleDeleteTab(i)}
+            showDeleteButton={!inReorderMode}
+            showReorderButtons={inReorderMode}
+            handleMoveUp={() => handleMoveUp(i)}
+            handleMoveDown={() => handleMoveDown(i)}
+            isFirst={i === 0}
+            isLast={(i+1) === tabs.length}
           />))}
-        <div>
-          <Button variant='link' onClick={handleNewTab}>Add tab</Button>
-        </div>
+        {inReorderMode ?
+          <div>
+            <Button variant='link' onClick={() => setInReorderMode(false)}>Done</Button>
+          </div>
+          :
+          <div>
+            <Button variant='link' onClick={handleNewTab}>Add tab</Button>
+            &nbsp; • &nbsp;
+            <Button variant='link' onClick={() => setInReorderMode(true)}>Reorder</Button>
+          </div>
+        }
       </PanelBody>
     </InspectorControls>
   )
@@ -102,7 +141,7 @@ export default function Edit({clientId, attributes: { tabs }, setAttributes}) {
   const [selectedTab, setSelectedTab] = useState(0)
   const slugs = useMemo(() => getSlugs(tabs), [tabs])
   const innerBlocksTemplate = tabs.map(() => ['unicamp/unicamp-blocks-hashtab', {}])
-  // TODO: dispatch the replaceInnerBlocks event to reorder blocks
+
   // https://developer.wordpress.org/block-editor/reference-guides/data/data-core-block-editor/#replaceinnerblocks
   // https://wordpress.stackexchange.com/questions/344957/how-can-you-reset-innerblock-content-to-base-template
   const { updateBlockAttributes, replaceInnerBlocks } = useDispatch("core/block-editor")
@@ -141,6 +180,15 @@ export default function Edit({clientId, attributes: { tabs }, setAttributes}) {
     setAttributes({tabs: newTabs})
   }
 
+  // Takes in an array of tab *indexes*
+  function setTabOrder(order) {
+    // Modify content blocks
+    replaceInnerBlocks(clientId, order.map(i => innerBlocks[i]))
+
+    // Modify tabs
+    setAttributes({tabs: order.map(i => tabs[i])})
+  }
+
   // TODO: Handle no tabs
   return (
     <>
@@ -149,6 +197,7 @@ export default function Edit({clientId, attributes: { tabs }, setAttributes}) {
         slugs={slugs}
         handleNewTab={handleNewTab}
         handleDeleteTab={handleDeleteTab}
+        setTabOrder={setTabOrder}
       />
       <div { ...useBlockProps() }>
         <h1>{clientId}</h1>

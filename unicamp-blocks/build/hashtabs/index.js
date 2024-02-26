@@ -14,15 +14,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./editor.scss */ "./src/hashtabs/editor.scss");
 /* harmony import */ var slugify__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! slugify */ "./node_modules/slugify/slugify.js");
 /* harmony import */ var slugify__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(slugify__WEBPACK_IMPORTED_MODULE_5__);
+
 
 
 
@@ -84,34 +85,109 @@ function getSlugs(tabs) {
 function TabControl({
   tab,
   slug,
-  deleteTab
+  deleteTab,
+  showDeleteButton,
+  showReorderButtons,
+  handleMoveUp,
+  handleMoveDown,
+  isFirst,
+  isLast
 }) {
   function handleDelete() {
     if (window.confirm("Delete this tab and its content?")) {
       deleteTab();
     }
   }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, tab.title, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "#", slug), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
-    onClick: handleDelete
-  }, "Delete"));
+  const id = `unicamp-hashtab-${slug}`;
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    id: id
+  }, tab.title, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "#", slug), showDeleteButton && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    icon: "remove",
+    isDestructive: true,
+    variant: "tertiary",
+    size: "small",
+    onClick: handleDelete,
+    label: "Delete",
+    showTooltip: true
+  }), showReorderButtons && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    icon: "arrow-up",
+    variant: "tertiary",
+    size: "small",
+    label: "Move up",
+    showTooltip: true,
+    onClick: handleMoveUp,
+    disabled: isFirst
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    icon: "arrow-down",
+    variant: "tertiary",
+    size: "small",
+    label: "Move up",
+    showTooltip: true,
+    onClick: handleMoveDown,
+    disabled: isLast
+  })));
 }
 function Controls({
   tabs,
   slugs,
   handleNewTab,
-  handleDeleteTab
+  handleDeleteTab,
+  setTabOrder
 }) {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+  const [inReorderMode, setInReorderMode] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  function handleMoveUp(i) {
+    if (i === 0) {
+      return;
+    }
+    const newOrder = [...Array(tabs.length)].map((_, j) => {
+      if (j === i) {
+        return j - 1;
+      } else if (j === i - 1) {
+        return i;
+      } else {
+        return j;
+      }
+    });
+    setTabOrder(newOrder);
+  }
+  function handleMoveDown(i) {
+    if (i + 1 >= tabs.length) {
+      return;
+    }
+    const newOrder = [...Array(tabs.length)].map((_, j) => {
+      if (j === i) {
+        return j + 1;
+      } else if (j === i + 1) {
+        return i;
+      } else {
+        return j;
+      }
+    });
+    setTabOrder(newOrder);
+  }
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
     title: "Tabs"
   }, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(TabControl, {
     tab: tab,
     slug: slugs[i],
-    key: i,
-    deleteTab: () => handleDeleteTab(i)
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+    key: slugs[i],
+    deleteTab: () => handleDeleteTab(i),
+    showDeleteButton: !inReorderMode,
+    showReorderButtons: inReorderMode,
+    handleMoveUp: () => handleMoveUp(i),
+    handleMoveDown: () => handleMoveDown(i),
+    isFirst: i === 0,
+    isLast: i + 1 === tabs.length
+  })), inReorderMode ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    variant: "link",
+    onClick: () => setInReorderMode(false)
+  }, "Done")) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
     variant: "link",
     onClick: handleNewTab
-  }, "Add tab"))));
+  }, "Add tab"), "\xA0 \u2022 \xA0", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    variant: "link",
+    onClick: () => setInReorderMode(true)
+  }, "Reorder"))));
 }
 
 /**
@@ -132,7 +208,7 @@ function Edit({
   const [selectedTab, setSelectedTab] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
   const slugs = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => getSlugs(tabs), [tabs]);
   const innerBlocksTemplate = tabs.map(() => ['unicamp/unicamp-blocks-hashtab', {}]);
-  // TODO: dispatch the replaceInnerBlocks event to reorder blocks
+
   // https://developer.wordpress.org/block-editor/reference-guides/data/data-core-block-editor/#replaceinnerblocks
   // https://wordpress.stackexchange.com/questions/344957/how-can-you-reset-innerblock-content-to-base-template
   const {
@@ -185,22 +261,34 @@ function Edit({
     });
   }
 
+  // Takes in an array of tab *indexes*
+  function setTabOrder(order) {
+    // Modify content blocks
+    replaceInnerBlocks(clientId, order.map(i => innerBlocks[i]));
+
+    // Modify tabs
+    setAttributes({
+      tabs: order.map(i => tabs[i])
+    });
+  }
+
   // TODO: Handle no tabs
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Controls, {
     tabs: tabs,
     slugs: slugs,
     handleNewTab: handleNewTab,
-    handleDeleteTab: handleDeleteTab
+    handleDeleteTab: handleDeleteTab,
+    setTabOrder: setTabOrder
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, clientId), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText, {
+    ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)()
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, clientId), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
     tagName: "li",
     key: i,
     value: tab.title,
     onChange: val => handleTabTitleChange(val, i),
     onFocus: () => setSelectedTab(i),
     multiline: false
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks, {
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks, {
     template: innerBlocksTemplate,
     templateLock: "all"
   })));
