@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Icon } from '@wordpress/components'
 import classnames from 'classnames'
 
 /**

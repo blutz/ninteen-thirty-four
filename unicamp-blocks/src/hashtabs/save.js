@@ -22,7 +22,7 @@ export default function save({attributes: {tabs}}) {
     <div { ...useBlockProps.save() }>
         <ol className='wp-block-unicamp-unicamp-blocks-hashtabs__tabs alignfull' >
         {tabs.map((tab, i) =>
-          <li className='wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab' key={i} data-slug={slugs[i]}>
+          <li className='wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab' key={i} data-slug={slugs[i]} tabIndex={0} role='button'>
             <RichText.Content
               tagName='span'
               value={tab.title}

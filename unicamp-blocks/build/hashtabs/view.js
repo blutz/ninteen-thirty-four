@@ -25,13 +25,53 @@ var __webpack_exports__ = {};
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/#view-script
  */
 
-// Tabs canNOT be added/removed dynamically, so doing this once per pageload is fine
+const SELECTED_TAB_CLASSNAME = 'wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab--selected';
+
+// Tabs can't be added/removed dynamically, so doing this once per pageload is fine
 function setupBlock(container) {
+  // Setup
   const slugs = [];
-  container.querySelectorAll('.wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab').forEach(el => slugs.push(el.dataset.slug));
-  const tabs = container.querySelectorAll('.wp-block-unicamp-unicamp-blocks-hashtab');
-  console.log(slugs);
-  console.log(tabs);
+  container.querySelectorAll('.wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab').forEach(el => slugs.push(el.dataset.slug ? el.dataset.slug.toLowerCase().trim() : ''));
+  if (!slugs.length) {
+    return;
+  }
+  const tabContainers = container.querySelectorAll('.wp-block-unicamp-unicamp-blocks-hashtab');
+  const tabs = container.querySelectorAll('.wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab');
+
+  // Click events on tabs
+  tabs.forEach(tab => tab.addEventListener('click', () => {
+    if (tab.dataset.slug) {
+      window.location = `#${tab.dataset.slug}`;
+    }
+  }));
+  function selectTab(tabId) {
+    tabs.forEach(tab => tab.classList.remove(SELECTED_TAB_CLASSNAME));
+    tabs[tabId].classList.add(SELECTED_TAB_CLASSNAME);
+    tabContainers.forEach(el => el.style.display = 'none');
+    tabContainers[tabId].style.display = 'block';
+    history.replaceState({}, '', `#${slugs[tabId]}`);
+  }
+
+  // Returns tab ID if we have a slug that matches the input hash, otherwise -1
+  function getTabIdByHash(hashInput = '') {
+    let hash = hashInput[0] === '#' ? hashInput.substring(1).toLowerCase() : hashInput;
+    if (!hash.trim().length) {
+      return -1;
+    }
+    return slugs.indexOf(hash);
+  }
+  const startingTab = getTabIdByHash(window.location.hash);
+  if (startingTab >= 0) {
+    selectTab(startingTab);
+  } else {
+    selectTab(0);
+  }
+  window.addEventListener("hashchange", () => {
+    const newTab = getTabIdByHash(window.location.hash);
+    if (newTab >= 0) {
+      selectTab(newTab);
+    }
+  });
 }
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll('.wp-block-unicamp-unicamp-blocks-hashtabs').forEach(setupBlock);
