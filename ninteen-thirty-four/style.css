@@ -579,13 +579,22 @@ input[type="submit"] {
   font-weight: bold;
   transition: box-shadow 0.2s;
   line-height: 1.5; }
-  .menu-toggle, .menu-toggle:visited,
+  .menu-toggle, .menu-toggle:hover, .menu-toggle:visited, .menu-toggle:focus, .menu-toggle:active,
   .wp-block-button__link,
+  .wp-block-button__link:hover,
   .wp-block-button__link:visited,
+  .wp-block-button__link:focus,
+  .wp-block-button__link:active,
   .button,
+  .button:hover,
   .button:visited,
+  .button:focus,
+  .button:active,
   [type="submit"],
-  [type="submit"]:visited {
+  [type="submit"]:hover,
+  [type="submit"]:visited,
+  [type="submit"]:focus,
+  [type="submit"]:active {
     color: #fff; }
   .menu-toggle:hover,
   .wp-block-button__link:hover,
