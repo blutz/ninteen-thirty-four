@@ -433,6 +433,8 @@ function save({
   const slugs = (0,_getSlugs__WEBPACK_IMPORTED_MODULE_2__["default"])(tabs);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save()
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "wp-block-unicamp-unicamp-blocks-hashtabs__tabs-container"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", {
     className: "wp-block-unicamp-unicamp-blocks-hashtabs__tabs alignfull"
   }, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
@@ -444,7 +446,7 @@ function save({
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
     tagName: "span",
     value: tab.title
-  })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks.Content, null));
+  }))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks.Content, null));
 }
 
 /***/ }),

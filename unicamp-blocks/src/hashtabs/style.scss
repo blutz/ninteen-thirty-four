@@ -7,6 +7,46 @@
 
 .wp-block-unicamp-unicamp-blocks-hashtabs {
   margin-top: 10px;
+  position: relative;
+  &:before {
+    content: "";
+    border-bottom: 5px solid #2774ae;
+    width: 100vw;
+    position: absolute;
+    top: 55px;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    z-index: 1;
+  }
+}
+.wp-block-unicamp-unicamp-blocks-hashtabs__tabs-container {
+  margin-left: -30px;
+  margin-right: -30px;
+  position: relative;
+  &::before {
+    content: "";
+    background: linear-gradient(90deg, #ffffffff 0%, #ffffff00 100%);
+    margin-left: calc(-50vw + 50%);
+    z-index: 2;
+    width: 30px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 10px;
+    pointer-events: none;
+  }
+  &::after {
+    content: "";
+    background: linear-gradient(270deg, #ffffffff 0%, #ffffff00 100%);
+    margin-right: calc(-50vw + 50%);
+    z-index: 2;
+    width: 100px;
+    position: absolute;
+    right: 0;
+    bottom: 10px;
+    top: 0;
+    pointer-events: none;
+  }
 }
 .wp-block-unicamp-unicamp-blocks-hashtabs__tabs {
   list-style: none;
@@ -14,25 +54,41 @@
   flex-direction: row;
   margin: 0;
   padding: 0;
-  justify-content: center;
   margin-bottom: 10px;
-  border-bottom: 5px solid #2774ae;
+  border-bottom: 5px solid transparent;
   max-width: 100vw;
   overflow-x: scroll;
+  overflow-y: hidden;
+  padding-top: 10px;
+  margin-left: -30px;
+  margin-right: -30px;
+  max-width: 100vw;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 .wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab {
-  padding: 10px 20px;
+  padding: 0 20px;
   background-color: #f5f5f6;
   border-radius: 10px 10px 0 0;
   margin: 0 10px;
   cursor: pointer;
   font-size: 1.1rem;
   transition: transform 150ms ease-out;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   &:hover {
     transform: scale(1.05) translateY(-2.25%);
   }
   & > span {
     white-space: nowrap;
+  }
+  &:first-child {
+    margin-left: auto;
+  }
+  &:last-child {
+    margin-right: auto;
   }
 }
 /* Not used yet */
@@ -42,4 +98,7 @@
   }
   background-color: #2774ae;
   color: white;
+  &:last-child {
+    z-index: 3;
+  }
 }

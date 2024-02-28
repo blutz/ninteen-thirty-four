@@ -37,6 +37,7 @@ function setupBlock(container) {
   }
   const tabContainers = container.querySelectorAll('.wp-block-unicamp-unicamp-blocks-hashtab');
   const tabs = container.querySelectorAll('.wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab');
+  const tabsContainer = container.querySelector('.wp-block-unicamp-unicamp-blocks-hashtabs__tabs');
 
   // Click events on tabs
   tabs.forEach(tab => tab.addEventListener('click', () => {
@@ -50,6 +51,10 @@ function setupBlock(container) {
     tabContainers.forEach(el => el.style.display = 'none');
     tabContainers[tabId].style.display = 'block';
     history.replaceState({}, '', `#${slugs[tabId]}`);
+    tabsContainer.scrollTo({
+      left: tabs[tabId].offsetLeft + tabs[tabId].clientWidth / 2 - tabsContainer.clientWidth / 2,
+      behavior: 'smooth'
+    });
   }
 
   // Returns tab ID if we have a slug that matches the input hash, otherwise -1

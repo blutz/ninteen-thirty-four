@@ -20,6 +20,7 @@ export default function save({attributes: {tabs}}) {
   const slugs = getSlugs(tabs)
   return (
     <div { ...useBlockProps.save() }>
+      <div className='wp-block-unicamp-unicamp-blocks-hashtabs__tabs-container'>
         <ol className='wp-block-unicamp-unicamp-blocks-hashtabs__tabs alignfull' >
         {tabs.map((tab, i) =>
           <li className='wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab' key={i} data-slug={slugs[i]} tabIndex={0} role='button'>
@@ -27,9 +28,9 @@ export default function save({attributes: {tabs}}) {
               tagName='span'
               value={tab.title}
             />
-          </li>
-        )}
-      </ol>
+          </li>)}
+        </ol>
+      </div>
       <InnerBlocks.Content />
     </div>
   );
