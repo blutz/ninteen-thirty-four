@@ -27,5 +27,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 function unicamp_blocks_unicamp_blocks_block_init() {
   register_block_type( __DIR__ . '/build/hashtab' );
   register_block_type( __DIR__ . '/build/hashtabs' );
+  register_block_type( __DIR__ . '/build/cost-calculator' );
 }
 add_action( 'init', 'unicamp_blocks_unicamp_blocks_block_init' );

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "unicamp/cost-calculator",
+  "version": "2023.1",
+  "title": "UniCamp Cost Calculator",
+  "category": "widgets",
+  "icon": "calculator",
+  "description": "Displays an interactive calculator for camp rates",
+  "example": {},
+  "supports": {
+    "html": false
+  },
+  "textdomain": "cost-calculator",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js"
+}
