@@ -477,6 +477,10 @@ figure {
   margin: 1em 0;
   /* Extra wide images within figure tags don't overflow the content area. */ }
 
+.wp-block-table {
+  max-width: calc(100vw - 60px);
+  overflow-x: scroll; }
+
 table {
   margin: 0 0 1.5em;
   width: 100%; }
