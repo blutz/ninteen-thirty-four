@@ -23,7 +23,7 @@
     "tabs": {
       "type": "array",
       "source": "query",
-      "selector": "ol li",
+      "selector": "ol li span",
       "default": [
         {
           "title": "Tab 1",
