@@ -29,7 +29,7 @@
   margin: 0 10px;
   cursor: pointer;
   font-size: 1.1rem;
-  transition: transform 150ms;
+  transition: transform 150ms ease-out;
 }
 .wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab:hover {
   transform: scale(1.05) translateY(-2.25%);

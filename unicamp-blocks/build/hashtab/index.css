@@ -7,7 +7,9 @@
  * Replace them with your own styles or remove the file completely.
  */
 .wp-block-unicamp-unicamp-blocks-hashtab {
-  border: 1px dotted #f00;
+  outline: 1px dotted #c0c0c0;
+  min-height: 100px;
+  margin-top: 1px;
 }
 
 /*# sourceMappingURL=index.css.map*/

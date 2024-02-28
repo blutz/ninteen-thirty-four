@@ -217,7 +217,9 @@ function Edit({
 }) {
   const [selectedTab, setSelectedTab] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
   const slugs = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => getSlugs(tabs), [tabs]);
-  const innerBlocksTemplate = tabs.map(() => ['unicamp/unicamp-blocks-hashtab', {}]);
+  const innerBlocksTemplate = tabs.map((_, i) => ['unicamp/unicamp-blocks-hashtab', {
+    hidden: i !== selectedTab
+  }]);
 
   // https://developer.wordpress.org/block-editor/reference-guides/data/data-core-block-editor/#replaceinnerblocks
   // https://wordpress.stackexchange.com/questions/344957/how-can-you-reset-innerblock-content-to-base-template
@@ -232,14 +234,23 @@ function Edit({
   }));
   const blockIds = innerBlocks.map(block => block.clientId);
   const selectedId = blockIds[selectedTab];
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+  function updateHiddenAttributes() {
     updateBlockAttributes(blockIds, {
       hidden: true
     }, false);
     updateBlockAttributes([selectedId], {
       hidden: false
     }, false);
-  }, [selectedTab]);
+  }
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(updateHiddenAttributes, [selectedTab]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (!innerBlocks) {
+      return;
+    }
+    if (innerBlocks?.[0]?.attributes?.hidden === undefined) {
+      updateHiddenAttributes();
+    }
+  }, [innerBlocks]);
   function handleTabTitleChange(newTitle, i) {
     const newTabs = [...tabs];
     newTabs[i] = {
@@ -301,7 +312,7 @@ function Edit({
     onChange: val => handleTabTitleChange(val, i),
     onFocus: () => setSelectedTab(i),
     multiline: false
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InnerBlocks, {
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InnerBlocks, {
     template: innerBlocksTemplate,
     templateLock: "all"
   })));

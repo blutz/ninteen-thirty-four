@@ -142,7 +142,7 @@ function Controls({tabs, slugs, handleNewTab, handleDeleteTab, setTabOrder}) {
 export default function Edit({clientId, attributes: { tabs }, setAttributes}) {
   const [selectedTab, setSelectedTab] = useState(0)
   const slugs = useMemo(() => getSlugs(tabs), [tabs])
-  const innerBlocksTemplate = tabs.map(() => ['unicamp/unicamp-blocks-hashtab', {}])
+  const innerBlocksTemplate = tabs.map((_, i) => ['unicamp/unicamp-blocks-hashtab', {hidden: i !== selectedTab}])
 
   // https://developer.wordpress.org/block-editor/reference-guides/data/data-core-block-editor/#replaceinnerblocks
   // https://wordpress.stackexchange.com/questions/344957/how-can-you-reset-innerblock-content-to-base-template
@@ -152,10 +152,17 @@ export default function Edit({clientId, attributes: { tabs }, setAttributes}) {
   }))
   const blockIds = innerBlocks.map(block => block.clientId)
   const selectedId = blockIds[selectedTab]
-  useEffect(() => {
+  function updateHiddenAttributes() {
     updateBlockAttributes(blockIds, {hidden: true}, false)
     updateBlockAttributes([selectedId], {hidden: false}, false)
-  }, [selectedTab])
+  }
+  useEffect(updateHiddenAttributes, [selectedTab])
+  useEffect(() => {
+    if(!innerBlocks) { return }
+    if(innerBlocks?.[0]?.attributes?.hidden === undefined) {
+      updateHiddenAttributes()
+    }
+  }, [innerBlocks])
 
   function handleTabTitleChange(newTitle, i) {
     const newTabs = [...tabs]
@@ -215,7 +222,6 @@ export default function Edit({clientId, attributes: { tabs }, setAttributes}) {
             />
           )}
         </ol>
-        <hr />
         <InnerBlocks
           template={innerBlocksTemplate}
           templateLock='all'
