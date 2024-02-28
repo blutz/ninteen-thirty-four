@@ -6,6 +6,11 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
+.wp-block-unicamp-unicamp-blocks-hashtabs:before {
+  margin: 0;
+  width: 100%;
+}
+
 .unicamp-blocks__hashtabs__tab-control {
   display: flex;
   flex-direction: row;
