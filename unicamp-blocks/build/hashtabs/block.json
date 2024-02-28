@@ -12,7 +12,8 @@
   "description": "Tabs that respond to and modify the browser hash (e.g. #about)",
   "example": {},
   "supports": {
-    "html": false
+    "html": false,
+    "multiple": false
   },
   "textdomain": "unicamp-blocks-hashtabs",
   "editorScript": "file:./index.js",

@@ -9,7 +9,15 @@
   "description": "Displays an interactive calculator for camp rates",
   "example": {},
   "supports": {
-    "html": false
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
   },
   "textdomain": "cost-calculator",
   "editorScript": "file:./index.js",

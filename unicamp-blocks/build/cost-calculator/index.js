@@ -59,7 +59,7 @@ function Edit() {
     ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)()
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
     icon: "calculator"
-  }), " UniCamp Cost Calculator 2023"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Cost calculator will appear here!"));
+  }), " UniCamp Cost Calculator 2024"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Cost calculator will appear here!"));
 }
 
 /***/ }),
@@ -153,48 +153,56 @@ __webpack_require__.r(__webpack_exports__);
 function save() {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, "Camp Cost Calculator"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("noscript", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "The camp cost calculator could not be loaded."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Reduced rates are available to campers who meet any one of the following criteria:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, "Are currently in the foster system."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, "Currently receive benefits from CalFresh, CalWORKS, FDPIR, or WIS (case number required)."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, "Meet the USDA income eligibility guidelines for the school year prior to the summer season. ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: "https://www.fns.usda.gov/cn/income-eligibility-guidelines"
-  }, "Click here for the USDA income eligibility guidelines."))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "If you qualify, you will automatically be offered the reduced rate when you submit your UniCamp registration.")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, "Camp Cost Calculator"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("noscript", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "The camp cost calculator could not be loaded. Contact us for more information about rates.")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     "data-step": "intro",
     style: "display: none"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "The reduced camp rate is available to campers who qualify for the Summer Food Service Program. Foster children, children who receive certain government benefits (CalFresh, CalWORKS, FDPIR, or WIS), and children in families who ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: "https://www.fns.usda.gov/cn/income-eligibility-guidelines"
-  }, "meet certain income limits"), " qualify."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Use this calculator to see if you are eligible for the reduced rate. More details (e.g. case numbers and income information) may be required on the camp application. Campers who qualify will automatically be offered the reduced rate during registration."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", null, "Start calculator \u2192")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Camp rates are based on a variety of factors, including participation in CalFresh and household income."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Information you input into this calculator is not saved. When you register for camp, we will ask for more details (e.g. case numbers and detailed income information)."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button"
+  }, "See your camp rate \u2192")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     "data-step": "dcfs-1",
     style: "display: none"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Does the camper have an active LA County DCFS case number?"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button--inline",
     value: "yes"
   }, "Yes"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button",
     value: "no"
   }, "No")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     "data-step": "dcfs-2",
     style: "display: none"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Is the camper in a Short-Term Residential Therapeutic Program (STRTP)?"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button--inline",
     value: "yes"
   }, "Yes"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button",
     value: "no"
   }, "No")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     "data-step": "dcfs-qualify",
     style: "display: none"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "The camper likely ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "qualifies to attend UniCamp for FREE"), " on a DCFS campership. These camperships are subject to DCFS approval and are only available ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", null, "for one session per child, per summer"), ", even across programs other than UniCamp. (For instance, if your camper goes to UniCamp and another summer camp, you will only be able to use the campership on ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", null, "one"), " of those programs.)"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Additional DCFS-specific information (e.g. case number, case worker, and contact info) will be required on the UniCamp application and, if you choose to use the DCFS campership with UniCamp, will be submitted to DCFS for verification. If DCFS does not approve your campership, you will be required to pay the normal rates prior to attending camp."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", null, "See my cost without a DCFS campership \u2192")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "You likely ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "qualify to attend UniCamp for FREE"), " on a DCFS campership. These camperships are subject to DCFS approval and are only available ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", null, "for one session per child, per summer"), ", even across programs other than UniCamp. (For instance, if your camper goes to UniCamp and another summer camp, you will only be able to use the campership on ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", null, "one"), " of those programs.)"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Additional DCFS-specific information (e.g. case number, case worker, and contact info) will be required on the UniCamp application and, if you choose to use the DCFS campership with UniCamp, will be submitted to DCFS for verification. If DCFS does not approve your campership, you will be required to pay the normal rates prior to attending camp."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button"
+  }, "See my cost without a DCFS campership \u2192")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     "data-step": "foster",
     style: "display: none"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Is the camper currently in the foster system?"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button--inline",
     value: "yes"
   }, "Yes"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button",
     value: "no"
   }, "No")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     "data-step": "program",
     style: "display: none"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Does the camper currently receive benefits from CalFresh, CalWORKS, FDPIR, or WIS?"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button--inline",
     value: "yes"
   }, "Yes"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button",
     value: "no"
   }, "No")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     "data-step": "income",
     style: "display: none"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "What is your household's combined ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", null, "annual"), " income?"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", null, "Include all household members, including children, and all income sources, including work, child support/alimony, payments from pensions/retirement/social security, and any other earnings."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), "$\xA0", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "What is your household\u2019s combined ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", null, "annual"), " income?"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", null, "Include all household members, including children, and all income sources, including work, child support/alimony, payments from pensions/retirement/social security, and any other earnings."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), "$\xA0", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: "number",
     value: "30000",
     min: "0",
@@ -202,40 +210,57 @@ function save() {
     step: "1",
     required: true,
     name: "income"
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "How many people are in your household?"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", null, "Count everyone, including the camper, all children, and all adults."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "How many ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", null, "children"), " are in your household?")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: "number",
-    value: "2",
+    value: "1",
     min: "1",
-    max: "50",
+    max: "20",
     required: true,
-    name: "household-size"
+    name: "household-size-children"
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "How many ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", null, "adults"), " are in your household?")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "number",
+    value: "1",
+    min: "1",
+    max: "20",
+    required: true,
+    name: "household-size-adults"
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    className: "button",
     type: "submit",
     value: "Continue \u2192"
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    class: "error",
+    className: "error",
     style: "color: red; display: none;"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Error:"), " Fill out both fields above with whole numbers before proceeding."))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    "data-step": "final-qualify",
+    "data-step": "final-low",
     style: "display: none"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Based on your responses, ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "your camper qualifies for the reduced rate of $229"), "."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", null, "(The reduced rate for The Village Session is $349.)")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "The camper application will ask for more details (e.g. case numbers or income information) and will automatically offer you the reduced rate if you qualify."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "The actual cost of camp to UniCamp is $800 per camper, but we offer all campers an automatic campership to help make camp more accessible. Additional camperships are available on a limited basis: email us at ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Your camper qualifies for the ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "low rate of $239"), " (or $360 for The Village Session)."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "The full cost to UniCamp is $1300 per camper, but we automatically offer a campership to everyone based on the information you filled out. Additional camperships are available on a limited basis: email us at ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: "mailto:registration@unicamp.org"
-  }, "registration@unicamp.org"), " for more information."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    "data-action": "start-over"
+  }, "registration@unicamp.org"), " for more information.")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    "data-action": "start-over",
+    className: "button button--secondary"
   }, "\u2190 Start over")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    "data-step": "final-no-qualify",
+    "data-step": "final-medium",
     style: "display: none"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Based on your responses, ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "your camper does NOT qualify for the reduced rate, but they are eligible to attend camp for $350"), "."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("em", null, "(The cost for The Village Session is $479.)")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "The actual cost of camp to UniCamp is $800 per camper, but we offer all campers an automatic campership to help make camp more accessible. Additional camperships are available on a limited basis: email us at ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Your camper qualifies for the ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "medium rate of $360"), " (or $550 for The Village Session)."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "The full cost to UniCamp is $1300 per camper, but we automatically offer a campership to everyone based on the information you filled out. Additional camperships are available on a limited basis: email us at ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: "mailto:registration@unicamp.org"
-  }, "registration@unicamp.org"), " for more information."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    "data-action": "start-over"
+  }, "registration@unicamp.org"), " for more information.")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    "data-action": "start-over",
+    className: "button button--secondary"
+  }, "\u2190 Start over")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    "data-step": "final-high",
+    style: "display: none"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Your camper qualifies for the ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "high rate of $600"), " (or $800 for The Village Session)."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "The full cost to UniCamp is $1300 per camper, but we automatically offer a campership to everyone based on the information you filled out. Additional camperships are available on a limited basis: email us at ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "mailto:registration@unicamp.org"
+  }, "registration@unicamp.org"), " for more information.")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    "data-action": "start-over",
+    className: "button button--secondary"
   }, "\u2190 Start over")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     "data-step": "error",
     style: "display: none"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Sorry, we encountered an error."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Reduced rates are available to campers who meet any one of the following criteria:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, "Are currently in the foster system."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, "Currently receive benefits from CalFresh, CalWORKS, FDPIR, or WIS (case number required)."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, "Meet the USDA income eligibility guidelines for the school year prior to the summer season. ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: "https://www.fns.usda.gov/cn/income-eligibility-guidelines"
-  }, "Click here for the USDA income eligibility guidelines."))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "If you qualify, you will automatically be offered the reduced rate when you submit your UniCamp registration."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    "data-action": "start-over"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Sorry, we encountered an error. Start a camper registration or reach out to us for more information about rates. Reduced rates are offered automatically during the camper registration process for those who qualify."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    "data-action": "start-over",
+    className: "button button--secondary"
   }, "\u2190 Start over")));
 }
 
@@ -321,7 +346,7 @@ module.exports = window["wp"]["i18n"];
   \****************************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/cost-calculator","version":"2023.1","title":"UniCamp Cost Calculator","category":"widgets","icon":"calculator","description":"Displays an interactive calculator for camp rates","example":{},"supports":{"html":false},"textdomain":"cost-calculator","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/cost-calculator","version":"2023.1","title":"UniCamp Cost Calculator","category":"widgets","icon":"calculator","description":"Displays an interactive calculator for camp rates","example":{},"supports":{"html":false,"align":["wide","full"],"spacing":{"margin":true,"padding":true}},"textdomain":"cost-calculator","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js"}');
 
 /***/ })
 

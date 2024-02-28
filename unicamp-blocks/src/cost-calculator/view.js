@@ -20,23 +20,49 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/#view-script
  */
 
-const incomeGuidelines2023 = {
-    brackets: [25142, 33874, 42606, 51338, 60070, 68802, 77534, 86266],
-    additional: 8732,
+const INCOME_BRACKETS = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+}
+
+// https://www.hcd.ca.gov/sites/default/files/docs/grants-and-funding/income-limits-2023.pdf
+const INCOME_GUIDELINES_2024 = {
+  // If the family males LESS than the low amount, they qualify
+  low: {
+    brackets: [26500, 30300, 34100, 37850, 40900, 43950, 46950, 50560],
+    additional: 3028, // 8% of the 4-person limit
+  },
+  // If the family makes LESS THAN OR EQUAL TO this amount them they qualify
+  medium: {
+    brackets: [103120,117870,132560,147310,159120,170870,182680,194430],
+    additional: 11784, // 8% of the 4-person limit
+  },
 }
 
 function init(container) {
-  function isIncomeEligible(income, householdSize) {
-    const guidelines = incomeGuidelines2023
+  function isEligibleForBracket(guidelines, income, householdSize, lessThanOrEqual = false) {
     let incomeLimit
-    console.log(income, householdSize)
     if(householdSize <= guidelines.brackets.length) {
       incomeLimit = guidelines.brackets[householdSize-1]
     } else {
       const extraPeople = householdSize - guidelines.brackets.length
       incomeLimit = guidelines.brackets[guidelines.brackets.length-1] + (extraPeople * guidelines.additional)
     }
-    return income <= incomeLimit
+    if(lessThanOrEqual) {
+      return income <= incomeLimit
+    } else {
+      return income < incomeLimit
+    }
+  }
+  function getIncomeBracket(income, householdSize) {
+    if(isEligibleForBracket(INCOME_GUIDELINES_2024.low, income, householdSize, false)) {
+      return INCOME_BRACKETS.LOW
+    }
+    if(isEligibleForBracket(INCOME_GUIDELINES_2024.medium, income, householdSize, true)) {
+      return INCOME_BRACKETS.MEDIUM
+    }
+    return INCOME_BRACKETS.HIGH
   }
 
   function hideAllSteps() {
@@ -75,11 +101,11 @@ function init(container) {
         stepEl.querySelector('button').onclick = () => initStep('foster')
         break
       case 'foster':
-        yesButton.onclick = () => initStep('final-qualify')
+        yesButton.onclick = () => initStep('final-low')
         noButton.onclick = () => initStep('program')
         break
       case 'program':
-        yesButton.onclick = () => initStep('final-qualify')
+        yesButton.onclick = () => initStep('final-low')
         noButton.onclick = () => initStep('income')
         break
       case 'income':
@@ -90,11 +116,19 @@ function init(container) {
             stepEl.querySelector('.error').style.display = ''
           } else {
             const income = parseInt(stepEl.querySelector('[name="income"]').value)
-            const householdSize = parseInt(stepEl.querySelector('[name="household-size"]').value)
-            if(isIncomeEligible(income, householdSize)) {
-              initStep('final-qualify')
-            } else {
-              initStep('final-no-qualify')
+            const householdSizeChildren = parseInt(stepEl.querySelector('[name="household-size-children"]').value)
+            const householdSizeAdults = parseInt(stepEl.querySelector('[name="household-size-adults"]').value)
+            const householdSize = householdSizeChildren + householdSizeAdults
+            const incomeBracket = getIncomeBracket(income, householdSize)
+            switch(incomeBracket) {
+              case INCOME_BRACKETS.LOW:
+                initStep('final-low')
+                break
+              case INCOME_BRACKETS.MEDIUM:
+                initStep('final-medium')
+                break
+              default:
+                initStep('final-high')
             }
           }
         }

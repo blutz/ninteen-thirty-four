@@ -33,7 +33,7 @@ import './editor.scss'
 export default function Edit() {
   return (
     <p { ...useBlockProps() }>
-      <h3><Icon icon='calculator' /> UniCamp Cost Calculator 2023</h3>
+      <h3><Icon icon='calculator' /> UniCamp Cost Calculator 2024</h3>
       <p>Cost calculator will appear here!</p>
     </p>
   )

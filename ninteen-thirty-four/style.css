@@ -568,7 +568,8 @@ input[type="submit"] {
 .menu-toggle,
 .wp-block-button__link,
 .button,
-[type="submit"] {
+input[type="button"],
+input[type="submit"] {
   cursor: pointer;
   background: radial-gradient(ellipse at bottom -25% right -25%, #2774ae 0%, #07385a 100%);
   border: none;
@@ -590,20 +591,30 @@ input[type="submit"] {
   .button:visited,
   .button:focus,
   .button:active,
-  [type="submit"],
-  [type="submit"]:hover,
-  [type="submit"]:visited,
-  [type="submit"]:focus,
-  [type="submit"]:active {
+  input[type="button"],
+  input[type="button"]:hover,
+  input[type="button"]:visited,
+  input[type="button"]:focus,
+  input[type="button"]:active,
+  input[type="submit"],
+  input[type="submit"]:hover,
+  input[type="submit"]:visited,
+  input[type="submit"]:focus,
+  input[type="submit"]:active {
     color: #fff; }
   .menu-toggle:hover,
   .wp-block-button__link:hover,
   .button:hover,
-  [type="submit"]:hover {
+  input[type="button"]:hover,
+  input[type="submit"]:hover {
     box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.2); }
 
+.button--secondary,
 .button--secondary .wp-block-button__link {
   background: radial-gradient(ellipse at bottom -25% right -25%, #FFD100 0%, #FFB81C 100%); }
+
+.button--inline {
+  margin-right: 10px; }
 
 .wp-block-button__link .svg-inline--fa {
   font-size: 0.8rem;
