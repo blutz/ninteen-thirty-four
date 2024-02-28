@@ -18,9 +18,10 @@ import { useBlockProps, InnerBlocks, RichText } from '@wordpress/block-editor';
 export default function save({attributes: {tabs}}) {
   return (
     <div { ...useBlockProps.save() }>
-      <ol>
+        <ol className='wp-block-unicamp-unicamp-blocks-hashtabs__tabs alignfull' >
         {tabs.map((tab, i) =>
           <RichText.Content
+            className='wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab'
             tagName='li'
             value={tab.title}
             key={i}

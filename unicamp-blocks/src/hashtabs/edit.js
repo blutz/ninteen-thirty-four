@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { Icon } from '@wordpress/components'
+import classnames from 'classnames'
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -200,10 +201,11 @@ export default function Edit({clientId, attributes: { tabs }, setAttributes}) {
         setTabOrder={setTabOrder}
       />
       <div { ...useBlockProps() }>
-        <ol>
+        <ol className='wp-block-unicamp-unicamp-blocks-hashtabs__tabs alignfull' >
           {(tabs.length === 0) && <div>Add a tab in the sidebar to get started</div>}
           {tabs.map((tab, i) =>
             <RichText
+              className={classnames('wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab', {'wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab--selected': i === selectedTab})}
               tagName='li'
               key={i}
               value={tab.title}

@@ -12,7 +12,9 @@
   "description": "Content inside a tab",
   "example": {},
   "supports": {
-    "html": false
+    "html": false,
+    "inserter": false,
+    "lock": false
   },
   "textdomain": "unicamp-blocks-hashtab",
   "editorScript": "file:./index.js",

@@ -6,7 +6,35 @@
  */
 
 .wp-block-unicamp-unicamp-blocks-hashtabs {
-  background-color: #21759b;
-  color: #fff;
-  padding: 2px;
+  margin-top: 10px;
+}
+.wp-block-unicamp-unicamp-blocks-hashtabs__tabs {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+  margin-bottom: 10px;
+  border-bottom: 5px solid #2774ae;
+}
+.wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab {
+  padding: 10px 20px;
+  background-color: #f5f5f6;
+  border-radius: 10px 10px 0 0;
+  margin: 0 10px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: transform 150ms;
+  &:hover {
+    transform: scale(1.05) translateY(-2.25%);
+  }
+}
+/* Not used yet */
+.wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab--selected {
+  &, &:hover {
+    transform: scale(1.1) translateY(-4.5%);
+  }
+  background-color: #2774ae;
+  color: white;
 }
