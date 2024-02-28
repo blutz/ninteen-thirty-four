@@ -22,9 +22,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./editor.scss */ "./src/hashtabs/editor.scss");
-/* harmony import */ var slugify__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! slugify */ "./node_modules/slugify/slugify.js");
-/* harmony import */ var slugify__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(slugify__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _getSlugs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./getSlugs */ "./src/hashtabs/getSlugs.js");
+/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./editor.scss */ "./src/hashtabs/editor.scss");
 
 
 
@@ -40,6 +39,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
@@ -47,44 +47,6 @@ __webpack_require__.r(__webpack_exports__);
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 
-function dupes(arr) {
-  const dupes = arr.filter((el, i) => arr.indexOf(el) !== i);
-  if (dupes.length) {
-    return dupes;
-  }
-}
-
-// MODIFIES src to get rid of dupes. This may take multiple passes.
-function dedupe(dupes, src) {
-  // O(n^2), but there should never be more than 5-10 tabs
-  for (const dupe of dupes) {
-    let counter = 1;
-    for (let i = src.indexOf(dupe); i >= 0; i = src.indexOf(dupe), counter++) {
-      src[i] = src[i] + "-" + counter;
-    }
-  }
-}
-
-// TODO: Move to a separate file
-
-function getSlugs(tabs) {
-  const slugs = tabs.map(tab => {
-    const text = new DOMParser().parseFromString(tab.title, "text/html").documentElement.textContent;
-    return slugify__WEBPACK_IMPORTED_MODULE_6___default()(text, {
-      lower: true,
-      strict: true,
-      replacement: '',
-      remove: /[\W]/
-    });
-  });
-  // Realistically since we strip "-", this will only ever run once.  But This
-  // while loop is here just in case that changes, to make sure we always have
-  // unique slugs.
-  while (dupes(slugs)) {
-    dedupe(dupes(slugs), slugs);
-  }
-  return slugs;
-}
 function TabControl({
   tab,
   slug,
@@ -216,7 +178,7 @@ function Edit({
   setAttributes
 }) {
   const [selectedTab, setSelectedTab] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
-  const slugs = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => getSlugs(tabs), [tabs]);
+  const slugs = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => (0,_getSlugs__WEBPACK_IMPORTED_MODULE_5__["default"])(tabs), [tabs]);
   const innerBlocksTemplate = tabs.map((_, i) => ['unicamp/unicamp-blocks-hashtab', {
     hidden: i !== selectedTab
   }]);
@@ -302,21 +264,75 @@ function Edit({
     ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)()
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", {
     className: "wp-block-unicamp-unicamp-blocks-hashtabs__tabs alignfull"
-  }, tabs.length === 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, "Add a tab in the sidebar to get started"), tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
+  }, tabs.length === 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, "Add a tab in the sidebar to get started"), tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
     className: classnames__WEBPACK_IMPORTED_MODULE_2___default()('wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab', {
       'wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab--selected': i === selectedTab
     }),
-    tagName: "li",
-    key: i,
+    key: i
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
+    tagName: "span",
     value: tab.title,
     onChange: val => handleTabTitleChange(val, i),
     onFocus: () => setSelectedTab(i),
     multiline: false
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InnerBlocks, {
+  })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InnerBlocks, {
     template: innerBlocksTemplate,
     templateLock: "all"
   })));
 }
+
+/***/ }),
+
+/***/ "./src/hashtabs/getSlugs.js":
+/*!**********************************!*\
+  !*** ./src/hashtabs/getSlugs.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var slugify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! slugify */ "./node_modules/slugify/slugify.js");
+/* harmony import */ var slugify__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(slugify__WEBPACK_IMPORTED_MODULE_0__);
+
+function dupes(arr) {
+  const dupes = arr.filter((el, i) => arr.indexOf(el) !== i);
+  if (dupes.length) {
+    return dupes;
+  }
+}
+
+// MODIFIES src to get rid of dupes. This may take multiple passes.
+function dedupe(dupes, src) {
+  // O(n^2), but there should never be more than 5-10 tabs
+  for (const dupe of dupes) {
+    let counter = 1;
+    for (let i = src.indexOf(dupe); i >= 0; i = src.indexOf(dupe), counter++) {
+      src[i] = src[i] + "-" + counter;
+    }
+  }
+}
+function getSlugs(tabs) {
+  const slugs = tabs.map(tab => {
+    const text = new DOMParser().parseFromString(tab.title, "text/html").documentElement.textContent;
+    return slugify__WEBPACK_IMPORTED_MODULE_0___default()(text, {
+      lower: true,
+      strict: true,
+      replacement: '',
+      remove: /[\W]/
+    });
+  });
+  // Realistically since we strip "-", this will only ever run once.  But This
+  // while loop is here just in case that changes, to make sure we always have
+  // unique slugs.
+  while (dupes(slugs)) {
+    dedupe(dupes(slugs), slugs);
+  }
+  return slugs;
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getSlugs);
 
 /***/ }),
 
@@ -390,6 +406,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _getSlugs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getSlugs */ "./src/hashtabs/getSlugs.js");
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -397,6 +414,7 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
+
 
 
 /**
@@ -413,16 +431,19 @@ function save({
     tabs
   }
 }) {
+  const slugs = (0,_getSlugs__WEBPACK_IMPORTED_MODULE_2__["default"])(tabs);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save()
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", {
     className: "wp-block-unicamp-unicamp-blocks-hashtabs__tabs alignfull"
-  }, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
+  }, tabs.map((tab, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
     className: "wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab",
-    tagName: "li",
-    value: tab.title,
-    key: i
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks.Content, null));
+    key: i,
+    "data-slug": slugs[i]
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
+    tagName: "span",
+    value: tab.title
+  })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks.Content, null));
 }
 
 /***/ }),

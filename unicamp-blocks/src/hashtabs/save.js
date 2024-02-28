@@ -5,6 +5,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
 import { useBlockProps, InnerBlocks, RichText } from '@wordpress/block-editor';
+import getSlugs from './getSlugs'
 
 /**
  * The save function defines the way in which the different attributes should
@@ -16,16 +17,17 @@ import { useBlockProps, InnerBlocks, RichText } from '@wordpress/block-editor';
  * @return {Element} Element to render.
  */
 export default function save({attributes: {tabs}}) {
+  const slugs = getSlugs(tabs)
   return (
     <div { ...useBlockProps.save() }>
         <ol className='wp-block-unicamp-unicamp-blocks-hashtabs__tabs alignfull' >
         {tabs.map((tab, i) =>
-          <RichText.Content
-            className='wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab'
-            tagName='li'
-            value={tab.title}
-            key={i}
-          />
+          <li className='wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab' key={i} data-slug={slugs[i]}>
+            <RichText.Content
+              tagName='span'
+              value={tab.title}
+            />
+          </li>
         )}
       </ol>
       <InnerBlocks.Content />

@@ -12,6 +12,8 @@ import { useBlockProps, InnerBlocks, RichText, InspectorControls } from '@wordpr
 import { PanelBody, Button } from '@wordpress/components'
 import { useDispatch, useSelect } from '@wordpress/data'
 
+import getSlugs from './getSlugs'
+
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
@@ -19,45 +21,6 @@ import { useDispatch, useSelect } from '@wordpress/data'
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
-
-function dupes(arr) {
-  const dupes = arr.filter((el, i) => arr.indexOf(el) !== i)
-  if(dupes.length) { return dupes }
-}
-
-// MODIFIES src to get rid of dupes. This may take multiple passes.
-function dedupe(dupes, src) {
-  // O(n^2), but there should never be more than 5-10 tabs
-  for (const dupe of dupes) {
-    let counter = 1
-    for(let i = src.indexOf(dupe); i >= 0; i = src.indexOf(dupe), counter++) {
-      src[i] = src[i] + "-" + counter
-    }
-  }
-}
-
-// TODO: Move to a separate file
-import slugify from 'slugify'
-function getSlugs(tabs) {
-  const slugs = tabs.map(tab => {
-    const text = new DOMParser()
-      .parseFromString(tab.title, "text/html")
-      .documentElement.textContent;
-    return slugify(text, {
-      lower: true,
-      strict: true,
-      replacement: '',
-      remove: /[\W]/,
-    })
-  })
-  // Realistically since we strip "-", this will only ever run once.  But This
-  // while loop is here just in case that changes, to make sure we always have
-  // unique slugs.
-  while(dupes(slugs)) {
-    dedupe(dupes(slugs), slugs)
-  }
-  return slugs
-}
 
 function TabControl({tab, slug, deleteTab, showDeleteButton, showReorderButtons, handleMoveUp, handleMoveDown, isFirst, isLast}) {
   function handleDelete() {
@@ -211,15 +174,15 @@ export default function Edit({clientId, attributes: { tabs }, setAttributes}) {
         <ol className='wp-block-unicamp-unicamp-blocks-hashtabs__tabs alignfull' >
           {(tabs.length === 0) && <div>Add a tab in the sidebar to get started</div>}
           {tabs.map((tab, i) =>
-            <RichText
-              className={classnames('wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab', {'wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab--selected': i === selectedTab})}
-              tagName='li'
-              key={i}
-              value={tab.title}
-              onChange={val => handleTabTitleChange(val, i)}
-              onFocus={() => setSelectedTab(i)}
-              multiline={false}
-            />
+            <li className={classnames('wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab', {'wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab--selected': i === selectedTab})} key={i}>
+              <RichText
+                tagName='span'
+                value={tab.title}
+                onChange={val => handleTabTitleChange(val, i)}
+                onFocus={() => setSelectedTab(i)}
+                multiline={false}
+              />
+            </li>
           )}
         </ol>
         <InnerBlocks

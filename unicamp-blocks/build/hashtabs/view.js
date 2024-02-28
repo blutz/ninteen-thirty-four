@@ -25,9 +25,17 @@ var __webpack_exports__ = {};
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/#view-script
  */
 
-/* eslint-disable no-console */
-console.log('Hello World! (from unicamp-unicamp-blocks-hashtabs block)');
-/* eslint-enable no-console */
+// Tabs canNOT be added/removed dynamically, so doing this once per pageload is fine
+function setupBlock(container) {
+  const slugs = [];
+  container.querySelectorAll('.wp-block-unicamp-unicamp-blocks-hashtabs__tabs__tab').forEach(el => slugs.push(el.dataset.slug));
+  const tabs = container.querySelectorAll('.wp-block-unicamp-unicamp-blocks-hashtab');
+  console.log(slugs);
+  console.log(tabs);
+}
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.wp-block-unicamp-unicamp-blocks-hashtabs').forEach(setupBlock);
+});
 /******/ })()
 ;
 //# sourceMappingURL=view.js.map

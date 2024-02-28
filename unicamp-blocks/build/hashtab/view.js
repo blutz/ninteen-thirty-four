@@ -26,7 +26,7 @@ var __webpack_exports__ = {};
  */
 
 /* eslint-disable no-console */
-console.log('Hello World! (from unicamp-unicamp-blocks-hashtab block)');
+//console.log( 'Hello World! (from unicamp-unicamp-blocks-hashtab block)' );
 /* eslint-enable no-console */
 /******/ })()
 ;
