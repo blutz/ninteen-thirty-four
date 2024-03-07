@@ -29,11 +29,11 @@ const INCOME_BRACKETS = {
 // https://www.hcd.ca.gov/sites/default/files/docs/grants-and-funding/income-limits-2023.pdf
 const INCOME_GUIDELINES_2024 = {
   low: {
-    brackets: [26500, 30300, 34100, 37850, 40900, 43950, 46950, 50560],
-    additional: 3028, // 8% of the 4-person limit
+    brackets: [44150, 50450, 56750, 63050, 68100, 73150, 78200, 83250],
+    additional: 5044, // 8% of the 4-person limit
   },
   medium: {
-    brackets: [103120,117870,132560,147310,159120,170870,182680,194430],
+    brackets: [103120, 117870, 132560, 147310, 159120, 170870, 182680, 194430],
     additional: 11784, // 8% of the 4-person limit
   },
 }
