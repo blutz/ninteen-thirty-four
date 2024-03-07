@@ -29,8 +29,8 @@ const INCOME_BRACKETS = {
 // https://www.hcd.ca.gov/sites/default/files/docs/grants-and-funding/income-limits-2023.pdf
 const INCOME_GUIDELINES_2024 = {
   low: {
-    brackets: [44150, 50450, 56750, 63050, 68100, 73150, 78200, 83250],
-    additional: 5044, // 8% of the 4-person limit
+    brackets: [44150, 50450, 56750, 63050, 68100, 74518, 84027, 93539],
+    additional: 9509, // SFSP number
   },
   medium: {
     brackets: [103120, 117870, 132560, 147310, 159120, 170870, 182680, 194430],
