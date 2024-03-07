@@ -28,12 +28,10 @@ const INCOME_BRACKETS = {
 
 // https://www.hcd.ca.gov/sites/default/files/docs/grants-and-funding/income-limits-2023.pdf
 const INCOME_GUIDELINES_2024 = {
-  // If the family males LESS than the low amount, they qualify
   low: {
     brackets: [26500, 30300, 34100, 37850, 40900, 43950, 46950, 50560],
     additional: 3028, // 8% of the 4-person limit
   },
-  // If the family makes LESS THAN OR EQUAL TO this amount them they qualify
   medium: {
     brackets: [103120,117870,132560,147310,159120,170870,182680,194430],
     additional: 11784, // 8% of the 4-person limit
@@ -41,7 +39,7 @@ const INCOME_GUIDELINES_2024 = {
 }
 
 function init(container) {
-  function isEligibleForBracket(guidelines, income, householdSize, lessThanOrEqual = false) {
+  function isEligibleForBracket(guidelines, income, householdSize) {
     let incomeLimit
     if(householdSize <= guidelines.brackets.length) {
       incomeLimit = guidelines.brackets[householdSize-1]
@@ -49,17 +47,13 @@ function init(container) {
       const extraPeople = householdSize - guidelines.brackets.length
       incomeLimit = guidelines.brackets[guidelines.brackets.length-1] + (extraPeople * guidelines.additional)
     }
-    if(lessThanOrEqual) {
-      return income <= incomeLimit
-    } else {
-      return income < incomeLimit
-    }
+    return income <= incomeLimit
   }
   function getIncomeBracket(income, householdSize) {
-    if(isEligibleForBracket(INCOME_GUIDELINES_2024.low, income, householdSize, false)) {
+    if(isEligibleForBracket(INCOME_GUIDELINES_2024.low, income, householdSize)) {
       return INCOME_BRACKETS.LOW
     }
-    if(isEligibleForBracket(INCOME_GUIDELINES_2024.medium, income, householdSize, true)) {
+    if(isEligibleForBracket(INCOME_GUIDELINES_2024.medium, income, householdSize)) {
       return INCOME_BRACKETS.MEDIUM
     }
     return INCOME_BRACKETS.HIGH
