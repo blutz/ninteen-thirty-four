@@ -82,11 +82,13 @@ function Edit({
   }, [blocks]);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "Contents"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, headings.map(h => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "wp-block-unicamp-floating-toc__title"
+  }, "Contents"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", {
+    className: "wp-block-unicamp-floating-toc__ol"
+  }, headings.map(h => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
     key: h.anchor
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: `#${h.anchor}`
-  }, h.content)))));
+  }, h.content))));
 }
 
 /***/ }),
@@ -184,7 +186,11 @@ function save({
 }) {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "Contents"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, headings.map(h => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "wp-block-unicamp-floating-toc__title"
+  }, "Contents"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", {
+    className: "wp-block-unicamp-floating-toc__ol"
+  }, headings.map(h => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
     key: h.anchor
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: `#${h.anchor}`

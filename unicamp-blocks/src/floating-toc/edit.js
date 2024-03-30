@@ -51,10 +51,10 @@ export default function Edit({attributes: {headings}, setAttributes}) {
 
   return (
     <div { ...useBlockProps() }>
-      <h3>Contents</h3>
-      <ol>
+      <span className='wp-block-unicamp-floating-toc__title'>Contents</span>
+      <ol className='wp-block-unicamp-floating-toc__ol'>
         {headings.map(h =>
-          <li key={h.anchor}><a href={`#${h.anchor}`}>{h.content}</a></li>
+          <li key={h.anchor}>{h.content}</li>
         )}
       </ol>
     </div>

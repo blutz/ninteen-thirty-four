@@ -24,10 +24,35 @@ var __webpack_exports__ = {};
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/#view-script
  */
-
-/* eslint-disable no-console */
-console.log("Hello World! (from unicamp-floating-toc block)");
-/* eslint-enable no-console */
+const MARGIN = 100;
+function setupBlock(container) {
+  const anchors = container.querySelectorAll('a');
+  const hashes = Array.from(anchors).map(a => a.hash.substring(1));
+  anchors.forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      window.history.pushState({}, '', a.hash);
+      const el = document.getElementById(a.hash.substring(1));
+      window.scrollTo({
+        top: el.offsetTop - MARGIN,
+        behavior: 'smooth'
+      });
+    });
+  });
+  function showSelected(index) {
+    const i = index < 0 ? 0 : index;
+    anchors.forEach(a => a.classList.remove('selected'));
+    anchors[i].classList.add('selected');
+  }
+  window.addEventListener('scroll', () => {
+    const positions = hashes.map(h => document.getElementById(h).offsetTop);
+    const index = positions.findLastIndex(p => p <= window.scrollY + MARGIN);
+    showSelected(index);
+  });
+}
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.wp-block-unicamp-floating-toc').forEach(setupBlock);
+});
 /******/ })()
 ;
 //# sourceMappingURL=view.js.map

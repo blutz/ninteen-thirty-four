@@ -18,8 +18,8 @@ import { useBlockProps } from '@wordpress/block-editor';
 export default function save({attributes: {headings}}) {
   return (
     <div { ...useBlockProps.save() }>
-      <h3>Contents</h3>
-      <ol>
+      <span className='wp-block-unicamp-floating-toc__title'>Contents</span>
+      <ol className='wp-block-unicamp-floating-toc__ol'>
         {headings.map(h =>
           <li key={h.anchor}><a href={`#${h.anchor}`}>{h.content}</a></li>
         )}
