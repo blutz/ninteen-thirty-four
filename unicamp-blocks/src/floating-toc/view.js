@@ -19,8 +19,8 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/#view-script
  */
-const MARGIN = 100
-function setupBlock(container) {
+function unicampToCSetupBlock(container) {
+  const MARGIN = 100
   const anchors = container.querySelectorAll('a')
   const hashes = Array.from(anchors).map(a => a.hash.substring(1))
 
@@ -50,5 +50,5 @@ function setupBlock(container) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll('.wp-block-unicamp-floating-toc').forEach(setupBlock)
+  document.querySelectorAll('.wp-block-unicamp-floating-toc').forEach(unicampToCSetupBlock)
 })

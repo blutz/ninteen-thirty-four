@@ -31,7 +31,7 @@ function getFlattenedBlocks(blocks) {
   blocks.forEach(b => innerBlocks = [...innerBlocks, ...b.innerBlocks])
   return [...blocks, ...getFlattenedBlocks(innerBlocks)]
 }
-export default function Edit({attributes: {headings}, setAttributes}) {
+export default function Edit({attributes: {headings=[]}, setAttributes}) {
   const { blocks } = useSelect(select => ({
       blocks: select("core/block-editor").getBlocks()
   }))

@@ -15,7 +15,7 @@ import { useBlockProps } from '@wordpress/block-editor';
  *
  * @return {Element} Element to render.
  */
-export default function save({attributes: {headings}}) {
+export default function save({attributes: {headings=[]}}) {
   return (
     <div { ...useBlockProps.save() }>
       <span className='wp-block-unicamp-floating-toc__title'>Contents</span>
