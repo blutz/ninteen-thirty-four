@@ -16,7 +16,10 @@ if ( ! function_exists( 'ninteen_thirty_four_setup' ) ) :
    * as indicating support for post thumbnails.
    */
   function ninteen_thirty_four_setup() {
+    add_theme_support( 'editor-styles' );
+
     add_theme_support( 'align-wide' );
+    add_editor_style( 'style-editor.css' );
 
     /*
      * Make theme available for translation.
