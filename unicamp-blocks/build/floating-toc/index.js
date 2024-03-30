@@ -2,10 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/hashtab/edit.js":
-/*!*****************************!*\
-  !*** ./src/hashtab/edit.js ***!
-  \*****************************/
+/***/ "./src/floating-toc/edit.js":
+/*!**********************************!*\
+  !*** ./src/floating-toc/edit.js ***!
+  \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -14,17 +14,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./editor.scss */ "./src/hashtab/editor.scss");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./editor.scss */ "./src/floating-toc/editor.scss");
 
-/**
- * Retrieves the translation of text.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
- */
+
 
 
 /**
@@ -51,46 +49,61 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @return {Element} Element to render.
  */
+function getFlattenedBlocks(blocks) {
+  if (blocks.length === 0) {
+    return [];
+  }
+  let innerBlocks = [];
+  blocks.forEach(b => innerBlocks = [...innerBlocks, ...b.innerBlocks]);
+  return [...blocks, ...getFlattenedBlocks(innerBlocks)];
+}
 function Edit({
   attributes: {
-    hidden
-  }
+    headings
+  },
+  setAttributes
 }) {
-  const displayStyle = hidden ? {
-    display: 'none'
-  } : null;
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)(),
-    style: {
-      ...displayStyle
-    }
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks, {
-    defaultBlock: {
-      name: 'core/paragraph',
-      attributes: {
-        content: 'Tab content here...'
-      }
-    },
-    directInsert: true,
-    templateLock: false
+  const {
+    blocks
+  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_1__.useSelect)(select => ({
+    blocks: select("core/block-editor").getBlocks()
   }));
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const flattenedBlocks = getFlattenedBlocks(blocks);
+    const h2s = flattenedBlocks.filter(b => b.name === 'core/heading' && b.attributes?.level === 2).map(b => ({
+      anchor: b.attributes.anchor,
+      content: b.attributes.content
+    }));
+    if (JSON.stringify(headings) !== JSON.stringify(h2s)) {
+      setAttributes({
+        headings: h2s
+      });
+    }
+  }, [blocks]);
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)()
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "Contents"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, headings.map(h => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+    key: h.anchor
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: `#${h.anchor}`
+  }, h.content)))));
 }
 
 /***/ }),
 
-/***/ "./src/hashtab/index.js":
-/*!******************************!*\
-  !*** ./src/hashtab/index.js ***!
-  \******************************/
+/***/ "./src/floating-toc/index.js":
+/*!***********************************!*\
+  !*** ./src/floating-toc/index.js ***!
+  \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
 /* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style.scss */ "./src/hashtab/style.scss");
-/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./src/hashtab/edit.js");
-/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./src/hashtab/save.js");
-/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./block.json */ "./src/hashtab/block.json");
+/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style.scss */ "./src/floating-toc/style.scss");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./src/floating-toc/edit.js");
+/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./src/floating-toc/save.js");
+/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./block.json */ "./src/floating-toc/block.json");
 /**
  * Registers a new block provided a unique name and an object defining its behavior.
  *
@@ -132,10 +145,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/hashtab/save.js":
-/*!*****************************!*\
-  !*** ./src/hashtab/save.js ***!
-  \*****************************/
+/***/ "./src/floating-toc/save.js":
+/*!**********************************!*\
+  !*** ./src/floating-toc/save.js ***!
+  \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -164,18 +177,26 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @return {Element} Element to render.
  */
-function save() {
+function save({
+  attributes: {
+    headings
+  }
+}) {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save()
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks.Content, null));
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "Contents"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ol", null, headings.map(h => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+    key: h.anchor
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: `#${h.anchor}`
+  }, h.content)))));
 }
 
 /***/ }),
 
-/***/ "./src/hashtab/editor.scss":
-/*!*********************************!*\
-  !*** ./src/hashtab/editor.scss ***!
-  \*********************************/
+/***/ "./src/floating-toc/editor.scss":
+/*!**************************************!*\
+  !*** ./src/floating-toc/editor.scss ***!
+  \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -184,10 +205,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/hashtab/style.scss":
-/*!********************************!*\
-  !*** ./src/hashtab/style.scss ***!
-  \********************************/
+/***/ "./src/floating-toc/style.scss":
+/*!*************************************!*\
+  !*** ./src/floating-toc/style.scss ***!
+  \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -226,23 +247,33 @@ module.exports = window["wp"]["blocks"];
 
 /***/ }),
 
-/***/ "@wordpress/i18n":
-/*!******************************!*\
-  !*** external ["wp","i18n"] ***!
-  \******************************/
+/***/ "@wordpress/components":
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
 /***/ ((module) => {
 
-module.exports = window["wp"]["i18n"];
+module.exports = window["wp"]["components"];
 
 /***/ }),
 
-/***/ "./src/hashtab/block.json":
-/*!********************************!*\
-  !*** ./src/hashtab/block.json ***!
-  \********************************/
+/***/ "@wordpress/data":
+/*!******************************!*\
+  !*** external ["wp","data"] ***!
+  \******************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/unicamp-blocks-hashtab","version":"0.1.0","title":"Hashtab Content","parent":["unicamp/unicamp-blocks-hashtabs"],"category":"widgets","icon":"pets","description":"Content inside a tab","example":{},"supports":{"html":false,"inserter":false,"lock":false},"textdomain":"unicamp-blocks-hashtab","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js"}');
+module.exports = window["wp"]["data"];
+
+/***/ }),
+
+/***/ "./src/floating-toc/block.json":
+/*!*************************************!*\
+  !*** ./src/floating-toc/block.json ***!
+  \*************************************/
+/***/ ((module) => {
+
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"unicamp/floating-toc","version":"0.1.0","title":"Floating ToC","category":"widgets","icon":"airplane","description":"Floating table of contents","example":{},"supports":{"html":false,"multiple":false},"textdomain":"floating-toc","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"headings":{"type":"array"}}}');
 
 /***/ })
 
@@ -356,8 +387,8 @@ module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/tru
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			"hashtab/index": 0,
-/******/ 			"hashtab/style-index": 0
+/******/ 			"floating-toc/index": 0,
+/******/ 			"floating-toc/style-index": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -407,7 +438,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/tru
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["hashtab/style-index"], () => (__webpack_require__("./src/hashtab/index.js")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["floating-toc/style-index"], () => (__webpack_require__("./src/floating-toc/index.js")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
