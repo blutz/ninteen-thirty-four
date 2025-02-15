@@ -9,7 +9,7 @@
   position: relative;
 }
 .handbook__new::before {
-  content: 'New in 2024';
+  content: 'New in 2025';
   display: block;
   position: absolute;
   top: -35px;
