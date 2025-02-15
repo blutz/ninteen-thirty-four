@@ -42,7 +42,7 @@ export default function save() {
       </div>
 
       <div data-step='dcfs-qualify' style='display: none'>
-        <p>You likely <strong>qualify to attend UniCamp for FREE</strong> on a DCFS campership. These camperships are subject to DCFS approval and are only available <em>for one session per child, per summer</em>, even across programs other than UniCamp. (For instance, if your camper goes to UniCamp and another summer camp, you will only be able to use the campership on <em>one</em> of those programs.)</p>
+        <p>You likely <strong>qualify to attend UniCamp for FREE</strong> on a DCFS campership. These camperships are subject to DCFS approval and are only available <em>for one session per child, per summer</em>.</p>
         <p>Additional DCFS-specific information (e.g. case number, case worker, and contact info) will be required on the UniCamp application and, if you choose to use the DCFS campership with UniCamp, will be submitted to DCFS for verification. If DCFS does not approve your campership, you will be required to pay the normal rates prior to attending camp.</p>
         <button className='button'>See my cost without a DCFS campership &rarr;</button>
       </div>
@@ -86,19 +86,19 @@ export default function save() {
       </div>
 
       <div data-step='final-low' style='display: none'>
-        <p>Your camper qualifies for the <strong>low rate of $239</strong> (or $400 for The Village Session).</p>
+        <p>Your camper qualifies for the <strong>low rate of $250</strong> (or $425 for The Village Session).</p>
         <p><small>The full cost to UniCamp is $1300 per camper, but we automatically offer a campership to everyone based on the information you filled out. Additional camperships are available on a limited basis: email us at <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> for more information.</small></p>
         <button data-action='start-over' className='button button--secondary'>&larr; Start over</button>
       </div>
 
       <div data-step='final-medium' style='display: none'>
-        <p>Your camper qualifies for the <strong>medium rate of $375</strong> (or $679 for The Village Session).</p>
+        <p>Your camper qualifies for the <strong>medium rate of $399</strong> (or $700 for The Village Session).</p>
         <p><small>The full cost to UniCamp is $1300 per camper, but we automatically offer a campership to everyone based on the information you filled out. Additional camperships are available on a limited basis: email us at <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> for more information.</small></p>
         <button data-action='start-over' className='button button--secondary'>&larr; Start over</button>
       </div>
 
       <div data-step='final-high' style='display: none'>
-        <p>Your camper qualifies for the <strong>general rate of $600</strong> (or $950 for The Village Session).</p>
+        <p>Your camper qualifies for the <strong>general rate of $650</strong> (or $999 for The Village Session).</p>
         <p><small>The full cost to UniCamp is $1300 per camper, but we automatically offer a campership to everyone based on the information you filled out. Additional camperships are available on a limited basis: email us at <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> for more information.</small></p>
         <button data-action='start-over' className='button button--secondary'>&larr; Start over</button>
       </div>
