@@ -36,12 +36,13 @@ export default function Edit({attributes: {headings=[]}, setAttributes}) {
       blocks: select("core/block-editor").getBlocks()
   }))
   useEffect(() => {
+    debugger
     const flattenedBlocks = getFlattenedBlocks(blocks)
     const h2s = flattenedBlocks.filter(b =>
       b.name === 'core/heading' && b.attributes?.level === 2
     ).map(b => ({
       anchor: b.attributes.anchor,
-      content: b.attributes.content,
+      content: b.attributes.content.text,
     }))
     if(JSON.stringify(headings) !== JSON.stringify(h2s)) {
       setAttributes({headings: h2s})
