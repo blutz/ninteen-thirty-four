@@ -26,8 +26,24 @@ const INCOME_BRACKETS = {
   HIGH: 'HIGH',
 }
 
-// https://www.hcd.ca.gov/sites/default/files/docs/grants-and-funding/income-limits-2024.pdf
 // https://www.fns.usda.gov/schoolmeals/income-eligibility-guidelines
+
+// https://www.hcd.ca.gov/sites/default/files/docs/grants-and-funding/income-limits-2025.pdf
+// https://www.federalregister.gov/documents/2025/03/13/2025-03821/child-nutrition-programs-income-eligibility-guidelines#p-15
+const INCOME_GUIDELINES_2026 = {
+  // "Very Low Income" (highest of either SFSP or HCD)
+  low: {
+    brackets: [53000, 60600, 68150, 75750, 81800, 87850, 93900, 100178],
+    additional: 10175, // SFSP number
+  },
+  // 1.25 x "Moderate Income"
+  medium: {
+    brackets: [111937, 127875, 143875, 159875, 172687, 185437, 198250, 211062],
+    additional: 11784, // 8% of the 4-person limit
+  },
+}
+
+// https://www.hcd.ca.gov/sites/default/files/docs/grants-and-funding/income-limits-2024.pdf
 const INCOME_GUIDELINES_2025 = {
   // "Very Low Income" (highest of either SFSP or HCD)
   low: {
@@ -41,6 +57,8 @@ const INCOME_GUIDELINES_2025 = {
   },
 }
 
+const CURRENT_INCOME_GUIDELINES = INCOME_GUIDELINES_2026
+
 function init(container) {
   function isEligibleForBracket(guidelines, income, householdSize) {
     let incomeLimit
@@ -53,10 +71,10 @@ function init(container) {
     return income <= incomeLimit
   }
   function getIncomeBracket(income, householdSize) {
-    if(isEligibleForBracket(INCOME_GUIDELINES_2025.low, income, householdSize)) {
+    if(isEligibleForBracket(CURRENT_INCOME_GUIDELINES.low, income, householdSize)) {
       return INCOME_BRACKETS.LOW
     }
-    if(isEligibleForBracket(INCOME_GUIDELINES_2025.medium, income, householdSize)) {
+    if(isEligibleForBracket(CURRENT_INCOME_GUIDELINES.medium, income, householdSize)) {
       return INCOME_BRACKETS.MEDIUM
     }
     return INCOME_BRACKETS.HIGH
