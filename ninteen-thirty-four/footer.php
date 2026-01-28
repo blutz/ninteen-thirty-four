@@ -27,6 +27,9 @@
       </div>
       <ul class='footer__content__contact'>
         <li>
+          <a class='footer__content__contact__title' href='https://www.instagram.com/uclaunicamp'><strong>@uclaunicamp</strong></a> <i class='fab fa-instagram'></i>
+        </li>
+        <li>
           <a class='footer__content__contact__title' href='mailto:registration@unicamp.org'><strong>registration@unicamp.org</strong></a> <i class='fas fa-envelope'></i>
         </li>
         <li>
