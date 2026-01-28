@@ -1031,6 +1031,8 @@ a {
   margin-left: 15px;
   position: relative;
   top: -5px; }
+  .footer__content__contact__title:visited {
+    color: white; }
 
 a.footer__content__contact__title:hover {
   text-decoration: underline;
