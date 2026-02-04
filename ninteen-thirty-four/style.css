@@ -1157,7 +1157,7 @@ a.footer__content__contact__title:hover {
   background-color: rgba(255, 105, 0, 0.05);
   position: relative; }
   .handbook__new::before {
-    content: 'New in 2025';
+    content: 'New in 2026';
     display: block;
     position: absolute;
     top: -25px;
