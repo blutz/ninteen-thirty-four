@@ -86,19 +86,19 @@ export default function save() {
       </div>
 
       <div data-step='final-low' style='display: none'>
-        <p>Your camper qualifies for the <strong>low rate of $265</strong> (or TBA for The Village Session).</p>
+        <p>Your camper qualifies for the <strong>low rate of $265</strong> (or $375 for The Village Session).</p>
         <p><small>The full cost to UniCamp is $1600 per camper, but we automatically offer a campership to everyone based on the information you filled out. Additional camperships are available on a limited basis: email us at <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> for more information.</small></p>
         <button data-action='start-over' className='button button--secondary'>&larr; Start over</button>
       </div>
 
       <div data-step='final-medium' style='display: none'>
-        <p>Your camper qualifies for the <strong>medium rate of $425</strong> (or TBA for The Village Session).</p>
+        <p>Your camper qualifies for the <strong>medium rate of $425</strong> (or $675 for The Village Session).</p>
         <p><small>The full cost to UniCamp is $1600 per camper, but we automatically offer a campership to everyone based on the information you filled out. Additional camperships are available on a limited basis: email us at <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> for more information.</small></p>
         <button data-action='start-over' className='button button--secondary'>&larr; Start over</button>
       </div>
 
       <div data-step='final-high' style='display: none'>
-        <p>Your camper qualifies for the <strong>general rate of $750</strong> (or TBA for The Village Session).</p>
+        <p>Your camper qualifies for the <strong>general rate of $750</strong> (or $999 for The Village Session).</p>
         <p><small>The full cost to UniCamp is $1600 per camper, but we automatically offer a campership to everyone based on the information you filled out. Additional camperships are available on a limited basis: email us at <a href='mailto:registration@unicamp.org'>registration@unicamp.org</a> for more information.</small></p>
         <button data-action='start-over' className='button button--secondary'>&larr; Start over</button>
       </div>

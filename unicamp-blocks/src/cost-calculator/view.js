@@ -39,7 +39,7 @@ const INCOME_GUIDELINES_2026 = {
   // 1.25 x "Moderate Income"
   medium: {
     brackets: [111937, 127875, 143875, 159875, 172687, 185437, 198250, 211062],
-    additional: 11784, // 8% of the 4-person limit
+    additional: 12790, // 8% of the 4-person limit
   },
 }
 
