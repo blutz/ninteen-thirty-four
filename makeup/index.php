@@ -38,7 +38,7 @@ const weeksRaw = Array.from(weeksRawSet).sort()
 const weeks = weeksRaw.map(w => {
   let quarter = 'Spring'
   if(w[0].toLowerCase() === 'w') { quarter = 'Winter' }
-  return `${quarter} week ${w.substring(1)}`
+  return {value: w, text: `${quarter} week ${w.substring(1)}`}
 })
 
 const surveyJson = {
@@ -107,7 +107,23 @@ const surveyJson = {
 }
 const survey = new Survey.Model(surveyJson)
 survey.onStarted.add((sender, options) => {
-  console.log('changing page!! TODO: insert additional pages here.')
+  const meeting = survey.getValue('meeting').toLowerCase().trim()
+  const weekQuestions = questions.filter(q => q.Meeting.toLowerCase().trim() === meeting)
+  const weekTopics = []
+  weekQuestions.forEach(q => {
+    // Preserve order while we're doing this
+    const t = q.Topic.trim()
+    if(!weekTopics.includes(t)) { weekTopics.push(t) }
+  })
+  weekTopics.forEach((topic, i) => {
+    const page = survey.addNewPage('topic-'+i, survey.pages.length-1)
+    page.title = topic
+    const topicQuestions = weekQuestions.filter(q => q.Topic.trim() === topic)
+    topicQuestions.forEach((q, j) => {
+      const newQuestion = page.addNewQuestion('text', `question-${i}-${j}`)
+      newQuestion.title = q.Question
+    })
+  })
 })
 document.addEventListener("DOMContentLoaded", function() {
   survey.render(document.getElementById("surveyContainer"))
