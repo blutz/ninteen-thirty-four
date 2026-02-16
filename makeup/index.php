@@ -20,11 +20,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 function csv_to_json($csv_str) {
-  $rows = array_map(fn($line) => str_getcsv($line, ",", '"', "\\"), explode("\n", trim($csv_str)));
-  $headers = array_shift($rows);
+  $stream = fopen('php://memory', 'r+');
+  fwrite($stream, trim($csv_str));
+  rewind($stream);
 
-  $json = array_map(fn($row) => array_combine($headers, $row), $rows);
-  return json_encode($json);
+  $headers = fgetcsv($stream, 0, ",", '"', "");
+  $json = [];
+
+  while (($row = fgetcsv($stream, 0, ",", '"', "")) !== false) {
+    if (count($headers) === count($row)) {
+      $json[] = array_combine($headers, $row);
+    }
+  }
+
+  fclose($stream);
+  return json_encode($json, JSON_PRETTY_PRINT);
 }
 $questions_raw = file_get_contents('https://docs.google.com/spreadsheets/d/10JzWFKrYvCJb4iActUmtfYG05fowog4M03vz_8TFhhc/export?format=csv&gid=0');
 $meetings_raw = file_get_contents('https://docs.google.com/spreadsheets/d/10JzWFKrYvCJb4iActUmtfYG05fowog4M03vz_8TFhhc/export?format=csv&gid=382462573');
