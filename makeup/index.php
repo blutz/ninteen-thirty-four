@@ -45,6 +45,7 @@ $meetings_json = csv_to_json($meetings_raw);
 <!doctype html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://unpkg.com/survey-core/survey-core.min.css" type="text/css" rel="stylesheet">
   <title>Training Make-Up Form <?php echo $year; ?> | UCLA UniCamp</title>
   <script type="text/javascript" src="https://unpkg.com/survey-core/survey.core.min.js"></script>
